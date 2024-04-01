@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "ViewSourcingForm";
+}
+
+<iframe id="excelFrame" src="" width="100%" height="500px"></iframe>
+
+@section Scripts {
+    <script>
+        // Function to get the value of a query string parameter by name
+        function getQueryStringParameter(name) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Get the value of the pNDesc parameter from the query string
+        var pNDesc = getQueryStringParameter('pNDesc');
+
+        // Set the src attribute of the iframe to the GetExcelFile action with the pNDesc parameter
+        if (pNDesc) {
+            var url = '@Url.Action("GetExcelFile", "Dashboard")' + '?pNDesc=' + encodeURIComponent(pNDesc);
+            fetch(url)
+                .then(response => response.text())
+                .then(pdfUrl => {
+                    $('#excelFrame').attr('src', pdfUrl);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+}

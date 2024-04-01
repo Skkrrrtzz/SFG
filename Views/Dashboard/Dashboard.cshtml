@@ -1,0 +1,654 @@
+﻿@{
+    ViewData["Title"] = "Dashboard Page";
+
+    // string department = ViewBag.Department;
+    string department = "Cost Engineering";
+}
+<div class="row">
+    <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
+        <div class="card shadow bg-warning border-3 border-warning-subtle">
+            <div class="card-body" type="button" data-mdb-toggle="modal" data-mdb-target="#pendingModal">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <i class="fa-solid fa-circle-exclamation h1 text-white"></i>
+                    </div>
+                    <div class="col me-2">
+                        <div class="text-white text-end">
+                            <h4 class="fs-1">0</h4>
+                        </div>
+                        <div class="text-end text-white">
+                            <h4 class="fs-6">Open RFQ</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
+        <div class="card shadow bg-success border-3 border-success-subtle">
+            <div class="card-body" type="button" data-mdb-toggle="modal" data-mdb-target="#closedModal">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <i class="fa-solid fa-circle-check h1 text-white"></i>
+                    </div>
+                    <div class="col me-2">
+                        <div class="text-white text-end">
+                            <h4 class="fs-1">0</h4>
+                        </div>
+                        <div class="text-end text-white">
+                            <h4 class="fs-6">Closed RFQ</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
+        <div class="row mx-0">
+            <a asp-action="Index" asp-controller="Home" class="btn btn-primary border-3 border-primary-subtle my-2">Project Summary Report</a>
+            <a asp-action="Index" asp-controller="Home" class="btn btn-primary border-3 border-primary-subtle my-2">OPEN Projects</a>
+        </div>
+    </div>
+    <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
+        <div class="card shadow bg-primary border-3 border-primary-subtle h-100">
+            <div class="card-body" type="button" data-bs-toggle="modal" data-bs-target="#menuSFG">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h4 class="text-white">Sourcing Form Generation</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <p>@Context.Session.GetString("uniqueKey")</p>
+    
+    <!--Menu Modal -->
+    <div class="modal fade" id="menuSFG" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="menuSFGLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <h1 class="modal-title fs-5" id="menuSFGLabel">@department</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2">
+                        <button type="button" class="btn btn-primary encoder border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#encoder">
+                            ENCODER
+                        </button>
+                        <button type="button" class="btn btn-primary processor border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#processor">
+                            PROCESSOR
+                        </button>
+                        <button type="button" class="btn btn-primary viewer border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#viewer">
+                            VIEWER
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Encoder Modal -->
+    <div class="modal fade" id="encoder" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="encoderLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <h1 class="modal-title fs-5" id="encoderLabel">Sourcing Form | <span class="badge text-bg-dark">Encoder</span> </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-cols-2 g-2">
+                        <div class="col">
+                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadLastPurchase">
+                                <div class="card-body text-white">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-file-arrow-up fa-2x"></i>
+                                        </div>
+                                        <div class="col">
+                                            <h5 class="fs-6">Upload ATS Last Purchase Info</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadQoutation">
+                                <div class="card-body text-white">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-file-arrow-up fa-2x"></i>
+                                        </div>
+                                        <div class="col">
+                                            <h5 class="fs-6">Upload quotation Database</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadMRPBom">
+                                <div class="card-body text-white">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-file-arrow-up fa-2x"></i>
+                                        </div>
+                                        <div class="col">
+                                            <h5 class="fs-6">Upload MRP BOM</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#sourcingForm" onclick="sourcingForm()">
+                                <div class="card-body text-white">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-file-lines fa-2x"></i>
+                                        </div>
+                                        <div class="col">
+                                            <h5 class="fs-6">Sourcing Form</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Processor Modal -->
+    <div class="modal fade" id="processor" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="processorLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="processorLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-cols-2 g-2">
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    This is some text within a card body.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    This is some text within a card body.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    This is some text within a card body.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                    This is some text within a card body.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Viewer Modal -->
+    <div class="modal fade" id="viewer" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="viewerLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <h1 class="modal-title fs-5" id="viewerLabel">Viewer <i class="fa-solid fa-circle-question" type="button"></i> </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2">
+                        <div class="col">
+                            <div class="card bg-primary border-3 border-primary-subtle">
+                                <div class="card-body" type="button">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-book fa-3x text-white"></i>
+                                        </div>
+                                        <div class="col me-2">
+                                            <div class="text-white text-end">
+                                                <h4 class="fs-1">0</h4>
+                                            </div>
+                                            <div class="text-end text-white">
+                                                <h4 class="fs-5">Library</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Upload Last Purchase Info Modal -->
+<div class="modal fade" id="uploadLastPurchase" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadLastPurchaseLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-bg-primary">
+                <h1 class="modal-title fs-5" id="uploadLastPurchaseLabel"> <i class="fa-solid fa-file-arrow-up"></i> Last Purchase Info</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="loadingSpinner" class="d-none text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <p>Uploading file <span id="fileName"></span>...</p>
+                </div>
+                <div class="mb-2" id="fileInputContainer">
+                    <input type="file" id="excelFileInput" accept=".xlsx, .xls">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="uploadButton" onclick="lastPurchaseFileUpload()">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Upload Qoutation Data Modal -->
+<div class="modal fade" id="uploadQoutation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadQoutationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-bg-primary">
+                <h1 class="modal-title fs-5" id="uploadQoutationLabel"> <i class="fa-solid fa-file-arrow-up"></i> Qoutations</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="qloadingSpinner" class="d-none text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <p>Uploading file <span id="qoutationfileName"></span>...</p>
+                </div>
+                <div class="mb-2" id="qoutationInputContainer">
+                    <input type="file" id="qoutationExcel" accept=".xlsx, .xls">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="uploadQoutationButton" onclick="qoutationFileUpload()">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Upload MRP BOM Data Modal -->
+<div class="modal fade" id="uploadMRPBom" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadMRPBomLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-bg-primary">
+                <h1 class="modal-title fs-5" id="uploadMRPBomLabel"> <i class="fa-solid fa-file-arrow-up"></i> MRP BOM</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="mrploadingSpinner" class="d-none text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <p>Uploading file <span id="MRPBomfileName"></span>...</p>
+                </div>
+                <div class="mb-2" id="MRPBomInputContainer">
+                    <input type="file" id="MRPBomExcel" accept=".xlsx, .xls">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="uploadMRPBomButton" onclick="MRPBomFileUpload()">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Open Sourcing Form Modal -->
+<div class="modal fade" id="sourcingForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sourcingFormLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-bg-primary">
+                <h1 class="modal-title fs-5" id="sourcingFormLabel"> <i class="fa-solid fa-file-arrow-up"></i> Sourcing Form</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-2">
+                    <h4>MRP BOM</h4>
+                    <div class="row d-flex align-items-center">
+                        <div class="col-6">
+                            <h6>Part Number/Description</h6>
+                        </div>
+                        <div class="col-6">
+                            <select class="form-select" id="sourcingFormSelect">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <button type="button" class="btn btn-primary border-3 border-primary-subtle" id="sourcingFormButton"><i class="fa-solid fa-plus"></i> Create Sourcing Form without BOM</button>
+                <button type="button" class="btn btn-primary border-3 border-primary-subtle d-none" onload="viewSourcingForm()" id="viewPNDesc"><i class="fa-solid fa-eye"></i> View</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        // Assuming department is retrieved from your backend
+        var department = "@department";
+
+        // Hide all buttons initially
+        $(".encoder, .processor, .viewer").hide();
+
+        // Show buttons based on department
+        if (department === "Cost Engineering") {
+            $(".encoder, .processor, .viewer").show();
+        } else if (department === "Sourcing") {
+            $(".processor, .viewer").show();
+        } else if (department === "Purchasing" || department === "Business Control") {
+            $(".viewer").show();
+        } else {
+            $(".encoder, .processor, .viewer").show();
+        }
+    });
+
+    function lastPurchaseFileUpload() {
+        const fileInput = $('#excelFileInput')[0];
+
+        $("#uploadButton").prop("disabled", true); // Disable the button while the file is being uploaded
+        $("#fileInputContainer").show(); // Show the file input
+       
+        if (!fileInput.files || !fileInput.files[0]) { // Check if a file was selected
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select a file to upload.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            $("#uploadButton").prop("disabled", false); // Re-enable the button
+            return;
+        } else {
+            $("#loadingSpinner").removeClass("d-none"); // Show the loading spinner
+            const file = fileInput.files[0]; // Get the uploaded file
+
+            $('#fileName').text(file.name); // Show the file name
+            const formData = new FormData(); // Create a FormData object
+            formData.append('file', file); // Append the file to FormData
+            $("#fileInputContainer").hide(); // Hide the file input container
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UploadLastPurchaseInfo", "Dashboard")',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+
+                    $("#loadingSpinner").addClass("d-none"); // Hide the loading spinner
+
+                    if (response.success) {
+                        // Display a SweetAlert2 success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            toast: true,
+                            position: 'top-end',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+
+                        // Reset the file input field
+                        $("#excelFileInput").val(''); // Clear the file input value
+                        $("#uploadLastPurchase").modal("hide"); // Close the modal
+                        $("#fileInputContainer").show(); // Show the file input
+                    } else {
+                        // Display a SweetAlert2 error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                            toast: true,
+                            position: 'top-end',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        // Reset the file input field
+                        $("#excelFileInput").val(''); // Clear the file input value
+                        $("#fileInputContainer").show(); // Show the file input
+                    }
+                    $("#uploadButton").prop("disabled", false); // Re-enable the button
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error uploading file:', error);
+                    $("#loadingSpinner").addClass("d-none"); // Hide the loading spinner
+                }
+            });
+        }
+
+        
+    }
+
+    function qoutationFileUpload() {
+        const fileInput = $('#qoutationExcel')[0]; // Access the native DOM element
+
+        $("#uploadQoutationButton").prop("disabled", true); // Disable the button while the file is being uploaded
+        $("#qoutationInputContainer").show(); // Show the file input container
+
+
+        if (!fileInput.files || !fileInput.files[0]) { // Check if a file was selected
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select a file to upload.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            $("#uploadQoutationButton").prop("disabled", false); // Re-enable the button
+            return;
+        } else { 
+            $("#qloadingSpinner").removeClass("d-none"); // Show the loading spinner
+            const file = fileInput.files[0]; // Get the uploaded file
+
+            $('#qoutationfileName').text(file.name); // Show the file name
+            const formData = new FormData(); // Create a FormData object
+            formData.append('file', file); // Append the file to FormData
+            $("#qoutationInputContainer").hide(); // Hide the file input container
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UploadQoutation", "Dashboard")',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+
+                    $("#qloadingSpinner").addClass("d-none"); // Hide the loading spinner
+
+                    if (response.success) {
+                        // Display a SweetAlert2 success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            toast: true,
+                            position: 'top-end',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+
+                        // Reset the file input field
+                        $("#qoutationExcel").val(''); // Clear the file input value
+                        $("#uploadQoutation").modal("hide"); // Close the modal
+                        $("#qoutationInputContainer").show(); // Show the file input
+                    } else {
+                        // Display a SweetAlert2 error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                            toast: true,
+                            position: 'top-end',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        // Reset the file input field
+                        $("#qoutationExcel").val(''); // Clear the file input value
+                        $("#qoutationInputContainer").show(); // Show the file input
+                    }
+                    $("#uploadQoutationButton").prop("disabled", false); // Re-enable the button
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error uploading file:', error);
+                    $("#qloadingSpinner").addClass("d-none"); // Hide the loading spinner
+                }
+            });
+        }
+    }
+
+    function MRPBomFileUpload() {
+        const fileInput = $('#MRPBomExcel')[0]; // Access the native DOM element
+
+        $("#uploadMRPBomButton").prop("disabled", true); // Disable the button while the file is being uploaded
+        $("#MRPBomInputContainer").show(); // Show the file input container
+
+
+        if (!fileInput.files || !fileInput.files[0]) { // Check if a file was selected
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select a file to upload.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            $("#uploadMRPBomButton").prop("disabled", false); // Re-enable the button
+            return;
+        } else {
+            $("#mrploadingSpinner").removeClass("d-none"); // Show the loading spinner
+            const file = fileInput.files[0]; // Get the uploaded file
+
+            $('#MRPBomfileName').text(file.name); // Show the file name
+            const formData = new FormData(); // Create a FormData object
+            formData.append('file', file); // Append the file to FormData
+            $("#MRPBomInputContainer").hide(); // Hide the file input container
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UploadMRPBOM", "Dashboard")',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+
+                    $("#mrploadingSpinner").addClass("d-none"); // Hide the loading spinner
+
+                    if (response.success) {
+                        // Display a SweetAlert2 success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            toast: true,
+                            position: 'top-end',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+
+                        // Reset the file input field
+                        $("#MRPBomExcel").val(''); // Clear the file input value
+                        $("#uploadMRPBom").modal("hide"); // Close the modal
+                        $("#MRPBomInputContainer").show(); // Show the file input
+                    } else {
+                        // Display a SweetAlert2 error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                            toast: true,
+                            position: 'top-end',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                        // Reset the file input field
+                        $("#MRPBomExcel").val(''); // Clear the file input value
+                        $("#MRPBomInputContainer").show(); // Show the file input
+                    }
+                    $("#uploadMRPBomButton").prop("disabled", false); // Re-enable the button
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error uploading file:', error);
+                    $("#mrploadingSpinner").addClass("d-none"); // Hide the loading spinner
+                }
+            });
+        }
+    }
+
+    function sourcingForm() {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Action("GetPNandDescription", "Dashboard")',
+            dataType: 'JSON',
+            success: function (response) {
+                var selectElement = $('#sourcingFormSelect');
+                selectElement.empty();
+                $('<option selected disabled>Select BOM</option>').appendTo(selectElement);
+
+                response.data.forEach(item => {
+                    let partNumber = item.partNumber;
+                    let description = item.description;
+                    let pndesc = partNumber + " - " + description;
+                    var option = $('<option></option>').attr('value', pndesc).text(pndesc);
+                    selectElement.append(option);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    // Event listener for the change event on the select element
+    $('#sourcingFormSelect').change(function () {
+        // Check if an option other than the default is selected
+        if ($(this).val() !== 'Select BOM') {
+            // Show the View button
+            $('#viewPNDesc').removeClass('d-none');
+        } else {
+            // Hide the View button
+            $('#viewPNDesc').addClass('d-none');
+        }
+    });
+    // Event listener for the click event on the View button
+    $('#viewPNDesc').click(function () {
+        // Get the selected option's value (pndesc)
+        var pndesc = $('#sourcingFormSelect').val();
+        // Call the viewSourcingForm function with the selected pndesc value
+        viewSourcingForm(pndesc);
+    });
+
+    function viewSourcingForm(pNDesc) {
+        // Replace forward slash with underscore in pNDesc
+        pNDesc = pNDesc.replace(/\//g, '_');
+
+        // Redirect to the ViewSourcingForm action with the modified pNDesc parameter
+        window.location.href = '@Url.Action("ViewSourcingForm", "Dashboard")?pNDesc=' + encodeURIComponent(pNDesc);
+    }
+
+</script>

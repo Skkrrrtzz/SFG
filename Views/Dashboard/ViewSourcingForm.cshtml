@@ -1,29 +1,80 @@
 ﻿@{
     ViewData["Title"] = "ViewSourcingForm";
 }
-
-<iframe id="excelFrame" src="" width="100%" height="500px"></iframe>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col d-flex align-items-center">
+            <h3 class="fw-bold mr-3 me-3" id="pNDesc"></h3>
+            <button class="btn btn-danger btn-sm" type="button" onclick="downloadPdf()"><i class="fa-solid fa-download"></i> Download PDF</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive mb-2">
+            <table class="table table-bordered table-hover" id="sourcingTbl" style="width: 100%">
+                <thead class="table-primary">
+                    <tr>
+                        <th>PART NUMBER</th>
+                        <th>DESCRIPTION</th>
+                        <th>REV</th>
+                        <th>COMMODITY</th>
+                        <th>1ST MPN</th>
+                        <th>1ST MFR</th>
+                        <th>SUM OF EQPA</th>
+                        <th>STATUS</th>
+                        <th>INVENTORY QTY</th>
+                        <th>LAST PURCHASE DATE</th>
+                        <th>REMARKS</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="d-flex justify-content-end">
+            <button id="btnSourcing" class="btn btn-outline-primary fw-bold shadow"><i class="fa-solid fa-square-plus"></i> Create Sourcing Form</button>
+        </div>
+    </div>
+</div>
+@* Edit Modal *@
+<div class="modal fade" id="editStatusRemarks" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editStatusRemarksLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header text-bg-primary">
+        <h1 class="modal-title fs-5" id="editStatusRemarksLabel">Edit Status and Remarks</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <div class="row g-3 align-items-center">
+          <div class="col-auto">
+            <label for="editId" class="form-label fw-bold">Part Number</label>
+          </div>
+          <div class="col-auto">
+                <input type="text" class="form-control" id="editId" />
+            </div>
+            <div class="col-6">
+                <label for="editStatus" class="form-label fw-bold">Status</label>
+                <input type="text" class="form-control" id="editStatus" />
+            </div>
+            <div class="col-6">
+                <label for="editRemarks" class="form-label fw-bold">Remarks</label>
+                <input type="text" class="form-control" id="editRemarks" />
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="btnUpdate">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 @section Scripts {
     <script>
-        // Function to get the value of a query string parameter by name
-        function getQueryStringParameter(name) {
-            var urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
-
-        // Get the value of the pNDesc parameter from the query string
-        var pNDesc = getQueryStringParameter('pNDesc');
-
-        // Set the src attribute of the iframe to the GetExcelFile action with the pNDesc parameter
-        if (pNDesc) {
-            var url = '@Url.Action("GetExcelFile", "Dashboard")' + '?pNDesc=' + encodeURIComponent(pNDesc);
-            fetch(url)
-                .then(response => response.text())
-                .then(pdfUrl => {
-                    $('#excelFrame').attr('src', pdfUrl);
-                })
-                .catch(error => console.error('Error:', error));
-        }
+        var checkDataUrl = '@Url.Action("ProcessData", "Sourcing")';
+        var checkQuotationsUrl = '@Url.Action("CheckQuotations", "Sourcing")';
+        var downloadPdfUrl = '@Url.Action("GetExcelFile", "Dashboard")';
     </script>
+    <script src="~/assets/js/SourcingProcess.js"></script>
 }

@@ -113,7 +113,7 @@
                             </div>
                         </div>
                         <div class="col">
-                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadQoutation">
+                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadQuotation">
                                 <div class="card-body text-white">
                                     <div class="row align-items-center">
                                         <div class="col-auto">
@@ -266,12 +266,12 @@
         </div>
     </div>
 </div>
-<!-- Upload Qoutation Data Modal -->
-<div class="modal fade" id="uploadQoutation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadQoutationLabel" aria-hidden="true">
+<!-- Upload Quotation Data Modal -->
+<div class="modal fade" id="uploadQuotation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadQuotationLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header text-bg-primary">
-                <h1 class="modal-title fs-5" id="uploadQoutationLabel"> <i class="fa-solid fa-file-arrow-up"></i> Qoutations</h1>
+                <h1 class="modal-title fs-5" id="uploadQuotationLabel"> <i class="fa-solid fa-file-arrow-up"></i> Quotations</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -279,14 +279,14 @@
                     <div class="spinner-border text-primary" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
-                    <p>Uploading file <span id="qoutationfileName"></span>...</p>
+                    <p>Uploading file <span id="quotationfileName"></span>...</p>
                 </div>
-                <div class="mb-2" id="qoutationInputContainer">
-                    <input type="file" id="qoutationExcel" accept=".xlsx, .xls">
+                <div class="mb-2" id="quotationInputContainer">
+                    <input type="file" id="quotationExcel" accept=".xlsx, .xls">
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="uploadQoutationButton" onclick="qoutationFileUpload()">Upload</button>
+                <button type="button" class="btn btn-primary" id="uploadQuotationButton" onclick="quotationFileUpload()">Upload</button>
             </div>
         </div>
     </div>
@@ -444,11 +444,11 @@
         
     }
 
-    function qoutationFileUpload() {
-        const fileInput = $('#qoutationExcel')[0]; // Access the native DOM element
+    function quotationFileUpload() {
+        const fileInput = $('#quotationExcel')[0]; // Access the native DOM element
 
-        $("#uploadQoutationButton").prop("disabled", true); // Disable the button while the file is being uploaded
-        $("#qoutationInputContainer").show(); // Show the file input container
+        $("#uploadQuotationButton").prop("disabled", true); // Disable the button while the file is being uploaded
+        $("#quotationInputContainer").show(); // Show the file input container
 
 
         if (!fileInput.files || !fileInput.files[0]) { // Check if a file was selected
@@ -461,19 +461,19 @@
                 showConfirmButton: false,
                 timer: 3000
             });
-            $("#uploadQoutationButton").prop("disabled", false); // Re-enable the button
+            $("#uploadQuotationButton").prop("disabled", false); // Re-enable the button
             return;
         } else { 
             $("#qloadingSpinner").removeClass("d-none"); // Show the loading spinner
             const file = fileInput.files[0]; // Get the uploaded file
 
-            $('#qoutationfileName').text(file.name); // Show the file name
+            $('#quotationfileName').text(file.name); // Show the file name
             const formData = new FormData(); // Create a FormData object
             formData.append('file', file); // Append the file to FormData
-            $("#qoutationInputContainer").hide(); // Hide the file input container
+            $("#quotationInputContainer").hide(); // Hide the file input container
             $.ajax({
                 type: 'POST',
-                url: '@Url.Action("UploadQoutation", "Dashboard")',
+                url: '@Url.Action("UploadQuotation", "Dashboard")',
                 data: formData,
                 contentType: false,
                 processData: false,
@@ -494,9 +494,9 @@
                         });
 
                         // Reset the file input field
-                        $("#qoutationExcel").val(''); // Clear the file input value
-                        $("#uploadQoutation").modal("hide"); // Close the modal
-                        $("#qoutationInputContainer").show(); // Show the file input
+                        $("#quotationExcel").val(''); // Clear the file input value
+                        $("#uploadQuotation").modal("hide"); // Close the modal
+                        $("#quotationInputContainer").show(); // Show the file input
                     } else {
                         // Display a SweetAlert2 error message
                         Swal.fire({
@@ -509,10 +509,10 @@
                             showConfirmButton: false
                         });
                         // Reset the file input field
-                        $("#qoutationExcel").val(''); // Clear the file input value
-                        $("#qoutationInputContainer").show(); // Show the file input
+                        $("#quotationExcel").val(''); // Clear the file input value
+                        $("#quotationInputContainer").show(); // Show the file input
                     }
-                    $("#uploadQoutationButton").prop("disabled", false); // Re-enable the button
+                    $("#uploadQuotationButton").prop("disabled", false); // Re-enable the button
                 },
                 error: function (xhr, status, error) {
                     console.error('Error uploading file:', error);
@@ -639,16 +639,8 @@
     $('#viewPNDesc').click(function () {
         // Get the selected option's value (pndesc)
         var pndesc = $('#sourcingFormSelect').val();
-        // Call the viewSourcingForm function with the selected pndesc value
-        viewSourcingForm(pndesc);
-    });
-
-    function viewSourcingForm(pNDesc) {
-        // Replace forward slash with underscore in pNDesc
-        pNDesc = pNDesc.replace(/\//g, '_');
-
+       
         // Redirect to the ViewSourcingForm action with the modified pNDesc parameter
-        window.location.href = '@Url.Action("ViewSourcingForm", "Dashboard")?pNDesc=' + encodeURIComponent(pNDesc);
-    }
-
+        window.location.href = '@Url.Action("ViewSourcingForm", "Dashboard")?pndesc=' + encodeURIComponent(pndesc);
+    });
 </script>

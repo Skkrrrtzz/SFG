@@ -2,7 +2,7 @@
 
 namespace SFG.Models
 {
-    public class QoutationModel
+    public class QuotationModel
     {
         [Key]
         public int Id { get; set; }

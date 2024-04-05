@@ -32,7 +32,6 @@ namespace SFG.Controllers
 
             return Checking();
         }
-
         private dynamic GetUsers(string Name)
         {
             using (SqlConnection conn = new(GetConnection()))
@@ -78,9 +77,17 @@ namespace SFG.Controllers
                 return NotFound(); // PDF file not found
             }
             // Construct the URL for the PDF file
-            string pdfUrl = Url.Content("~/Uploads/PDF/" + Path.GetFileName(pdfFilePath));
+            //string pdfUrl = Url.Content("~/Uploads/PDF/" + Path.GetFileName(pdfFilePath));
 
-            return Ok(pdfUrl); // Return the URL of the PDF file
+            //return Ok(pdfUrl); // Return the URL of the PDF file
+            // Get the PDF file name
+            string fileName = Path.GetFileName(pdfFilePath);
+
+            // Open the PDF file as a stream
+            var fileStream = new FileStream(pdfFilePath, FileMode.Open);
+
+            // Return the PDF file as a FileStreamResult with the appropriate content type
+            return File(fileStream, "application/pdf", fileName);
         }
         public async Task<IActionResult> UploadLastPurchaseInfo(IFormFile file)
         {
@@ -111,7 +118,7 @@ namespace SFG.Controllers
             }
             return Json(new { success = true, message = "File uploaded successfully" });
         }
-        public async Task<IActionResult> UploadQoutation(IFormFile file)
+        public async Task<IActionResult> UploadQuotation(IFormFile file)
         {
             try
             {
@@ -129,7 +136,7 @@ namespace SFG.Controllers
                 }
                 else
                 {
-                    string tableName = "Qoutations";
+                    string tableName = "Quotations";
                     await UploadingExcelFile(file, tableName);
                 }
 
@@ -187,13 +194,13 @@ namespace SFG.Controllers
             };
             return lastPurchaseInfo;
         }
-        private async Task<QoutationModel> SaveQoutations(ExcelWorksheet worksheet, int row)
+        private async Task<QuotationModel> SaveQuotations(ExcelWorksheet worksheet, int row)
         {
-            var qoutations = new QoutationModel
+            var quotations = new QuotationModel
             {
                 PartNumber = worksheet.Cells[row, 1].Value?.ToString()
             };
-            return qoutations;
+            return quotations;
         }
         private async Task<MRPBOMModel> SaveMRPBOM(ExcelWorksheet worksheet, int row)
         {
@@ -275,7 +282,6 @@ namespace SFG.Controllers
                 throw new Exception("An error occurred while uploading the Excel file.", ex);
             }
         }
-
         private async Task UploadingExcelFile(IFormFile file, string tableName)
         {
             try
@@ -298,9 +304,9 @@ namespace SFG.Controllers
                                         _db.LastPurchaseInfo.Add(await SaveLastPurchaseInfo(worksheet, i));
                                         break;
                                     }
-                                case "Qoutations":
+                                case "Quotations":
                                     {
-                                        _db.Qoutations.Add(await SaveQoutations(worksheet, i));
+                                        _db.Quotations.Add(await SaveQuotations(worksheet, i));
                                         break;
                                     }
                                 default:
@@ -320,14 +326,12 @@ namespace SFG.Controllers
                 throw new Exception("An error occurred while uploading the Excel file.", ex.InnerException);
             }
         }
-
         private bool IsSupportedFileExtension(string fileExtension)
         {
             // Add more supported extensions if needed
             string[] supportedExtensions = { ".xlsx", ".xls", ".csv" };
             return supportedExtensions.Contains(fileExtension.ToLower());
         }
-
         private string GetValueOrDefault(object value)
         {
             return value?.ToString() ?? string.Empty;

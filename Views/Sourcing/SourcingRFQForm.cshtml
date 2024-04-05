@@ -1,0 +1,112 @@
+﻿@{
+    ViewData ["Title"] = "Sourcing RFQ Form";
+}
+<div>
+    <h3>Sourcing RFQ Form</h3>
+    <div class="card text-bg-light">
+        <div class="card-body">
+            <form asp-action="SourcingRFQForm" method="post">
+                <div class="row mb-2">
+                    <label for="projectName" class="col-sm-3 col-form-label fw-bold">Project Name</label>
+                    <div class="col-4">
+                        <input type="text" id="projectName" class="form-control" aria-describedby="projectName" autocomplete="off" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="customer" class="col-sm-3 col-form-label fw-bold">Customer</label>
+                    <div class="col-4">
+                        <select class="form-select" aria-label="Select Customer" id="customer">
+                            <option selected disabled>Select Customer</option>
+                            <option value="CohuMY">Cohu MY</option>
+                            <option value="CohuUS">Cohu US</option>
+                            <option value="DeltaPH">Delta PH</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="quotation" class="col-sm-3 col-form-label fw-bold">Quotation Code</label>
+                    <div class="col-4">
+                        <input type="text" id="quotation" class="form-control" aria-describedby="quotation" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="noItems" class="col-sm-3 col-form-label fw-bold">Number of Items</label>
+                    <div class="col-4">
+                        <input type="number" id="noItems" class="form-control" aria-describedby="noItems" readonly>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="reqDate" class="col-sm-3 col-form-label fw-bold">Request Date</label>
+                    <div class="col-4">
+                        <input type="date" id="reqDate" class="form-control" aria-describedby="reqDate" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="reqCompDate" class="col-sm-3 col-form-label fw-bold">Required Completion Date</label>
+                    <div class="col-4">
+                        <input type="date" id="reqCompDate" class="form-control" aria-describedby="reqCompDate" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="cusPartNo" class="col-sm-3 col-form-label fw-bold">Customer Part Number</label>
+                    <div class="col-4">
+                        <input type="number" id="cusPartNo" class="form-control" aria-describedby="cusPartNo" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="rev" class="col-sm-3 col-form-label fw-bold">Rev</label>
+                    <div class="col-4">
+                        <input type="text" id="rev" class="form-control" aria-describedby="rev" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="description" class="col-sm-3 col-form-label fw-bold">Description</label>
+                    <div class="col-4">
+                        <input type="text" id="description" class="form-control" aria-describedby="description" autocomplete="off" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="origMPNRawMatsFab" class="col-sm-3 col-form-label fw-bold">Original MPN/Raw Materials for FAB</label>
+                    <div class="col-4">
+                        <input type="text" id="origMPNRawMatsFab" class="form-control" aria-describedby="origMPNRawMatsFab" autocomplete="off" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="origManufacturerFinishingFabParts" class="col-sm-3 col-form-label fw-bold">Original Manufacturing / Finishing for FAB Parts</label>
+                    <div class="col-4">
+                        <input type="text" id="origManufacturerFinishingFabParts" class="form-control" aria-describedby="origManufacturerFinishingFabParts" autocomplete="off" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="commodity" class="col-sm-3 col-form-label fw-bold">Commodity</label>
+                    <div class="col-4">
+                        <input type="text" id="commodity" class="form-control" aria-describedby="commodity" autocomplete="off" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="qtyPerAssembly" class="col-sm-3 col-form-label fw-bold">Qty per Assembly</label>
+                    <div class="col-4">
+                        <input type="text" id="qtyPerAssembly" class="form-control" aria-describedby="qtyPerAssembly" autocomplete="off" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="bomUoM" class="col-sm-3 col-form-label fw-bold">BOM UOM</label>
+                    <div class="col-4">
+                        <input type="text" id="bomUoM" class="form-control" aria-describedby="bomUoM" autocomplete="off" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <label for="commonUniqParts" class="col-sm-3 col-form-label fw-bold">Common or Unique Parts</label>
+                    <div class="col-4">
+                        <input type="text" id="commonUniqParts" class="form-control" aria-describedby="commonUniqParts" autocomplete="off" required>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+     @*    <div class="card-footer">
+        </div> *@
+    </<div>
+</div>

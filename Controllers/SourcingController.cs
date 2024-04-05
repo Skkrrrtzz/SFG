@@ -16,6 +16,10 @@ namespace SFG.Controllers
         public SourcingController(AppDbContext dataBase) : base(dataBase)
         {
         }
+        public IActionResult SourcingRFQForm()
+        {
+            return View();
+        }
         public async Task<IActionResult> ProcessData(string partNumber)
         {
             try

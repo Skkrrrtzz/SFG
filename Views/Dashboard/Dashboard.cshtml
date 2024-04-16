@@ -92,7 +92,7 @@
     <div class="modal fade" id="encoder" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="encoderLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header text-bg-primary">
+                <div class="modal-header">
                     <h1 class="modal-title fs-5" id="encoderLabel">Sourcing Form | <span class="badge text-bg-dark">Encoder</span> </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -163,45 +163,93 @@
     <div class="modal fade" id="processor" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="processorLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="processorLabel">Modal title</h1>
+                <div class="modal-header text-bg-light">
+                    <h1 class="modal-title fs-5" id="processorLabel">Sourcing Form | <span class="badge text-bg-dark">Processor</span> </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row row-cols-2 g-2">
                         <div class="col">
-                            <div class="card">
+                            <a asp-action="Library" asp-controller="Dashboard">
+                                <div class="card text-bg-primary border-3 border-primary-subtle" type="button">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <i class="fa-solid fa-book h1"></i>
+                                            </div>
+                                            <div class="col me-2">
+                                                <div class="text-end">
+                                                    <h4 class="fs-6">Library</h4>
+                                                </div>
+                                                <div class="text-end">
+                                                    <h4 class="fs-1">0</h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a asp-action="Incoming" asp-controller="Dashboard">
+                                <div class="card text-bg-primary border-3 border-primary-subtle" type="button">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-auto">
+                                                <i class="fa-solid fa-circle-arrow-down h1"></i>
+                                            </div>
+                                            <div class="col me-2">
+                                                <div class="text-end">
+                                                    <h4 class="fs-6">Incoming</h4>
+                                                </div>
+                                                <div class="text-end">
+                                                    <h4 class="fs-1">0</h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <div class="card text-bg-primary border-3 border-primary-subtle" type="button" data-bs-toggle="modal" data-bs-target="#closed">
                                 <div class="card-body">
-                                    This is some text within a card body.
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-circle-check h1"></i>
+                                        </div>
+                                        <div class="col me-2">
+                                            <div class="text-end">
+                                                <h4 class="fs-6">Closed</h4>
+                                            </div>
+                                            <div class="text-end">
+                                                <h4 class="fs-1">0</h4>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col">
-                            <div class="card">
+                            <div class="card text-bg-primary border-3 border-primary-subtle">
                                 <div class="card-body">
-                                    This is some text within a card body.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    This is some text within a card body.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body">
-                                    This is some text within a card body.
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-circle-question h1"></i>
+                                        </div>
+                                        <div class="col me-2">
+                                            <div class="text-end">
+                                                <h4 class="fs-6">Help</h4>
+                                            </div>
+                                            <div class="text-end">
+                                                <h4 class="fs-1">--</h4>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Understood</button>
                 </div>
             </div>
         </div>
@@ -328,10 +376,10 @@
                 <div class="mb-2">
                     <h4>MRP BOM</h4>
                     <div class="row d-flex align-items-center">
-                        <div class="col-6">
+                        <div class="col-sm col-lg-6">
                             <h6>Part Number/Description</h6>
                         </div>
-                        <div class="col-6">
+                        <div class="col-sm col-lg-6">
                             <select class="form-select" id="sourcingFormSelect">
                             </select>
                         </div>
@@ -340,7 +388,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <a asp-action="SourcingRFQForm" asp-controller="Sourcing" class="btn btn-primary border-3 border-primary-subtle">
-                    <i class="fa-solid fa-plus"></i> Create Sourcing Form without BOM
+                    <i class="fa-solid fa-circle-plus"></i> Create Sourcing Form without BOM
                 </a>
                 <button type="button" class="btn btn-primary border-3 border-primary-subtle d-none" onload="viewSourcingForm()" id="viewPNDesc"><i class="fa-solid fa-eye"></i> View</button>
             </div>

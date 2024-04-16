@@ -1,8 +1,179 @@
-﻿@{
+﻿@model MyViewModel
+@{
     ViewData ["Title"] = "Sourcing RFQ Form";
 }
+<style>
+    
+</style>
 <div>
-    <h3>Sourcing RFQ Form</h3>
+    <h4 class="fw-bold">SOURCING RFQ FORM</h4>
+    <div class="card p-2 text-bg-light mb-1">
+        <div class="row mb-2">
+            <label for="projectName" class="col-sm-3 col-lg-3 col-form-label fw-bold">Project Name</label>
+            <div class="col-sm-9 col-lg-6">
+                <input type="text" id="projectName" class="form-control form-control-sm text-bg-secondary" aria-describedby="projectName" value="@Model.RFQProjectData[0]?.ProjectName" readonly>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <label for="customer" class="col-sm-3 col-lg-3 col-form-label fw-bold">Customer</label>
+            <div class="col-sm-9 col-lg-6">
+                <input type="text" id="customer" class="form-control form-control-sm text-bg-secondary" aria-describedby="customer" value="@Model.RFQProjectData[1]?.Customer" readonly>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <label for="quotation" class="col-sm-3 col-lg-3 col-form-label fw-bold">Quotation Code/Purchase Request Code</label>
+            <div class="col-sm-9 col-lg-6">
+                <input type="text" id="quotation" class="form-control form-control-sm text-bg-secondary" aria-describedby="quotation" value="@Model.RFQProjectData[1]?.QuotationCode" readonly>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <label for="noItems" class="col-sm-3 col-lg-3 col-form-label fw-bold">Number of Items</label>
+            <div class="col-sm-9 col-lg-6">
+                <input type="text" id="noItems" class="form-control form-control-sm text-bg-secondary" aria-describedby="noItems" value="@Model.RFQProjectData[1]?.NoItems" readonly>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <label for="reqDate" class="col-sm-3 col-lg-3 col-form-label fw-bold">Request Date</label>
+            <div class="col-sm-9 col-lg-6">
+                <input type="text" id="reqDate" class="form-control form-control-sm text-bg-secondary" aria-describedby="reqDate" value="@(Model.RFQProjectData.Count > 1 ? Model.RFQProjectData[1]?.RequestDate.ToShortDateString() : string.Empty)" readonly>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <label for="reqCompDate" class="col-sm-3 col-lg-3 col-form-label fw-bold">Required Completion Date</label>
+            <div class="col-sm-9 col-lg-6">
+                <input type="text" id="reqCompDate" class="form-control form-control-sm text-bg-secondary" aria-describedby="reqCompDate" value="@(Model.RFQProjectData.Count > 1 ? Model.RFQProjectData[1]?.RequiredDate.ToShortDateString() : string.Empty)" readonly>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-2 mb-1">
+        <div class="table-responsive">
+            <table class="table table-sm compact table-bordered table-hover" id="SRFQTbl" style="width: 100%">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Item No</th>
+                        <th>Customer Part Number</th>
+                        <th>Rev</th>
+                        @* <th>Sap Part Number</th> *@
+                        <th>Description</th>
+                        <th>Original MPN/Raw Material for Fab Parts</th>
+                        <th>Original Manufacturer/Finishing for Fab Parts</th>
+                        <th>Commodity</th>
+                        <th>Quantity per Assembly</th>
+                        <th>Annual Forecast Quantity</th>
+                        <th>BOM UOM</th>
+                        <th>Common or Unique Parts</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.RFQData)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.CustomerPartNumber</td>
+                            <td>@item.Rev</td>
+                            <td>@item.Description</td>
+                            <td>@item.OrigMPN</td>
+                            <td>@item.OrigMFR</td>
+                            <td>@item.Commodity</td>
+                            <td>@item.Eqpa</td>
+                            <td></td>
+                            <td>@item.UoM</td>
+                            <td>@item.Status</td>
+                            <td>
+                                <i class="fa-solid fa-pen-to-square text-primary fs-4 btnEdit" data-id="@item.Id" data-bs-toggle="modal" data-bs-target="#editModal" type="button" id="btnEdit"></i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+   <div class="d-flex justify-content-end gap-2 m-2">
+        <button type="button" class="btn btn-primary" id="btnUpdate"><i class="fa-solid fa-pen-to-square"></i> Add Annual Forecast</button>
+        <button type="button" class="btn btn-primary" id="btnSubmit"><i class="fa-solid fa-paper-plane"></i> Submit</button>
+   </div>
+</div>
+<div>
+    <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="editModalLabel">Edit Sourcing RFQ Form</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-2">
+                        <label for="editCustomerPartnumber" class="col-sm-4 col-form-label fw-bold">Customer Part Number</label>
+                        <div class="col-4">
+                            <input type="text" id="editCustomerPartnumber" class="form-control" aria-describedby="editCustomerPartnumber" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editRev" class="col-sm-4 col-form-label fw-bold">Rev</label>
+                        <div class="col-4">
+                            <input type="text" id="editRev" class="form-control" aria-describedby="editRev" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editDescription" class="col-sm-4 col-form-label fw-bold">Description</label>
+                        <div class="col-4">
+                            <input type="text" id="editDescription" class="form-control" aria-describedby="editDescription" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editOrigMPN" class="col-sm-4 col-form-label fw-bold">Original MPN/Raw Material for Fab Parts</label>
+                        <div class="col-4">
+                            <input type="text" id="editOrigMPN" class="form-control" aria-describedby="editOrigMPN" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editOrigMFR" class="col-sm-4 col-form-label fw-bold">Original Manufacturer/Finishing for Fab Parts</label>
+                        <div class="col-4">
+                            <input type="text" id="editOrigMFR" class="form-control" aria-describedby="editOrigMFR" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editCommodity" class="col-sm-4 col-form-label fw-bold">Commodity</label>
+                        <div class="col-4">
+                            <input type="text" id="editCommodity" class="form-control" aria-describedby="editCommodity" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editEqpa" class="col-sm-4 col-form-label fw-bold">Quantity per Assembly</label>
+                        <div class="col-4">
+                            <input type="text" id="editEqpa" class="form-control" aria-describedby="editEqpa" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editUoM" class="col-sm-4 col-form-label fw-bold">BOM UOM</label>
+                        <div class="col-4">
+                            <input type="text" id="editUoM" class="form-control" aria-describedby="editUoM" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editStatus" class="col-sm-4 col-form-label fw-bold">Common or Unique Parts</label>
+                        <div class="col-4">
+                            <input type="text" id="editStatus" class="form-control" aria-describedby="editStatus" autocomplete="off" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnEditSave">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var FindIdUrl = '@Url.Action("FindId", "Sourcing")';
+    var UpdateUrl = '@Url.Action("Update", "Sourcing")';
+    var SubmitUrl = '@Url.Action("Submit", "Sourcing")';
+</script>
+<script src="~/assets/js/SfqForm.js"></script>
+@* <div>
+    <h4>Sourcing RFQ Form</h4>
     <div class="card text-bg-light">
         <div class="card-body">
             <form asp-action="SourcingRFQForm" method="post">
@@ -101,12 +272,15 @@
                         <input type="text" id="commonUniqParts" class="form-control" aria-describedby="commonUniqParts" autocomplete="off" required>
                     </div>
                 </div>
-                <div class="row mb-2">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                <div class="row d-flex justify-content-center mb-2">
+                    <div class="col">
+                        <!-- Adjust the column width as needed -->
+                        <button type="submit" class="btn btn-primary btn-block">Next</button>
+                    </div>
                 </div>
             </form>
         </div>
-     @*    <div class="card-footer">
-        </div> *@
+        <div class="card-footer">
+        </div>
     </<div>
-</div>
+</div> *@

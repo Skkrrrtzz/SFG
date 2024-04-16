@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SFG.Data;
 
@@ -11,9 +12,11 @@ using SFG.Data;
 namespace SFG.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240411044736_newRFQ")]
+    partial class newRFQ
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -80,6 +83,12 @@ namespace SFG.Migrations
                     b.Property<string>("Commodity")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DescriptionTable")
                         .HasColumnType("nvarchar(max)");
 
@@ -104,6 +113,9 @@ namespace SFG.Migrations
                     b.Property<string>("PartNumberTable")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PreparedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Product")
                         .HasColumnType("nvarchar(max)");
 
@@ -112,6 +124,13 @@ namespace SFG.Migrations
 
                     b.Property<string>("Rev")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReviewedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Revision")
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)");
 
                     b.Property<string>("SAPPartNumber")
                         .HasColumnType("nvarchar(max)");
@@ -122,41 +141,6 @@ namespace SFG.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MRPBOM");
-                });
-
-            modelBuilder.Entity("SFG.Models.MRPBOMProductModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("DateModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PartNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PreparedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Product")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReviewedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Revision")
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MRPBOMProducts");
                 });
 
             modelBuilder.Entity("SFG.Models.QuotationModel", b =>
@@ -184,6 +168,13 @@ namespace SFG.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("ActualCompletionDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("BOMUOM")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Commodity")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -200,67 +191,25 @@ namespace SFG.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Eqpa")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LastPurchaseDate")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OrigMFR")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OrigMPN")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProjectName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QuotationCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Rev")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UoM")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RFQ");
-                });
-
-            modelBuilder.Entity("SFG.Models.RFQProjectModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("ActualCompletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Customer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("NoItems")
                         .HasColumnType("int");
 
+                    b.Property<string>("OrigMPNRawMatFab")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrigManufacturerFinishFabParts")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PartIdentifier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ProjectName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QtyperAssy")
+                        .HasColumnType("int");
 
                     b.Property<string>("QuotationCode")
                         .IsRequired()
@@ -272,13 +221,13 @@ namespace SFG.Migrations
                     b.Property<DateTime>("RequiredDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
+                    b.Property<string>("Rev")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("RFQProjects");
+                    b.ToTable("RFQ");
                 });
 
             modelBuilder.Entity("SFG.Models.UsersModel", b =>

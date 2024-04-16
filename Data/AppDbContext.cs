@@ -13,5 +13,9 @@ namespace SFG.Data
         public DbSet<LastPurchaseInfoModel> LastPurchaseInfo { get; set; }
         public DbSet<QuotationModel> Quotations { get; set; }
         public DbSet<MRPBOMModel> MRPBOM { get; set; }
+        public DbSet<MRPBOMProductModel> MRPBOMProducts { get; set; }
+        public DbSet<RFQModel> RFQ { get; set; }
+        public DbSet<RFQProjectModel> RFQProjects { get; set; }
+        
     }
 }

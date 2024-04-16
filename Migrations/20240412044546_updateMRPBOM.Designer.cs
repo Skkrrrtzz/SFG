@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SFG.Data;
 
@@ -11,9 +12,11 @@ using SFG.Data;
 namespace SFG.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240412044546_updateMRPBOM")]
+    partial class updateMRPBOM
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,6 +187,9 @@ namespace SFG.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("ActualCompletionDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Commodity")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -203,8 +209,8 @@ namespace SFG.Migrations
                     b.Property<int>("Eqpa")
                         .HasColumnType("int");
 
-                    b.Property<string>("LastPurchaseDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("NoItems")
+                        .HasColumnType("int");
 
                     b.Property<string>("OrigMFR")
                         .HasColumnType("nvarchar(max)");
@@ -220,8 +226,11 @@ namespace SFG.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("RequestDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("RequiredDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Rev")
                         .IsRequired()
@@ -238,47 +247,6 @@ namespace SFG.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RFQ");
-                });
-
-            modelBuilder.Entity("SFG.Models.RFQProjectModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("ActualCompletionDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Customer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NoItems")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ProjectName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QuotationCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RequestDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("RequiredDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RFQProjects");
                 });
 
             modelBuilder.Entity("SFG.Models.UsersModel", b =>

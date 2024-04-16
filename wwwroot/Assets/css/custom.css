@@ -40,6 +40,9 @@ h5{
     padding: 5px;
     cursor: pointer;
 }
+a {
+    text-decoration: none;
+}
 
 .image-container:hover .edit-icon {
     display: block;

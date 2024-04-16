@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SFG.Data;
 
@@ -11,9 +12,11 @@ using SFG.Data;
 namespace SFG.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240415012807_addednewRFQProjectsandupdateRFQ")]
+    partial class addednewRFQProjectsandupdateRFQ
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,8 +206,8 @@ namespace SFG.Migrations
                     b.Property<int>("Eqpa")
                         .HasColumnType("int");
 
-                    b.Property<string>("LastPurchaseDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("LastPurchaseDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("OrigMFR")
                         .HasColumnType("nvarchar(max)");
@@ -271,10 +274,6 @@ namespace SFG.Migrations
 
                     b.Property<DateTime>("RequiredDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

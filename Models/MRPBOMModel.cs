@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SFG.Models
 {
@@ -9,12 +8,6 @@ namespace SFG.Models
         public int Id { get; set; }
         public string? Product { get; set; } = string.Empty;
         public string? PartNumber { get; set; } = string.Empty;
-        [StringLength(4, MinimumLength = 1)]
-        public string? Revision { get; set; } = string.Empty;
-        public string? Description { get; set; } = string.Empty;
-        public DateTime? DateModified { get; set; }
-        public string? PreparedBy { get; set; } = string.Empty;
-        public string? ReviewedBy { get; set; } = string.Empty;
         public int? Item { get; set; } = 0;
         public int? Level { get; set; } = 0;
         public string? PartNumberTable { get; set; } = string.Empty;

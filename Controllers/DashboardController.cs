@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using SFG.Data;
 using SFG.Models;
@@ -32,6 +33,30 @@ namespace SFG.Controllers
 
             return Checking();
         }
+        public IActionResult Library()
+        {
+            return View();
+        }
+        public async Task<IActionResult> Incoming()
+        {
+            try
+            {
+                // Retrieve all RFQProjectModels from the RFQProjects table
+                List<RFQProjectModel> rfqProjectData = await _db.RFQProjects.ToListAsync();
+
+                // Pass the retrieved data to the view
+                return View(rfqProjectData);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as required
+                return View("Error", ex);
+            }
+        }
+        public IActionResult Closed()
+        {
+            return View();
+        }
         private dynamic GetUsers(string Name)
         {
             using (SqlConnection conn = new(GetConnection()))
@@ -40,11 +65,11 @@ namespace SFG.Controllers
                 return acc == null ? null : acc;
             }
         }
-        private async Task<List<MRPBOMModel>> GetBOM()
+        private async Task<List<MRPBOMProductModel>> GetBOM()
         {
             using (SqlConnection conn = new(GetConnection()))
             {
-                return (await conn.QueryAsync<MRPBOMModel>("SELECT * FROM MRPBOM")).ToList();
+                return (await conn.QueryAsync<MRPBOMProductModel>("SELECT * FROM MRPBOMProducts")).ToList();
             }
         }
         public async Task<IActionResult> GetPNandDescription()
@@ -204,17 +229,10 @@ namespace SFG.Controllers
         }
         private async Task<MRPBOMModel> SaveMRPBOM(ExcelWorksheet worksheet, int row)
         {
-            var mrpBOM = new MRPBOMModel
+            return new MRPBOMModel
             {
-                // Example of handling potential null values
                 Product = GetValueOrDefault(worksheet.Cells[2, 4].Value),
                 PartNumber = GetValueOrDefault(worksheet.Cells[3, 4].Value),
-                Revision = GetValueOrDefault(worksheet.Cells[4, 4].Value),
-                Description = GetValueOrDefault(worksheet.Cells[5, 4].Value),
-                DateModified = worksheet.Cells[2, 12].GetValue<DateTime>(),
-                PreparedBy = GetValueOrDefault(worksheet.Cells[3, 12].Value),
-                ReviewedBy = GetValueOrDefault(worksheet.Cells[4, 12].Value),
-                // Assuming these values cannot be null, no need to handle with GetValueOrDefault
                 Item = int.TryParse(worksheet.Cells[row, 2].Value?.ToString(), out int itemValue) ? itemValue : 0,
                 Level = int.TryParse(worksheet.Cells[row, 2].Value?.ToString(), out int levelValue) ? levelValue : 0,
                 PartNumberTable = worksheet.Cells[row, 3].Value?.ToString(),
@@ -228,7 +246,64 @@ namespace SFG.Controllers
                 MPN = worksheet.Cells[row, 11].Value?.ToString(),
                 Manufacturer = worksheet.Cells[row, 12].Value?.ToString()
             };
-            return mrpBOM;
+        }
+        private async Task<MRPBOMProductModel> SaveMRPBOMProducts(ExcelWorksheet worksheet)
+        {
+            return new MRPBOMProductModel
+            {
+                Product = GetValueOrDefault(worksheet.Cells[2, 4].Value),
+                PartNumber = GetValueOrDefault(worksheet.Cells[3, 4].Value),
+                Revision = GetValueOrDefault(worksheet.Cells[4, 4].Value),
+                Description = GetValueOrDefault(worksheet.Cells[5, 4].Value),
+                DateModified = worksheet.Cells[2, 12].GetValue<DateTime>(),
+                PreparedBy = GetValueOrDefault(worksheet.Cells[3, 12].Value),
+                ReviewedBy = GetValueOrDefault(worksheet.Cells[4, 12].Value),
+            };
+        }
+        private async Task<string> SaveUploadedFileAndReturnPath(IFormFile file, string partNumber, string description)
+        {
+            string filePath = await _uploadService.SaveUploadedFile(file, partNumber, description);
+            return filePath;
+        }
+        private async Task ProcessMRPQBOMFile(ExcelPackage package, IFormFile file)
+        {
+            using (var worksheet = package.Workbook.Worksheets[0])
+            {
+                int rowCount = worksheet.Dimension.Rows;
+
+                // Extract PartNumber and Description from specific cells
+                string partNumber = worksheet.Cells[3, 4].Value?.ToString();
+                string description = worksheet.Cells[5, 4].Value?.ToString();
+
+                // Save uploaded file and get its path
+                string filePath = await SaveUploadedFileAndReturnPath(file, partNumber, description);
+
+                for (int i = 9; i <= rowCount; i++)
+                {
+                    bool rowHasValue = false;
+                    int columnCount = worksheet.Dimension.Columns;
+
+                    // Check if any cell in the row has a value
+                    for (int j = 1; j <= columnCount; j++)
+                    {
+                        if (!string.IsNullOrEmpty(worksheet.Cells[i, j].Text))
+                        {
+                            rowHasValue = true;
+                            break;
+                        }
+                    }
+
+                    // If row has a value, process it
+                    if (rowHasValue)
+                    {
+                        _db.MRPBOM.Add(await SaveMRPBOM(worksheet, i));
+                    }
+                }
+                _db.MRPBOMProducts.Add(await SaveMRPBOMProducts(worksheet));
+
+                // Save changes to database
+                await _db.SaveChangesAsync();
+            }
         }
         private async Task ProcessMRPQBOM(IFormFile file)
         {
@@ -240,40 +315,7 @@ namespace SFG.Controllers
                     stream.Position = 0;
                     using (var package = new ExcelPackage(stream))
                     {
-                        ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
-                        int rowCount = worksheet.Dimension.Rows;
-
-                        // Extract PartNumber and Description from specific cells
-                        string partNumber = worksheet.Cells[3, 4].Value?.ToString();
-                        string description = worksheet.Cells[5, 4].Value?.ToString();
-
-                        for (int i = 9; i <= rowCount; i++)
-                        {
-                            bool rowHasValue = false;
-                            int columnCount = worksheet.Dimension.Columns;
-
-                            // Check if any cell in the row has a value
-                            for (int j = 1; j <= columnCount; j++)
-                            {
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, j].Text))
-                                {
-                                    rowHasValue = true;
-                                    break;
-                                }
-                            }
-
-                            // If the row has a value, process it
-                            if (rowHasValue)
-                            {
-                                _db.MRPBOM.Add(await SaveMRPBOM(worksheet, i));
-                            }
-                        }
-
-                        // Save changes to the database
-                        await _db.SaveChangesAsync();
-
-                        // Save the uploaded file to wwwroot/uploads directory with the constructed file name
-                        string filePath = await _uploadService.SaveUploadedFile(file, partNumber, description);
+                        await ProcessMRPQBOMFile(package, file);
                     }
                 }
             }

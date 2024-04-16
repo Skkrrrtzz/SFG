@@ -1,10 +1,15 @@
-﻿// Function to get the value of a query string parameter by name
+﻿// Define data
+var data;
+
+// Function to get the value of a query string parameter by name
 function getQueryStringParameter(name) {
   var urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(name);
 }
 // Get the value of the pNDesc parameter from the query string
 var pNDesc = getQueryStringParameter("pndesc");
+var uploadSRFQForm =
+  "/Sourcing/SourcingRFQForm?partNumber=" + encodeURIComponent(pNDesc);
 // console.log(pNDesc);
 // Set the value to an element with ID "pNDesc"
 $("#pNDesc").text(pNDesc);
@@ -20,7 +25,7 @@ if (partNumber != null) {
     data: { PartNumber: partNumber },
     dataType: "JSON",
     success: function (response) {
-      var data = response.data;
+      data = response.data;
       // Call the getMRPData function with the response data
       getMRPData(data);
     },
@@ -43,6 +48,7 @@ function getMRPData(data) {
       { data: "mpn" },
       { data: "manufacturer" },
       { data: "eqpa" },
+      { data: "uom" },
       {
         data: "status",
         render: function (data) {
@@ -127,4 +133,166 @@ function downloadPdf() {
   var downloadUrl =
     "/Dashboard/GetExcelFile?pNDesc=" + encodeURIComponent(pNDesc);
   window.location.href = downloadUrl;
+}
+
+$("#btnSourcing").on("click", function (e) {
+  e.preventDefault();
+
+  $("#projectName").val(pNDesc);
+  $("#noItems").val(getSourcingRowsAndSumEqpa().totalEqpaForSourcing);
+});
+
+function getSourcingRowsAndSumEqpa() {
+  var sourcingRows = []; // Array to store rows with "FOR SOURCING" remarks
+  var totalEqpaForSourcing = 0; // Variable to store the total sum of "eqpa" values
+
+  // Iterate over each row in the DataTable
+  $("#sourcingTbl tbody tr").each(function () {
+    // Get the DataTable cells corresponding to the "eqpa" and "remarks" columns in the current row
+    var pNCell = $(this).find("td:eq(0)");
+    var descCell = $(this).find("td:eq(1)");
+    var revCell = $(this).find("td:eq(2)");
+    var commodityCell = $(this).find("td:eq(3)");
+    var mpnCell = $(this).find("td:eq(4)");
+    var mfrCell = $(this).find("td:eq(5)");
+    var eqpaCell = $(this).find("td:eq(6)");
+    var uomCell = $(this).find("td:eq(7)");
+    var statusCell = $(this).find("td:eq(8)");
+    var qtyCell = $(this).find("td:eq(9)");
+    var lastPurchaseDateCell = $(this).find("td:eq(10)");
+    var remarksCell = $(this).find("td:eq(11)");
+
+    // Check if cells are found
+    if (eqpaCell.length === 0 || remarksCell.length === 0) {
+      console.log("Cells not found.");
+      return; // Exit the loop if cells are not found
+    }
+
+    var pN = pNCell.text().trim();
+    var description = descCell.text().trim();
+    var rev = revCell.text().trim();
+    var commodity = commodityCell.text().trim();
+    var mpn = mpnCell.text().trim();
+    var mfr = mfrCell.text().trim();
+    var eqpa = parseInt(eqpaCell.text().trim());
+    var uom = uomCell.text().trim();
+    var status = statusCell.text().trim();
+    var qty = parseFloat(qtyCell.text().trim());
+    var lastPurchaseDate = lastPurchaseDateCell.text().trim();
+    var remarks = remarksCell.text().trim();
+
+    // Check if the remarks indicate "FOR SOURCING"
+    if (remarks === "FOR SOURCING") {
+      // Store the row data in the sourcingRows array
+      var rowData = {
+        partNumber: pN,
+        description: description,
+        rev: rev,
+        commodity: commodity,
+        mpn: mpn,
+        mfr: mfr,
+        eqpa: eqpa,
+        uom: uom,
+        status: status,
+        qty: qty,
+        lastPurchaseDate: lastPurchaseDate,
+        remarks: remarks,
+      };
+      sourcingRows.push(rowData);
+    }
+
+    // Add eqpa to the total sum of "eqpa" values
+    totalEqpaForSourcing += eqpa;
+  });
+
+  // Return both the array of sourcing rows and the total sum of "eqpa" values
+  return {
+    sourcingRows: sourcingRows,
+    totalEqpaForSourcing: totalEqpaForSourcing,
+  };
+}
+// Handle form submission
+$("#rfqForm").on("submit", function (e) {
+  e.preventDefault();
+  RFQ(); // Call RFQ function
+});
+function RFQ() {
+  // Get the sourcing rows data
+  let sourcingRows = getSourcingRowsAndSumEqpa().sourcingRows;
+
+  // Initialize an array to store the sourcing row data
+  let sourcingData = [];
+
+  // Iterate over each object in the sourcingRows array
+  sourcingRows.forEach((rowData) => {
+    // Push each sourcing row data as an object to the sourcingData array
+    sourcingData.push({
+      customerPartNumber: rowData.partNumber,
+      description: rowData.description,
+      rev: rowData.rev,
+      commodity: rowData.commodity,
+      origMPN: rowData.mpn,
+      origMFR: rowData.mfr,
+      eqpa: rowData.eqpa,
+      uom: rowData.uom,
+      status: rowData.status,
+      qtyperAssy: rowData.qty,
+      lastPurchaseDate: rowData.lastPurchaseDate,
+      remarks: rowData.remarks,
+    });
+  });
+
+  // Example of accessing values outside the loop
+  let pN = $("#projectName").val();
+  let customer = $("#customer").val();
+  let quotation = $("#quotation").val();
+  let noItems = $("#noItems").val();
+  let reqDate = $("#reqDate").val();
+  let reqCompletionDate = $("#reqCompDate").val();
+
+  // Construct the data object to be sent in the AJAX request
+  let requestData = {
+    projectName: pN,
+    customer: customer,
+    quotationCode: quotation,
+    noItems: noItems,
+    requestDate: reqDate,
+    requiredDate: reqCompletionDate,
+    sourcingData: sourcingData, // Pass the sourcing row data array
+  };
+  var reqData = JSON.stringify(requestData);
+  // Make the AJAX request
+  $.ajax({
+    type: "POST",
+    url: uploadRFQUrl,
+    data: reqData,
+    contentType: "application/json",
+    dataType: "JSON",
+    success: function (response) {
+      console.log(response);
+      // Display a SweetAlert2 success message
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: response.message,
+        timer: 3000,
+        showConfirmButton: false,
+      }).then(function () {
+        window.location.href = uploadSRFQForm;
+      });
+
+      $("#createSourcingForm").modal("hide"); // Close the modal
+    },
+    error: function (xhr, status, error) {
+      // Display a SweetAlert2 success message
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: response.message,
+        timer: 3000,
+        showConfirmButton: false,
+      });
+      console.error("Error:", error);
+    },
+  });
 }

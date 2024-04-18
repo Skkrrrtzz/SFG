@@ -6,14 +6,19 @@ using SFG.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using Newtonsoft.Json;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using SFG.Services;
+using Azure.Core;
 
 namespace SFG.Controllers
 {
     public class SourcingController : HomeController
     {
-        public SourcingController(AppDbContext dataBase) : base(dataBase)
+        private readonly Emailing _emailingService;
+        private readonly Exporting _exportingService;
+        public SourcingController(AppDbContext dataBase, Exporting exportingService, Emailing emailingService) : base(dataBase)
         {
+            _exportingService = exportingService;
+            _emailingService = emailingService;
         }
         public async Task<IActionResult> SourcingRFQForm(string partNumber)
         {
@@ -154,20 +159,157 @@ namespace SFG.Controllers
                     var result = await conn.QueryFirstOrDefaultAsync<RFQModel>(query, new { Id = id });
                     if (result != null)
                     {
-                        return Json(result); // Return the data if found
+                        return Json(result);
                     }
                     else
                     {
-                        return NotFound(); // Return 404 Not Found if no data found
+                        return NotFound();
                     }
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error: {ex.Message}"); // Return 500 Internal Server Error for any exceptions
+                return StatusCode(500, $"Error: {ex.Message}");
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> UpdateId(string customerPartNumber, string rev, string description, string origMFR, string origMPN, string commodity, string eqpa, string uoM, int id, string status)
+        {
+            try
+            {
+                string query = "UPDATE RFQ SET CustomerPartNumber = @CustomerPartNumber, Rev = @Rev, Description = @Description, OrigMFR = @OrigMFR, OrigMPN = @OrigMPN, Commodity = @Commodity, Eqpa = @Eqpa, UoM = @UoM, Status = @Status WHERE Id = @Id";
 
+                using (SqlConnection conn = new SqlConnection(GetConnection()))
+                {
+                    var result = await conn.ExecuteAsync(query, new
+                    {
+                        Id = id,
+                        CustomerPartNumber = customerPartNumber,
+                        Rev = rev,
+                        Description = description,
+                        OrigMFR = origMFR,
+                        OrigMPN = origMPN,
+                        Commodity = commodity,
+                        Eqpa = eqpa,
+                        UoM = uoM,
+                        Status = status
+                    });
+
+                    return Json(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
+        }
+        [HttpPost]
+        public async Task<bool> AddAnnualForecast(List<int> ids, List<string> annualForecasts)
+        {
+            try
+            {
+                // Check if the number of IDs matches the number of annual forecasts
+                if (ids.Count != annualForecasts.Count)
+                {
+                    // Return false indicating failure due to mismatched counts
+                    return false;
+                }
+
+                // Prepare the SQL query
+                string query = "UPDATE RFQ SET AnnualForecast = @AnnualForecast WHERE Id = @Id";
+
+                using (SqlConnection conn = new SqlConnection(GetConnection()))
+                {
+                    // Iterate through each ID and annual forecast
+                    for (int i = 0; i < ids.Count; i++)
+                    {
+                        // Execute the query for each ID and annual forecast pair
+                        await conn.ExecuteAsync(query, new { Id = ids[i], AnnualForecast = annualForecasts[i] });
+                    }
+                }
+
+                // Return true indicating success
+                return true;
+            }
+            catch (Exception)
+            {
+                // Log the exception or handle it as needed
+                return false; // Return false indicating failure
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> Project(string projectName)
+        {
+            try
+            {
+                // GetRFQ method to retrieve RFQ data
+                var rfqData = await GetRFQ(projectName);
+
+                // GetRFQProject method to retrieve RFQProject data
+                var rfqProjectData = await GetRFQProject(projectName);
+
+                // Check if rfqData or rfqProjectData is null
+                if (rfqData == null || rfqProjectData == null)
+                {
+                    // Return a NotFoundResult or appropriate status code
+                    return NotFound();
+                }
+
+                await _exportingService.WriteToExcel(rfqData, rfqProjectData, projectName, 1);
+
+                // Return a view or other appropriate action result
+                return View();
+            }
+            catch (Exception ex)
+            {
+                // Return an error view with the exception details
+                return View("Error", ex);
+            }
+        }
+        private async Task<IEnumerable<RFQModel>> GetRFQ(string projectName)
+        {
+            try
+            {
+                string query = "SELECT * FROM RFQ WHERE ProjectName = @ProjectName AND Remarks = 'FOR SOURCING'";
+
+                using (SqlConnection conn = new SqlConnection(GetConnection()))
+                {
+                    // Execute the query asynchronously
+                    var rfqData = await conn.QueryAsync<RFQModel>(query, new { ProjectName = projectName });
+
+                    // Return the retrieved RFQ data
+                    return rfqData;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as required
+                Console.WriteLine($"Error processing query: {ex.Message}");
+                return null;
+            }
+        }
+        private async Task<RFQProjectModel> GetRFQProject(string projectName)
+        {
+            try
+            {
+                string query = "SELECT Id, ProjectName, Customer, QuotationCode, NoItems, RequestDate, RequiredDate FROM RFQProjects WHERE ProjectName = @ProjectName";
+
+                using (SqlConnection conn = new SqlConnection(GetConnection()))
+                {
+                    // Execute the query asynchronously
+                    var rfqProjectData = await conn.QueryFirstOrDefaultAsync<RFQProjectModel>(query, new { ProjectName = projectName });
+
+                    // Return the retrieved RFQ data
+                    return rfqProjectData;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as required
+                Console.WriteLine($"Error processing query: {ex.Message}");
+                return null;
+            }
+        }
         public async Task<IActionResult> ProcessData(string partNumber)
         {
             try
@@ -481,6 +623,20 @@ namespace SFG.Controllers
                     return count > 0;
                 }
             }
+        }
+        public IActionResult EmailNotification(string email, string name, bool send)
+        {
+            string subject = "Email Confirmation";
+            string body = "If you receive this email, please note that it will be used for sending emails from ATS Business Control Portal. <br> Thank you!<br><i>***This is an auto generated message, please do not reply***<i>";
+
+            if (send)
+            {
+                _emailingService.SendingEmail(name, email, subject, body);
+                // Return a JSON response indicating success
+                return Json(new { success = true, message = "Email has been Sent!" });
+            }
+            // Return a JSON response indicating failure
+            return Json(new { success = false, message = "Sending Email failed!" });
         }
 
     }

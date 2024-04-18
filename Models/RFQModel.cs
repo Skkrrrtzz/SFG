@@ -16,6 +16,7 @@ namespace SFG.Models
         public string? OrigMFR { get; set; } = string.Empty;
         public string Commodity { get; set; } = string.Empty;
         public int Eqpa { get; set; } = 0;
+        public int? AnnualForecast { get; set; } = 0;
         public string UoM { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public string? LastPurchaseDate { get; set; }

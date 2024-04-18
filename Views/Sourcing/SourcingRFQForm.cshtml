@@ -10,37 +10,37 @@
     <div class="card p-2 text-bg-light mb-1">
         <div class="row mb-2">
             <label for="projectName" class="col-sm-3 col-lg-3 col-form-label fw-bold">Project Name</label>
-            <div class="col-sm-9 col-lg-6">
+            <div class="col-sm-9 col-lg-4">
                 <input type="text" id="projectName" class="form-control form-control-sm text-bg-secondary" aria-describedby="projectName" value="@Model.RFQProjectData[0]?.ProjectName" readonly>
             </div>
         </div>
         <div class="row mb-2">
             <label for="customer" class="col-sm-3 col-lg-3 col-form-label fw-bold">Customer</label>
-            <div class="col-sm-9 col-lg-6">
+            <div class="col-sm-9 col-lg-4">
                 <input type="text" id="customer" class="form-control form-control-sm text-bg-secondary" aria-describedby="customer" value="@Model.RFQProjectData[1]?.Customer" readonly>
             </div>
         </div>
         <div class="row mb-2">
             <label for="quotation" class="col-sm-3 col-lg-3 col-form-label fw-bold">Quotation Code/Purchase Request Code</label>
-            <div class="col-sm-9 col-lg-6">
+            <div class="col-sm-9 col-lg-4">
                 <input type="text" id="quotation" class="form-control form-control-sm text-bg-secondary" aria-describedby="quotation" value="@Model.RFQProjectData[1]?.QuotationCode" readonly>
             </div>
         </div>
         <div class="row mb-2">
             <label for="noItems" class="col-sm-3 col-lg-3 col-form-label fw-bold">Number of Items</label>
-            <div class="col-sm-9 col-lg-6">
+            <div class="col-sm-9 col-lg-4">
                 <input type="text" id="noItems" class="form-control form-control-sm text-bg-secondary" aria-describedby="noItems" value="@Model.RFQProjectData[1]?.NoItems" readonly>
             </div>
         </div>
         <div class="row mb-2">
             <label for="reqDate" class="col-sm-3 col-lg-3 col-form-label fw-bold">Request Date</label>
-            <div class="col-sm-9 col-lg-6">
+            <div class="col-sm-9 col-lg-4">
                 <input type="text" id="reqDate" class="form-control form-control-sm text-bg-secondary" aria-describedby="reqDate" value="@(Model.RFQProjectData.Count > 1 ? Model.RFQProjectData[1]?.RequestDate.ToShortDateString() : string.Empty)" readonly>
             </div>
         </div>
         <div class="row mb-2">
             <label for="reqCompDate" class="col-sm-3 col-lg-3 col-form-label fw-bold">Required Completion Date</label>
-            <div class="col-sm-9 col-lg-6">
+            <div class="col-sm-9 col-lg-4">
                 <input type="text" id="reqCompDate" class="form-control form-control-sm text-bg-secondary" aria-describedby="reqCompDate" value="@(Model.RFQProjectData.Count > 1 ? Model.RFQProjectData[1]?.RequiredDate.ToShortDateString() : string.Empty)" readonly>
             </div>
         </div>
@@ -48,7 +48,7 @@
 
     <div class="p-2 mb-1">
         <div class="table-responsive">
-            <table class="table table-sm compact table-bordered table-hover" id="SRFQTbl" style="width: 100%">
+            <table class="table table-sm compact table-bordered table-hover text-wrap" id="SRFQTbl" style="width: 100%">
                 <thead class="table-primary">
                     <tr>
                         <th>Item No</th>
@@ -78,7 +78,7 @@
                             <td>@item.OrigMFR</td>
                             <td>@item.Commodity</td>
                             <td>@item.Eqpa</td>
-                            <td></td>
+                            <td id="annualForecast"></td>
                             <td>@item.UoM</td>
                             <td>@item.Status</td>
                             <td>
@@ -91,10 +91,14 @@
         </div>
     </div>
    <div class="d-flex justify-content-end gap-2 m-2">
-        <button type="button" class="btn btn-primary" id="btnUpdate"><i class="fa-solid fa-pen-to-square"></i> Add Annual Forecast</button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAnnualForecastModal">
+            <i class="fa-solid fa-circle-plus"></i> Add Annual Forecast
+        </button>
         <button type="button" class="btn btn-primary" id="btnSubmit"><i class="fa-solid fa-paper-plane"></i> Submit</button>
    </div>
 </div>
+
+<!-- Edit Modal -->
 <div>
     <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -143,7 +147,7 @@
                     <div class="row mb-2">
                         <label for="editEqpa" class="col-sm-4 col-form-label fw-bold">Quantity per Assembly</label>
                         <div class="col-4">
-                            <input type="text" id="editEqpa" class="form-control" aria-describedby="editEqpa" autocomplete="off" required>
+                            <input type="number" id="editEqpa" class="form-control" aria-describedby="editEqpa" autocomplete="off" required>
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -160,7 +164,30 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnEditSave">Save changes</button>
+                    <button type="button" class="btn btn-primary" id="btnSave">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Add Annual Forecast-->
+<div>
+    <div class="modal fade" id="addAnnualForecastModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addAnnualForecastLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <h1 class="modal-title fs-5" id="addAnnualForecastLabel">Annual Forecast</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row m-2">
+                        <label for="addAnnualForecast" class="col-sm-6 col-form-label fw-bold">Input Quantity</label>
+                        <input type="number" id="addAnnualForecast" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnAddAnnualForecast">Save changes</button>
                 </div>
             </div>
         </div>
@@ -168,8 +195,9 @@
 </div>
 <script>
     var FindIdUrl = '@Url.Action("FindId", "Sourcing")';
-    var UpdateUrl = '@Url.Action("Update", "Sourcing")';
-    var SubmitUrl = '@Url.Action("Submit", "Sourcing")';
+    var UpdateUrl = '@Url.Action("UpdateId", "Sourcing")';
+    var AddAFUrl = '@Url.Action("AddAnnualForecast", "Sourcing")';
+    var ProjectUrl = '@Url.Action("Project", "Sourcing")';
 </script>
 <script src="~/assets/js/SfqForm.js"></script>
 @* <div>

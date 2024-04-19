@@ -5,7 +5,7 @@ namespace SFG.Services
 {
     public class Emailing
     {
-        public void SendingEmail(string approverName, string approverEmail, string subject, string body)
+        public void SendingEmail(string RecipientName, string Email, string Subject, string Body)
         {
             try
             {
@@ -18,10 +18,10 @@ namespace SFG.Services
                     smtpClient.Port = 587;
 
                     MailAddress fromAddress = new MailAddress("atsbcportal@gmail.com", "ATS Business Control Portal");
-                    MailMessage mailMessage = new MailMessage(fromAddress, new MailAddress(approverEmail, approverName));
+                    MailMessage mailMessage = new MailMessage(fromAddress, new MailAddress(Email, RecipientName));
 
-                    mailMessage.Subject = subject;
-                    mailMessage.Body = body;
+                    mailMessage.Subject = Subject;
+                    mailMessage.Body = Body;
                     mailMessage.IsBodyHtml = true;
                     // Send the email
                     smtpClient.Send(mailMessage);
@@ -31,7 +31,7 @@ namespace SFG.Services
             catch (Exception ex)
             {
                 // Log the exception or handle it appropriately
-                Console.WriteLine($"Error sending email to {approverEmail}: {ex.Message}");
+                Console.WriteLine($"Error sending email to {Email}: {ex.Message}");
             }
         }
     }

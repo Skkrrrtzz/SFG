@@ -36,7 +36,7 @@ namespace SFG.Services
                     }
 
                     // Insert values of rfqData
-                    InsertRFQData(worksheet, rfqData, 14, rfqDataStartColumn);
+                    InsertRFQData(worksheet, rfqData, 14);
 
                     // Save the Excel file to the specified path asynchronously
                     await package.SaveAsAsync(new FileInfo(filePath));
@@ -75,32 +75,24 @@ namespace SFG.Services
             worksheet.Cells[startCell].Offset(4, 0).Value = rfqProject.RequestDate;
             worksheet.Cells[startCell].Offset(5, 0).Value = rfqProject.RequiredDate;
         }
-        private void InsertRFQData(ExcelWorksheet worksheet, IEnumerable<RFQModel> rfqData, int startRow, int startColumn)
+        private void InsertRFQData(ExcelWorksheet worksheet, IEnumerable<RFQModel> rfqData, int startRow)
         {
             int row = startRow;
-            int col = startColumn;
 
             foreach (var rfqModel in rfqData)
             {
-                worksheet.Cells[row, col++].Value = rfqModel.Id;
-                worksheet.Cells[row, col++].Value = rfqModel.CustomerPartNumber;
-                worksheet.Cells[row, col++].Value = rfqModel.Rev;
-                col++; // 4th column skipped
-                worksheet.Cells[row, col++].Value = rfqModel.Description;
-                worksheet.Cells[row, col++].Value = rfqModel.OrigMPN;
-                worksheet.Cells[row, col++].Value = rfqModel.OrigMFR;
-                col++; // 8th column skipped
-                col++; // 9th column skipped
-                col++; // 10th column skipped
-                col++; // 11th column skipped
-                worksheet.Cells[row, col++].Value = rfqModel.Commodity;
-                worksheet.Cells[row, col++].Value = rfqModel.Eqpa;
-                worksheet.Cells[row, col++].Value = rfqModel.AnnualForecast;
-                worksheet.Cells[row, col++].Value = rfqModel.UoM;
-                worksheet.Cells[row, col++].Value = rfqModel.Status;
+                worksheet.Cells[row, 1].Value = rfqModel.Id;
+                worksheet.Cells[row, 2].Value = rfqModel.CustomerPartNumber;
+                worksheet.Cells[row, 3].Value = rfqModel.Rev;
+                worksheet.Cells[row, 5].Value = rfqModel.Description;
+                worksheet.Cells[row, 6].Value = rfqModel.OrigMPN;
+                worksheet.Cells[row, 7].Value = rfqModel.OrigMFR;
+                worksheet.Cells[row, 12].Value = rfqModel.Commodity;
+                worksheet.Cells[row, 13].Value = rfqModel.Eqpa;
+                worksheet.Cells[row, 14].Value = rfqModel.AnnualForecast;
+                worksheet.Cells[row, 15].Value = rfqModel.UoM;
+                worksheet.Cells[row, 16].Value = rfqModel.Status;
 
-                // Reset column index and increment row index for the next iteration
-                col = startColumn;
                 row++;
             }
         }

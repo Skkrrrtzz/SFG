@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using Newtonsoft.Json;
 using SFG.Services;
-using Azure.Core;
 
 namespace SFG.Controllers
 {
@@ -19,6 +18,10 @@ namespace SFG.Controllers
         {
             _exportingService = exportingService;
             _emailingService = emailingService;
+        }
+        public IActionResult SourcingForm()
+        {
+            return View();
         }
         public async Task<IActionResult> SourcingRFQForm(string partNumber)
         {
@@ -255,8 +258,17 @@ namespace SFG.Controllers
                     return NotFound();
                 }
 
-                await _exportingService.WriteToExcel(rfqData, rfqProjectData, projectName, 1);
+                // WriteToExcel method to write data to Excel
+                var result = await _exportingService.WriteToExcel(rfqData, rfqProjectData, projectName, 1);
 
+                //var checkEmail = 
+                // SendingEmail method to send email
+                //await _emailingService.SendingEmail();
+                // Check if the writing process was successful
+                if (result == false)
+                {
+                    return View("Error Writing to Excel");
+                }
                 // Return a view or other appropriate action result
                 return View();
             }
@@ -266,6 +278,27 @@ namespace SFG.Controllers
                 return View("Error", ex);
             }
         }
+        //private async Task<dynamic> CheckEmail()
+        //{
+        //    try
+        //    {
+        //        string query = "SELECT Name, Email FROM Users";
+
+        //        using (SqlConnection conn = new SqlConnection(GetConnection()))
+        //        {
+        //            // Execute the query asynchronously
+        //            var data = await conn.QueryAsync<dynamic>(query);
+
+        //            // Return the retrieved data
+        //            return data;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        Console.WriteLine($"Error processing query: {ex.Message}");
+        //    }
+        //}
         private async Task<IEnumerable<RFQModel>> GetRFQ(string projectName)
         {
             try

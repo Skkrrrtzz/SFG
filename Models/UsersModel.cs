@@ -12,4 +12,9 @@ namespace SFG.Models
         public string? Role { get; set; }
         public string? Department { get; set; }
     }
+    public class DepartmentEmails
+    {
+        public static string SourcingEmail = "atssourcing@pimes.com.ph";
+        public static string BusinessOpsEmail = "atsbusinessops@pimes.com.ph";
+    }
 }

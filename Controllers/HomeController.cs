@@ -19,7 +19,7 @@ namespace SFG.Controllers
         }
         public dynamic? GetSessionData()
         {
-            dynamic sessionData = new ATS_Library.GetSession.Session().GetUserData("8817bcc6-7291-4bce-ad3e-2a363c0565c5");
+            dynamic sessionData = new ATS_Library.GetSession.Session().GetUserData("a749d44a-9e42-45dc-9677-88b3cb436f96");
 
             return sessionData;
         }

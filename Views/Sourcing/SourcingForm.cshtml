@@ -2,37 +2,42 @@
 @{
     ViewData["Title"] = "Sourcing Form";
 }
+<style>
+    .col-form-label {
+        font-size: 14px;
+    }
+</style>
 <div>
     <div class="d-flex justify-content-center">
         <div class="col-lg-4">
             <div class="card shadow">
                 <h5 class="ps-2 pt-1 text-bg-primary border-bottom border-2 border-dark rounded-top"><i class="fa-solid fa-file-lines"></i> Sourcing RFQ Form</h5>
                 <div class="mx-3" id="sourcingForm">
-                    <form asp-action="SourcingRFQForm" method="post">
+                    <form asp-controller="Sourcing" asp-action="SourcingForm" method="post">
                         <div class="mb-2">
                             <label for="projectName" class="col-form-label fw-bold">Project Name</label>
-                            <input type="text" id="projectName" class="form-control" aria-describedby="projectName" autocomplete="off" required>
+                            <input type="text" id="projectName" class="form-control form-control-sm" aria-describedby="projectName" name="ProjectName" autocomplete="off" required>
                         </div>
                         <div class="mb-2">
                             <label for="customer" class="col-sm-3 col-form-label fw-bold">Customer</label>
-                            <select class="form-select" aria-label="Select Customer" id="customer">
+                            <select class="form-select" aria-label="Select Customer" id="customer" name="Customer">
                                 <option selected disabled>Select Customer</option>
                                 <option value="CohuMY">Cohu MY</option>
                                 <option value="CohuUS">Cohu US</option>
                                 <option value="DeltaPH">Delta PH</option>
                                 <option value="custom">Add Customer</option> <!-- Add this option for input -->
                             </select>
-                            <input type="text" id="customInput" class="form-control mt-2 d-none" placeholder="Enter Custom Customer">
+                            <input type="text" id="customInput" class="form-control form-control-sm mt-2 d-none" name="Customer" placeholder="Enter Custom Customer">
                         </div>
                         <div class="mb-2">
                             <div class="row">
                                 <div class="col-lg-8">
                                     <label for="quotation" class="col-form-label fw-bold">Quotation Code</label>
-                                    <input type="text" id="quotation" class="form-control" aria-describedby="quotation" required>
+                                    <input type="text" id="quotation" class="form-control form-control-sm" name="QuotationCode" aria-describedby="quotation" required>
                                 </div>
                                 <div class="col-lg-4">
                                     <label for="noItems" class="col-form-label fw-bold">Number of Items</label>
-                                    <input type="number" id="noItems" class="form-control" aria-describedby="noItems" readonly>
+                                    <input type="number" id="noItems" class="form-control form-control-sm" name="NoItems" aria-describedby="noItems" required>
                                 </div>
                             </div>
                         </div>
@@ -40,11 +45,11 @@
                             <div class="row">
                                 <div class="col-lg-6">
                                     <label for="reqDate" class="col-form-label fw-bold">Request Date</label>
-                                    <input type="date" id="reqDate" class="form-control" aria-describedby="reqDate" required>
+                                    <input type="date" id="reqDate" class="form-control form-control-sm" name="RequestDate" aria-describedby="reqDate" required>
                                 </div>
                                 <div class="col-lg-6">
                                     <label for="reqCompDate" class="col-form-label fw-bold">Required Completion Date</label>
-                                    <input type="date" id="reqCompDate" class="form-control" aria-describedby="reqCompDate" required>
+                                    <input type="date" id="reqCompDate" class="form-control form-control-sm" name="RequiredDate" aria-describedby="reqCompDate" required>
                                 </div>
                             </div>
                         </div>
@@ -52,11 +57,11 @@
                             <div class="row">
                                 <div class="col-lg-8">
                                     <label for="cusPartNo" class="col-form-label fw-bold">Customer Part Number</label>
-                                    <input type="number" id="cusPartNo" class="form-control" aria-describedby="cusPartNo" required>
+                                    <input type="number" id="cusPartNo" class="form-control form-control-sm" name="CustomerPartNumber" aria-describedby="cusPartNo" required>
                                 </div>
                                 <div class="col-lg-4">
                                     <label for="rev" class="col-form-label fw-bold">Rev</label>
-                                    <input type="text" id="rev" class="form-control" aria-describedby="rev" required>
+                                    <input type="text" id="rev" class="form-control form-control-sm" name="Rev" aria-describedby="rev" required>
                                 </div>
                             </div>
                             
@@ -64,19 +69,19 @@
                         <div class="mb-2">
                             <label for="description" class="col-form-label fw-bold">Description</label>
                             <div class="col">
-                                <input type="text" id="description" class="form-control" aria-describedby="description" autocomplete="off" required>
+                                <input type="text" id="description" class="form-control form-control-sm" aria-describedby="description" name="Description" autocomplete="off" required>
                             </div>
                         </div>
                         <div class="mb-2">
                             <label for="origMPNRawMatsFab" class="col-form-label fw-bold">Original MPN/Raw Materials for FAB</label>
                             <div class="col">
-                                <input type="text" id="origMPNRawMatsFab" class="form-control" aria-describedby="origMPNRawMatsFab" autocomplete="off" required>
+                                <input type="text" id="origMPNRawMatsFab" class="form-control form-control-sm" name="OrigMPN" aria-describedby="origMPNRawMatsFab" autocomplete="off" required>
                             </div>
                         </div>
                         <div class="mb-2">
                             <label for="origManufacturerFinishingFabParts" class="col-form-label fw-bold">Original Manufacturing / Finishing for FAB Parts</label>
                             <div class="col">
-                                <input type="text" id="origManufacturerFinishingFabParts" class="form-control" aria-describedby="origManufacturerFinishingFabParts" autocomplete="off" required>
+                                <input type="text" id="origManufacturerFinishingFabParts" class="form-control form-control-sm" name="OrigMFR" aria-describedby="origManufacturerFinishingFabParts" autocomplete="off" required>
                             </div>
                         </div>
                         <div class="mb-2">
@@ -86,19 +91,19 @@
                             <div class="row">
                                 <div class="col-lg-4">
                                     <label for="commodity" class="col-form-label fw-bold">Commodity</label>
-                                    <input type="text" id="commodity" class="form-control" aria-describedby="commodity" autocomplete="off" required>
+                                    <input type="text" id="commodity" class="form-control form-control-sm" name="Commodity" aria-describedby="commodity" autocomplete="off" required>
                                 </div>
                                 <div class="col-lg-4">
                                     <label for="qtyPerAssembly" class="col-form-label fw-bold">Qty per Assembly</label>
-                                    <input type="text" id="qtyPerAssembly" class="form-control" aria-describedby="qtyPerAssembly" autocomplete="off" required>
+                                    <input type="text" id="qtyPerAssembly" class="form-control form-control-sm" name="Eqpa" aria-describedby="qtyPerAssembly" autocomplete="off" required>
                                 </div>
                                 <div class="col-lg-4">
                                     <label for="bomUoM" class="col-form-label fw-bold">BOM UOM</label>
-                                    <input type="text" id="bomUoM" class="form-control" aria-describedby="bomUoM" autocomplete="off" required>
+                                    <input type="text" id="bomUoM" class="form-control form-control-sm" name="UoM" aria-describedby="bomUoM" autocomplete="off" required>
                                 </div>
                                 <div class="col-lg-6">
                                     <label for="commonUniqParts" class="col-form-label fw-bold">Common or Unique Parts</label>
-                                    <input type="text" id="commonUniqParts" class="form-control" aria-describedby="commonUniqParts" autocomplete="off" required>
+                                    <input type="text" id="commonUniqParts" class="form-control form-control-sm" name="Status" aria-describedby="commonUniqParts" autocomplete="off" required>
                                 </div>
                             </div>
                         </div>

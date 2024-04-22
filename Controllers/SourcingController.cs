@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using Newtonsoft.Json;
 using SFG.Services;
+using System.Net.Mail;
 
 namespace SFG.Controllers
 {
@@ -21,6 +22,51 @@ namespace SFG.Controllers
         }
         public IActionResult SourcingForm()
         {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SourcingForm(RFQModel RFQ,RFQProjectModel RFQProject)
+        {
+            if (ModelState.IsValid)
+            {
+                var RFQData = new RFQModel
+                {
+                    ProjectName = RFQ.ProjectName,
+                    Customer = RFQ.Customer,
+                    QuotationCode = RFQ.QuotationCode,
+                    CustomerPartNumber = RFQ.CustomerPartNumber,
+                    Rev = RFQ.Rev,
+                    Description = RFQ.Description,
+                    OrigMFR = RFQ.OrigMFR,
+                    OrigMPN = RFQ.OrigMPN,
+                    Commodity = RFQ.Commodity,
+                    Eqpa = RFQ.Eqpa,
+                    UoM = RFQ.UoM,
+                    Status = RFQ.Status
+                };
+
+                var RFQProjectData = new RFQProjectModel
+                {
+                    ProjectName = RFQProject.ProjectName,
+                    Customer = RFQProject.Customer,
+                    QuotationCode = RFQProject.QuotationCode,
+                    NoItems = RFQProject.NoItems,
+                    RequestDate = RFQProject.RequestDate,
+                    RequiredDate = RFQProject.RequiredDate,
+                    Status = "OPEN"
+                };
+
+                _db.RFQ.Add(RFQData);
+                _db.RFQProjects.Add(RFQProjectData);
+                _db.SaveChanges();
+
+                return RedirectToAction("Success");
+            }
+            return View();
+        }
+        public IActionResult Success()
+        {
+            // This action method can be used to display a success message after form submission
             return View();
         }
         public async Task<IActionResult> SourcingRFQForm(string partNumber)
@@ -143,7 +189,8 @@ namespace SFG.Controllers
                     QuotationCode = item.QuotationCode,
                     NoItems = item.NoItems,
                     RequestDate = item.RequestDate,
-                    RequiredDate = item.RequiredDate
+                    RequiredDate = item.RequiredDate,
+                    Status = "OPEN"
                 };
                 rfqprojList.Add(rfq);
             }
@@ -180,7 +227,7 @@ namespace SFG.Controllers
         {
             try
             {
-                string query = "UPDATE RFQ SET CustomerPartNumber = @CustomerPartNumber, Rev = @Rev, Description = @Description, OrigMFR = @OrigMFR, OrigMPN = @OrigMPN, Commodity = @Commodity, Eqpa = @Eqpa, UoM = @UoM, Status = @Status WHERE Id = @Id";
+                string query = "UPDATE RFQ SET CustomerPartNumber = @CustomerPartNumber, Rev = @Rev, DescriprigMPN = @Origtion = @Description, OrigMFR = @OrigMFR, OMPN, Commodity = @Commodity, Eqpa = @Eqpa, UoM = @UoM, Status = @Status WHERE Id = @Id";
 
                 using (SqlConnection conn = new SqlConnection(GetConnection()))
                 {
@@ -261,16 +308,16 @@ namespace SFG.Controllers
                 // WriteToExcel method to write data to Excel
                 var result = await _exportingService.WriteToExcel(rfqData, rfqProjectData, projectName, 1);
 
-                //var checkEmail = 
-                // SendingEmail method to send email
-                //await _emailingService.SendingEmail();
+                var checkEmail = await SendEmail();
+
                 // Check if the writing process was successful
-                if (result == false)
+                if (result == false || checkEmail == false)
                 {
-                    return View("Error Writing to Excel");
+                    return View("Error Writing to Excel File or Sending Email");
                 }
+
                 // Return a view or other appropriate action result
-                return View();
+                return Json(result);
             }
             catch (Exception ex)
             {
@@ -278,27 +325,36 @@ namespace SFG.Controllers
                 return View("Error", ex);
             }
         }
-        //private async Task<dynamic> CheckEmail()
-        //{
-        //    try
-        //    {
-        //        string query = "SELECT Name, Email FROM Users";
+        private async Task<bool> SendEmail()
+        {
+            try
+            {
+                //string email = DepartmentEmails.SourcingEmail;
+                string email = "kgajete@pimes.com.ph";
+                string emailName = "Sourcing";
+                string body = html();
+                //string body = "Please process this request: " + 
+                //    "<br> Please login to ATS Business Control Portal. <br> Thank you!<br><i>***This is an auto generated message, please do not reply***<i>";
+                string subject = "RFQ";
+                
 
-        //        using (SqlConnection conn = new SqlConnection(GetConnection()))
-        //        {
-        //            // Execute the query asynchronously
-        //            var data = await conn.QueryAsync<dynamic>(query);
+                // Check if _emailingService is properly initialized
+                if (_emailingService == null)
+                {
+                    throw new InvalidOperationException("_emailingService is not initialized.");
+                }
 
-        //            // Return the retrieved data
-        //            return data;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
+                await _emailingService.SendingEmail(emailName, email, subject, body);
 
-        //        Console.WriteLine($"Error processing query: {ex.Message}");
-        //    }
-        //}
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing email: {ex.Message}");
+                return false;
+            }
+        }
+
         private async Task<IEnumerable<RFQModel>> GetRFQ(string projectName)
         {
             try
@@ -544,7 +600,7 @@ namespace SFG.Controllers
                 var projectName = formData["projectName"].ToString();
                 var noItems = Convert.ToInt32(formData["noItems"].ToString());
                 var customer = formData["customer"].ToString();
-
+                var status ="OPEN";
                 // Setup your database connection
                 using (var connection = new SqlConnection(GetConnection()))
                 {
@@ -555,9 +611,9 @@ namespace SFG.Controllers
                     try
                     {
                         // Insert data into RFQProjects table
-                        await connection.ExecuteAsync(@"INSERT INTO RFQProjects (ProjectName, Customer, QuotationCode, NoItems, RequestDate, RequiredDate) 
-                                                 VALUES (@ProjectName, @Customer, @QuotationCode, @NoItems, @RequestDate, @RequiredDate)",
-                                                        new { ProjectName = projectName, Customer = customer, QuotationCode = quotationCode, NoItems = noItems, RequestDate = requestDate, RequiredDate = requiredDate },
+                        await connection.ExecuteAsync(@"INSERT INTO RFQProjects (ProjectName, Customer, QuotationCode, NoItems, RequestDate, RequiredDate, Status) 
+                                                 VALUES (@ProjectName, @Customer, @QuotationCode, @NoItems, @RequestDate, @RequiredDate, @Status)",
+                                                        new { ProjectName = projectName, Customer = customer, QuotationCode = quotationCode, NoItems = noItems, RequestDate = requestDate, RequiredDate = requiredDate, Status = @status },
                                                         transaction);
 
                         // Insert data into RFQ table for each item in sourcingData
@@ -671,6 +727,10 @@ namespace SFG.Controllers
             // Return a JSON response indicating failure
             return Json(new { success = false, message = "Sending Email failed!" });
         }
-
+        private string html()
+        {
+            string html = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n  <head>\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\r\n    <title>Email</title>\r\n    <style media=\"all\" type=\"text/css\">\r\n      /* -------------------------------------\r\n    GLOBAL RESETS\r\n------------------------------------- */\r\n\r\n      body {\r\n        font-family: Helvetica, sans-serif;\r\n        -webkit-font-smoothing: antialiased;\r\n        font-size: 16px;\r\n        line-height: 1.3;\r\n        -ms-text-size-adjust: 100%;\r\n        -webkit-text-size-adjust: 100%;\r\n      }\r\n\r\n      table {\r\n        border-collapse: separate;\r\n        mso-table-lspace: 0pt;\r\n        mso-table-rspace: 0pt;\r\n        width: 100%;\r\n      }\r\n\r\n      table td {\r\n        font-family: Helvetica, sans-serif;\r\n        font-size: 16px;\r\n        vertical-align: top;\r\n      }\r\n      /* -------------------------------------\r\n    BODY & CONTAINER\r\n------------------------------------- */\r\n\r\n      body {\r\n        background-color: #f4f5f6;\r\n        margin: 0;\r\n        padding: 0;\r\n      }\r\n\r\n      .body {\r\n        background-color: #f4f5f6;\r\n        width: 100%;\r\n      }\r\n\r\n      .container {\r\n        margin: 0 auto !important;\r\n        max-width: 600px;\r\n        padding: 0;\r\n        padding-top: 24px;\r\n        padding-bottom: 24px;\r\n        width: 600px;\r\n      }\r\n\r\n      .content {\r\n        box-sizing: border-box;\r\n        display: block;\r\n        margin: 0 auto;\r\n        max-width: 600px;\r\n        padding: 0;\r\n      }\r\n      /* -------------------------------------\r\n    HEADER, FOOTER, MAIN\r\n------------------------------------- */\r\n\r\n      .main {\r\n        background: #ffffff;\r\n        border: 1px solid #eaebed;\r\n        border-radius: 16px;\r\n        width: 100%;\r\n      }\r\n\r\n      .wrapper {\r\n        box-sizing: border-box;\r\n        padding: 24px;\r\n      }\r\n\r\n      .footer {\r\n        clear: both;\r\n        padding-top: 24px;\r\n        text-align: center;\r\n        width: 100%;\r\n      }\r\n\r\n      .footer td,\r\n      .footer p,\r\n      .footer span,\r\n      .footer a {\r\n        color: #9a9ea6;\r\n        font-size: 16px;\r\n        text-align: center;\r\n      }\r\n      /* -------------------------------------\r\n    TYPOGRAPHY\r\n------------------------------------- */\r\n\r\n      p {\r\n        font-family: Helvetica, sans-serif;\r\n        font-size: 16px;\r\n        font-weight: normal;\r\n        margin: 0;\r\n        margin-bottom: 16px;\r\n      }\r\n\r\n      a {\r\n        color: #0867ec;\r\n        text-decoration: underline;\r\n      }\r\n      /* -------------------------------------\r\n    BUTTONS\r\n------------------------------------- */\r\n\r\n      .btn {\r\n        box-sizing: border-box;\r\n        min-width: 100% !important;\r\n        width: 100%;\r\n      }\r\n\r\n      .btn > tbody > tr > td {\r\n        padding-bottom: 16px;\r\n      }\r\n\r\n      .btn table {\r\n        width: auto;\r\n      }\r\n\r\n      .btn table td {\r\n        background-color: #ffffff;\r\n        border-radius: 4px;\r\n        text-align: center;\r\n      }\r\n\r\n      .btn a {\r\n        background-color: #ffffff;\r\n        border: solid 2px #0867ec;\r\n        border-radius: 4px;\r\n        box-sizing: border-box;\r\n        color: #0867ec;\r\n        cursor: pointer;\r\n        display: inline-block;\r\n        font-size: 16px;\r\n        font-weight: bold;\r\n        margin: 0;\r\n        padding: 12px 24px;\r\n        text-decoration: none;\r\n        text-transform: capitalize;\r\n      }\r\n\r\n      .btn-primary table td {\r\n        background-color: #0867ec;\r\n      }\r\n\r\n      .btn-primary a {\r\n        background-color: #0867ec;\r\n        border-color: #0867ec;\r\n        color: #ffffff;\r\n      }\r\n\r\n      @media all {\r\n        .btn-primary table td:hover {\r\n          background-color: #ec0867 !important;\r\n        }\r\n        .btn-primary a:hover {\r\n          background-color: #ec0867 !important;\r\n          border-color: #ec0867 !important;\r\n        }\r\n      }\r\n\r\n      /* -------------------------------------\r\n    OTHER STYLES THAT MIGHT BE USEFUL\r\n------------------------------------- */\r\n\r\n      .last {\r\n        margin-bottom: 0;\r\n      }\r\n\r\n      .first {\r\n        margin-top: 0;\r\n      }\r\n\r\n      .align-center {\r\n        text-align: center;\r\n      }\r\n\r\n      .align-right {\r\n        text-align: right;\r\n      }\r\n\r\n      .align-left {\r\n        text-align: left;\r\n      }\r\n\r\n      .text-link {\r\n        color: #0867ec !important;\r\n        text-decoration: underline !important;\r\n      }\r\n\r\n      .clear {\r\n        clear: both;\r\n      }\r\n\r\n      .mt0 {\r\n        margin-top: 0;\r\n      }\r\n\r\n      .mb0 {\r\n        margin-bottom: 0;\r\n      }\r\n\r\n      .preheader {\r\n        color: transparent;\r\n        display: none;\r\n        height: 0;\r\n        max-height: 0;\r\n        max-width: 0;\r\n        opacity: 0;\r\n        overflow: hidden;\r\n        mso-hide: all;\r\n        visibility: hidden;\r\n        width: 0;\r\n      }\r\n\r\n      .powered-by a {\r\n        text-decoration: none;\r\n      }\r\n\r\n      /* -------------------------------------\r\n    RESPONSIVE AND MOBILE FRIENDLY STYLES\r\n------------------------------------- */\r\n\r\n      @media only screen and (max-width: 640px) {\r\n        .main p,\r\n        .main td,\r\n        .main span {\r\n          font-size: 16px !important;\r\n        }\r\n        .wrapper {\r\n          padding: 8px !important;\r\n        }\r\n        .content {\r\n          padding: 0 !important;\r\n        }\r\n        .container {\r\n          padding: 0 !important;\r\n          padding-top: 8px !important;\r\n          width: 100% !important;\r\n        }\r\n        .main {\r\n          border-left-width: 0 !important;\r\n          border-radius: 0 !important;\r\n          border-right-width: 0 !important;\r\n        }\r\n        .btn table {\r\n          max-width: 100% !important;\r\n          width: 100% !important;\r\n        }\r\n        .btn a {\r\n          font-size: 16px !important;\r\n          max-width: 100% !important;\r\n          width: 100% !important;\r\n        }\r\n      }\r\n      /* -------------------------------------\r\n    PRESERVE THESE STYLES IN THE HEAD\r\n------------------------------------- */\r\n\r\n      @media all {\r\n        .ExternalClass {\r\n          width: 100%;\r\n        }\r\n        .ExternalClass,\r\n        .ExternalClass p,\r\n        .ExternalClass span,\r\n        .ExternalClass font,\r\n        .ExternalClass td,\r\n        .ExternalClass div {\r\n          line-height: 100%;\r\n        }\r\n        .apple-link a {\r\n          color: inherit !important;\r\n          font-family: inherit !important;\r\n          font-size: inherit !important;\r\n          font-weight: inherit !important;\r\n          line-height: inherit !important;\r\n          text-decoration: none !important;\r\n        }\r\n        #MessageViewBody a {\r\n          color: inherit;\r\n          text-decoration: none;\r\n          font-size: inherit;\r\n          font-family: inherit;\r\n          font-weight: inherit;\r\n          line-height: inherit;\r\n        }\r\n      }\r\n    </style>\r\n  </head>\r\n  <body>\r\n    <table\r\n      role=\"presentation\"\r\n      border=\"0\"\r\n      cellpadding=\"0\"\r\n      cellspacing=\"0\"\r\n      class=\"body\">\r\n      <tr>\r\n        <td>&nbsp;</td>\r\n        <td class=\"container\">\r\n          <div class=\"content\">\r\n            <!-- START CENTERED WHITE CONTAINER -->\r\n            <table\r\n              role=\"presentation\"\r\n              border=\"0\"\r\n              cellpadding=\"0\"\r\n              cellspacing=\"0\"\r\n              class=\"main\">\r\n              <!-- START MAIN CONTENT AREA -->\r\n              <tr>\r\n                <td class=\"wrapper\">\r\n                  <p>Hi there,</p>\r\n                  <p>Please process this request</p>\r\n                  <table\r\n                    role=\"presentation\"\r\n                    border=\"0\"\r\n                    cellpadding=\"0\"\r\n                    cellspacing=\"0\"\r\n                    class=\"btn btn-primary\">\r\n                    <tbody>\r\n                      <tr>\r\n                        <td align=\"left\">\r\n                          <table\r\n                            role=\"presentation\"\r\n                            border=\"0\"\r\n                            cellpadding=\"0\"\r\n                            cellspacing=\"0\">\r\n                            <tbody>\r\n                              <tr>\r\n                                <td>\r\n                                  <a\r\n                                    href=\"http://192.168.5.73:83/\"\r\n                                    target=\"_blank\"\r\n                                    >Open in your browser</a\r\n                                  >\r\n                                </td>\r\n                              </tr>\r\n                            </tbody>\r\n                          </table>\r\n                        </td>\r\n                      </tr>\r\n                    </tbody>\r\n                  </table>\r\n                </td>\r\n              </tr>\r\n\r\n              <!-- END MAIN CONTENT AREA -->\r\n            </table>\r\n\r\n            <!-- END CENTERED WHITE CONTAINER -->\r\n          </div>\r\n        </td>\r\n        <td>&nbsp;</td>\r\n      </tr>\r\n    </table>\r\n  </body>\r\n</html>\r\n";
+            return html;
+        }
     }
 }

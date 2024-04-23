@@ -5,7 +5,7 @@ namespace SFG.Services
 {
     public class Emailing
     {
-        public async Task<bool> SendingEmail(string RecipientName, string Email, string Subject, string Body, string attachmentFilePath = null) 
+        public async Task<bool> SendingEmail(string RecipientName, string Email, string Subject, string Body, string attachmentFilePath) 
         {
             try
             {

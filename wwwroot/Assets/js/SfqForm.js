@@ -1,7 +1,6 @@
 ﻿var table = $("#SRFQTbl").dataTable({
   responsive: true,
 });
-
 // Variable to store the current ID
 let currentId = null;
 
@@ -134,18 +133,45 @@ function project(partNumber) {
     alert("No ProjectName found.");
     return;
   }
+  captureDivToImage("capture", function (dataURL) {
+    // Convert data URL to Blob
+    var blob = dataURLtoBlob(dataURL);
 
-  $.ajax({
-    type: "POST",
-    url: ProjectUrl,
-    data: { projectName: partNumber },
-    success: function (response) {
-      alert(response);
-    },
-    error: function (xhr, status, error) {
-      alert("Error: " + error);
-    },
+    // Create FormData object
+    var formData = new FormData();
+    formData.append("projectName", partNumber);
+    formData.append("image", blob); // No need to specify file name here
+
+    // Make the AJAX request with both the projectName and imageData
+    $.ajax({
+      type: "POST",
+      url: ProjectUrl,
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        alert(response);
+      },
+      error: function (xhr, status, error) {
+        alert("Error: " + error);
+      },
+    }).then(function () {
+      window.location.href = "/Dashboard/Dashboard";
+    });
   });
+}
+
+// Function to convert data URL to Blob
+function dataURLtoBlob(dataURL) {
+  var arr = dataURL.split(",");
+  var mime = arr[0].match(/:(.*?);/)[1];
+  var bstr = atob(arr[1]);
+  var n = bstr.length;
+  var u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
 }
 
 $("#btnSubmit").click(function (e) {
@@ -192,3 +218,25 @@ $("#btnSubmit").click(function (e) {
     },
   });
 });
+
+function captureDivToImage(divId, callback) {
+  // Get the jQuery object of the div element by id
+  var $div = $("#" + divId);
+
+  // Create a new canvas element
+  var canvas = document.createElement("canvas");
+  var context = canvas.getContext("2d");
+
+  // Set canvas dimensions based on the size of the div
+  canvas.width = $div.width();
+  canvas.height = $div.height();
+
+  // Render the content of the div onto the canvas
+  html2canvas($div.get(0)).then(function (canvas) {
+    // Convert canvas to data URL
+    var dataURL = canvas.toDataURL("image/png");
+
+    // Invoke the callback function with the image data URL
+    callback(dataURL);
+  });
+}

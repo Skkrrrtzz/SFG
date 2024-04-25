@@ -18,6 +18,14 @@ var parts = pNDesc.split(" - ");
 var partNumber = parts[0].trim();
 
 if (partNumber != null) {
+  Swal.fire({
+    title: "Loading...",
+    html: '<div class="m-2" id="loading-spinner"><div class="loader3"><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div></div></div>',
+    showCancelButton: false,
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+  });
   // Send the PartNumber to the server using AJAX
   $.ajax({
     type: "POST",
@@ -28,12 +36,14 @@ if (partNumber != null) {
       data = response.data;
       // Call the getMRPData function with the response data
       getMRPData(data);
+      Swal.close();
     },
     error: function (xhr, status, error) {
       console.error("Error:", error);
     },
   });
 } else {
+  Swal.close();
   console.error("PartNumber is null");
 }
 function getMRPData(data) {
@@ -146,45 +156,27 @@ function getSourcingRowsAndSumEqpa() {
   var sourcingRows = []; // Array to store rows with "FOR SOURCING" remarks
   var totalEqpaForSourcing = 0; // Variable to store the total sum of "eqpa" values
 
-  // Iterate over each row in the DataTable
-  $("#sourcingTbl tbody tr").each(function () {
-    // Get the DataTable cells corresponding to the "eqpa" and "remarks" columns in the current row
-    var pNCell = $(this).find("td:eq(0)");
-    var descCell = $(this).find("td:eq(1)");
-    var revCell = $(this).find("td:eq(2)");
-    var commodityCell = $(this).find("td:eq(3)");
-    var mpnCell = $(this).find("td:eq(4)");
-    var mfrCell = $(this).find("td:eq(5)");
-    var eqpaCell = $(this).find("td:eq(6)");
-    var uomCell = $(this).find("td:eq(7)");
-    var statusCell = $(this).find("td:eq(8)");
-    var qtyCell = $(this).find("td:eq(9)");
-    var lastPurchaseDateCell = $(this).find("td:eq(10)");
-    var remarksCell = $(this).find("td:eq(11)");
-
-    // Check if cells are found
-    if (eqpaCell.length === 0 || remarksCell.length === 0) {
-      console.log("Cells not found.");
-      return; // Exit the loop if cells are not found
-    }
-
-    var pN = pNCell.text().trim();
-    var description = descCell.text().trim();
-    var rev = revCell.text().trim();
-    var commodity = commodityCell.text().trim();
-    var mpn = mpnCell.text().trim();
-    var mfr = mfrCell.text().trim();
-    var eqpa = parseInt(eqpaCell.text().trim());
-    var uom = uomCell.text().trim();
-    var status = statusCell.text().trim();
-    var qty = parseFloat(qtyCell.text().trim());
-    var lastPurchaseDate = lastPurchaseDateCell.text().trim();
-    var remarks = remarksCell.text().trim();
-
+  // Get all rows data from the DataTables instance
+  var sourcingTbl = $("#sourcingTbl").DataTable();
+  var allRowsData = sourcingTbl.rows().data();
+  // Iterate over each row data
+  allRowsData.each(function (rowData) {
+    var pN = rowData["partNumber"].trim(); // Assuming the first column contains part numbers
+    var description = rowData["description"].trim();
+    var rev = rowData["rev"].trim();
+    var commodity = rowData["commodity"].trim();
+    var mpn = rowData["mpn"];
+    var mfr = rowData["manufacturer"];
+    var eqpa = rowData["eqpa"];
+    var uom = rowData["uom"].trim();
+    var status = rowData["status"].trim();
+    var qty = rowData["gwrlQty"];
+    var lastPurchaseDate = rowData["lastPurchaseDate"].trim();
+    var remarks = rowData["remarks"].trim();
     // Check if the remarks indicate "FOR SOURCING"
     if (remarks === "FOR SOURCING") {
       // Store the row data in the sourcingRows array
-      var rowData = {
+      var row = {
         partNumber: pN,
         description: description,
         rev: rev,
@@ -198,13 +190,12 @@ function getSourcingRowsAndSumEqpa() {
         lastPurchaseDate: lastPurchaseDate,
         remarks: remarks,
       };
-      sourcingRows.push(rowData);
+      sourcingRows.push(row);
     }
 
     // Add eqpa to the total sum of "eqpa" values
     totalEqpaForSourcing += eqpa;
   });
-
   // Return both the array of sourcing rows and the total sum of "eqpa" values
   return {
     sourcingRows: sourcingRows,
@@ -296,3 +287,12 @@ function RFQ() {
     },
   });
 }
+$("#customer").change(function () {
+  var selectedOption = $(this).val();
+  if (selectedOption === "custom") {
+    $("#customInput").removeClass("d-none");
+  } else {
+    $("#customInput").addClass("d-none");
+    $("#customInput").val(""); // Clear input field when other options are selected
+  }
+});

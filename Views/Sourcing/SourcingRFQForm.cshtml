@@ -18,44 +18,44 @@
             <h4 class="fw-bold">SOURCING RFQ FORM</h4>
         </div>
         <div class="card-body">
-            <div class="p-2 w-50" id="capture">
+            <div class="p-2 col-sm-6 col-lg-6" id="capture">
                 <div class="table-responsive">
-                    <table class="table w-sm-auto table-bordered table" id="ProjectTbl">
+                    <table class="table w-sm-auto table-bordered" id="ProjectTbl">
                         <tbody>
                             <tr>
                                 <th class="col-sm col-lg-2 text-primary">Project Name</th>
                                 <td class="col-sm col-lg-4">
-                                    <input type="text" id="projectName" class="form-control form-control-sm" value="@Model.RFQProjectData[0]?.ProjectName" readonly>
+                                    <input type="text" id="projectName" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[0]?.ProjectName" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <th class="col-sm col-lg-2 text-primary">Customer</th>
                                 <td>
-                                    <input type="text" id="customer" class="form-control form-control-sm" value="@Model.RFQProjectData[1]?.Customer" readonly>
+                                    <input type="text" id="customer" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[1]?.Customer" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <th class="col-sm col-lg-2 text-primary">Quotation Code/Purchase Request Code</th>
                                 <td>
-                                    <input type="text" id="quotationCode" class="form-control form-control-sm" value="@Model.RFQProjectData[2]?.QuotationCode" readonly>
+                                    <input type="text" id="quotationCode" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[2]?.QuotationCode" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <th class="col-sm col-lg-2 text-primary">Number of Items</th>
                                 <td>
-                                    <input type="text" id="customerPartNumber" class="form-control form-control-sm" value="@Model.RFQProjectData[1]?.NoItems" readonly>
+                                    <input type="text" id="customerPartNumber" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[1]?.NoItems" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <th class="col-sm col-lg-2 text-primary">Request Date</th>
                                 <td>
-                                    <input type="text" id="requestDate" class="form-control form-control-sm" value="@(Model.RFQProjectData.Count > 1 ? Model.RFQProjectData[1]?.RequestDate.ToShortDateString() : string.Empty)" readonly>
+                                    <input type="text" id="requestDate" class="form-control form-control-sm text-bg-secondary" value="@(Model.RFQProjectData.Count > 1 ? Model.RFQProjectData[1]?.RequestDate.ToShortDateString() : string.Empty)" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <th class="col-sm col-lg-2 text-primary">Required Completion Date</th>
                                 <td>
-                                    <input type="text" id="requiredDate" class="form-control form-control-sm" value="@(Model.RFQProjectData.Count > 1 ? Model.RFQProjectData[1]?.RequiredDate.ToShortDateString() : string.Empty)" readonly>
+                                    <input type="text" id="requiredDate" class="form-control form-control-sm text-bg-secondary" value="@(Model.RFQProjectData.Count > 1 ? Model.RFQProjectData[1]?.RequiredDate.ToShortDateString() : string.Empty)" readonly>
                                 </td>
                             </tr>
                         </tbody>
@@ -173,7 +173,7 @@
     <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header text-bg-primary">
                     <h1 class="modal-title fs-5" id="editModalLabel">Edit Sourcing RFQ Form</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -263,9 +263,9 @@
     </div>
 </div>
 <script>
-    var FindIdUrl = '@Url.Action("FindId", "Sourcing")';
-    var UpdateUrl = '@Url.Action("UpdateId", "Sourcing")';
-    var AddAFUrl = '@Url.Action("AddAnnualForecast", "Sourcing")';
-    var ProjectUrl = '@Url.Action("Project", "Sourcing")';
+    const FindIdUrl = '@Url.Action("FindId", "Sourcing")';
+    const UpdateUrl = '@Url.Action("UpdateId", "Sourcing")';
+    const AddAFUrl = '@Url.Action("AddAnnualForecast", "Sourcing")';
+    const ProjectUrl = '@Url.Action("Project", "Sourcing")';
 </script>
-<script src="~/assets/js/SfqForm.js"></script>
+<script src="~/javascript/sfqform.js"></script>

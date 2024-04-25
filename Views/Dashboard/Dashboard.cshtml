@@ -80,7 +80,7 @@
                         <button type="button" class="btn btn-primary processor border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#processor">
                             PROCESSOR
                         </button>
-                        <button type="button" class="btn btn-primary viewer border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#viewer">
+                        <button type="button" class="btn btn-primary viewer border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#viewer" id="viewRFQProjectsBtn">
                             VIEWER
                         </button>
                     </div>
@@ -191,25 +191,23 @@
                             </a>
                         </div>
                         <div class="col">
-                            <a asp-action="Incoming" asp-controller="Dashboard">
-                                <div class="card text-bg-primary border-3 border-primary-subtle" type="button">
-                                    <div class="card-body">
-                                        <div class="row align-items-center">
-                                            <div class="col-auto">
-                                                <i class="fa-solid fa-circle-arrow-down h1"></i>
+                            <div class="card text-bg-primary border-3 border-primary-subtle" type="button" data-bs-toggle="modal" data-bs-target="#incomingRFQ">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-circle-arrow-down h1"></i>
+                                        </div>
+                                        <div class="col me-2">
+                                            <div class="text-end">
+                                                <h4 class="fs-6">Incoming</h4>
                                             </div>
-                                            <div class="col me-2">
-                                                <div class="text-end">
-                                                    <h4 class="fs-6">Incoming</h4>
-                                                </div>
-                                                <div class="text-end">
-                                                    <h4 class="fs-1">0</h4>
-                                                </div>
+                                            <div class="text-end">
+                                                <h4 class="fs-1" id="incoming"></h4>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                         <div class="col">
                             <div class="card text-bg-primary border-3 border-primary-subtle" type="button" data-bs-toggle="modal" data-bs-target="#closed">
@@ -265,7 +263,7 @@
                 <div class="modal-body">
                     <div class="row g-2">
                         <div class="col">
-                            <div class="card bg-primary border-3 border-primary-subtle">
+                            <div class="card bg-primary border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#library">
                                 <div class="card-body" type="button">
                                     <div class="row align-items-center">
                                         <div class="col-auto">
@@ -273,7 +271,7 @@
                                         </div>
                                         <div class="col me-2">
                                             <div class="text-white text-end">
-                                                <h4 class="fs-1">0</h4>
+                                                <h4 class="fs-1" id="rfqCount"></h4>
                                             </div>
                                             <div class="text-end text-white">
                                                 <h4 class="fs-5">Library</h4>
@@ -395,6 +393,63 @@
         </div>
     </div>
 </div>
+
+<!-- Show Sourcing Form Modal-->
+<div class="modal fade" id="library" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="libraryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="libraryLabel"> <i class="fa-solid fa-file-arrow-up"></i> Sourcing Form | <span class="badge text-bg-dark">Viewer</span></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive mb-2">
+                   <table class="table table-striped" id="libraryTable" style="width: 100%;">
+                       <thead class="table-primary">
+                           <tr>
+                               <th>Quotation Number</th>
+                               <th>Request Date</th>
+                               <th>Part Number</th>
+                               <th>Status</th>
+                               <th>Action</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                       </tbody>
+                   </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Show Sourcing Form Modal-->
+<div class="modal fade" id="incomingRFQ" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="incomingRFQLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="incomingRFQLabel"> <i class="fa-solid fa-file-arrow-up"></i> Sourcing Form | <span class="badge text-bg-dark">Processor</span></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive mb-2">
+                    <table class="table table-striped" id="incomingRFQTable" style="width: 100%;">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Quotation Number</th>
+                                <th>Request Date</th>
+                                <th>Part Number</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function () {
         // Assuming department is retrieved from your backend
@@ -413,284 +468,47 @@
         } else {
             $(".encoder, .processor, .viewer").show();
         }
-    });
 
-    function lastPurchaseFileUpload() {
-        const fileInput = $('#excelFileInput')[0];
-
-        $("#uploadButton").prop("disabled", true); // Disable the button while the file is being uploaded
-        $("#fileInputContainer").show(); // Show the file input
-       
-        if (!fileInput.files || !fileInput.files[0]) { // Check if a file was selected
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Please select a file to upload.',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-            $("#uploadButton").prop("disabled", false); // Re-enable the button
-            return;
-        } else {
-            $("#loadingSpinner").removeClass("d-none"); // Show the loading spinner
-            const file = fileInput.files[0]; // Get the uploaded file
-
-            $('#fileName').text(file.name); // Show the file name
-            const formData = new FormData(); // Create a FormData object
-            formData.append('file', file); // Append the file to FormData
-            $("#fileInputContainer").hide(); // Hide the file input container
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("UploadLastPurchaseInfo", "Dashboard")',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-
-                    $("#loadingSpinner").addClass("d-none"); // Hide the loading spinner
-
-                    if (response.success) {
-                        // Display a SweetAlert2 success message
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: response.message,
-                            toast: true,
-                            position: 'top-end',
-                            timer: 3000,
-                            showConfirmButton: false
-                        });
-
-                        // Reset the file input field
-                        $("#excelFileInput").val(''); // Clear the file input value
-                        $("#uploadLastPurchase").modal("hide"); // Close the modal
-                        $("#fileInputContainer").show(); // Show the file input
-                    } else {
-                        // Display a SweetAlert2 error message
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: response.message,
-                            toast: true,
-                            position: 'top-end',
-                            timer: 3000,
-                            showConfirmButton: false
-                        });
-                        // Reset the file input field
-                        $("#excelFileInput").val(''); // Clear the file input value
-                        $("#fileInputContainer").show(); // Show the file input
-                    }
-                    $("#uploadButton").prop("disabled", false); // Re-enable the button
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error uploading file:', error);
-                    $("#loadingSpinner").addClass("d-none"); // Hide the loading spinner
-                }
-            });
-        }
-
-        
-    }
-
-    function quotationFileUpload() {
-        const fileInput = $('#quotationExcel')[0]; // Access the native DOM element
-
-        $("#uploadQuotationButton").prop("disabled", true); // Disable the button while the file is being uploaded
-        $("#quotationInputContainer").show(); // Show the file input container
-
-
-        if (!fileInput.files || !fileInput.files[0]) { // Check if a file was selected
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Please select a file to upload.',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-            $("#uploadQuotationButton").prop("disabled", false); // Re-enable the button
-            return;
-        } else { 
-            $("#qloadingSpinner").removeClass("d-none"); // Show the loading spinner
-            const file = fileInput.files[0]; // Get the uploaded file
-
-            $('#quotationfileName').text(file.name); // Show the file name
-            const formData = new FormData(); // Create a FormData object
-            formData.append('file', file); // Append the file to FormData
-            $("#quotationInputContainer").hide(); // Hide the file input container
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("UploadQuotation", "Dashboard")',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-
-                    $("#qloadingSpinner").addClass("d-none"); // Hide the loading spinner
-
-                    if (response.success) {
-                        // Display a SweetAlert2 success message
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: response.message,
-                            toast: true,
-                            position: 'top-end',
-                            timer: 3000,
-                            showConfirmButton: false
-                        });
-
-                        // Reset the file input field
-                        $("#quotationExcel").val(''); // Clear the file input value
-                        $("#uploadQuotation").modal("hide"); // Close the modal
-                        $("#quotationInputContainer").show(); // Show the file input
-                    } else {
-                        // Display a SweetAlert2 error message
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: response.message,
-                            toast: true,
-                            position: 'top-end',
-                            timer: 3000,
-                            showConfirmButton: false
-                        });
-                        // Reset the file input field
-                        $("#quotationExcel").val(''); // Clear the file input value
-                        $("#quotationInputContainer").show(); // Show the file input
-                    }
-                    $("#uploadQuotationButton").prop("disabled", false); // Re-enable the button
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error uploading file:', error);
-                    $("#qloadingSpinner").addClass("d-none"); // Hide the loading spinner
-                }
-            });
-        }
-    }
-
-    function MRPBomFileUpload() {
-        const fileInput = $('#MRPBomExcel')[0]; // Access the native DOM element
-
-        $("#uploadMRPBomButton").prop("disabled", true); // Disable the button while the file is being uploaded
-        $("#MRPBomInputContainer").show(); // Show the file input container
-
-
-        if (!fileInput.files || !fileInput.files[0]) { // Check if a file was selected
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Please select a file to upload.',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-            $("#uploadMRPBomButton").prop("disabled", false); // Re-enable the button
-            return;
-        } else {
-            $("#mrploadingSpinner").removeClass("d-none"); // Show the loading spinner
-            const file = fileInput.files[0]; // Get the uploaded file
-
-            $('#MRPBomfileName').text(file.name); // Show the file name
-            const formData = new FormData(); // Create a FormData object
-            formData.append('file', file); // Append the file to FormData
-            $("#MRPBomInputContainer").hide(); // Hide the file input container
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("UploadMRPBOM", "Dashboard")',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-
-                    $("#mrploadingSpinner").addClass("d-none"); // Hide the loading spinner
-
-                    if (response.success) {
-                        // Display a SweetAlert2 success message
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: response.message,
-                            toast: true,
-                            position: 'top-end',
-                            timer: 3000,
-                            showConfirmButton: false
-                        });
-
-                        // Reset the file input field
-                        $("#MRPBomExcel").val(''); // Clear the file input value
-                        $("#uploadMRPBom").modal("hide"); // Close the modal
-                        $("#MRPBomInputContainer").show(); // Show the file input
-                    } else {
-                        // Display a SweetAlert2 error message
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: response.message,
-                            toast: true,
-                            position: 'top-end',
-                            timer: 3000,
-                            showConfirmButton: false
-                        });
-                        // Reset the file input field
-                        $("#MRPBomExcel").val(''); // Clear the file input value
-                        $("#MRPBomInputContainer").show(); // Show the file input
-                    }
-                    $("#uploadMRPBomButton").prop("disabled", false); // Re-enable the button
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error uploading file:', error);
-                    $("#mrploadingSpinner").addClass("d-none"); // Hide the loading spinner
-                }
-            });
-        }
-    }
-
-    function sourcingForm() {
         $.ajax({
-            type: 'GET',
-            url: '@Url.Action("GetPNandDescription", "Dashboard")',
-            dataType: 'JSON',
+            type: "GET",
+            url: '@Url.Action("GetAllRFQProjects", "Dashboard")',
+            dataType: "json",
             success: function (response) {
-                var selectElement = $('#sourcingFormSelect');
-                selectElement.empty();
-                $('<option selected disabled>Select BOM</option>').appendTo(selectElement);
+                // Count the number of responses
+                var count = response.data.length;
 
-                response.data.forEach(item => {
-                    let partNumber = item.partNumber;
-                    let description = item.description;
-                    let pndesc = partNumber + " - " + description;
-                    var option = $('<option></option>').attr('value', pndesc).text(pndesc);
-                    selectElement.append(option);
-                });
+                // Update the element with ID 'rfqCount' with the count
+                $("#rfqCount").text(count);
+
+                // Call the viewRFQProjects function with the data
+                viewRFQProjects("#libraryTable", response.data);
             },
             error: function (xhr, status, error) {
-                console.error('Error:', error);
-            }
+                // Handle the error
+                alert("Error: " + error);
+            },
         });
-    }
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("IncomingRFQProjects", "Dashboard")',
+            dataType: "json",
+            success: function (response) {
+                // Count the number of responses
+                var count = response.data.length;
 
-    // Event listener for the change event on the select element
-    $('#sourcingFormSelect').change(function () {
-        // Check if an option other than the default is selected
-        if ($(this).val() !== 'Select BOM') {
-            // Show the View button
-            $('#viewPNDesc').removeClass('d-none');
-        } else {
-            // Hide the View button
-            $('#viewPNDesc').addClass('d-none');
-        }
+                $("#incoming").text(count);
+                // Call the viewRFQProjects function with the data
+                viewRFQProjects("#incomingRFQTable", response.data);
+            },
+            error: function (xhr, status, error) {
+                // Handle the error
+                alert("Error: " + error);
+            },
+        });
     });
-    // Event listener for the click event on the View button
-    $('#viewPNDesc').click(function () {
-        // Get the selected option's value (pndesc)
-        var pndesc = $('#sourcingFormSelect').val();
-       
-        // Redirect to the ViewSourcingForm action with the modified pNDesc parameter
-        window.location.href = '@Url.Action("ViewSourcingForm", "Dashboard")?pndesc=' + encodeURIComponent(pndesc);
-    });
+    const GetPNandDescription = '@Url.Action("GetPNandDescription", "Dashboard")';
+    const UploadQuotation = '@Url.Action("UploadQuotation", "Dashboard")';
+    const UploadLastPurchaseInfo = '@Url.Action("UploadLastPurchaseInfo", "Dashboard")';
+    const UploadMRPBom = '@Url.Action("UploadMRPBom", "Dashboard")';
 </script>
+<script src="~/JavaScript/Dashboard.js"></script>

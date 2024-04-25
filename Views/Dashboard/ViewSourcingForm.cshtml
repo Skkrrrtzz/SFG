@@ -99,13 +99,17 @@
                     <div class="row mb-2">
                         <label for="customer" class="col-sm-4 col-form-label fw-bold">Customer</label>
                         <div class="col-8">
-                            <select class="form-select" aria-label="Select Customer" id="customer">
+                            <select class="form-select" aria-label="Select Customer" id="customer" name="customer">
                                 <option selected disabled>Select Customer</option>
                                 <option value="CohuMY">Cohu MY</option>
-                                <option value="CohuUS">Cohu US</option>
+                                <option value="CohuDE">Cohu DE</option>
+                                <option value="DeltaUS">Delta US</option>
                                 <option value="DeltaPH">Delta PH</option>
+                                <option value="custom">Add Customer</option> <!-- Add this option for input -->
                             </select>
+                            <input type="text" id="customInput" class="form-control form-control-sm mt-2 d-none" name="customer" placeholder="Enter Custom Customer">
                         </div>
+                        
                     </div>
                     <div class="row mb-2">
                         <label for="quotation" class="col-sm-4 col-form-label fw-bold">Quotation Code</label>
@@ -147,5 +151,5 @@
         var uploadRFQUrl = '@Url.Action("RFQUpload", "Sourcing")';
        
     </script>
-    <script src="~/assets/js/SourcingProcess.js"></script>
+    <script src="~/JavaScript/SourcingProcess.js"></script>
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using OfficeOpenXml;
 using SFG.Data;
 using SFG.Models;
@@ -32,6 +33,11 @@ namespace SFG.Controllers
             }
 
             return Checking();
+        }
+        public async Task<IActionResult> ViewRFQProjects()
+        {
+            var model = await GetAllRFQProjects();
+            return View(model);
         }
         public IActionResult Library()
         {
@@ -79,6 +85,48 @@ namespace SFG.Controllers
             var distinctPNAndDescriptions = bomData.GroupBy(bom => bom.PartNumber).Select(group => new { PartNumber = group.Key, Description = group.First().Description });
 
             return Json(new { data = distinctPNAndDescriptions });
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllRFQProjects()
+        {
+            try
+            {
+                string query = "SELECT * FROM RFQProjects";
+                List<RFQProjectModel> result;
+
+                using (SqlConnection conn = new SqlConnection(GetConnection()))
+                {
+                    result = (await conn.QueryAsync<RFQProjectModel>(query)).ToList();
+                }
+
+                return Json(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or return a generic error message
+                return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> IncomingRFQProjects()
+        {
+            try
+            {
+                string query = "SELECT * FROM RFQProjects WHERE Status = 'OPEN'";
+                List<RFQProjectModel> result;
+
+                using (SqlConnection conn = new SqlConnection(GetConnection()))
+                {
+                    result = (await conn.QueryAsync<RFQProjectModel>(query)).ToList();
+                }
+
+                return Json(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or return a generic error message
+                return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
+            }
         }
         public IActionResult ViewSourcingForm()
         {
@@ -267,7 +315,7 @@ namespace SFG.Controllers
         }
         private async Task ProcessMRPQBOMFile(ExcelPackage package, IFormFile file)
         {
-            using (var worksheet = package.Workbook.Worksheets[0])
+            using (var worksheet = package.Workbook.Worksheets[1])
             {
                 int rowCount = worksheet.Dimension.Rows;
 

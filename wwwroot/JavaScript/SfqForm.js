@@ -103,25 +103,39 @@ $("#btnSave").click(function (e) {
       });
     });
 });
-
+var sourcingTbl = $("#SRFQTbl").DataTable();
+var allRowsData = sourcingTbl.rows().data();
 // Function to calculate annual forecast for each item
 function calculateAnnualForecast() {
   var inputQty = parseFloat($("#addAnnualForecast").val()); // Get the input quantity
 
   // Validate input
   if (isNaN(inputQty) || inputQty <= 0) {
-    alert("Please enter a valid input quantity.");
+    Swal.fire({
+      title: "Message",
+      text: "Please enter a valid input quantity.",
+      icon: "error",
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 2000,
+    });
     return;
   }
 
   // Loop through each row in the table
-  $("#SRFQTbl tbody tr").each(function () {
-    var eqpa = parseFloat($(this).find("td:eq(7)").text()); // Get Eqpa value for the current row
-    var annualForecast = inputQty * eqpa; // Calculate annual forecast
-    $(this).find("td#annualForecast").text(annualForecast); // Update annual forecast cell
-  });
-}
+  allRowsData.each(function (rowData, index) {
+    var eqpa = parseFloat(rowData[7]); // Assuming eqpa is stored in the 8th column
+    var annualForecast = inputQty * eqpa;
+    rowData[8] = annualForecast; // Assuming annual forecast should be stored in the 9th column
 
+    // Update the DataTable with the modified rowData
+    sourcingTbl.row(index).data(rowData);
+  });
+
+  // Redraw the DataTable to reflect the changes
+  sourcingTbl.draw();
+}
 // Add click event listener to the button
 $("#btnAddAnnualForecast").click(function () {
   calculateAnnualForecast();
@@ -133,6 +147,14 @@ function project(partNumber) {
     alert("No ProjectName found.");
     return;
   }
+  Swal.fire({
+    title: "Loading...",
+    html: '<div class="m-2" id="loading-spinner"><div class="loader3"><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div></div></div>',
+    showCancelButton: false,
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+  });
   captureDivToImage("capture", function (dataURL) {
     // Convert data URL to Blob
     var blob = dataURLtoBlob(dataURL);
@@ -150,13 +172,23 @@ function project(partNumber) {
       processData: false,
       contentType: false,
       success: function (response) {
-        alert(response);
+        // Display a SweetAlert2 success message
+        Swal.fire({
+          icon: "success",
+          title: "Notification Sent to Sourcing Team",
+          toast: true,
+          position: "top-end",
+          timer: 3000,
+          showConfirmButton: false,
+        }).then(function () {
+          Swal.close();
+          window.location.href = "/Dashboard/Dashboard";
+        });
       },
       error: function (xhr, status, error) {
+        Swal.close();
         alert("Error: " + error);
       },
-    }).then(function () {
-      window.location.href = "/Dashboard/Dashboard";
     });
   });
 }
@@ -182,16 +214,23 @@ $("#btnSubmit").click(function (e) {
   let isValid = true; // Flag variable to track input validity
 
   // Loop through each row in the table
-  $("#SRFQTbl tbody tr").each(function () {
-    let currentId = $(this).find("td:eq(0)").text();
-    let annualForecastValue = $(this).find("td#annualForecast").text();
+  allRowsData.each(function (rowData, index) {
+    let currentId = rowData[0];
+    let annualForecastValue = rowData[8];
     currentIds.push(currentId);
     annualForecasts.push(annualForecastValue);
+    if (isNaN(annualForecastValue)) {
+      // Display a SweetAlert2 success message
+      Swal.fire({
+        icon: "info",
+        title:
+          "Please enter a valid input quantity in the Annual Forecast field.",
+        toast: true,
+        position: "top-end",
+        timer: 3000,
+        showConfirmButton: false,
+      });
 
-    if (isNaN(annualForecastValue) || annualForecastValue <= 0) {
-      alert(
-        "Please enter a valid input quantity in the Annual Forecast field."
-      );
       isValid = false; // Set isValid to false if invalid input is detected
       return false; // Exit the loop
     }
@@ -210,7 +249,15 @@ $("#btnSubmit").click(function (e) {
       annualForecasts: annualForecasts,
     },
     success: () => {
-      alert("All data saved successfully.");
+      // Display a SweetAlert2 success message
+      Swal.fire({
+        icon: "success",
+        title: "All data saved successfully.",
+        toast: true,
+        position: "top-end",
+        timer: 3000,
+        showConfirmButton: false,
+      });
       project(partNumber);
     },
     error: () => {

@@ -235,12 +235,18 @@ function RFQ() {
 
   // Example of accessing values outside the loop
   let pN = $("#projectName").val();
-  let customer = $("#customer").val();
   let quotation = $("#quotation").val();
   let noItems = $("#noItems").val();
   let reqDate = $("#reqDate").val();
   let reqCompletionDate = $("#reqCompDate").val();
 
+  var customer;
+  if ($("#customer").val() === "custom") {
+    customer = $("#customInput").val();
+  } else {
+    customer = $("#customer").val();
+  }
+  console.log(customer);
   // Construct the data object to be sent in the AJAX request
   let requestData = {
     projectName: pN,
@@ -293,6 +299,6 @@ $("#customer").change(function () {
     $("#customInput").removeClass("d-none");
   } else {
     $("#customInput").addClass("d-none");
-    $("#customInput").val(""); // Clear input field when other options are selected
+    $("#customInput").val("");
   }
 });

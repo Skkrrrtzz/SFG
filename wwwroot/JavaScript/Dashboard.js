@@ -297,12 +297,25 @@ function viewRFQProjects(table, data) {
       {
         data: null,
         render: function (row) {
-          return '<a href="#" class="text-primary edit-btn fs-4"><i class="fa-solid fa-eye"></i></a>';
+          return (
+            '<a href="#" class="text-primary view-btn fs-4" data-id="' +
+            row.quotationCode +
+            '"><i class="fa-solid fa-eye"></i></a>'
+          );
         },
       },
     ],
   });
 }
+
+// Attach click event handler to a parent element using event delegation
+$("#incomingRFQTable").on("click", ".view-btn", function () {
+  var quotationCode = $(this).data("id");
+  var url = ViewRFQForm + "?quotationCode=" + quotationCode;
+  console.log(url);
+  // Redirect to the generated URL
+  window.location.href = url;
+});
 
 // Function to format the date
 function formatDate(dateString) {

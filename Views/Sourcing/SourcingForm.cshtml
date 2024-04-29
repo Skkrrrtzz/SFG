@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Sourcing Form";
 }
 <style>
@@ -26,7 +25,7 @@
                                 <option value="CohuDE">Cohu DE</option>
                                 <option value="DeltaUS">Delta US</option>
                                 <option value="DeltaPH">Delta PH</option>
-                                <option value="custom">Add Customer</option> <!-- Add this option for input -->
+                                <option value="custom">Add Customer</option>
                             </select>
                             <input type="text" id="customInput" class="form-control form-control-sm mt-2 d-none" name="Customer" placeholder="Enter Custom Customer">
                         </div>
@@ -126,7 +125,7 @@
             $("#customInput").removeClass("d-none");
         } else {
             $("#customInput").addClass("d-none");
-            $("#customInput").val(""); // Clear input field when other options are selected
+            $("#customInput").val("");
         }
     });
 </script>

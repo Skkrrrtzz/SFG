@@ -43,6 +43,24 @@ namespace SFG.Controllers
         {
             return View();
         }
+        public async Task<IActionResult> ViewRFQForm(string quotationCode)
+        {
+            try
+            {
+                var viewModel = new MyViewModel
+                {
+                    RFQData = await GetRFQByQuotationCode(quotationCode),
+                    RFQProjectData = await GetRFQProjectsByQuotationCode(quotationCode)
+                };
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error retrieving RFQ data: {ex.Message}");
+                return StatusCode(500); // Return 500 Internal Server Error
+            }
+        }
         public async Task<IActionResult> Incoming()
         {
             try
@@ -107,6 +125,49 @@ namespace SFG.Controllers
                 return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
             }
         }
+        public async Task<List<RFQProjectModel>> GetRFQProjectsByQuotationCode(string quotationCode)
+        {
+            try
+            {
+                string query = "SELECT * FROM RFQProjects WHERE QuotationCode = @QuotationCode";
+                List<RFQProjectModel> result;
+
+                using (SqlConnection conn = new SqlConnection(GetConnection()))
+                {
+                    result = (await conn.QueryAsync<RFQProjectModel>(query, new { QuotationCode = quotationCode })).ToList();
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error retrieving RFQ project data: {ex.Message}");
+                throw; // Re-throw the exception to be caught by the calling method
+            }
+        }
+        public async Task<List<RFQModel>> GetRFQByQuotationCode(string quotationCode)
+        {
+            try
+            {
+                string query = "SELECT * FROM RFQ WHERE QuotationCode = @QuotationCode";
+                List<RFQModel> result;
+
+                using (SqlConnection conn = new SqlConnection(GetConnection()))
+                {
+                    result = (await conn.QueryAsync<RFQModel>(query, new { QuotationCode = quotationCode })).ToList();
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error retrieving RFQ data: {ex.Message}");
+                throw; // Re-throw the exception to be caught by the calling method
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> IncomingRFQProjects()
         {

@@ -1,0 +1,634 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Fonts\GEORGIA.TTF" />
+    <None Remove="Resources\Fonts\MULISH.ttf" />
+    <None Remove="Resources\Fonts\PIMES.ttf" />
+    <None Remove="Resources\Fonts\Roboto-Regular.ttf" />
+    <None Remove="Resources\Fonts\SEGOEPR.TTF" />
+    <None Remove="Resources\Fonts\SEGOEUI.TTF" />
+    <None Remove="Resources\Fonts\stylus-bt.ttf" />
+    <None Remove="Resources\Icons\pimes.ico" />
+    <None Remove="Resources\Icons\pimescorp.ico" />
+    <None Remove="Resources\Images\30th_logo.png" />
+    <None Remove="Resources\Images\admta_bg.png" />
+    <None Remove="Resources\Images\bg1.png" />
+    <None Remove="Resources\Images\bg2.png" />
+    <None Remove="Resources\Images\bg3.png" />
+    <None Remove="Resources\Images\blankprofile.png" />
+    <None Remove="Resources\Images\bldg3b.jpg" />
+    <None Remove="Resources\Images\directory_bg.png" />
+    <None Remove="Resources\Images\dyk.png" />
+    <None Remove="Resources\Images\emergency.png" />
+    <None Remove="Resources\Images\imeslogo3.jpg" />
+    <None Remove="Resources\Images\launcher_bg.png" />
+    <None Remove="Resources\Images\menu_bg1.png" />
+    <None Remove="Resources\Images\menu_bg2.png" />
+    <None Remove="Resources\Images\menu_key.gif" />
+    <None Remove="Resources\Images\menu_lock.gif" />
+    <None Remove="Resources\Images\pattern_lock.gif" />
+    <None Remove="Resources\Images\pimes_logo.png" />
+    <None Remove="Resources\Images\plwvd_bg.png" />
+    <None Remove="Resources\Images\siren.png" />
+    <None Remove="Resources\Images\xmas.png" />
+    <None Remove="Resources\Loaders\ld_1.gif" />
+    <None Remove="Resources\Loaders\ld_10.gif" />
+    <None Remove="Resources\Loaders\ld_11.gif" />
+    <None Remove="Resources\Loaders\ld_12.gif" />
+    <None Remove="Resources\Loaders\ld_13.gif" />
+    <None Remove="Resources\Loaders\ld_14.gif" />
+    <None Remove="Resources\Loaders\ld_15.gif" />
+    <None Remove="Resources\Loaders\ld_16.gif" />
+    <None Remove="Resources\Loaders\ld_17.gif" />
+    <None Remove="Resources\Loaders\ld_18.gif" />
+    <None Remove="Resources\Loaders\ld_19.gif" />
+    <None Remove="Resources\Loaders\ld_2.gif" />
+    <None Remove="Resources\Loaders\ld_20.gif" />
+    <None Remove="Resources\Loaders\ld_21.gif" />
+    <None Remove="Resources\Loaders\ld_22.gif" />
+    <None Remove="Resources\Loaders\ld_23.gif" />
+    <None Remove="Resources\Loaders\ld_24.gif" />
+    <None Remove="Resources\Loaders\ld_25.gif" />
+    <None Remove="Resources\Loaders\ld_26.gif" />
+    <None Remove="Resources\Loaders\ld_27.gif" />
+    <None Remove="Resources\Loaders\ld_3.gif" />
+    <None Remove="Resources\Loaders\ld_4.gif" />
+    <None Remove="Resources\Loaders\ld_5.gif" />
+    <None Remove="Resources\Loaders\ld_6.gif" />
+    <None Remove="Resources\Loaders\ld_7.gif" />
+    <None Remove="Resources\Loaders\ld_8.gif" />
+    <None Remove="Resources\Loaders\ld_9.gif" />
+    <None Remove="Resources\Loaders\ld_email.GIF" />
+    <None Remove="Resources\Patterns\3px-tile.png" />
+    <None Remove="Resources\Patterns\black-linen.png" />
+    <None Remove="Resources\Patterns\black-lozenge.png" />
+    <None Remove="Resources\Patterns\black-orchid.png" />
+    <None Remove="Resources\Patterns\black-scales.png" />
+    <None Remove="Resources\Patterns\brilliant.png" />
+    <None Remove="Resources\Patterns\carbon-fibre.png" />
+    <None Remove="Resources\Patterns\classy-fabric.png" />
+    <None Remove="Resources\Patterns\climpek.png" />
+    <None Remove="Resources\Patterns\cream-dust.png" />
+    <None Remove="Resources\Patterns\cream-pixels.png" />
+    <None Remove="Resources\Patterns\cross-stripes.png" />
+    <None Remove="Resources\Patterns\cutcube.png" />
+    <None Remove="Resources\Patterns\dark-matter.png" />
+    <None Remove="Resources\Patterns\dark-stripes.png" />
+    <None Remove="Resources\Patterns\dark-wood.png" />
+    <None Remove="Resources\Patterns\diagmonds.png" />
+    <None Remove="Resources\Patterns\diagonal-striped-brick.png" />
+    <None Remove="Resources\Patterns\diagonales-decalees.png" />
+    <None Remove="Resources\Patterns\egg-shell.png" />
+    <None Remove="Resources\Patterns\escheresque.png" />
+    <None Remove="Resources\Patterns\maze-black.png" />
+    <None Remove="Resources\Patterns\micro-carbon.png" />
+    <None Remove="Resources\Patterns\office.png" />
+    <None Remove="Resources\Patterns\padded.png" />
+    <None Remove="Resources\Patterns\paper.png" />
+    <None Remove="Resources\Patterns\paven.png" />
+    <None Remove="Resources\Patterns\rebel.png" />
+    <None Remove="Resources\Patterns\retina-wood.png" />
+    <None Remove="Resources\Patterns\shattered-dark.png" />
+    <None Remove="Resources\Patterns\simple-dashed.png" />
+    <None Remove="Resources\Patterns\skulls.png" />
+    <None Remove="Resources\Patterns\straws.png" />
+    <None Remove="Resources\Patterns\stressed-linen.png" />
+    <None Remove="Resources\Patterns\subtle-dots.png" />
+    <None Remove="Resources\Patterns\swirl.png" />
+    <None Remove="Resources\Patterns\tasky.png" />
+    <None Remove="Resources\Patterns\tileable-wood.png" />
+    <None Remove="Resources\Patterns\use-your-illusion.png" />
+    <None Remove="Resources\Patterns\white-diamond-dark.png" />
+    <None Remove="Resources\Patterns\woven-light.png" />
+    <None Remove="Resources\Patterns\woven.png" />
+    <None Remove="Resources\SVG\pimeslogo.svg" />
+    <None Remove="Templates\Email\email_report.htm" />
+    <None Remove="Templates\Email\email_template.htm" />
+    <None Remove="Templates\Excel\bi_budget_actual_summary.xlsx" />
+    <None Remove="Templates\Excel\bi_budget_combi.xlsx" />
+    <None Remove="Templates\Excel\bi_budget_manager_combi.xlsx" />
+    <None Remove="Templates\Excel\bi_budget_manager_outlook.xlsx" />
+    <None Remove="Templates\Excel\bi_budget_manager_summary.xlsx" />
+    <None Remove="Templates\Excel\bi_budget_variance.xlsx" />
+    <None Remove="Templates\Excel\bi_budget_variance_a&amp;g.xlsx" />
+    <None Remove="Templates\Excel\bi_budget_variance_summary.xlsx" />
+    <None Remove="Templates\Excel\bi_budget_variance_summary_bu.xlsx" />
+    <None Remove="Templates\Excel\bi_budget_variance_summary_outlook.xlsx" />
+    <None Remove="Templates\Excel\bi_budget_variance_svc.xlsx" />
+    <None Remove="Templates\Excel\bi_cos_opex.xlsx" />
+    <None Remove="Templates\Excel\bi_cos_opex_account.xlsx" />
+    <None Remove="Templates\Excel\bi_cos_trans_details.xlsx" />
+    <None Remove="Templates\Excel\bi_sales.xlsx" />
+    <None Remove="Templates\Excel\bi_sales_customer.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_alloc.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_distrule.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_distrule_ats.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_distrule_atsed.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_distrule_box.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_distrule_cal.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_distrule_md.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_distrule_mp.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_distrule_pa.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_distrule_pcb.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_distrule_pmi.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_distrule_sde.xlsx" />
+    <None Remove="Templates\Excel\fin_payroll_reg.xlsx" />
+    <None Remove="Templates\Excel\template_admtravelauthoritysummary.xlsx" />
+    <None Remove="Templates\Excel\template_budget.xlsx" />
+    <None Remove="Templates\Excel\template_budget_blank.xlsx" />
+    <None Remove="Templates\Excel\template_budget_sales_blank.xlsx" />
+    <None Remove="Templates\Excel\template_calcalibrationsystemext.xlsx" />
+    <None Remove="Templates\Excel\template_calcalibrationsystemexternal.xlsx" />
+    <None Remove="Templates\Excel\template_calcalibrationsystemtag.xlsx" />
+    <None Remove="Templates\Excel\template_empleval.xlsx" />
+    <None Remove="Templates\Excel\template_emplevaldetails.xlsx" />
+    <None Remove="Templates\Excel\template_emplevalsummary.xlsx" />
+    <None Remove="Templates\Excel\template_emplpasssummary.xlsx" />
+    <None Remove="Templates\Excel\template_facaccomplishment.xlsx" />
+    <None Remove="Templates\Excel\template_facjobrequestsummary.xlsx" />
+    <None Remove="Templates\Excel\template_itaccomplishment.xlsx" />
+    <None Remove="Templates\Excel\template_itjobrequestsummary.xlsx" />
+    <None Remove="Templates\Excel\template_plwvehicledispatchsummary.xlsx" />
+    <None Remove="Templates\Excel\template_itequipment.xlsx" />
+    <None Remove="Templates\Excel\template_ppdproduction.xlsx" />
+    <None Remove="Templates\Excel\template_ppdschedule.xlsx" />
+    <None Remove="Templates\Images\blankprofile.png" />
+    <None Remove="Templates\template_acknowledgement.xlsx" />
+    <None Remove="Resources\Text\trivia.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Templates\Email\email_report.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Email\email_template.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_budget_actual_summary.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_budget_combi.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_budget_manager_combi.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_budget_manager_outlook.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_budget_manager_summary.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_budget_variance.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_budget_variance_a&amp;g.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_budget_variance_summary.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_budget_variance_summary_outlook.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_budget_variance_summary_bu.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_budget_variance_svc.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_cos_opex.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_cos_opex_account.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_cos_trans_details.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_sales.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\bi_sales_customer.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_alloc.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_distrule.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_distrule_ats.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_distrule_atsed.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_distrule_box.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_distrule_cal.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_distrule_md.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_distrule_mp.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_distrule_pa.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_distrule_pcb.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_distrule_pmi.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_distrule_sde.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\fin_payroll_reg.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_admtravelauthoritysummary.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_budget_blank.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_budget.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_acknowledgement.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_calcalibrationsystemext.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_calcalibrationsystemexternal.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_calcalibrationsystemtag.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_empleval.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_emplevaldetails.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_emplevalsummary.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_emplpasssummary.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_facaccomplishment.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_facjobrequestsummary.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_itaccomplishment.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_itjobrequestsummary.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_plwvehicledispatchsummary.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_itequipment.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_ppdproduction.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_ppdschedule.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Templates\Excel\template_budget_sales_blank.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="DotNetZip" Version="1.16.0" />
+    <PackageReference Include="EPPlus" Version="4.5.3.3" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.0" />
+    <PackageReference Include="LiveCharts" Version="0.9.7" />
+    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+    <PackageReference Include="MySqlConnector" Version="2.3.7" />
+    <PackageReference Include="PdfSharp" Version="1.50.5147" />
+    <PackageReference Include="SharpVectors" Version="1.8.4" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Sap.Data.Hana.v4.5">
+      <HintPath>C:\Program Files (x86)\sap\hdbclient\ado.net\v4.5\Sap.Data.Hana.v4.5.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Fonts\GEORGIA.TTF" />
+    <Resource Include="Resources\Fonts\MULISH.ttf">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Fonts\PIMES.ttf" />
+    <Resource Include="Resources\Fonts\Roboto-Regular.ttf" />
+    <Resource Include="Resources\Fonts\SEGOEPR.TTF" />
+    <Resource Include="Resources\Fonts\SEGOEUI.TTF" />
+    <Resource Include="Resources\Fonts\stylus-bt.ttf" />
+    <Resource Include="Resources\Icons\pimes.ico" />
+    <Resource Include="Resources\Icons\pimescorp.ico" />
+    <Resource Include="Resources\Images\30th_logo.png" />
+    <Resource Include="Resources\Images\admta_bg.png" />
+    <Resource Include="Resources\Images\bg1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\bg2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\bg3.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\blankprofile.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\bldg3b.jpg" />
+    <Resource Include="Resources\Images\directory_bg.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\dyk.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\emergency.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\imeslogo3.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\launcher_bg.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\menu_bg2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\menu_bg1.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\menu_key.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\menu_lock.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\pattern_lock.gif" />
+    <Resource Include="Resources\Images\pimes_logo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\plwvd_bg.png" />
+    <Resource Include="Resources\Images\siren.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Images\xmas.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_1.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_10.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_11.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_12.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_13.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_14.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_15.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_16.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_17.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_18.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_19.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_2.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_20.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_21.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_22.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_23.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_24.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_25.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_26.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_27.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_3.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_4.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_5.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_6.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_7.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_8.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_9.gif">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Loaders\ld_email.GIF">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\3px-tile.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\black-linen.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\black-lozenge.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\black-orchid.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\black-scales.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\brilliant.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\carbon-fibre.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\classy-fabric.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\climpek.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\cream-dust.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\cream-pixels.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\cross-stripes.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\cutcube.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\dark-matter.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\dark-stripes.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\dark-wood.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\diagmonds.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\diagonal-striped-brick.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\diagonales-decalees.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\egg-shell.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\escheresque.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\maze-black.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\micro-carbon.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\office.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\padded.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\paper.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\paven.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\rebel.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\retina-wood.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\shattered-dark.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\simple-dashed.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\skulls.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\straws.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\stressed-linen.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\subtle-dots.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\swirl.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\tasky.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\tileable-wood.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\use-your-illusion.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\white-diamond-dark.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\woven-light.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Patterns\woven.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\SVG\pimeslogo.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Text\trivia.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Templates\Images\blankprofile.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\UserCtrl\PIMESLoaderEmail.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>

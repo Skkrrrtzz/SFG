@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using Newtonsoft.Json;
 using SFG.Services;
+using OfficeOpenXml;
+using System.IO;
 
 namespace SFG.Controllers
 {
@@ -565,6 +567,7 @@ namespace SFG.Controllers
                 }
             }
         }
+
         //EMAIL 
         public IActionResult EmailNotification(string email, string name, bool send)
         {
@@ -784,6 +787,92 @@ namespace SFG.Controllers
             {
                 // Log the exception or return a generic error message
                 throw new Exception($"Error: {ex.Message}");
+            }
+        }
+
+        /* Checking Excel file for sourcing */
+        public async Task<IActionResult> CheckingUploadedFile(IFormFile file)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    return BadRequest("No file uploaded.");
+                }
+
+                // Check if the file is an Excel file
+                if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                {
+                    return BadRequest("Only Excel files are allowed.");
+                }
+
+                using (var stream = new MemoryStream())
+                {
+                    // Copy the file contents to a memory stream
+                    await file.CopyToAsync(stream);
+
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        var workbook = package.Workbook;
+                        if (workbook != null)
+                        {
+                            var worksheet = workbook.Worksheets[0];
+
+                            int rowCount = worksheet.Dimension.Rows;
+                            int colOIndex = worksheet.Cells["O14"].Start.Column;
+                            int colAEIndex = worksheet.Cells["AE14"].Start.Column;
+
+                            for (int row = 14; row <= rowCount; row++) // Start @ row 14
+                            {
+                                var cellO = worksheet.Cells[row, colOIndex].Value?.ToString(); // Cell O
+                                var cellAE = worksheet.Cells[row, colAEIndex].Value?.ToString(); // Cell AE
+                                var cellAD = worksheet.Cells[row, colAEIndex - 1].Value?.ToString(); // Cell AD
+                                var cellAF = worksheet.Cells[row, colAEIndex+1].Value?.ToString(); // Cell AF
+
+                                // Additional checks for cellAE value
+                                if (cellAE == "ft" || cellAE == "m" || cellAE == "mm" || cellAE == "inch" || cellAE == "pack")
+                                {
+                                    // Check if cell AD is blank
+                                    if (string.IsNullOrWhiteSpace(cellAD))
+                                    {
+                                        return Json(new { success = false, message = $"Value of cell AD{row} is blank." });
+                                    }
+                                }
+
+                                // Check if cell AF contains letters
+                                if (cellAF != null && cellAF.Any(char.IsLetter))
+                                {
+                                    return Json(new { success = false, message = $"Value of cell AF{row} contains letters." });
+                                }
+
+                                // Compare the values of cell O14 and AE14
+                                if (cellO == cellAE)
+                                {
+                                    // Values are the same, continue to the next row
+                                    continue;
+                                }
+                                else
+                                {
+                                    // Values are different, return the result as JSON
+                                    return Json(new { success = false, message = $"Values of cell AE{row} ('{cellAE}') are different from cell O{row} ('{cellO}')." });
+                                }
+                            }
+
+                            // If all checks are successful, return an Ok response
+                            return Ok(new { success = true, message = "All values are valid." });
+                        }
+                        else
+                        {
+                            return Json(new { success = false, message = "No worksheet found in the Excel file." });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error checking uploaded file: {ex.Message}");
+                return StatusCode(500, "An error occurred while processing the file.");
             }
         }
     }

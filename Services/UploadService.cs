@@ -7,6 +7,7 @@ namespace SFG.Services
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly string _excelDirectory = "Uploads\\Excel";
         private readonly string _pdfDirectory = "Uploads\\PDF";
+        private readonly string _exportedExcelDirectory = "ExportedExcel";
 
         public UploadService(IWebHostEnvironment webHostEnvironment)
         {
@@ -58,6 +59,13 @@ namespace SFG.Services
 
             return filePath;
         }
+        public string GetExportedExcel(string projectName)
+        {
+            string uploadsDirectory = Path.Combine(_webHostEnvironment.WebRootPath, _exportedExcelDirectory);
+            string filePath = Path.Combine(uploadsDirectory, projectName + ".xlsx");
+
+            return filePath;
+        }
 
         public string GetPdfFilePath(string excelFilePath)
         {
@@ -78,7 +86,7 @@ namespace SFG.Services
             return pdfFilePath;
         }
 
-        public string GetConvertedToPdf(string filePath)
+        public string GetConvertedToPdf(string filePath, int worksheetIndex)
         {
             // Create an instance of Excel Application
             Application excelApplication = new();
@@ -92,9 +100,12 @@ namespace SFG.Services
                 // Open the Excel file
                 Workbook workbook = excelApplication.Workbooks.Open(filePath);
 
-                // Save the Excel file as PDF
+                // Get the worksheet by index
+                Worksheet worksheet = workbook.Worksheets[worksheetIndex];
+
+                // Save the worksheet as PDF
                 string pdfFilePath = GetPdfFilePath(filePath);
-                workbook.ExportAsFixedFormat(XlFixedFormatType.xlTypePDF, pdfFilePath);
+                worksheet.ExportAsFixedFormat(XlFixedFormatType.xlTypePDF, pdfFilePath);
 
                 return pdfFilePath;
             }

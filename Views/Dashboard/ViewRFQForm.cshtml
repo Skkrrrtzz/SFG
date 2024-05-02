@@ -2,6 +2,13 @@
 @{
     ViewData["Title"] = "View RFQ Form";
 }
+<style>
+    .file-name {
+        margin-top: 10px;
+        font-size: 14px;
+        color: #6c757d;
+    }
+</style>
 <div>
     <div class="card text-bg-light mb-2 shadow-sm">
         <div class="card-header text-bg-primary">
@@ -54,10 +61,12 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-lg-4">
-                    <button class="btn btn-primary btn-sm" type="button" id="btnCapture"><i class="fa-solid fa-camera"></i> Capture</button>
+                    <div class="input-group mb-3 p-2">
+                        <input type="file" class="form-control" accept=".xlsx, .xls" id="excelFileInput">
+                        <button class="btn btn-success" type="button" id="uploadBtn"><i class="fa-solid fa-upload"></i> Upload Excel </button>
+                    </div>
                 </div>
             </div>
-           
             <div class="p-2 mb-1">
                 <div class="table-responsive">
                     <table class="table table-sm compact table-bordered table-hover text-wrap" id="SRFQTbl" style="width: 100%">
@@ -115,13 +124,6 @@
     </div>
 </div>
 <script>
-
-    function getQueryStringParameter(name) {
-        var urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
-    }
-    var qC = getQueryStringParameter("quotationCode");
-    console.log(qC);
-    $("#SRFQTbl").DataTable({
-    });
+    const UploadRFQInfo = '@Url.Action("CheckingUploadedFile", "Sourcing")';
 </script>
+<script src="~/JavaScript/RFQProcess.js"></script>

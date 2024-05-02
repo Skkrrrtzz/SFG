@@ -42,6 +42,8 @@
     <Folder Include="wwwroot\ExportedExcel\" />
     <Folder Include="wwwroot\Template\" />
     <Folder Include="wwwroot\Uploads\" />
+    <Folder Include="wwwroot\Uploads\Excel\" />
+    <Folder Include="wwwroot\Uploads\PDF\" />
   </ItemGroup>
 
 </Project>

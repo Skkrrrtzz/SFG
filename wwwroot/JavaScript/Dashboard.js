@@ -300,7 +300,10 @@ function viewRFQProjects(table, data) {
           return (
             '<a href="#" class="text-primary view-btn fs-4" data-id="' +
             row.quotationCode +
-            '"><i class="fa-solid fa-eye"></i></a>'
+            '"><i class="fa-solid fa-eye"></i></a> ' +
+            ' <a href="#" class="text-success download-btn fs-4" data-id="' +
+            row.projectName +
+            '"><i class="fa-solid fa-download"></i></a>'
           );
         },
       },
@@ -314,6 +317,15 @@ $("#incomingRFQTable").on("click", ".view-btn", function () {
   var url = ViewRFQForm + "?quotationCode=" + quotationCode;
   console.log(url);
   // Redirect to the generated URL
+  window.location.href = url;
+});
+
+$("#incomingRFQTable").on("click", ".download-btn", function () {
+  var projectName = $(this).data("id");
+  var url =
+    "/Dashboard/DownloadExcelFile?projectName=" +
+    encodeURIComponent(projectName);
+  console.log(url);
   window.location.href = url;
 });
 

@@ -1,0 +1,32 @@
+:root {
+    --colorMain1: #010038;
+    --colorMain2: #0f1c57;
+    --colorMain3: #293A80;
+    --colorMain4: #3A5BA0;
+    --colorMain5: #537EC5;
+    --colorMain5: #658bcb;
+    --colorDimGray: #696969;
+}
+
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    background-color: #2e2e2e;
+    background-image: url("https://www.transparenttextures.com/patterns/dark-tire.png");
+    /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
+
+    margin-bottom: 60px;
+}

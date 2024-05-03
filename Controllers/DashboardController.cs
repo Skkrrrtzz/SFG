@@ -43,6 +43,14 @@ namespace SFG.Controllers
         {
             return View();
         }
+        public IActionResult ProjectSummaryReport()
+        {
+            return View();
+        }
+        public IActionResult OpenProjects()
+        {
+            return View();
+        }
         public async Task<IActionResult> ViewRFQForm(string quotationCode)
         {
             try

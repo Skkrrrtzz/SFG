@@ -4,6 +4,7 @@
     // string department = ViewBag.Department;
     string department = "Cost Engineering";
 }
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
 <div class="row">
     <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
         <div class="card shadow bg-warning border-3 border-warning-subtle">
@@ -45,8 +46,8 @@
     </div>
     <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
         <div class="row mx-0">
-            <a asp-action="Index" asp-controller="Home" class="btn btn-primary border-3 border-primary-subtle my-2">Project Summary Report</a>
-            <a asp-action="Index" asp-controller="Home" class="btn btn-primary border-3 border-primary-subtle my-2">OPEN Projects</a>
+            <a asp-action="ProjectSummaryReport" asp-controller="Dashboard" class="btn btn-primary border-3 border-primary-subtle my-2">Project Summary Report</a>
+            <a asp-action="OpenProjects" asp-controller="Dashboard" class="btn btn-primary border-3 border-primary-subtle my-2">OPEN Projects</a>
         </div>
     </div>
     <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
@@ -286,6 +287,7 @@
             </div>
         </div>
     </div>
+    <div id="example"></div>
 </div>
 <!-- Upload Last Purchase Info Modal -->
 <div class="modal fade" id="uploadLastPurchase" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadLastPurchaseLabel" aria-hidden="true">
@@ -450,7 +452,24 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
 <script>
+    const container = document.querySelector('#example');
+
+    const hot = new Handsontable(container, {
+        data: [
+            ['', 'Tesla', 'Volvo', 'Toyota', 'Ford'],
+            ['2019', 10, 11, 12, 13],
+            ['2020', 20, 11, 14, 13],
+            ['2021', 30, 15, 12, 13]
+        ],
+        rowHeaders: true,
+        colHeaders: true,
+        height: 'auto',
+        autoWrapRow: true,
+        autoWrapCol: true,
+        licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
+    });
     $(document).ready(function () {
         // Assuming department is retrieved from your backend
         var department = "@department";

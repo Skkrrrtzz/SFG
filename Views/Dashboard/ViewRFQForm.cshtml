@@ -2,13 +2,6 @@
 @{
     ViewData["Title"] = "View RFQ Form";
 }
-<style>
-    .file-name {
-        margin-top: 10px;
-        font-size: 14px;
-        color: #6c757d;
-    }
-</style>
 <div>
     <div class="card text-bg-light mb-2 shadow-sm">
         <div class="card-header text-bg-primary">
@@ -60,10 +53,13 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-sm-6 col-lg-4">
-                    <div class="input-group mb-3 p-2">
+                <div class="col-sm-6 col-lg-6">
+                    <div class="input-group p-2">
                         <input type="file" class="form-control" accept=".xlsx, .xls" id="excelFileInput">
-                        <button class="btn btn-success" type="button" id="uploadBtn"><i class="fa-solid fa-upload"></i> Upload Excel </button>
+                        <button class="btn btn-success" type="button" onclick="uploadExcel()"><i class="fa-solid fa-upload"></i> Upload</button>
+                    </div>
+                    <div class="mx-2">
+                        <i class="">Upload the excel file</i>
                     </div>
                 </div>
             </div>
@@ -75,7 +71,6 @@
                                 <th>Item No</th>
                                 <th>Customer Part Number</th>
                                 <th>Rev</th>
-                                @* <th>Sap Part Number</th> *@
                                 <th>Description</th>
                                 <th>Original MPN/Raw Material for Fab Parts</th>
                                 <th>Original Manufacturer/Finishing for Fab Parts</th>

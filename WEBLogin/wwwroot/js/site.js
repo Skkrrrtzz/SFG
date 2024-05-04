@@ -66,13 +66,30 @@ $(function () {
             data: { parapass: password },
             success: function (data) {
                 if (data == "loginsucess") {
-                    // $("#stkRole").show();
-                    //const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
 
-                    // $.fn.myFunction();
-                    $("#dialog").dialog("open");
+                    $("#partialModal .modal-body").load("/Role");
+                    $("#partialModal").modal('show');
 
-                    showMessage('success');
+                    //$("#dialog").dialog("open");
+                    //showMessage('success');
+                    // window.location.href = "/Account/Role";
+
+                 //   $.ajax({
+                 //       type: 'GET',
+                 //       url: '?handler=LoginSuccess',
+                 //       contentType: false,
+                 //       processData: false,
+                 //       success: function (res) {
+                 //           $('#partialModal .modal-body').html(res.html);
+                 ///*           $('#partialModal .modal-title').html(title);*/
+                 //           $('#partialModal').modal('show');
+                 //       },
+                 //       error: function (err) {
+                 //           console.log(err)
+                 //       }
+                 //   })
+
+
                 }
                 else {
                     // $("#stkRole").hide();

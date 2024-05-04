@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APPCommon", "APPCommon\APPC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMLaptopPass", "COMLaptopPass\COMLaptopPass.csproj", "{D015EC73-1AAA-4698-943E-10C2869663B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEBLogin", "WEBLogin\WEBLogin.csproj", "{4CD0380B-8B2B-4BBD-B84B-A819CFB447C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEBLogin", "WEBLogin\WEBLogin.csproj", "{4CD0380B-8B2B-4BBD-B84B-A819CFB447C3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 
 builder.Services.AddTransient<ILoginRepository, LoginRepository>();
+builder.Services.AddTransient<ILaptopPassRepository, LaptopPassRepository>();
 
 var app = builder.Build();
 

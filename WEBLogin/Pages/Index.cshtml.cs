@@ -15,7 +15,7 @@ namespace WEBLogin.Pages
         public async Task<IActionResult> OnGetAsync()
         {
 
-            return RedirectToPage("/Account/Login");
+            return RedirectToPage("/Login");
 
         }
     }

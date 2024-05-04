@@ -10,18 +10,20 @@ namespace WEBLogin.Repository
 {
     public class LoginRepository : ILoginRepository
     {
-        public async Task<IEnumerable<UserLoginModel>> GetLogin()
+        public async Task<IEnumerable<UserLoginModel>> GetLogin(string strpass)
         {
             using (MySqlConnection sqlConnection = new MySqlConnection(PIMESSettings.mysqlConnString))
             {
-                var result = new ObservableCollection<UserLoginModel>
+                var sqlParameters = new DynamicParameters();
+                sqlParameters.Add("@varpass", strpass);
+
+                var result = new List<UserLoginModel>
                                     (await sqlConnection.QueryAsync<UserLoginModel>
-                                        ("laptop_role_sp",
-                                          null,
+                                        ("com_login_sp",
+                                          sqlParameters,
                                           commandType: CommandType.StoredProcedure
                                         )
                                     );
-
                 return result;
             }
         }

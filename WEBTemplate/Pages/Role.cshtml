@@ -1,0 +1,142 @@
+﻿@page
+@using System.Text.Json
+@using WEBTemplate.Models
+@using static WEBTemplate.Models.LaptopPassModel
+
+
+@model WEBTemplate.Pages.Account.RoleModel
+@{
+    ViewBag.Title = "PIMES Role";
+    Layout = "_LayoutFull";
+}
+
+
+<div class="vstack">
+    <div class="hstack">
+        <div class="col-4 text-center">
+            @*     <d"iv class="container text-center bg-white"> *@
+            <img src="@Model.imgstring" class="border" style="max-width: 100%; width:150px; height:auto;">
+            @*  </div> *@
+        </div>
+        <div class="col-8">
+            <div class="vstack centerdiv">
+                <div class="container">
+                    @{
+                        // var tempuser = JsonSerializer.Deserialize<List<UserLoginModel>>((string)TempData.Peek("CurrentUser"))
+                        //                              .Select(x => x.username).FirstOrDefault();
+                        // var varlist = Model.roleList
+                        //                    .Where(x => x.username == tempuser)
+                        //                    .ToList();
+
+                        // var strusername = "";
+                        // var stremail = "";
+                        // var strlocalno = "";
+                        // var strbuname = "";
+
+                        // foreach (var item in varlist)
+                        // {
+                        //     strusername = item.username;
+                        //     stremail = item.email;
+                        //     strlocalno = item.localno;
+                        //     strbuname = item.buname;
+                        // }
+
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">User Name</th>
+                                    <td>@Model.username</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Email</th>
+                                    <td>@Model.email</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Local No.</th>
+                                    <td>@Model.localno</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    }
+
+
+
+
+
+
+
+
+                    @*  <table class="table">
+                    @{
+                    var tempData = JsonSerializer.Deserialize(TempData["CurrentUser"].ToString(), typeof(IEnumerable<UserLoginModel>));
+                    string jeck1 = "", jeck2 = "", jeck3 = "", jeck4 = "";
+                    <tbody>
+
+
+
+                    @foreach (var tempItem in (IEnumerable<UserLoginModel>)tempData)
+                    {
+                    jeck1 = tempItem.username;
+                    jeck2 = tempItem.employeeno;
+                    jeck3 = tempItem.email;
+                    jeck4 = tempItem.localno;
+
+                    }
+
+
+                    <tr>
+                    <td>User Name</td>
+                    <td>@jeck1</td>
+                    </tr>
+                    <tr>
+                    <td>Employee No.</td>
+                    <td>@jeck2</td>
+                    </tr>
+                    <tr>
+                    <td>Email</td>
+                    <td>@jeck3</td>
+                    </tr>
+                    <tr>
+                    <td>Local No.</td>
+                    <td>@jeck4</td>
+                    </tr>
+
+
+                    </tbody>
+                    TempData.Keep("CurrentUser");
+                    }
+
+                    </table> *@
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <hr />
+
+    <div id="stkRole" class="vstack">
+        <div class="row hstack mt-3">
+            <label class="col-2 form-label" for="optBU">BU</label>
+            <div class="col-10">
+                <select id="optBU" class="form-select" asp-items="@Model.buitem"></select>
+            </div>
+        </div>
+        <div class="row hstack mt-3">
+            <label class=" col-2 form-label" for="optBU">Role</label>
+            <div class="col-10">
+                <select id="optRole" class="form-select" asp-items="@Model.roleitem"></select>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+

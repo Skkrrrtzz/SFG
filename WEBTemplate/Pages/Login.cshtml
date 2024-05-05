@@ -1,0 +1,58 @@
+﻿@page
+@model WEBTemplate.Pages.LoginModel
+@{
+    ViewBag.Title = "PIMES Login";
+    Layout = "_LayoutFull";
+}
+
+
+
+<div class="vstack centerdiv">
+    <div class="row" style="height:20%; background-color:var(--colorMain1)">
+    </div>
+    <div class="row" style="height:80%; background-color:var(--colorDimGray)">
+        <div class="vstack ms-3 me-3">
+            <div class="mx-auto mt-3" style="height:50px">
+                <h6 class="display-6 text-center text-white"> L O G I N </h6>
+           </div>
+            <div class="mx-auto mt-2" style="height:50px">
+               <label class="form-label" for="txtPassword"></label>
+                <input id="txtPassword" type="password" class="form-control text-center" placeholder="Enter password">
+            </div>
+
+            <div class="mx-auto mt-5 text-center" style="height:50px">
+                <button id="btnLogin" class="btn btn-primary text-center"><i class="bi bi-box-arrow-in-right"></i> Login</button>
+            </div>
+
+            @*  <div id="stkRole" class="vstack" style="display:none">
+            <div class="mx-auto mt-3" style="height:50px">
+            <label class="form-label" for="optBU">BU</label>
+            <select id="optBU" class="form-select" asp-for="SelectedBU" asp-items="@Model.BUList"></select>
+            </div>
+
+            <div class="mx-auto mt-3" style="height:50px">
+            <label class="form-label" for="optRole">Role</label>
+            <select id="optRole" class="form-select" asp-for="SelectedRole" asp-items="@Model.RoleList"></select>
+            </div>
+            </div> *@
+
+        </div>
+    </div>
+</div>
+
+
+<div id="partialModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 100%; width:550px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Welcome!</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-arrow-right-circle-fill"></i> Continue</button
+            </div>
+        </div>
+    </div>
+</div>

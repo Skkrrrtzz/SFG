@@ -601,6 +601,16 @@ namespace APPCommon.Class
         }
 
         #endregion String
+
+        #region Converters
+        public static int ToInt16OrDefault(this string value, int defaultValue = 0)
+        {
+            int result;
+            return int.TryParse(value, out result) ? result : defaultValue;
+        }
+
+
+        #endregion Converters
     }
 
     #region Converter

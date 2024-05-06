@@ -1,7 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text.Json;
-using WEBTemplate.Models;
 using WEBTemplate.Repository;
 
 namespace WEBTemplate.Pages
@@ -17,7 +14,6 @@ namespace WEBTemplate.Pages
 
         public void OnGet()
         {
-
             //Check if Login
             //if (TempData.Peek("CurrentUser")==null)
             //{

@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
@@ -19,14 +18,11 @@ namespace WEBTemplate.Pages
             _loginRepository = loginRepository;
             _httpContext = httpContext;
             userLogin = new List<UserLoginModel>();
-
         }
 
         public void OnGet()
         {
-
         }
-
 
         public async Task<IActionResult> OnGetUserLoginAsync(string parapass)
         {
@@ -50,11 +46,9 @@ namespace WEBTemplate.Pages
             return new JsonResult(result);
         }
 
-
         public async Task<IActionResult> OnGetSuccessLoginAsync()
         {
             return RedirectToPage("/Account/Role");
-
         }
     }
 }

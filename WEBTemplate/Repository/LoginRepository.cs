@@ -1,11 +1,8 @@
 ﻿using APPCommon.Class;
 using Dapper;
-using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
-using System.Collections.ObjectModel;
 using System.Data;
 using WEBTemplate.Models;
-using static WEBTemplate.Models.LaptopPassModel;
 
 namespace WEBTemplate.Repository
 {
@@ -34,8 +31,6 @@ namespace WEBTemplate.Repository
         {
             using (MySqlConnection sqlConnection = new MySqlConnection(PIMESSettings.mysqlConnString))
             {
-
-
                 var sqlParameters = new DynamicParameters();
                 sqlParameters.Add("@varempcode", in_empno);
 
@@ -46,11 +41,9 @@ namespace WEBTemplate.Repository
                                      )
                                 );
 
-
                 return result;
             }
         }
-
 
         public async Task<IEnumerable<UserRoleModel>> GetRole()
         {
@@ -69,7 +62,6 @@ namespace WEBTemplate.Repository
                                     );
                 return result;
             }
-
         }
     }
 }

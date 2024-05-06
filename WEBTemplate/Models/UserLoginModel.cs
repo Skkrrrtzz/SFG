@@ -1,12 +1,11 @@
 ﻿namespace WEBTemplate.Models
-{   
+{
     public class UserLoginModel
     {
         public string username { get; set; }
         public string empno { get; set; }
         public int appaccess { get; set; }
     }
-
 
     public class UserRoleModel
     {

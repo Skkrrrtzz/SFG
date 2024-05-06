@@ -1,6 +1,4 @@
-﻿
-
-// #region Function
+﻿// #region Function
 
 $("#dialog").dialog({
     autoOpen: false,
@@ -27,7 +25,6 @@ function showMessage(paramode) {
 
         toasterHeader.innerHTML = 'SUCCESS';
         toasterBody.innerHTML = '<i class="bi bi-check-circle-fill"></i> Password accepted.';
-
     }
 
     if (paramode == 'error') {
@@ -43,15 +40,11 @@ function showMessage(paramode) {
 
     var visibleToast = new bootstrap.Toast(toaster, { 'autohide': true, 'delay': 3000 });
     visibleToast.show();
-
-
 }
-
 
 //#endregion Function
 
 $(function () {
-
     // #region Login
 
     $("#btnLogin").on("click", function (e) {
@@ -61,7 +54,6 @@ $(function () {
             data: { parapass: $("#txtPassword").val() },
             success: function (data) {
                 if (JSON.parse(data)["Success"] === true) {
-
                     $("#partialModal .modal-body").load("/Role");
                     $("#partialModal").modal('show');
                 }
@@ -82,7 +74,6 @@ $(function () {
             // dataType: "json",
             data: { parabu: $("#optBU option:selected").text() },
             success: function (data) {
-
                 //Remove all items in the countriesList
                 $("#optRole option").remove();
 
@@ -90,7 +81,6 @@ $(function () {
                 $.each(data, function (index, itemData) {
                     //Append that item to the countriesList
                     $("#optRole").append("<option value='" + itemData + "'>" + itemData + "</option>");
-
                 });
 
                 $("#optRole").val([]);
@@ -122,11 +112,4 @@ $(function () {
     })
 
     // #endregion Login
-
-
-
-
 });
-
-
-

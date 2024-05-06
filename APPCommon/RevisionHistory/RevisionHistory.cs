@@ -3,8 +3,10 @@ namespace APPCommon.RevisionHistory
 {
     public static class RevisionHistory
     {
-        public const double appVersion = 1.04;
+        public const double appVersion = 1.05;
 
+        //--> Version : 1.05 May 06, 2024
+        //Design landing page
         //--> Version : 1.04 May 04, 2024
         //Add image to welcome message role menu
         //--> Version : 1.03 May 04, 2024

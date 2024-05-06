@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using WEBTemplate.Repository;
 
@@ -5,24 +6,25 @@ namespace WEBTemplate.Pages
 {
     public class RequestModel : PageModel
     {
-        private readonly ILaptopPassRepository _laptopPassRepository;
+        private readonly IHttpContextAccessor _httpContext;
 
-        public RequestModel(ILaptopPassRepository laptopPassRepository)
+        [BindProperty]
+        public string pagetitle { get; set; }
+        public string webversion { get; set; }
+
+        public RequestModel(IHttpContextAccessor httpContextAccessor)
         {
-            _laptopPassRepository = laptopPassRepository;
+            _httpContext = httpContextAccessor;
         }
+
+
 
         public void OnGet()
         {
-            //Check if Login
-            //if (TempData.Peek("CurrentUser")==null)
-            //{
-            //    return RedirectToPage("/Login");
-            //}
-            //else
-            //{
-            //    return Page();
-            //}
+            _httpContext.HttpContext.Session.SetString("MyTitle", "LAPTOP PASS");
+
+            pagetitle = _httpContext.HttpContext.Session.GetString("MyTitle");
+            webversion = "Ver. " + APPCommon.RevisionHistory.RevisionHistory.appVersion.ToString("N2");
         }
     }
 }

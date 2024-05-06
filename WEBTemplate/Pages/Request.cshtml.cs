@@ -15,18 +15,18 @@ namespace WEBTemplate.Pages
             _laptopPassRepository = laptopPassRepository;
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public void OnGet()
         {
 
             //Check if Login
-            if (TempData.Peek("CurrentUser")==null)
-            {
-                return RedirectToPage("/Login");
-            }
-            else
-            {
-                return Page();
-            }
+            //if (TempData.Peek("CurrentUser")==null)
+            //{
+            //    return RedirectToPage("/Login");
+            //}
+            //else
+            //{
+            //    return Page();
+            //}
         }
     }
 }

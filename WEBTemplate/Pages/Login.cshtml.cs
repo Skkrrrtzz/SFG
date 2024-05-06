@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
@@ -9,12 +10,15 @@ namespace WEBTemplate.Pages
     public class LoginModel : PageModel
     {
         private readonly ILoginRepository _loginRepository;
-        public IEnumerable<UserLoginModel> loginList { get; set; }
+        private readonly IHttpContextAccessor _httpContext;
 
-        public LoginModel(ILoginRepository loginRepository)
+        public IEnumerable<UserLoginModel> userLogin { get; set; }
+
+        public LoginModel(ILoginRepository loginRepository, IHttpContextAccessor httpContext)
         {
             _loginRepository = loginRepository;
-            loginList = new List<UserLoginModel>();
+            _httpContext = httpContext;
+            userLogin = new List<UserLoginModel>();
 
         }
 
@@ -26,52 +30,24 @@ namespace WEBTemplate.Pages
 
         public async Task<IActionResult> OnGetUserLoginAsync(string parapass)
         {
-            loginList = await _loginRepository.GetLogin(parapass);
+            userLogin = await _loginRepository.GetLogin(parapass);
 
-            var resultlist = new List<string>();
+            var result = string.Empty;
 
-            if (!loginList.Any())
+            if (!userLogin.Any())
             {
-                resultlist.Add("");
+                result = JsonSerializer.Serialize(new { Success = false });
             }
             else
             {
-           
+                _httpContext.HttpContext.Session.SetString("MyUser", userLogin.Select(x => x.username).FirstOrDefault());
+                _httpContext.HttpContext.Session.SetString("MyEmpNo", userLogin.Select(x => x.empno).FirstOrDefault());
+                _httpContext.HttpContext.Session.SetInt32("MyAccess", userLogin.Select(x => x.appaccess).FirstOrDefault());
 
-                string myuser = JsonSerializer.Serialize(loginList);
-
-                TempData["CurrentUser"] = myuser;
-
-                resultlist.Add("loginsucess");
+                result = JsonSerializer.Serialize(new { Success = true });
             }
 
-
-            return new JsonResult(resultlist);
-        }
-
-        public async Task<IActionResult> OnGetRoleAsync(string parapass)
-        {
-            loginList = await _loginRepository.GetLogin(parapass);
-
-            var resultlist = new List<string>();
-
-            if (!loginList.Any())
-            {
-                resultlist.Add("");
-            }
-            else
-            {
-
-
-                string myuser = JsonSerializer.Serialize(loginList);
-
-                TempData["CurrentUser"] = myuser;
-
-                resultlist.Add("loginsucess");
-            }
-
-
-            return new JsonResult(resultlist);
+            return new JsonResult(result);
         }
 
 

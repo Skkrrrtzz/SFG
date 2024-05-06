@@ -1,4 +1,5 @@
 ﻿using WEBTemplate.Models;
+using static WEBTemplate.Models.LaptopPassModel;
 
 namespace WEBTemplate.Repository
 {
@@ -6,6 +7,11 @@ namespace WEBTemplate.Repository
     {
 
         public Task<IEnumerable<UserLoginModel>> GetLogin(string strpass);
+
+
+        public Task<byte[]> GetEmployeeImage(int in_empno);
+
+        public Task<IEnumerable<UserRoleModel>> GetRole();
 
 
     }

@@ -609,7 +609,6 @@ namespace APPCommon.Class
             return int.TryParse(value, out result) ? result : defaultValue;
         }
 
-
         #endregion Converters
     }
 

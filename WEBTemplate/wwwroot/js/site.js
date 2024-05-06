@@ -1,6 +1,6 @@
 ﻿
 
-
+// #region Function
 
 $("#dialog").dialog({
     autoOpen: false,
@@ -13,9 +13,6 @@ $("#dialog").dialog({
         duration: 500
     }
 });
-
-
-// #region Function
 function showMessage(paramode) {
     var toaster = document.getElementById("toastMessage");
     var toasterHeader = document.getElementById("toastHeader");
@@ -47,80 +44,43 @@ function showMessage(paramode) {
     var visibleToast = new bootstrap.Toast(toaster, { 'autohide': true, 'delay': 3000 });
     visibleToast.show();
 
-    // const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
 
 }
 
 
-// #endregion
-
+//#endregion Function
 
 $(function () {
 
+    // #region Login
 
     $("#btnLogin").on("click", function (e) {
-        var password = $("#txtPassword").val();
-        // $("#dialog").dialog("open");
-
         $.ajax({
             url: "Login?handler=UserLogin",
             method: "GET",
-            data: { parapass: password },
+            data: { parapass: $("#txtPassword").val() },
             success: function (data) {
-                if (data == "loginsucess") {
+                if (JSON.parse(data)["Success"] === true) {
 
                     $("#partialModal .modal-body").load("/Role");
                     $("#partialModal").modal('show');
-
-
-                   // $("#optBU").val([]);
-
-                    //$("#dialog").dialog("open");
-                    //showMessage('success');
-                    // window.location.href = "/Account/Role";
-
-                 //   $.ajax({
-                 //       type: 'GET',
-                 //       url: '?handler=LoginSuccess',
-                 //       contentType: false,
-                 //       processData: false,
-                 //       success: function (res) {
-                 //           $('#partialModal .modal-body').html(res.html);
-                 ///*           $('#partialModal .modal-title').html(title);*/
-                 //           $('#partialModal').modal('show');
-                 //       },
-                 //       error: function (err) {
-                 //           console.log(err)
-                 //       }
-                 //   })
-
-
                 }
                 else {
                     // $("#stkRole").hide();
                     $("#txtPassword").select();
-
                     showMessage('error');
-                    //toastBootstrap.show()
-
-
-
-
                 }
             }
         })
         e.preventDefault();
     })
-
-
-    $("#optRole").on("focus",function (e) {
-        // var password = $("#txtPassword").val();
+    $("#optRole").on("focus", function (e) {
         $.ajax({
             url: "Role?handler=CheckRole",
             method: "GET",
             // contentType: 'application/json; charset=utf-8',
             // dataType: "json",
-            data: { parabu: $("#optBU").val() },
+            data: { parabu: $("#optBU option:selected").text() },
             success: function (data) {
 
                 //Remove all items in the countriesList
@@ -128,20 +88,43 @@ $(function () {
 
                 //For each item retrieved in the AJAX call...
                 $.each(data, function (index, itemData) {
-                    //...append that item to the countriesList
+                    //Append that item to the countriesList
                     $("#optRole").append("<option value='" + itemData + "'>" + itemData + "</option>");
 
                 });
 
                 $("#optRole").val([]);
-            },
-            error: function (xhr, status, error) {
-                // Handle errors
-                alert("Error " + error);
             }
         })
         e.preventDefault();
     })
+    $("#btnNext").on("click", function (e) {
+        var varbu = $("#optBU option:selected").text();
+        var varbuid = $("#optBU option:selected").val();
+        var varrole = $("#optRole option:selected").text();
+        $.ajax({
+            url: "Role?handler=StartPage",
+            method: "GET",
+            data: { parabu: varbu, parabuid: varbuid, pararole: varrole },
+            success: function (data) {
+                if (JSON.parse(data)["currentrole"] === 'REQUESTOR') {
+                    window.location.href = "/Requestor";
+                }
+                if (JSON.parse(data)["currentrole"] === 'APPROVER') {
+                    window.location.href = "/Approver";
+                }
+                if (JSON.parse(data)["currentrole"] === 'NOTER') {
+                    window.location.href = "/Noter";
+                }
+            }
+        })
+        e.preventDefault();
+    })
+
+    // #endregion Login
+
+
+
 
 });
 

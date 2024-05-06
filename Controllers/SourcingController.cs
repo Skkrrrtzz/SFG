@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using SFG.Services;
 using OfficeOpenXml;
 using System.IO;
+using SFG.Repository;
 
 namespace SFG.Controllers
 {
@@ -16,10 +17,13 @@ namespace SFG.Controllers
     {
         private readonly Emailing _emailingService;
         private readonly Exporting _exportingService;
-        public SourcingController(AppDbContext dataBase, Exporting exportingService, Emailing emailingService) : base(dataBase)
+        private readonly ISourcingRepository _sourcingRepository;
+
+        public SourcingController(AppDbContext dataBase, Exporting exportingService, Emailing emailingService, ISourcingRepository sourcingRepository) : base(dataBase)
         {
             _exportingService = exportingService;
             _emailingService = emailingService;
+            _sourcingRepository = sourcingRepository;
         }
         public IActionResult SourcingForm()
         {
@@ -307,10 +311,10 @@ namespace SFG.Controllers
                 }
 
                 // GetRFQ method to retrieve RFQ data
-                var rfqData = await GetRFQ(projectName);
+                var rfqData = await _sourcingRepository.GetRFQ(projectName);
 
                 // GetRFQProject method to retrieve RFQProject data
-                var rfqProjectData = await GetRFQProject(projectName);
+                var rfqProjectData = await _sourcingRepository.GetRFQProject(projectName);
 
                 // Check if rfqData or rfqProjectData is null
                 if (rfqData == null || rfqProjectData == null)
@@ -515,6 +519,7 @@ namespace SFG.Controllers
         }
 
         /*COMMON QUERY*/
+
         private async Task<IEnumerable<dynamic>> GetData(string partNumber, string tableName)
         {
             // Check if the specified table exists
@@ -687,6 +692,7 @@ namespace SFG.Controllers
             {
                 // Call the GetBOM method to retrieve MRPBOM data
                 var mrpData = await GetData(PartNumber, "MRPBOMProducts");
+                //var mrpData = await _sourcingRepository.GetData(PartNumber, "MRPBOMProducts");
 
                 return mrpData;
             }

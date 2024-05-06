@@ -1,11 +1,10 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using OfficeOpenXml;
 using SFG.Data;
 using SFG.Models;
+using SFG.Repository;
 using SFG.Services;
 
 namespace SFG.Controllers
@@ -14,10 +13,12 @@ namespace SFG.Controllers
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly UploadService _uploadService;
-        public DashboardController(AppDbContext dataBase, IWebHostEnvironment hostingEnvironment, UploadService uploadService) : base(dataBase)
+        private readonly IDashboardRepository _dashboardRepository;
+        public DashboardController(AppDbContext dataBase, IWebHostEnvironment hostingEnvironment, UploadService uploadService, IDashboardRepository dashboardRepository) : base(dataBase)
         {
             _hostingEnvironment = hostingEnvironment;
             _uploadService = uploadService;
+            _dashboardRepository = dashboardRepository;
         }
         public IActionResult Dashboard()
         {
@@ -34,11 +35,6 @@ namespace SFG.Controllers
 
             return Checking();
         }
-        public async Task<IActionResult> ViewRFQProjects()
-        {
-            var model = await GetAllRFQProjects();
-            return View(model);
-        }
         public IActionResult Library()
         {
             return View();
@@ -51,62 +47,13 @@ namespace SFG.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> ViewRFQForm(string quotationCode)
-        {
-            try
-            {
-                var viewModel = new MyViewModel
-                {
-                    RFQData = await GetRFQByQuotationCode(quotationCode),
-                    RFQProjectData = await GetRFQProjectsByQuotationCode(quotationCode)
-                };
-                return View(viewModel);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                Console.WriteLine($"Error retrieving RFQ data: {ex.Message}");
-                return StatusCode(500); // Return 500 Internal Server Error
-            }
-        }
-        public async Task<IActionResult> Incoming()
-        {
-            try
-            {
-                // Retrieve all RFQProjectModels from the RFQProjects table
-                List<RFQProjectModel> rfqProjectData = await _db.RFQProjects.ToListAsync();
-
-                // Pass the retrieved data to the view
-                return View(rfqProjectData);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception or handle it as required
-                return View("Error", ex);
-            }
-        }
         public IActionResult Closed()
         {
             return View();
         }
-        private dynamic GetUsers(string Name)
-        {
-            using (SqlConnection conn = new(GetConnection()))
-            {
-                dynamic? acc = conn.QueryFirstOrDefault<dynamic>("SELECT * FROM Users WHERE Name = @name", new { name = Name });
-                return acc == null ? null : acc;
-            }
-        }
-        private async Task<List<MRPBOMProductModel>> GetBOM()
-        {
-            using (SqlConnection conn = new(GetConnection()))
-            {
-                return (await conn.QueryAsync<MRPBOMProductModel>("SELECT * FROM MRPBOMProducts")).ToList();
-            }
-        }
         public async Task<IActionResult> GetPNandDescription()
         {
-            var bomData = await GetBOM();
+            var bomData = await _dashboardRepository.GetBOM();
 
             var distinctPNAndDescriptions = bomData.GroupBy(bom => bom.PartNumber).Select(group => new { PartNumber = group.Key, Description = group.First().Description });
 
@@ -117,89 +64,62 @@ namespace SFG.Controllers
         {
             try
             {
-                string query = "SELECT * FROM RFQProjects";
-                List<RFQProjectModel> result;
-
-                using (SqlConnection conn = new SqlConnection(GetConnection()))
-                {
-                    result = (await conn.QueryAsync<RFQProjectModel>(query)).ToList();
-                }
+                var result = await _dashboardRepository.GetAllRFQProjects();
 
                 return Json(new { data = result });
             }
             catch (Exception ex)
             {
-                // Log the exception or return a generic error message
                 return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
             }
         }
-        public async Task<List<RFQProjectModel>> GetRFQProjectsByQuotationCode(string quotationCode)
-        {
-            try
-            {
-                string query = "SELECT * FROM RFQProjects WHERE QuotationCode = @QuotationCode";
-                List<RFQProjectModel> result;
-
-                using (SqlConnection conn = new SqlConnection(GetConnection()))
-                {
-                    result = (await conn.QueryAsync<RFQProjectModel>(query, new { QuotationCode = quotationCode })).ToList();
-                }
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                Console.WriteLine($"Error retrieving RFQ project data: {ex.Message}");
-                throw; // Re-throw the exception to be caught by the calling method
-            }
-        }
-        public async Task<List<RFQModel>> GetRFQByQuotationCode(string quotationCode)
-        {
-            try
-            {
-                string query = "SELECT * FROM RFQ WHERE QuotationCode = @QuotationCode";
-                List<RFQModel> result;
-
-                using (SqlConnection conn = new SqlConnection(GetConnection()))
-                {
-                    result = (await conn.QueryAsync<RFQModel>(query, new { QuotationCode = quotationCode })).ToList();
-                }
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                Console.WriteLine($"Error retrieving RFQ data: {ex.Message}");
-                throw; // Re-throw the exception to be caught by the calling method
-            }
-        }
-
         [HttpGet]
+        public IActionResult ViewSourcingForm()
+        {
+            return View();
+        }
+        public async Task<IActionResult> ViewRFQProjects()
+        {
+            var model = await GetAllRFQProjects();
+            return View(model);
+        }
+        public async Task<IActionResult> ViewRFQForm(string quotationCode)
+        {
+            try
+            {
+                var viewModel = new MyViewModel
+                {
+                    RFQData = await _dashboardRepository.GetRFQByQuotationCode(quotationCode),
+                    RFQProjectData = await _dashboardRepository.GetRFQProjectsByQuotationCode(quotationCode)
+                };
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving RFQ data: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
+        private dynamic GetUsers(string Name)
+        {
+            using (SqlConnection conn = new(GetConnection()))
+            {
+                dynamic? acc = conn.QueryFirstOrDefault<dynamic>("SELECT * FROM Users WHERE Name = @name", new { name = Name });
+                return acc == null ? null : acc;
+            }
+        }
         public async Task<IActionResult> IncomingRFQProjects()
         {
             try
             {
-                string query = "SELECT * FROM RFQProjects WHERE Status = 'OPEN'";
-                List<RFQProjectModel> result;
-
-                using (SqlConnection conn = new SqlConnection(GetConnection()))
-                {
-                    result = (await conn.QueryAsync<RFQProjectModel>(query)).ToList();
-                }
+               var result = await _dashboardRepository.GetOpenRFQProjects();
 
                 return Json(new { data = result });
             }
             catch (Exception ex)
             {
-                // Log the exception or return a generic error message
                 return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
             }
-        }
-        public IActionResult ViewSourcingForm()
-        {
-            return View();
         }
         public async Task<IActionResult> GetExcelFile(string pNDesc)
         {
@@ -289,8 +209,8 @@ namespace SFG.Controllers
                     return Json(new { success = false, message = "No file received" });
                 }
 
-                // Check if the file extension is valid (optional, depending on your requirements)
                 string fileExtension = Path.GetExtension(file.FileName);
+
                 if (!IsSupportedFileExtension(fileExtension))
                 {
                     return Json(new { success = false, message = "Invalid file format. Please upload a valid Excel file." });
@@ -318,8 +238,8 @@ namespace SFG.Controllers
                     return Json(new { success = false, message = "No file received" });
                 }
 
-                // Check if the file extension is valid (optional, depending on your requirements)
                 string fileExtension = Path.GetExtension(file.FileName);
+
                 if (!IsSupportedFileExtension(fileExtension))
                 {
                     return Json(new { success = false, message = "Invalid file format. Please upload a valid Excel file." });
@@ -339,7 +259,7 @@ namespace SFG.Controllers
         }
         private async Task<LastPurchaseInfoModel> SaveLastPurchaseInfo(ExcelWorksheet worksheet, int row)
         {
-            var lastPurchaseInfo = new LastPurchaseInfoModel
+            return new LastPurchaseInfoModel
             {
                 ItemNo = worksheet.Cells[row, 2].Value?.ToString(),
                 ForeignName = worksheet.Cells[row, 3].Value?.ToString(),
@@ -353,15 +273,13 @@ namespace SFG.Controllers
                 RMWHEREUSED = worksheet.Cells[row, 11].Value?.ToString(),
                 FGName = worksheet.Cells[row, 12].Value?.ToString()
             };
-            return lastPurchaseInfo;
         }
         private async Task<QuotationModel> SaveQuotations(ExcelWorksheet worksheet, int row)
         {
-            var quotations = new QuotationModel
+            return new QuotationModel
             {
                 PartNumber = worksheet.Cells[row, 1].Value?.ToString()
             };
-            return quotations;
         }
         private async Task<MRPBOMModel> SaveMRPBOM(ExcelWorksheet worksheet, int row)
         {
@@ -401,46 +319,6 @@ namespace SFG.Controllers
             string filePath = await _uploadService.SaveUploadedFile(file, partNumber, description);
             return filePath;
         }
-        private async Task ProcessMRPQBOMFile(ExcelPackage package, IFormFile file)
-        {
-            using (var worksheet = package.Workbook.Worksheets[1])
-            {
-                int rowCount = worksheet.Dimension.Rows;
-
-                // Extract PartNumber and Description from specific cells
-                string partNumber = worksheet.Cells[3, 4].Value?.ToString();
-                string description = worksheet.Cells[5, 4].Value?.ToString();
-
-                // Save uploaded file and get its path
-                string filePath = await SaveUploadedFileAndReturnPath(file, partNumber, description);
-
-                for (int i = 9; i <= rowCount; i++)
-                {
-                    bool rowHasValue = false;
-                    int columnCount = worksheet.Dimension.Columns;
-
-                    // Check if any cell in the row has a value
-                    for (int j = 1; j <= columnCount; j++)
-                    {
-                        if (!string.IsNullOrEmpty(worksheet.Cells[i, j].Text))
-                        {
-                            rowHasValue = true;
-                            break;
-                        }
-                    }
-
-                    // If row has a value, process it
-                    if (rowHasValue)
-                    {
-                        _db.MRPBOM.Add(await SaveMRPBOM(worksheet, i));
-                    }
-                }
-                _db.MRPBOMProducts.Add(await SaveMRPBOMProducts(worksheet));
-
-                // Save changes to database
-                await _db.SaveChangesAsync();
-            }
-        }
         private async Task ProcessMRPQBOM(IFormFile file)
         {
             try
@@ -460,13 +338,64 @@ namespace SFG.Controllers
                 throw new Exception("An error occurred while uploading the Excel file.", ex);
             }
         }
+        private async Task ProcessMRPQBOMFile(ExcelPackage package, IFormFile file)
+        {
+            using (var worksheet = package.Workbook.Worksheets[1])
+            {
+                int rowCount = worksheet.Dimension.Rows;
+
+                // Extract PartNumber and Description from specific cells
+                string? partNumber = worksheet.Cells[3, 4].Value?.ToString();
+                string? description = worksheet.Cells[5, 4].Value?.ToString();
+
+                // Save uploaded file and get its path
+                string filePath = await SaveUploadedFileAndReturnPath(file, partNumber, description);
+                
+                for (int i = 9; i <= rowCount; i++)
+                {
+                    bool rowHasValue = false;
+                    int columnCount = worksheet.Dimension.Columns;
+
+                    // Check if any cell in the row has a value
+                    for (int j = 1; j <= columnCount; j++)
+                    {
+                        if (!string.IsNullOrEmpty(worksheet.Cells[i, j].Text))
+                        {
+                            rowHasValue = true;
+                            break;
+                        }
+                    }
+
+                    // If row has a value, process it
+                    if (rowHasValue)
+                    {
+                        var model = await SaveMRPBOM(worksheet, i);
+
+                        var affectedRows = await _dashboardRepository.UploadMRPBOM(model);
+                        if (affectedRows == 0)
+                        {
+                            throw new Exception("Error: No rows affected after uploading.");
+                        }
+                    }
+                }
+
+                // Save MRPBOMProducts
+                var productsModel = await SaveMRPBOMProducts(worksheet);
+                var affectedRows2 = await _dashboardRepository.UploadMRPBOMProducts(productsModel);
+
+                if (affectedRows2 == 0)
+                {
+                    throw new Exception("Error: No rows affected after uploading MRPBOMProducts.");
+                }
+            }
+        }
         private async Task UploadingExcelFile(IFormFile file, string tableName)
         {
             try
             {
                 using (var stream = new MemoryStream())
                 {
-                    await file.CopyToAsync(stream); 
+                    await file.CopyToAsync(stream);
                     stream.Position = 0;
                     using (var package = new ExcelPackage(stream))
                     {
@@ -479,12 +408,14 @@ namespace SFG.Controllers
                             {
                                 case "LastPurchaseInfo":
                                     {
-                                        _db.LastPurchaseInfo.Add(await SaveLastPurchaseInfo(worksheet, i));
+                                        var lastPurchaseInfo = await SaveLastPurchaseInfo(worksheet, i);
+                                        await _dashboardRepository.UploadLastPurchaseInfo(lastPurchaseInfo);
                                         break;
                                     }
                                 case "Quotations":
                                     {
-                                        _db.Quotations.Add(await SaveQuotations(worksheet, i));
+                                        var quotations = await SaveQuotations(worksheet, i);
+                                        await _dashboardRepository.UploadQuotations(quotations);
                                         break;
                                     }
                                 default:
@@ -493,9 +424,6 @@ namespace SFG.Controllers
                             }
 
                         }
-
-                        // Save changes to the database
-                        await _db.SaveChangesAsync();
                     }
                 }
             }

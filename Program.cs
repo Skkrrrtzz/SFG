@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using SFG.Data;
+using SFG.Repository;
 using SFG.Services;
 
 namespace SFG
@@ -16,7 +17,9 @@ namespace SFG
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(); 
+            builder.Services.AddTransient<ISourcingRepository, SourcingRepository>();
+            builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
             builder.Services.AddScoped<UploadService>();
             builder.Services.AddScoped<Emailing>();
             builder.Services.AddScoped<Exporting>();

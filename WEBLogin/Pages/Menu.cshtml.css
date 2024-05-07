@@ -1,0 +1,108 @@
+﻿.centerdiv {
+    width: 1000px;
+    height: 500px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1px;
+    margin: auto;
+}
+
+.success-header {
+    background-color: #5cb85c;
+}
+
+.success-body {
+    background-color: #eca9a7;
+}
+
+.error-header {
+    background-color: #d9534f;
+}
+
+.error-body {
+    background-color: #aedcae;
+}
+
+#lstLink {
+    background-color: transparent;
+    max-height: 400px;
+    margin-bottom: 5px;
+    /* overflow: scroll;*/
+    -webkit-overflow-scrolling: touch;
+}
+
+.list-group-item {
+    height: 30px;
+    background-color: transparent;
+    border: none;
+    color: white;
+}
+
+a:hover {
+    background-color: var(--colorHighLight)!important;
+    font-weight: bold;
+}
+
+#divlogin {
+    background-image: linear-gradient(rgba(105,105,105,0.7),rgba(105,105,105,0.7)), url('img/bg/menu_bg1.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+
+#tblPending {
+    background-color: transparent !important;
+    font-size: 14px;
+
+}
+
+.table-hover tbody tr:hover td {
+    background-color: var(--colorHighLight)!important;
+}
+
+th {
+    color: black;
+    background-color: darkgray;
+    line-height: 15px;
+    min-height: 15px;
+    height: 15px;
+}
+
+td {
+    color: white;
+    border-bottom: 0.5px solid transparent;
+    background-color: transparent !important;
+}
+
+tr {
+    line-height: 15px;
+    min-height: 15px;
+    height: 15px;
+}
+
+/*.table td, .table th {
+    min-width: 100px;
+}*/
+
+
+/* Scrollbar */
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }

@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APPCommon", "APPCommon\APPC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WEBTemplate", "WEBTemplate\WEBTemplate.csproj", "{C8603B46-30F4-4CCA-A1A3-1073F70D215D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WEBLogin", "WEBLogin\WEBLogin.csproj", "{4D678BF2-DC99-46FC-9A0F-136F3B6B4CCE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C8603B46-30F4-4CCA-A1A3-1073F70D215D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8603B46-30F4-4CCA-A1A3-1073F70D215D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8603B46-30F4-4CCA-A1A3-1073F70D215D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D678BF2-DC99-46FC-9A0F-136F3B6B4CCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D678BF2-DC99-46FC-9A0F-136F3B6B4CCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D678BF2-DC99-46FC-9A0F-136F3B6B4CCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D678BF2-DC99-46FC-9A0F-136F3B6B4CCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

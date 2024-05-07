@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 
 
 namespace APPCommon.Class
@@ -502,16 +503,16 @@ namespace APPCommon.Class
 
         #region Trivia
 
-        //public static string[] loadTrivia()
-        //{
-        //    var uri = new Uri("pack://application:,,,/APPCommon;component/Resources/Text/trivia.txt");
-        //    var resourceStream = Application.GetResourceStream(uri);
+        public static string[] loadTrivia(string struri)
+        {
+            var uri = new Uri(struri);
+            var resourceStream = Application.GetResourceStream(uri);
 
-        //    using (var sr = new StreamReader(resourceStream.Stream))
-        //    {
-        //        return sr.ReadToEnd().Split('\n');
-        //    }
-        //}
+            using (var sr = new StreamReader(resourceStream.Stream))
+            {
+                return sr.ReadToEnd().Split('\n');
+            }
+        }
 
         public static string getTrivia(string[] trivia)
         {
@@ -610,6 +611,32 @@ namespace APPCommon.Class
         }
 
         #endregion Converters
+
+
+        #region Greeting
+        public static string getGreeting()
+        {
+            var varResult = string.Empty;
+
+            var varHour = Convert.ToUInt16(DateTime.Now.ToString("HH"));
+
+            if (varHour >= 0 && varHour < 12)
+            {
+                varResult = "Good Morning. Welcome to";
+            }
+            else if (varHour >= 12 && varHour <= 17)
+            {
+                varResult = "Good Afternoon. Welcome to";
+            }
+            else
+            {
+                varResult = "Good Evening. Welcome to";
+            }
+
+            return varResult;
+        }
+
+        #endregion Greeting
     }
 
     #region Converter

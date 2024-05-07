@@ -1,4 +1,4 @@
-﻿var table = $("#SRFQTbl").dataTable({
+﻿let table = $("#SRFQTbl").dataTable({
   responsive: true,
 });
 // Variable to store the current ID
@@ -59,6 +59,7 @@ $(".btnEdit").click(function (e) {
 // Add click event listener to the save button
 $("#btnSave").click(function (e) {
   e.preventDefault();
+
   if (!currentId) {
     alert("No ID found for saving.");
     return;
@@ -103,11 +104,11 @@ $("#btnSave").click(function (e) {
       });
     });
 });
-var sourcingTbl = $("#SRFQTbl").DataTable();
-var allRowsData = sourcingTbl.rows().data();
+let sourcingTbl = $("#SRFQTbl").DataTable();
+let allRowsData = sourcingTbl.rows().data();
 // Function to calculate annual forecast for each item
 function calculateAnnualForecast() {
-  var inputQty = parseFloat($("#addAnnualForecast").val()); // Get the input quantity
+  let inputQty = parseFloat($("#addAnnualForecast").val()); // Get the input quantity
 
   // Validate input
   if (isNaN(inputQty) || inputQty <= 0) {
@@ -125,8 +126,8 @@ function calculateAnnualForecast() {
 
   // Loop through each row in the table
   allRowsData.each(function (rowData, index) {
-    var eqpa = parseFloat(rowData[7]); // Assuming eqpa is stored in the 8th column
-    var annualForecast = inputQty * eqpa;
+    let eqpa = parseFloat(rowData[7]); // Assuming eqpa is stored in the 8th column
+    let annualForecast = inputQty * eqpa;
     rowData[8] = annualForecast; // Assuming annual forecast should be stored in the 9th column
 
     // Update the DataTable with the modified rowData
@@ -157,10 +158,10 @@ function project(partNumber) {
   });
   captureDivToImage("capture", function (dataURL) {
     // Convert data URL to Blob
-    var blob = dataURLtoBlob(dataURL);
+    let blob = dataURLtoBlob(dataURL);
 
     // Create FormData object
-    var formData = new FormData();
+    let formData = new FormData();
     formData.append("projectName", partNumber);
     formData.append("image", blob); // No need to specify file name here
 
@@ -195,11 +196,11 @@ function project(partNumber) {
 
 // Function to convert data URL to Blob
 function dataURLtoBlob(dataURL) {
-  var arr = dataURL.split(",");
-  var mime = arr[0].match(/:(.*?);/)[1];
-  var bstr = atob(arr[1]);
-  var n = bstr.length;
-  var u8arr = new Uint8Array(n);
+  let arr = dataURL.split(",");
+  let mime = arr[0].match(/:(.*?);/)[1];
+  let bstr = atob(arr[1]);
+  let n = bstr.length;
+  let u8arr = new Uint8Array(n);
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n);
   }
@@ -217,25 +218,33 @@ $("#btnSubmit").click(function (e) {
   allRowsData.each(function (rowData, index) {
     let currentId = rowData[0];
     let annualForecastValue = rowData[8];
+
     currentIds.push(currentId);
     annualForecasts.push(annualForecastValue);
-    if (isNaN(annualForecastValue)) {
-      // Display a SweetAlert2 success message
-      Swal.fire({
+    if (isNaN(annualForecastValue) || annualForecastValue === "") {
+      // Display a SweetAlert2 warning message
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      Toast.fire({
         icon: "info",
         title:
           "Please enter a valid input quantity in the Annual Forecast field.",
-        toast: true,
-        position: "top-end",
-        timer: 3000,
-        showConfirmButton: false,
       });
 
       isValid = false; // Set isValid to false if invalid input is detected
       return false; // Exit the loop
     }
   });
-
+  console.log(annualForecasts);
   if (!isValid) {
     return; // Exit the function if invalid input is detected
   }
@@ -268,11 +277,11 @@ $("#btnSubmit").click(function (e) {
 
 function captureDivToImage(divId, callback) {
   // Get the jQuery object of the div element by id
-  var $div = $("#" + divId);
+  let $div = $("#" + divId);
 
   // Create a new canvas element
-  var canvas = document.createElement("canvas");
-  var context = canvas.getContext("2d");
+  let canvas = document.createElement("canvas");
+  let context = canvas.getContext("2d");
 
   // Set canvas dimensions based on the size of the div
   canvas.width = $div.width();
@@ -281,7 +290,7 @@ function captureDivToImage(divId, callback) {
   // Render the content of the div onto the canvas
   html2canvas($div.get(0)).then(function (canvas) {
     // Convert canvas to data URL
-    var dataURL = canvas.toDataURL("image/png");
+    let dataURL = canvas.toDataURL("image/png");
 
     // Invoke the callback function with the image data URL
     callback(dataURL);

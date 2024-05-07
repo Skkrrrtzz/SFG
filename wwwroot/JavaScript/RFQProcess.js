@@ -1,15 +1,49 @@
 ﻿function getQueryStringParameter(name) {
-  var urlParams = new URLSearchParams(window.location.search);
+  let urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(name);
 }
-var qC = getQueryStringParameter("quotationCode");
+let qC = getQueryStringParameter("quotationCode");
 console.log(qC);
 
 $("#SRFQTbl").DataTable({
   responsive: true,
 });
-
-function uploadExcel() {
+function uploadExcel(file) {
+  $.ajax({
+    type: "POST",
+    url: UploadRFQInfo,
+    data: file,
+    dataType: "json",
+    success: function (response) {
+      console.log(response);
+      if (response.success) {
+        // Display success message using SweetAlert
+        Swal.fire({
+          icon: "success",
+          title: "Success",
+          text: response.message,
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        // window.location.reload();
+      } else {
+        // Display error message using SweetAlert
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: response.message,
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+        });
+      }
+    },
+  });
+}
+function checkExcel() {
   const excelFile = $("#excelFileInput")[0];
 
   if (!excelFile.files || !excelFile.files[0]) {
@@ -31,11 +65,12 @@ function uploadExcel() {
 
     $.ajax({
       type: "POST",
-      url: UploadRFQInfo,
+      url: CheckRFQInfo,
       data: formData,
       processData: false,
       contentType: false,
       success: function (response) {
+        console.log(response);
         if (response.success) {
           // Display success message using SweetAlert
           Swal.fire({
@@ -44,9 +79,25 @@ function uploadExcel() {
             text: response.message,
             toast: true,
             position: "top-end",
-            timer: 3000,
-            showConfirmButton: false,
-          });
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "Submit",
+            cancelButtonText: "Cancel",
+          })
+            .then((result) => {
+              if (result.isConfirmed) {
+                Swal.fire({
+                  title: "Loading...",
+                  html: '<div class="m-2" id="loading-spinner"><div class="loader3"><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div></div></div>',
+                  showCancelButton: false,
+                  showConfirmButton: false,
+                  allowOutsideClick: false,
+                  allowEscapeKey: false,
+                });
+                uploadExcel(formData);
+              }
+            })
+            .catch((err) => {});
         } else {
           // Display error message using SweetAlert
           Swal.fire({

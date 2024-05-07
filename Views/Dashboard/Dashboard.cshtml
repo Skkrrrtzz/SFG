@@ -69,7 +69,7 @@
     <div class="modal fade" id="menuSFG" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="menuSFGLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header text-bg-primary">
                     <h1 class="modal-title fs-5" id="menuSFGLabel">@department</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -93,7 +93,7 @@
     <div class="modal fade" id="encoder" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="encoderLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header text-bg-primary">
                     <h1 class="modal-title fs-5" id="encoderLabel">Sourcing Form | <span class="badge text-bg-dark">Encoder</span> </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -164,7 +164,7 @@
     <div class="modal fade" id="processor" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="processorLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header text-bg-light">
+                <div class="modal-header text-bg-primary">
                     <h1 class="modal-title fs-5" id="processorLabel">Sourcing Form | <span class="badge text-bg-dark">Processor</span> </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -366,9 +366,9 @@
 </div>
 <!-- Open Sourcing Form Modal -->
 <div class="modal fade" id="sourcingForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sourcingFormLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header text-bg-primary">
                 <h1 class="modal-title fs-5" id="sourcingFormLabel"> <i class="fa-solid fa-file-arrow-up"></i> Sourcing Form</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -452,84 +452,86 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
-<script>
-    const container = document.querySelector('#example');
+@section Scripts {
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+    <script>
+        const container = document.querySelector('#example');
 
-    const hot = new Handsontable(container, {
-        data: [
-            ['', 'Tesla', 'Volvo', 'Toyota', 'Ford'],
-            ['2019', 10, 11, 12, 13],
-            ['2020', 20, 11, 14, 13],
-            ['2021', 30, 15, 12, 13]
-        ],
-        rowHeaders: true,
-        colHeaders: true,
-        height: 'auto',
-        autoWrapRow: true,
-        autoWrapCol: true,
-        licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
-    });
-    $(document).ready(function () {
-        // Assuming department is retrieved from your backend
-        var department = "@department";
-
-        // Hide all buttons initially
-        $(".encoder, .processor, .viewer").hide();
-
-        // Show buttons based on department
-        if (department === "Cost Engineering") {
-            $(".encoder, .processor, .viewer").show();
-        } else if (department === "Sourcing") {
-            $(".processor, .viewer").show();
-        } else if (department === "Purchasing" || department === "Business Control") {
-            $(".viewer").show();
-        } else {
-            $(".encoder, .processor, .viewer").show();
-        }
-
-        $.ajax({
-            type: "GET",
-            url: '@Url.Action("GetAllRFQProjects", "Dashboard")',
-            dataType: "json",
-            success: function (response) {
-                // Count the number of responses
-                var count = response.data.length;
-
-                // Update the element with ID 'rfqCount' with the count
-                $("#rfqCount").text(count);
-
-                // Call the viewRFQProjects function with the data
-                viewRFQProjects("#libraryTable", response.data);
-            },
-            error: function (xhr, status, error) {
-                // Handle the error
-                alert("Error: " + error);
-            },
+        const hot = new Handsontable(container, {
+            data: [
+                ['', 'Tesla', 'Volvo', 'Toyota', 'Ford'],
+                ['2019', 10, 11, 12, 13],
+                ['2020', 20, 11, 14, 13],
+                ['2021', 30, 15, 12, 13]
+            ],
+            rowHeaders: true,
+            colHeaders: true,
+            height: 'auto',
+            autoWrapRow: true,
+            autoWrapCol: true,
+            licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
         });
-        $.ajax({
-            type: "GET",
-            url: '@Url.Action("IncomingRFQProjects", "Dashboard")',
-            dataType: "json",
-            success: function (response) {
-                // Count the number of responses
-                var count = response.data.length;
+        $(document).ready(function () {
+            // Assuming department is retrieved from your backend
+            let department = "@department";
 
-                $("#incoming").text(count);
-                // Call the viewRFQProjects function with the data
-                viewRFQProjects("#incomingRFQTable", response.data);
-            },
-            error: function (xhr, status, error) {
-                // Handle the error
-                alert("Error: " + error);
-            },
+            // Hide all buttons initially
+            $(".encoder, .processor, .viewer").hide();
+
+            // Show buttons based on department
+            if (department === "Cost Engineering") {
+                $(".encoder, .processor, .viewer").show();
+            } else if (department === "Sourcing") {
+                $(".processor, .viewer").show();
+            } else if (department === "Purchasing" || department === "Business Control") {
+                $(".viewer").show();
+            } else {
+                $(".encoder, .processor, .viewer").show();
+            }
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetAllRFQProjects", "Dashboard")',
+                dataType: "json",
+                success: function (response) {
+                    // Count the number of responses
+                    let count = response.data.length;
+
+                    // Update the element with ID 'rfqCount' with the count
+                    $("#rfqCount").text(count);
+
+                    // Call the viewRFQProjects function with the data
+                    viewRFQProjects("#libraryTable", response.data);
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error
+                    alert("Error: " + error);
+                },
+            });
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("IncomingRFQProjects", "Dashboard")',
+                dataType: "json",
+                success: function (response) {
+                    // Count the number of responses
+                    let count = response.data.length;
+
+                    $("#incoming").text(count);
+                    // Call the viewRFQProjects function with the data
+                    viewRFQProjects("#incomingRFQTable", response.data);
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error
+                    alert("Error: " + error);
+                },
+            });
         });
-    });
-    const GetPNandDescription = '@Url.Action("GetPNandDescription", "Dashboard")';
-    const UploadQuotation = '@Url.Action("UploadQuotation", "Dashboard")';
-    const UploadLastPurchaseInfo = '@Url.Action("UploadLastPurchaseInfo", "Dashboard")';
-    const UploadMRPBom = '@Url.Action("UploadMRPBom", "Dashboard")';
-    const ViewRFQForm = '@Url.Action("ViewRFQForm", "Dashboard")'; 
-    const downloadPdfUrl = '@Url.Action("DownloadExcelFile", "Dashboard")';
-</script>
-<script src="~/JavaScript/Dashboard.js"></script>
+        const GetPNandDescription = '@Url.Action("GetPNandDescription", "Dashboard")';
+        const UploadQuotation = '@Url.Action("UploadQuotation", "Dashboard")';
+        const UploadLastPurchaseInfo = '@Url.Action("UploadLastPurchaseInfo", "Dashboard")';
+        const UploadMRPBom = '@Url.Action("UploadMRPBom", "Dashboard")';
+        const ViewRFQForm = '@Url.Action("ViewRFQForm", "Dashboard")';
+        const downloadPdfUrl = '@Url.Action("DownloadExcelFile", "Dashboard")';
+    </script>
+    <script src="~/JavaScript/Dashboard.js"></script>
+}

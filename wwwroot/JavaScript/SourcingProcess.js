@@ -1,21 +1,21 @@
 ﻿// Define data
-var data;
+let data;
 
 // Function to get the value of a query string parameter by name
 function getQueryStringParameter(name) {
-  var urlParams = new URLSearchParams(window.location.search);
+  let urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(name);
 }
 // Get the value of the pNDesc parameter from the query string
-var pNDesc = getQueryStringParameter("pndesc");
-var uploadSRFQForm =
+let pNDesc = getQueryStringParameter("pndesc");
+let uploadSRFQForm =
   "/Sourcing/SourcingRFQForm?partNumber=" + encodeURIComponent(pNDesc);
 // console.log(pNDesc);
 // Set the value to an element with ID "pNDesc"
 $("#pNDesc").text(pNDesc);
 // Split the pNDesc into PartNumber and Description
-var parts = pNDesc.split(" - ");
-var partNumber = parts[0].trim();
+let parts = pNDesc.split(" - ");
+let partNumber = parts[0].trim();
 
 if (partNumber != null) {
   Swal.fire({
@@ -47,7 +47,7 @@ if (partNumber != null) {
   console.error("PartNumber is null");
 }
 function getMRPData(data) {
-  var table = $("#sourcingTbl").DataTable({
+  let table = $("#sourcingTbl").DataTable({
     responsive: true,
     data: data,
     columns: [
@@ -99,10 +99,10 @@ function getMRPData(data) {
     e.preventDefault();
 
     // Get the data-id attribute value of the clicked button
-    var partId = $(this).data("id");
+    let partId = $(this).data("id");
 
     // Retrieve row data
-    var rowData = table.row($(this).closest("tr")).data();
+    let rowData = table.row($(this).closest("tr")).data();
 
     // Display the current status and remarks in the edit modal
     $("#editStatus").val(rowData.status);
@@ -115,13 +115,13 @@ function getMRPData(data) {
     e.preventDefault();
 
     // Retrieve updated status and remarks from modal fields
-    var updatedStatus = $("#editStatus").val();
-    var updatedRemarks = $("#editRemarks").val();
-    var partId = $("#editId").val();
+    let updatedStatus = $("#editStatus").val();
+    let updatedRemarks = $("#editRemarks").val();
+    let partId = $("#editId").val();
 
     // Update corresponding row in DataTable with new values
-    var index = table.column(0).data().indexOf(partId); // Find index of row based on partId
-    var rowData = table.row(index).data(); // Retrieve row data
+    let index = table.column(0).data().indexOf(partId); // Find index of row based on partId
+    let rowData = table.row(index).data(); // Retrieve row data
     rowData.status = updatedStatus; // Update status
     rowData.remarks = updatedRemarks; // Update remarks
     table.row(index).data(rowData).draw(); // Redraw the table with updated data
@@ -132,7 +132,7 @@ function getMRPData(data) {
 }
 function downloadPdf() {
   // Get the value of the pNDesc parameter from the query string
-  //   var pNDesc = getQueryStringParameter("pndesc");
+  //   let pNDesc = getQueryStringParameter("pndesc");
 
   // Check if pNDesc is valid
   if (!pNDesc) {
@@ -140,7 +140,7 @@ function downloadPdf() {
     return;
   }
   // Send a GET request to download the PDF file
-  var downloadUrl =
+  let downloadUrl =
     "/Dashboard/GetExcelFile?pNDesc=" + encodeURIComponent(pNDesc);
   window.location.href = downloadUrl;
 }
@@ -153,30 +153,30 @@ $("#btnSourcing").on("click", function (e) {
 });
 
 function getSourcingRowsAndSumEqpa() {
-  var sourcingRows = []; // Array to store rows with "FOR SOURCING" remarks
-  var totalEqpaForSourcing = 0; // Variable to store the total sum of "eqpa" values
+  let sourcingRows = []; // Array to store rows with "FOR SOURCING" remarks
+  let totalEqpaForSourcing = 0; // letiable to store the total sum of "eqpa" values
 
   // Get all rows data from the DataTables instance
-  var sourcingTbl = $("#sourcingTbl").DataTable();
-  var allRowsData = sourcingTbl.rows().data();
+  let sourcingTbl = $("#sourcingTbl").DataTable();
+  let allRowsData = sourcingTbl.rows().data();
   // Iterate over each row data
   allRowsData.each(function (rowData) {
-    var pN = rowData["partNumber"].trim(); // Assuming the first column contains part numbers
-    var description = rowData["description"].trim();
-    var rev = rowData["rev"].trim();
-    var commodity = rowData["commodity"].trim();
-    var mpn = rowData["mpn"];
-    var mfr = rowData["manufacturer"];
-    var eqpa = rowData["eqpa"];
-    var uom = rowData["uom"].trim();
-    var status = rowData["status"].trim();
-    var qty = rowData["gwrlQty"];
-    var lastPurchaseDate = rowData["lastPurchaseDate"].trim();
-    var remarks = rowData["remarks"].trim();
+    let pN = rowData["partNumber"].trim(); // Assuming the first column contains part numbers
+    let description = rowData["description"].trim();
+    let rev = rowData["rev"].trim();
+    let commodity = rowData["commodity"].trim();
+    let mpn = rowData["mpn"];
+    let mfr = rowData["manufacturer"];
+    let eqpa = rowData["eqpa"];
+    let uom = rowData["uom"].trim();
+    let status = rowData["status"].trim();
+    let qty = rowData["gwrlQty"];
+    let lastPurchaseDate = rowData["lastPurchaseDate"].trim();
+    let remarks = rowData["remarks"].trim();
     // Check if the remarks indicate "FOR SOURCING"
     if (remarks === "FOR SOURCING") {
       // Store the row data in the sourcingRows array
-      var row = {
+      let row = {
         partNumber: pN,
         description: description,
         rev: rev,
@@ -240,7 +240,7 @@ function RFQ() {
   let reqDate = $("#reqDate").val();
   let reqCompletionDate = $("#reqCompDate").val();
 
-  var customer;
+  let customer;
   if ($("#customer").val() === "custom") {
     customer = $("#customInput").val();
   } else {
@@ -257,7 +257,7 @@ function RFQ() {
     requiredDate: reqCompletionDate,
     sourcingData: sourcingData, // Pass the sourcing row data array
   };
-  var reqData = JSON.stringify(requestData);
+  let reqData = JSON.stringify(requestData);
   // Make the AJAX request
   $.ajax({
     type: "POST",
@@ -294,7 +294,7 @@ function RFQ() {
   });
 }
 $("#customer").change(function () {
-  var selectedOption = $(this).val();
+  let selectedOption = $(this).val();
   if (selectedOption === "custom") {
     $("#customInput").removeClass("d-none");
   } else {

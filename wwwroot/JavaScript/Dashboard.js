@@ -235,7 +235,7 @@ function sourcingForm() {
     url: GetPNandDescription,
     dataType: "JSON",
     success: function (response) {
-      var selectElement = $("#sourcingFormSelect");
+      let selectElement = $("#sourcingFormSelect");
       selectElement.empty();
       $("<option selected disabled>Select BOM</option>").appendTo(
         selectElement
@@ -245,7 +245,7 @@ function sourcingForm() {
         let partNumber = item.partNumber;
         let description = item.description;
         let pndesc = partNumber + " - " + description;
-        var option = $("<option></option>").attr("value", pndesc).text(pndesc);
+        let option = $("<option></option>").attr("value", pndesc).text(pndesc);
         selectElement.append(option);
       });
     },
@@ -256,7 +256,7 @@ function sourcingForm() {
 }
 
 function viewRFQProjects(table, data) {
-  var Tbl = $(table).DataTable({
+  let Tbl = $(table).DataTable({
     responsive: true,
     data: data,
     columns: [
@@ -300,6 +300,8 @@ function viewRFQProjects(table, data) {
           return (
             '<a href="#" class="text-primary view-btn fs-4" data-id="' +
             row.quotationCode +
+            ' " data-name="' +
+            row.projectName +
             '"><i class="fa-solid fa-eye"></i></a> ' +
             ' <a href="#" class="text-success download-btn fs-4" data-id="' +
             row.projectName +
@@ -313,27 +315,32 @@ function viewRFQProjects(table, data) {
 
 // Attach click event handler to a parent element using event delegation
 $("#incomingRFQTable").on("click", ".view-btn", function () {
-  var quotationCode = $(this).data("id");
-  var url = ViewRFQForm + "?quotationCode=" + quotationCode;
+  let quotationCode = $(this).data("id");
+  let url = ViewRFQForm + "?quotationCode=" + quotationCode;
   console.log(url);
   // Redirect to the generated URL
   window.location.href = url;
 });
 
 $("#incomingRFQTable").on("click", ".download-btn", function () {
-  var projectName = $(this).data("id");
-  var url =
+  let projectName = $(this).data("id");
+  let url =
     "/Dashboard/DownloadExcelFile?projectName=" +
     encodeURIComponent(projectName);
   console.log(url);
   window.location.href = url;
 });
 
+$("#libraryTable").on("click", ".view-btn", function () {
+  let quotationCode = $(this).data("name");
+
+  console.log(quotationCode);
+});
 // Function to format the date
 function formatDate(dateString) {
-  var date = new Date(dateString);
-  var day = date.getDate();
-  var monthNames = [
+  let date = new Date(dateString);
+  let day = date.getDate();
+  let monthNames = [
     "Jan",
     "Feb",
     "Mar",
@@ -347,8 +354,8 @@ function formatDate(dateString) {
     "Nov",
     "Dec",
   ];
-  var monthIndex = date.getMonth();
-  var year = date.getFullYear().toString().slice(-2); // Get last two digits of the year
+  let monthIndex = date.getMonth();
+  let year = date.getFullYear().toString().slice(-2); // Get last two digits of the year
   return day + "-" + monthNames[monthIndex] + "-" + year;
 }
 // Function to extract part number from projectName
@@ -370,7 +377,7 @@ $("#sourcingFormSelect").change(function () {
 // Event listener for the click event on the View button
 $("#viewPNDesc").click(function () {
   // Get the selected option's value (pndesc)
-  var pndesc = $("#sourcingFormSelect").val();
+  let pndesc = $("#sourcingFormSelect").val();
 
   // Redirect to the ViewSourcingForm action with the modified pNDesc parameter
   window.location.href =

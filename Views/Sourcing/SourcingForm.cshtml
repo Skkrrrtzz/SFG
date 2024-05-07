@@ -118,14 +118,16 @@
         </div>
     </div>
 </div>
-<script>
-    $("#customer").change(function () {
-        var selectedOption = $(this).val();
-        if (selectedOption === "custom") {
-            $("#customInput").removeClass("d-none");
-        } else {
-            $("#customInput").addClass("d-none");
-            $("#customInput").val("");
-        }
-    });
-</script>
+@section Scripts{
+    <script>
+        $("#customer").change(function () {
+            let selectedOption = $(this).val();
+            if (selectedOption === "custom") {
+                $("#customInput").removeClass("d-none");
+            } else {
+                $("#customInput").addClass("d-none");
+                $("#customInput").val("");
+            }
+        });
+    </script>
+}

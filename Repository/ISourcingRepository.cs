@@ -10,7 +10,11 @@ namespace SFG.Repository
 
         public Task<RFQModel> FindById(int id);
 
-        public Task<bool> UpdateById(string customerPartNumber, string rev, string description, string origMFR, string origMPN, string commodity, string eqpa, string uoM, int id, string status);
+        public Task<bool> UpdateById(RFQModel formData);
+
+        public Task<bool> InsertAnnualForecast(List<int> ids, List<string> annualForecasts);
+
+        public Task<bool> InsertRFQ(RFQProjectModel rfqProjects, List<RFQModel> rfqData);
 
         public Task<IEnumerable<RFQModel>> GetRFQ(string projectName);
 

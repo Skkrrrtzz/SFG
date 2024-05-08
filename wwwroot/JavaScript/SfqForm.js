@@ -17,19 +17,6 @@ function fetchDataForEditing(id) {
   });
 }
 
-// Function to save data
-function saveData(formData) {
-  return new Promise((resolve, reject) => {
-    $.ajax({
-      url: UpdateUrl,
-      method: "POST",
-      data: formData,
-      success: resolve,
-      error: reject,
-    });
-  });
-}
-
 // Function to populate edit form fields
 function populateEditFormFields(data) {
   $("#editCustomerPartnumber").val(data.customerPartNumber);
@@ -66,33 +53,53 @@ $("#btnSave").click(function (e) {
   }
 
   const formData = {
-    id: currentId, // Use the current ID
-    customerPartNumber: $("#editCustomerPartnumber").val(),
-    rev: $("#editRev").val(),
-    description: $("#editDescription").val(),
-    origMPN: $("#editOrigMPN").val(),
-    origMFR: $("#editOrigMFR").val(),
-    commodity: $("#editCommodity").val(),
-    eqpa: $("#editEqpa").val(),
-    uoM: $("#editUoM").val(),
-    status: $("#editStatus").val(),
+    Id: currentId, // Use the current ID
+    CustomerPartNumber: $("#editCustomerPartnumber").val(),
+    Rev: $("#editRev").val(),
+    Description: $("#editDescription").val(),
+    OrigMPN: $("#editOrigMPN").val(),
+    OrigMFR: $("#editOrigMFR").val(),
+    Commodity: $("#editCommodity").val(),
+    Eqpa: $("#editEqpa").val(),
+    UoM: $("#editUoM").val(),
+    Status: $("#editStatus").val(),
   };
 
-  saveData(formData)
-    .then(() => {
-      Swal.fire({
-        title: "Message",
-        text: "Data saved successfully.",
-        icon: "success",
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 2000,
-      }).then((result) => {
-        location.reload();
-      });
+  fetch(UpdateUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data === true) {
+        Swal.fire({
+          title: "Message",
+          text: "Data saved successfully.",
+          icon: "success",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 2000,
+        }).then(() => {
+          location.reload();
+        });
+      } else {
+        Swal.fire({
+          title: "Message",
+          text: "Failed to save data.",
+          icon: "error",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
     })
-    .catch(() => {
+    .catch((error) => {
+      console.error("Error:", error);
       Swal.fire({
         title: "Message",
         text: "Failed to save data.",
@@ -104,6 +111,7 @@ $("#btnSave").click(function (e) {
       });
     });
 });
+
 let sourcingTbl = $("#SRFQTbl").DataTable();
 let allRowsData = sourcingTbl.rows().data();
 // Function to calculate annual forecast for each item
@@ -250,29 +258,35 @@ $("#btnSubmit").click(function (e) {
   }
   const partNumber = $("#projectName").val();
   // Send AJAX request to the controller
-  $.ajax({
-    url: AddAFUrl,
+  fetch(AddAFUrl, {
     method: "POST",
-    data: {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
       ids: currentIds,
       annualForecasts: annualForecasts,
-    },
-    success: () => {
-      // Display a SweetAlert2 success message
-      Swal.fire({
-        icon: "success",
-        title: "All data saved successfully.",
-        toast: true,
-        position: "top-end",
-        timer: 3000,
-        showConfirmButton: false,
-      });
-      project(partNumber);
-    },
-    error: () => {
-      alert("Failed to save data.");
-    },
-  });
+    }),
+  })
+    .then((response) => {
+      if (response.ok) {
+        // Display a SweetAlert2 success message
+        Swal.fire({
+          icon: "success",
+          title: "All data saved successfully.",
+          toast: true,
+          position: "top-end",
+          timer: 3000,
+          showConfirmButton: false,
+        });
+        project(partNumber);
+      } else {
+        throw new Error("Failed to save data.");
+      }
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
 });
 
 function captureDivToImage(divId, callback) {

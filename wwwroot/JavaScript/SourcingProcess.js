@@ -51,6 +51,7 @@ function getMRPData(data) {
     responsive: true,
     data: data,
     columns: [
+      { data: "no" },
       { data: "partNumber" },
       { data: "description" },
       { data: "rev" },
@@ -87,7 +88,7 @@ function getMRPData(data) {
         render: function (row) {
           return (
             '<a href="#" class="text-primary edit-btn fs-4" data-id="' +
-            row.partNumber +
+            row.no +
             '" data-bs-toggle="modal" data-bs-target="#editStatusRemarks"><i class="fa-solid fa-pen-to-square"></i></a>'
           );
         },
@@ -99,7 +100,7 @@ function getMRPData(data) {
     e.preventDefault();
 
     // Get the data-id attribute value of the clicked button
-    let partId = $(this).data("id");
+    let no = $(this).data("id");
 
     // Retrieve row data
     let rowData = table.row($(this).closest("tr")).data();
@@ -107,7 +108,7 @@ function getMRPData(data) {
     // Display the current status and remarks in the edit modal
     $("#editStatus").val(rowData.status);
     $("#editRemarks").val(rowData.remarks);
-    $("#editId").val(partId);
+    $("#editId").val(no);
   });
 
   // Handle click event on update button
@@ -119,12 +120,13 @@ function getMRPData(data) {
     let updatedRemarks = $("#editRemarks").val();
     let partId = $("#editId").val();
 
-    // Update corresponding row in DataTable with new values
-    let index = table.column(0).data().indexOf(partId); // Find index of row based on partId
-    let rowData = table.row(index).data(); // Retrieve row data
+    let rowData = table.row(partId - 1).data(); // Retrieve row data
     rowData.status = updatedStatus; // Update status
     rowData.remarks = updatedRemarks; // Update remarks
-    table.row(index).data(rowData).draw(); // Redraw the table with updated data
+    table
+      .row(partId - 1)
+      .data(rowData)
+      .draw(); // Redraw the table with updated data
 
     // Close the modal
     $("#editStatusRemarks").modal("hide");
@@ -246,7 +248,6 @@ function RFQ() {
   } else {
     customer = $("#customer").val();
   }
-  console.log(customer);
   // Construct the data object to be sent in the AJAX request
   let requestData = {
     projectName: pN,

@@ -1,6 +1,4 @@
-﻿using Dapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using OfficeOpenXml;
 using SFG.Data;
@@ -26,6 +24,12 @@ namespace SFG.Controllers
 
         public IActionResult SourcingForm()
         {
+            return View();
+        }
+
+        public IActionResult Success()
+        {
+            // This action method can be used to display a success message after form submission
             return View();
         }
 
@@ -70,10 +74,126 @@ namespace SFG.Controllers
             return View();
         }
 
-        public IActionResult Success()
+        [HttpGet]
+        public async Task<IActionResult> FindId(int id)
         {
-            // This action method can be used to display a success message after form submission
-            return View();
+            try
+            {
+                var result = await _sourcingRepository.FindById(id);
+
+                if (result != null)
+                {
+                    return Json(result);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateId([FromBody] RFQModel formData)
+        {
+            try
+            {
+                var result = await _sourcingRepository.UpdateById(formData);
+
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public async Task<bool> AddAnnualForecast(List<int> ids, List<string> annualForecasts)
+        {
+            try
+            {
+                if (ids.Count != annualForecasts.Count)
+                {
+                    return false;
+                }
+
+                var result = await _sourcingRepository.InsertAnnualForecast(ids, annualForecasts);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding annual forecasts: {ex.Message}");
+                return false;
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Project(string projectName, IFormFile image)
+        {
+            try
+            {
+                // Check if rfqData or rfqProjectData is null
+                if (string.IsNullOrEmpty(projectName) || image == null || image.Length == 0)
+                {
+                    return BadRequest("Invalid project name or empty image");
+                }
+
+                // Save the image to a temporary file
+                string tempImagePath = Path.GetTempFileName();
+                using (var stream = new FileStream(tempImagePath, FileMode.Create))
+                {
+                    await image.CopyToAsync(stream);
+                }
+
+                // GetRFQ method to retrieve RFQ data
+                var rfqData = await _sourcingRepository.GetRFQ(projectName);
+
+                // GetRFQProject method to retrieve RFQProject data
+                var rfqProjectData = await _sourcingRepository.GetRFQProject(projectName);
+
+                // Check if rfqData or rfqProjectData is null
+                if (rfqData == null || rfqProjectData == null)
+                {
+                    // Delete the temporary file if data retrieval fails
+                    if (System.IO.File.Exists(tempImagePath))
+                    {
+                        System.IO.File.Delete(tempImagePath);
+                    }
+                    // Return a NotFoundResult or appropriate status code
+                    return NotFound();
+                }
+
+                // WriteToExcel method to write data to Excel
+                var result = await _exportingService.WriteToExcel(rfqData, rfqProjectData, projectName, 1);
+
+                // Send the email with the temporary image file path
+                var checkEmail = await SendEmail(tempImagePath);
+
+                // Delete the temporary file after sending email
+                if (System.IO.File.Exists(tempImagePath))
+                {
+                    System.IO.File.Delete(tempImagePath);
+                }
+
+                // Check if the writing process was successful
+                if (result == false || checkEmail == false)
+                {
+                    return View("Error Writing to Excel File or Sending Email");
+                }
+
+                // Return a view or other appropriate action result
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                // Return an error view with the exception details
+                return View("Error", ex);
+            }
         }
 
         public async Task<IActionResult> SourcingRFQForm(string partNumber)
@@ -179,140 +299,6 @@ namespace SFG.Controllers
             return rfqprojList;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> FindId(int id)
-        {
-            try
-            {
-                var result = await _sourcingRepository.FindById(id);
-
-                if (result != null)
-                {
-                    return Json(result);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error: {ex.Message}");
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> UpdateId(string customerPartNumber, string rev, string description, string origMFR, string origMPN, string commodity, string eqpa, string uoM, int id, string status)
-        {
-            try
-            {
-                var result = await _sourcingRepository.UpdateById(customerPartNumber, rev, description, origMFR, origMPN, commodity, eqpa, uoM, id, status);
-
-                return Json(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error: {ex.Message}");
-            }
-        }
-
-        [HttpPost]
-        public async Task<bool> AddAnnualForecast(List<int> ids, List<string> annualForecasts)
-        {
-            try
-            {
-                // Check if the number of IDs matches the number of annual forecasts
-                if (ids.Count != annualForecasts.Count)
-                {
-                    // Return false indicating failure due to mismatched counts
-                    return false;
-                }
-
-                // Prepare the SQL query
-                string query = "UPDATE RFQ SET AnnualForecast = @AnnualForecast WHERE Id = @Id";
-
-                using (SqlConnection conn = new SqlConnection(GetConnection()))
-                {
-                    // Iterate through each ID and annual forecast
-                    for (int i = 0; i < ids.Count; i++)
-                    {
-                        // Execute the query for each ID and annual forecast pair
-                        await conn.ExecuteAsync(query, new { Id = ids[i], AnnualForecast = annualForecasts[i] });
-                    }
-                }
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Project(string projectName, IFormFile image)
-        {
-            try
-            {
-                // Check if rfqData or rfqProjectData is null
-                if (string.IsNullOrEmpty(projectName) || image == null || image.Length == 0)
-                {
-                    return BadRequest("Invalid project name or empty image");
-                }
-
-                // Save the image to a temporary file
-                string tempImagePath = Path.GetTempFileName();
-                using (var stream = new FileStream(tempImagePath, FileMode.Create))
-                {
-                    await image.CopyToAsync(stream);
-                }
-
-                // GetRFQ method to retrieve RFQ data
-                var rfqData = await _sourcingRepository.GetRFQ(projectName);
-
-                // GetRFQProject method to retrieve RFQProject data
-                var rfqProjectData = await _sourcingRepository.GetRFQProject(projectName);
-
-                // Check if rfqData or rfqProjectData is null
-                if (rfqData == null || rfqProjectData == null)
-                {
-                    // Delete the temporary file if data retrieval fails
-                    if (System.IO.File.Exists(tempImagePath))
-                    {
-                        System.IO.File.Delete(tempImagePath);
-                    }
-                    // Return a NotFoundResult or appropriate status code
-                    return NotFound();
-                }
-
-                // WriteToExcel method to write data to Excel
-                var result = await _exportingService.WriteToExcel(rfqData, rfqProjectData, projectName, 1);
-
-                // Send the email with the temporary image file path
-                var checkEmail = await SendEmail(tempImagePath);
-
-                // Delete the temporary file after sending email
-                if (System.IO.File.Exists(tempImagePath))
-                {
-                    System.IO.File.Delete(tempImagePath);
-                }
-
-                // Check if the writing process was successful
-                if (result == false || checkEmail == false)
-                {
-                    return View("Error Writing to Excel File or Sending Email");
-                }
-
-                // Return a view or other appropriate action result
-                return Json(result);
-            }
-            catch (Exception ex)
-            {
-                // Return an error view with the exception details
-                return View("Error", ex);
-            }
-        }
-
         private async Task<bool> SendEmail(string imagePath)
         {
             try
@@ -360,75 +346,26 @@ namespace SFG.Controllers
         {
             try
             {
-                // Deserialize the sourcingData from formData
                 var sourcingDataJson = formData["sourcingData"].ToString();
-                var sourcingData = JsonConvert.DeserializeObject<List<RFQModel>>(sourcingDataJson);
+                var rfqData = JsonConvert.DeserializeObject<List<RFQModel>>(sourcingDataJson);
 
-                // Extract other relevant information from formData
-                var requiredDate = DateTime.Parse(formData["requiredDate"].ToString());
-                var requestDate = DateTime.Parse(formData["requestDate"].ToString());
-                var quotationCode = formData["quotationCode"].ToString();
-                var projectName = formData["projectName"].ToString();
-                var noItems = Convert.ToInt32(formData["noItems"].ToString());
-                var customer = formData["customer"].ToString();
-                var status = "OPEN";
-                // Setup your database connection
-                using (var connection = new SqlConnection(GetConnection()))
+                var rfqProjects = new RFQProjectModel
                 {
-                    await connection.OpenAsync();
-                    // Begin a transaction
-                    var transaction = connection.BeginTransaction();
+                    ProjectName = formData["projectName"].ToString(),
+                    Customer = formData["customer"].ToString(),
+                    QuotationCode = formData["quotationCode"].ToString(),
+                    NoItems = Convert.ToInt32(formData["noItems"].ToString()),
+                    RequestDate = DateTime.Parse(formData["requestDate"].ToString()),
+                    RequiredDate = DateTime.Parse(formData["requiredDate"].ToString()),
+                    Status = "OPEN"
+                };
 
-                    try
-                    {
-                        // Insert data into RFQProjects table
-                        await connection.ExecuteAsync(@"INSERT INTO RFQProjects (ProjectName, Customer, QuotationCode, NoItems, RequestDate, RequiredDate, Status)
-                                                 VALUES (@ProjectName, @Customer, @QuotationCode, @NoItems, @RequestDate, @RequiredDate, @Status)",
-                                                        new { ProjectName = projectName, Customer = customer, QuotationCode = quotationCode, NoItems = noItems, RequestDate = requestDate, RequiredDate = requiredDate, Status = @status },
-                                                        transaction);
+                var result = await _sourcingRepository.InsertRFQ(rfqProjects, rfqData);
 
-                        // Insert data into RFQ table for each item in sourcingData
-                        foreach (var item in sourcingData)
-                        {
-                            await connection.ExecuteAsync(@"INSERT INTO RFQ (ProjectName, Customer, QuotationCode, LastPurchaseDate, CustomerPartNumber, Description, Rev, Commodity, OrigMPN, OrigMFR, Eqpa, UoM, Status, Remarks)
-                                    VALUES (@ProjectName, @Customer, @QuotationCode, @LastPurchaseDate, @CustomerPartNumber, @Description, @Rev, @Commodity, @OrigMPN, @OrigMFR, @Eqpa, @Uom, @Status, @Remarks)",
-                                  new
-                                  {
-                                      ProjectName = projectName,
-                                      Customer = customer,
-                                      QuotationCode = quotationCode,
-                                      item.LastPurchaseDate,
-                                      item.CustomerPartNumber,
-                                      item.Description,
-                                      item.Rev,
-                                      item.Commodity,
-                                      item.OrigMPN,
-                                      item.OrigMFR,
-                                      item.Eqpa,
-                                      item.UoM,
-                                      item.Status,
-                                      item.Remarks
-                                  },
-                                  transaction);
-                        }
-
-                        // Commit the transaction
-                        transaction.Commit();
-
-                        // Return success response
-                        return Json(new { success = true, message = "RFQ data uploaded successfully!" });
-                    }
-                    catch (Exception ex)
-                    {
-                        // Rollback the transaction in case of any exception
-                        transaction.Rollback();
-                        throw; // Rethrow the exception to be handled at a higher level
-                    }
-                }
+                return Json(new { success = true, message = "RFQ data uploaded successfully!" });
             }
             catch (Exception ex)
             {
-                // Log the exception or return a generic error message
                 return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
@@ -449,12 +386,6 @@ namespace SFG.Controllers
             return Json(new { success = false, message = "Sending Email failed!" });
         }
 
-        private string html()
-        {
-            string html = "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n  <head>\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\r\n    <title>Email</title>\r\n    <style media=\"all\" type=\"text/css\">\r\n      /* -------------------------------------\r\n    GLOBAL RESETS\r\n------------------------------------- */\r\n\r\n      body {\r\n        font-family: Helvetica, sans-serif;\r\n        -webkit-font-smoothing: antialiased;\r\n        font-size: 16px;\r\n        line-height: 1.3;\r\n        -ms-text-size-adjust: 100%;\r\n        -webkit-text-size-adjust: 100%;\r\n      }\r\n      .label-value-pair {\r\n        display: flex;\r\n      }\r\n\r\n      .label,\r\n      .value {\r\n        border: 1px solid black;\r\n        padding: 8px;\r\n      }\r\n\r\n      .label {\r\n        flex: 2;\r\n        color: blue;\r\n        font-weight: bold;\r\n        border-bottom: none;\r\n        border-right: none;\r\n      }\r\n\r\n      .value {\r\n        flex: 2;\r\n        font-weight: bold;\r\n        border-bottom: none;\r\n        border-left: none;\r\n      }\r\n      .label-value-pair:last-child .label,\r\n      .label-value-pair:last-child .value {\r\n        border-bottom: 1px solid black; /* Add bottom border to the last label-value pair */\r\n        margin-bottom: 8px;\r\n      }\r\n      /* -------------------------------------\r\n    BODY & CONTAINER\r\n------------------------------------- */\r\n\r\n      body {\r\n        background-color: #f4f5f6;\r\n        margin: 0;\r\n        padding: 0;\r\n      }\r\n\r\n      .body {\r\n        background-color: #f4f5f6;\r\n        width: 100%;\r\n      }\r\n\r\n      .container {\r\n        margin: 0 auto !important;\r\n        max-width: 600px;\r\n        padding: 0;\r\n        padding-top: 24px;\r\n        padding-bottom: 24px;\r\n        width: 600px;\r\n      }\r\n\r\n      .content {\r\n        box-sizing: border-box;\r\n        display: block;\r\n        margin: 0 auto;\r\n        max-width: 600px;\r\n        padding: 0;\r\n      }\r\n      /* -------------------------------------\r\n    HEADER, FOOTER, MAIN\r\n------------------------------------- */\r\n\r\n      .main {\r\n        background: #ffffff;\r\n        border: 1px solid #eaebed;\r\n        border-radius: 16px;\r\n        width: 100%;\r\n      }\r\n\r\n      .wrapper {\r\n        box-sizing: border-box;\r\n        padding: 24px;\r\n      }\r\n\r\n      .footer {\r\n        clear: both;\r\n        padding-top: 24px;\r\n        text-align: center;\r\n        width: 100%;\r\n      }\r\n\r\n      .footer td,\r\n      .footer p,\r\n      .footer span,\r\n      .footer a {\r\n        color: #9a9ea6;\r\n        font-size: 16px;\r\n        text-align: center;\r\n      }\r\n      /* -------------------------------------\r\n    TYPOGRAPHY\r\n------------------------------------- */\r\n\r\n      p {\r\n        font-family: Helvetica, sans-serif;\r\n        font-size: 16px;\r\n        font-weight: normal;\r\n        margin: 0;\r\n        margin-bottom: 16px;\r\n      }\r\n\r\n      a {\r\n        color: #0867ec;\r\n        text-decoration: underline;\r\n      }\r\n      /* -------------------------------------\r\n    BUTTONS\r\n------------------------------------- */\r\n\r\n      .btn {\r\n        box-sizing: border-box;\r\n        min-width: 100% !important;\r\n        width: 100%;\r\n      }\r\n\r\n      .btn > tbody > tr > td {\r\n        padding-bottom: 16px;\r\n      }\r\n\r\n      .btn table {\r\n        width: auto;\r\n      }\r\n\r\n      .btn table td {\r\n        background-color: #ffffff;\r\n        border-radius: 4px;\r\n        text-align: center;\r\n      }\r\n\r\n      .btn a {\r\n        background-color: #ffffff;\r\n        border: solid 2px #0867ec;\r\n        border-radius: 4px;\r\n        box-sizing: border-box;\r\n        color: #0867ec;\r\n        cursor: pointer;\r\n        display: inline-block;\r\n        font-size: 16px;\r\n        font-weight: bold;\r\n        margin: 0;\r\n        padding: 12px 24px;\r\n        text-decoration: none;\r\n        text-transform: capitalize;\r\n      }\r\n\r\n      .btn-primary table td {\r\n        background-color: #0867ec;\r\n      }\r\n\r\n      .btn-primary a {\r\n        background-color: #0867ec;\r\n        border-color: #0867ec;\r\n        color: #ffffff;\r\n      }\r\n\r\n      @media all {\r\n        .btn-primary table td:hover {\r\n          background-color: #f7f4f5 !important;\r\n          color: black;\r\n        }\r\n        .btn-primary a:hover {\r\n          background-color: #f7f4f5 !important;\r\n          border-color: #f7f4f5 !important;\r\n          color: black;\r\n        }\r\n      }\r\n\r\n      /* -------------------------------------\r\n    OTHER STYLES THAT MIGHT BE USEFUL\r\n------------------------------------- */\r\n\r\n      .last {\r\n        margin-bottom: 0;\r\n      }\r\n\r\n      .first {\r\n        margin-top: 0;\r\n      }\r\n\r\n      .align-center {\r\n        text-align: center;\r\n      }\r\n\r\n      .align-right {\r\n        text-align: right;\r\n      }\r\n\r\n      .align-left {\r\n        text-align: left;\r\n      }\r\n\r\n      .text-link {\r\n        color: #0867ec !important;\r\n        text-decoration: underline !important;\r\n      }\r\n\r\n      .clear {\r\n        clear: both;\r\n      }\r\n\r\n      .mt0 {\r\n        margin-top: 0;\r\n      }\r\n\r\n      .mb0 {\r\n        margin-bottom: 0;\r\n      }\r\n\r\n      .preheader {\r\n        color: transparent;\r\n        display: none;\r\n        height: 0;\r\n        max-height: 0;\r\n        max-width: 0;\r\n        opacity: 0;\r\n        overflow: hidden;\r\n        mso-hide: all;\r\n        visibility: hidden;\r\n        width: 0;\r\n      }\r\n\r\n      .powered-by a {\r\n        text-decoration: none;\r\n      }\r\n\r\n      /* -------------------------------------\r\n    RESPONSIVE AND MOBILE FRIENDLY STYLES\r\n------------------------------------- */\r\n\r\n      @media only screen and (max-width: 640px) {\r\n        .main p,\r\n        .main td,\r\n        .main span {\r\n          font-size: 16px !important;\r\n        }\r\n        .wrapper {\r\n          padding: 8px !important;\r\n        }\r\n        .content {\r\n          padding: 0 !important;\r\n        }\r\n        .container {\r\n          padding: 0 !important;\r\n          padding-top: 8px !important;\r\n          width: 100% !important;\r\n        }\r\n        .main {\r\n          border-left-width: 0 !important;\r\n          border-radius: 0 !important;\r\n          border-right-width: 0 !important;\r\n        }\r\n        .btn table {\r\n          max-width: 100% !important;\r\n          width: 100% !important;\r\n        }\r\n        .btn a {\r\n          font-size: 16px !important;\r\n          max-width: 100% !important;\r\n          width: 100% !important;\r\n        }\r\n      }\r\n      /* -------------------------------------\r\n    PRESERVE THESE STYLES IN THE HEAD\r\n------------------------------------- */\r\n\r\n      @media all {\r\n        .ExternalClass {\r\n          width: 100%;\r\n        }\r\n        .ExternalClass,\r\n        .ExternalClass p,\r\n        .ExternalClass span,\r\n        .ExternalClass font,\r\n        .ExternalClass td,\r\n        .ExternalClass div {\r\n          line-height: 100%;\r\n        }\r\n        .apple-link a {\r\n          color: inherit !important;\r\n          font-family: inherit !important;\r\n          font-size: inherit !important;\r\n          font-weight: inherit !important;\r\n          line-height: inherit !important;\r\n          text-decoration: none !important;\r\n        }\r\n        #MessageViewBody a {\r\n          color: inherit;\r\n          text-decoration: none;\r\n          font-size: inherit;\r\n          font-family: inherit;\r\n          font-weight: inherit;\r\n          line-height: inherit;\r\n        }\r\n      }\r\n    </style>\r\n  </head>\r\n  <body>\r\n    <table\r\n      role=\"presentation\"\r\n      border=\"0\"\r\n      cellpadding=\"0\"\r\n      cellspacing=\"0\"\r\n      class=\"body\">\r\n      <tr>\r\n        <td>&nbsp;</td>\r\n        <td class=\"container\">\r\n          <div class=\"content\">\r\n            <!-- START CENTERED WHITE CONTAINER -->\r\n            <table\r\n              role=\"presentation\"\r\n              border=\"0\"\r\n              cellpadding=\"0\"\r\n              cellspacing=\"0\"\r\n              class=\"main\">\r\n              <!-- START MAIN CONTENT AREA -->\r\n              <tr>\r\n                <td class=\"wrapper\">\r\n                  <p>Hi there,</p>\r\n                  <p>Please process this request</p>\r\n                  <div class=\"info\">\r\n                    <div class=\"label-value-pair\">\r\n                      <div class=\"label\">Project Name</div>\r\n                      <div class=\"value\">Value 1</div>\r\n                    </div>\r\n                    <div class=\"label-value-pair\">\r\n                      <div class=\"label\">Customer</div>\r\n                      <div class=\"value\">Value 2</div>\r\n                    </div>\r\n                    <div class=\"label-value-pair\">\r\n                      <div class=\"label\">\r\n                        Quotation Code/Purchase Request Code\r\n                      </div>\r\n                      <div class=\"value\">Value 3</div>\r\n                    </div>\r\n                    <div class=\"label-value-pair\">\r\n                      <div class=\"label\">Number of Items</div>\r\n                      <div class=\"value\">Value 1</div>\r\n                    </div>\r\n                    <div class=\"label-value-pair\">\r\n                      <div class=\"label\">Request Date</div>\r\n                      <div class=\"value\">Value 2</div>\r\n                    </div>\r\n                    <div class=\"label-value-pair\">\r\n                      <div class=\"label\">Required Completion Date</div>\r\n                      <div class=\"value\">Value 3</div>\r\n                    </div>\r\n                  </div>\r\n                  <table\r\n                    role=\"presentation\"\r\n                    border=\"0\"\r\n                    cellpadding=\"0\"\r\n                    cellspacing=\"0\"\r\n                    class=\"btn btn-primary\">\r\n                    <tbody>\r\n                      <tr>\r\n                        <td align=\"left\">\r\n                          <table\r\n                            role=\"presentation\"\r\n                            border=\"0\"\r\n                            cellpadding=\"0\"\r\n                            cellspacing=\"0\">\r\n                            <tbody>\r\n                              <tr>\r\n                                <td>\r\n                                  <a\r\n                                    href=\"http://192.168.5.73:83/\"\r\n                                    target=\"_blank\"\r\n                                    >Open in your browser</a\r\n                                  >\r\n                                </td>\r\n                              </tr>\r\n                            </tbody>\r\n                          </table>\r\n                        </td>\r\n                      </tr>\r\n                    </tbody>\r\n                  </table>\r\n                </td>\r\n              </tr>\r\n\r\n              <!-- END MAIN CONTENT AREA -->\r\n            </table>\r\n\r\n            <!-- END CENTERED WHITE CONTAINER -->\r\n          </div>\r\n        </td>\r\n        <td>&nbsp;</td>\r\n      </tr>\r\n    </table>\r\n  </body>\r\n</html>\r\n";
-            return html;
-        }
-
         /*MRP BOM TABLE*/
 
         public async Task<IActionResult> ProcessData(string partNumber)
@@ -469,7 +400,7 @@ namespace SFG.Controllers
 
                 // Initialize a list to store data with status
                 List<dynamic> dataWithStatus = new List<dynamic>();
-
+                int rowNum = 1;
                 // Iterate through each row in mrpData and add the Status column
                 foreach (var row in mrpData)
                 {
@@ -515,6 +446,7 @@ namespace SFG.Controllers
                         // Create a new object representing the row with the Status column added
                         var rowDataWithStatus = new
                         {
+                            No = rowNum++,
                             PartNumber = row.PartNumberTable,
                             Description = row.DescriptionTable,
                             Rev = row.Rev,
@@ -693,61 +625,68 @@ namespace SFG.Controllers
 
                             string targetValue = "Purchasing UOM";
 
+                            string firstBestPrice = worksheet.Cells["T12"].Value?.ToString();
+                            string secondBestPrice = worksheet.Cells["AN12"].Value?.ToString();
+                            string thirdBestPrice = worksheet.Cells["BF12"].Value?.ToString();
+
                             int rowCount = worksheet.Dimension.Rows;
                             int colOIndex = worksheet.Cells["O14"].Start.Column; // Cell BOM UOM
-                            int colAEIndex = 0;
+                            //int colAEIndex = 0;
 
-                            // Find the column index of the targetValue
+                            // Find the column indices of the targetValue ("Purchasing UOM")
+                            var colIndices = new List<int>();
                             for (int col = worksheet.Dimension.Start.Column; col <= worksheet.Dimension.End.Column; col++)
                             {
                                 var cellValue = worksheet.Cells[13, col].Value?.ToString(); // Row 13
                                 if (cellValue == targetValue)
                                 {
-                                    colAEIndex = col;
-                                    break;
+                                    colIndices.Add(col);
                                 }
                             }
 
-                            // Check if targetValue column was found
-                            if (colAEIndex == 0)
+                            // Check if any "Purchasing UOM" column was found
+                            if (colIndices.Count == 0)
                             {
                                 return Json(new { success = false, message = $"Column for '{targetValue}' not found." });
                             }
-                            for (int row = 14; row <= rowCount; row++) // Start @ row 14
-                            {
-                                var cellO = worksheet.Cells[row, colOIndex].Value?.ToString(); // Cell O
-                                var cellAE = worksheet.Cells[row, colAEIndex].Value?.ToString(); // Cell Purchasing UOM
-                                var cellAD = worksheet.Cells[row, colAEIndex - 1].Value?.ToString(); // Cell SPQ
-                                var cellAF = worksheet.Cells[row, colAEIndex + 1].Value?.ToString(); // Cell Parts Lead Time
 
-                                // Additional checks for Purchasing UOM value
-                                if (cellAE == "ft" || cellAE == "m" || cellAE == "mm" || cellAE == "inch" || cellAE == "pack")
+                            foreach (var colAEIndex in colIndices)
+                            {
+                                // Iterate over each "Purchasing UOM" column
+                                for (int row = 14; row <= rowCount; row++) // Start @ row 14
                                 {
-                                    // Check if cell SPQ is blank
-                                    if (string.IsNullOrWhiteSpace(cellAD))
+                                    // Retrieve values from specific cells
+                                    var cellO = worksheet.Cells[row, colOIndex].Value?.ToString(); // Value of Cell BOM UOM
+                                    var cellAE = worksheet.Cells[row, colAEIndex].Value?.ToString(); // Value of Cell Purchasing UOM
+                                    var cellAD = worksheet.Cells[row, colAEIndex - 1].Value?.ToString(); // Value of Cell SPQ
+                                    var cellAF = worksheet.Cells[row, colAEIndex + 1].Value?.ToString(); // Value of Cell Parts Lead Time
+                                    var cellAddress = worksheet.Cells[row, colAEIndex].Address; // Cell Address Purchasing UOM
+                                    var cellAddress2 = worksheet.Cells[row, colOIndex].Address; // Cell Address BOM UOM
+                                    // Additional checks for Purchasing UOM value
+                                    if (cellAE == "ft" || cellAE == "m" || cellAE == "mm" || cellAE == "inch" || cellAE == "pack")
                                     {
-                                        return Json(new { success = false, message = $"Value of cell AD{row} is blank." });
+                                        // Check if cell SPQ is blank
+                                        if (string.IsNullOrWhiteSpace(cellAD))
+                                        {
+                                            return Json(new { success = false, message = $"Value of cell AD{row} is blank." });
+                                        }
+                                    }
+
+                                    // Check if cell Parts Lead Time contains letters
+                                    if (cellAF != null && cellAF.Any(char.IsLetter))
+                                    {
+                                        return Json(new { success = false, message = $"Value of cell AF{row} contains letters." });
+                                    }
+
+                                    // Compare the values of cell BOM UOM and Purchasing UOM
+                                    if (cellO != cellAE)
+                                    {
+                                        // Values are different, return the result as JSON
+                                        return Json(new { success = false, message = $"Value of Purchasing UOM in cell {cellAddress} ('{cellAE}') is different from BOM UOM in cell {cellAddress2} ('{cellO}')." });
                                     }
                                 }
-
-                                // Check if cell Parts Lead Time contains letters
-                                if (cellAF != null && cellAF.Any(char.IsLetter))
-                                {
-                                    return Json(new { success = false, message = $"Value of cell AF{row} contains letters." });
-                                }
-
-                                // Compare the values of cell BOM UOM and Purchasing UOM
-                                if (cellO == cellAE)
-                                {
-                                    // Values are the same, continue to the next row
-                                    continue;
-                                }
-                                else
-                                {
-                                    // Values are different, return the result as JSON
-                                    return Json(new { success = false, message = $"Values of Purchasing UOM row {row} ('{cellAE}') is different from BOM UOM ('{cellO}')." });
-                                }
                             }
+
 
                             // If all checks are successful, return an Ok response
                             return Ok(new { success = true, message = "All values are valid." });
@@ -767,27 +706,28 @@ namespace SFG.Controllers
             }
         }
 
-        //public async Task<IActionResult> UploadExcelFile(IFormFile file)
-        //{
-        //    try
-        //    {
-        //        if (file == null || file.Length == 0)
-        //        {
-        //            return BadRequest("No file uploaded.");
-        //        }
+        public async Task<IActionResult> UploadExcelFile(IFormFile file)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    return BadRequest("No file uploaded.");
+                }
 
-        //        // Check if the file is an Excel file
-        //        if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
-        //        {
-        //            return BadRequest("Only Excel files are allowed.");
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log the exception
-        //        Console.WriteLine($"Error checking uploaded file: {ex.Message}");
-        //        return StatusCode(500, "An error occurred while processing the file.");
-        //    }
-        //}
+                // Check if the file is an Excel file
+                if (!Path.GetExtension(file.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+                {
+                    return BadRequest("Only Excel files are allowed.");
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine($"Error checking uploaded file: {ex.Message}");
+                return StatusCode(500, "An error occurred while processing the file.");
+            }
+        }
     }
 }

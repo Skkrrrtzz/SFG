@@ -68,27 +68,15 @@ namespace SFG.Repository
             }
         }
 
-        public async Task<bool> UpdateById(string customerPartNumber, string rev, string description, string origMFR, string origMPN, string commodity, string eqpa, string uoM, int id, string status)
+        public async Task<bool> UpdateById(RFQModel formData)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
-                    string query = "UPDATE RFQ SET CustomerPartNumber = @CustomerPartNumber, Rev = @Rev, DescriprigMPN = @Origtion = @Description, OrigMFR = @OrigMFR, OMPN, Commodity = @Commodity, Eqpa = @Eqpa, UoM = @UoM, Status = @Status WHERE Id = @Id";
+                    string query = "UPDATE RFQ SET CustomerPartNumber = @CustomerPartNumber, Rev = @Rev, Description = @Description, OrigMFR = @OrigMFR, OrigMPN = @OrigMPN, Commodity = @Commodity, Eqpa = @Eqpa, UoM = @UoM, Status = @Status WHERE Id = @Id";
 
-                    var result = await conn.ExecuteAsync(query, new
-                    {
-                        Id = id,
-                        CustomerPartNumber = customerPartNumber,
-                        Rev = rev,
-                        Description = description,
-                        OrigMFR = origMFR,
-                        OrigMPN = origMPN,
-                        Commodity = commodity,
-                        Eqpa = eqpa,
-                        UoM = uoM,
-                        Status = status
-                    });
+                    int result = await conn.ExecuteAsync(query, formData);
 
                     return result > 0;
                 }
@@ -96,6 +84,73 @@ namespace SFG.Repository
             catch (Exception ex)
             {
                 Console.WriteLine($"Error processing query: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> InsertRFQ(RFQProjectModel rFQProjects, List<RFQModel> rfqData)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    string RFQProjectsQuery = "INSERT INTO RFQProjects (ProjectName, Customer, QuotationCode, NoItems, RequestDate, RequiredDate, Status) " +
+                                  "VALUES (@ProjectName, @Customer, @QuotationCode, @NoItems, @RequestDate, @RequiredDate, @Status)";
+
+                    string RFQQuery = "INSERT INTO RFQ (ProjectName, Customer, QuotationCode, LastPurchaseDate, CustomerPartNumber, Description, Rev, Commodity, OrigMPN, OrigMFR, Eqpa, UoM, Status, Remarks) " +
+                       "VALUES (@ProjectName, @Customer, @QuotationCode, @LastPurchaseDate, @CustomerPartNumber, @Description, @Rev, @Commodity, @OrigMPN, @OrigMFR, @Eqpa, @UoM, @Status, @Remarks)";
+
+                    await connection.ExecuteAsync(RFQProjectsQuery, rFQProjects);
+
+                    foreach (var item in rfqData)
+                    {
+                        await connection.ExecuteAsync(RFQQuery, new
+                        {
+                            ProjectName = rFQProjects.ProjectName,
+                            Customer = rFQProjects.Customer,
+                            QuotationCode = rFQProjects.QuotationCode,
+                            LastPurchaseDate = item.LastPurchaseDate,
+                            CustomerPartNumber = item.CustomerPartNumber,
+                            Description = item.Description,
+                            Rev = item.Rev,
+                            Commodity = item.Commodity,
+                            OrigMPN = item.OrigMPN,
+                            OrigMFR = item.OrigMFR,
+                            Eqpa = item.Eqpa,
+                            UoM = item.UoM,
+                            Status = item.Status,
+                            Remarks = item.Remarks
+                        });
+                    }
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error inserting RFQ: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> InsertAnnualForecast(List<int> ids, List<string> annualForecasts)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    string query = "UPDATE RFQ SET AnnualForecast = @AnnualForecast WHERE Id = @Id";
+
+                    for (int i = 0; i < ids.Count; i++)
+                    {
+                        await conn.ExecuteAsync(query, new { Id = ids[i], AnnualForecast = annualForecasts[i] });
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating AnnualForecast: {ex.Message}");
                 return false;
             }
         }
@@ -132,6 +187,8 @@ namespace SFG.Repository
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+                await conn.OpenAsync();
+
                 using (SqlCommand cmd = new SqlCommand($"SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tableName}'", conn))
                 {
                     int count = (int)await cmd.ExecuteScalarAsync();
@@ -184,9 +241,7 @@ namespace SFG.Repository
                 {
                     string query = "SELECT * FROM RFQ WHERE ProjectName = @ProjectName AND Remarks = 'FOR SOURCING'";
 
-                    var rfqData = await conn.QueryAsync<RFQModel>(query, new { ProjectName = projectName });
-
-                    return rfqData;
+                    return await conn.QueryAsync<RFQModel>(query, new { ProjectName = projectName });
                 }
             }
             catch (Exception ex)

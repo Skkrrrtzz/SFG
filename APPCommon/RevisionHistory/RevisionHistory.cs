@@ -3,8 +3,10 @@ namespace APPCommon.RevisionHistory
 {
     public static class RevisionHistory
     {
-        public const double appVersion = 1.05;
+        public const double appVersion = 1.06;
 
+        //--> Version : 1.05 May 09, 2024
+        //Revised login page from cookie mode to parameter
         //--> Version : 1.05 May 06, 2024
         //Design landing page
         //--> Version : 1.04 May 04, 2024

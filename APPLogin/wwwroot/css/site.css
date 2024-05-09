@@ -1,0 +1,85 @@
+/* || Colors */
+:root {
+    --colorMain1: #010038;
+    --colorMain2: #0f1c57;
+    --colorMain3: #293A80;
+    --colorMain4: #3A5BA0;
+    --colorMain5: #537EC5;
+    --colorMain5: #658bcb;
+    --colorDimGray: #696969;
+    --colorHighLight: #F39422;
+    --colorHighLightSemi: #99F39422;
+    --colorHighLightText: White;
+    --colorHighLight1: #4DF39422;
+    --colorWindow: DimGray;
+    --colorDialog: #515151;
+}
+
+html {
+    font-size: 14px;
+    font-family: Mulish;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    background-color: #2e2e2e;
+    background-image: url("https://www.transparenttextures.com/patterns/dark-tire.png");
+    margin-bottom: 0px;
+}
+
+.centerdiv {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1px;
+    margin: auto;
+}
+
+.success-header {
+    background-color: #5cb85c;
+}
+
+.success-body {
+    background-color: #eca9a7;
+}
+
+.error-header {
+    background-color: #d9534f;
+}
+
+.error-body {
+    background-color: #aedcae;
+}
+
+/* Scrollbar */
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+/* Scrollbar */

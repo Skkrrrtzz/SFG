@@ -1,0 +1,10 @@
+﻿.divLogin {
+    width: 300px;
+    height: 450px;
+}
+
+.divLoginBG {
+    background-image: linear-gradient(rgba(105,105,105,0.7),rgba(105,105,105,0.7)), url('img/bg/menu_bg1.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}

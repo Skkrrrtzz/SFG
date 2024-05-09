@@ -1,0 +1,53 @@
+﻿.divMenu {
+    width: 1000px;
+    height: 500px;
+}
+
+.lstLink {
+    background-color: transparent;
+    max-height: 400px;
+    margin-bottom: 5px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.list-group-item {
+    height: 30px;
+    background-color: transparent;
+    border: none;
+    color: white;
+}
+
+a:hover {
+    background-color: var(--colorHighLight) !important;
+    font-weight: bold;
+}
+
+#tblPending {
+    background-color: transparent !important;
+    font-size: 14px;
+}
+
+.table-hover tbody tr:hover td {
+    background-color: var(--colorHighLight) !important;
+    cursor: pointer;
+}
+
+th {
+    color: black;
+    background-color: darkgray;
+    line-height: 15px;
+    min-height: 15px;
+    height: 15px;
+}
+
+td {
+    color: white;
+    border-bottom: 0.5px solid transparent;
+    background-color: transparent !important;
+}
+
+tr {
+    line-height: 15px;
+    min-height: 15px;
+    height: 15px;
+}

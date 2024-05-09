@@ -1,0 +1,46 @@
+﻿@page
+@model APPTemplate.Pages.LoginModel
+@{
+    ViewBag.Title = @Model.pagetitle;
+    Layout = "_LayoutFull";
+}
+
+<div class="vstack centerdiv">
+    <div class="row" style="height:20%; background-color:var(--colorMain1)">
+         <img src="img/svg/pimeslogo.svg" alt="pimeslogo" style="padding-top:35px;display:block;margin:0 auto; width:60%; z-index:1" />
+    </div>
+    <div id="divlogin" class="row" style="height:80%;">
+        <div class="vstack">
+            <div class="mx-auto mt-5 text-center">
+                <h6 class="display-6 mt-3 text-white"> L O G I N </h6>
+                <h7 class="display-7 text-white" style="letter-spacing:3px">@Model.pagetitle</h7>
+           </div>
+            <div class="mx-auto mt-2">
+               <label class="form-label" for="txtPassword"></label>
+                <input id="txtPassword" type="password" class="form-control text-center" placeholder="Enter password">
+            </div>
+            <div class="mx-auto mt-5 text-center" style="height:50px">
+                <button id="btnLogin" class="btn btn-primary text-center"><i class="bi bi-box-arrow-in-right"></i> Login</button>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top:-25px" >
+       <p class="text-white" style="font-size:12px">Ver. @Model.webversion</p>
+    </div>
+</div>
+
+<div id="partialModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 100%; width:550px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Welcome!</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button id="btnNext" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-arrow-right-circle-fill"></i> Continue</button
+            </div>
+        </div>
+    </div>
+</div>

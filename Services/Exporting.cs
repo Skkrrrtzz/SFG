@@ -9,10 +9,12 @@ namespace SFG.Services
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly string ExcelTemplate = "Template\\Sourcing Form.xlsx";
         private readonly string ExcelOutput = "ExportedExcel";
+
         public Exporting(IWebHostEnvironment webHostEnvironment)
         {
             _webHostEnvironment = webHostEnvironment;
         }
+
         public async Task<bool> WriteToExcel(IEnumerable<RFQModel> rfqData, RFQProjectModel rfqProject, string? projectName, int rfqDataStartColumn)
         {
             try
@@ -52,6 +54,7 @@ namespace SFG.Services
                 return false;
             }
         }
+
         private bool CheckRFQProjectDataExists(ExcelWorksheet worksheet, string startCell, string endCell)
         {
             for (int row = worksheet.Cells[startCell].Start.Row; row <= worksheet.Cells[endCell].End.Row; row++)
@@ -66,6 +69,7 @@ namespace SFG.Services
             }
             return false; // If no cell has a value, return false
         }
+
         private void InsertRFQProjectData(ExcelWorksheet worksheet, RFQProjectModel rfqProject, string startCell)
         {
             worksheet.Cells[startCell].Value = rfqProject.ProjectName;
@@ -75,6 +79,7 @@ namespace SFG.Services
             worksheet.Cells[startCell].Offset(4, 0).Value = rfqProject.RequestDate;
             worksheet.Cells[startCell].Offset(5, 0).Value = rfqProject.RequiredDate;
         }
+
         private void InsertRFQData(ExcelWorksheet worksheet, IEnumerable<RFQModel> rfqData, int startRow)
         {
             int row = startRow;
@@ -96,7 +101,6 @@ namespace SFG.Services
                 row++;
             }
         }
-
 
         //private void InsertRFQData(ExcelWorksheet worksheet, IEnumerable<RFQModel> rfqData, int startRow, int startColumn)
         //{

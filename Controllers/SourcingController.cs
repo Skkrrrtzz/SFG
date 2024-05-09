@@ -14,12 +14,14 @@ namespace SFG.Controllers
         private readonly Emailing _emailingService;
         private readonly Exporting _exportingService;
         private readonly ISourcingRepository _sourcingRepository;
+        private readonly UploadService _uploadService;
 
-        public SourcingController(AppDbContext dataBase, Exporting exportingService, Emailing emailingService, ISourcingRepository sourcingRepository) : base(dataBase)
+        public SourcingController(AppDbContext dataBase, Exporting exportingService, Emailing emailingService, ISourcingRepository sourcingRepository, UploadService uploadService) : base(dataBase)
         {
             _exportingService = exportingService;
             _emailingService = emailingService;
             _sourcingRepository = sourcingRepository;
+            _uploadService = uploadService;
         }
 
         public IActionResult SourcingForm()
@@ -687,7 +689,6 @@ namespace SFG.Controllers
                                 }
                             }
 
-
                             // If all checks are successful, return an Ok response
                             return Ok(new { success = true, message = "All values are valid." });
                         }
@@ -706,7 +707,8 @@ namespace SFG.Controllers
             }
         }
 
-        public async Task<IActionResult> UploadExcelFile(IFormFile file)
+        //public async Task<IActionResult> UploadRFQExcelFile(IFormFile file, string fileName)
+        public async Task<IActionResult> UploadRFQExcelFile(IFormFile file, string fileName)
         {
             try
             {
@@ -720,7 +722,15 @@ namespace SFG.Controllers
                 {
                     return BadRequest("Only Excel files are allowed.");
                 }
-                return Ok();
+
+                string filePath = await _uploadService.SaveRFQFile(file, fileName);
+
+                if (filePath is null)
+                {
+                    return Json(new { success = false, message = "Error saving the file." });
+                }
+
+                return Ok(new { success = true, message = "File uploaded successfully!" });
             }
             catch (Exception ex)
             {

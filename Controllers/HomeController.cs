@@ -17,12 +17,14 @@ namespace SFG.Controllers
         {
             HttpContext.Session.SetString("uniqueKey", HttpContext.Request.Cookies["uniqueKey"] == null ? "No Cookies" : HttpContext.Request.Cookies["uniqueKey"]);
         }
+
         public dynamic? GetSessionData()
         {
             dynamic sessionData = new ATS_Library.GetSession.Session().GetUserData("8114a571-c459-461a-9628-a19f0f052bfc");
 
             return sessionData;
         }
+
         //return new ATS_Library.GetSession.Session().GetUserData(HttpContext.Session.GetString("uniqueKey"));
         public IActionResult Checking()
         {
@@ -47,6 +49,7 @@ namespace SFG.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Login(UsersModel user)
         {
@@ -72,21 +75,25 @@ namespace SFG.Controllers
                 return View();
             }
         }
+
         public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Clear();
             HttpContext.Response.Cookies.Delete("uniqueKey");
             return Redirect("http://192.168.5.73:81");
         }
+
         public IActionResult Privacy()
         {
             return View();
         }
+
         public IActionResult DisplayUsers()
         {
             Checking();
             return View();
         }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

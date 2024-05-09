@@ -51,6 +51,37 @@ namespace SFG.Services
             return filePath; // Return the path to the saved file
         }
 
+        public async Task<string> SaveRFQFile(IFormFile file, string description)
+        {
+            if (file == null || file.Length == 0)
+            {
+                throw new ArgumentException("File is null or empty.");
+            }
+
+            // Create a unique file name
+            string fileName = $"RFQ - {description}{Path.GetExtension(file.FileName)}";
+
+            // Define the directory path where the file will be saved
+            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", "Excel", "RFQ");
+
+            // If the directory doesn't exist, create it
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            // Combine the directory path with the unique file name to get the full path
+            string filePath = Path.Combine(uploadsFolder, fileName);
+
+            // Save the file to the specified path
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return filePath; // Return the path to the saved file
+        }
+
         public string GetFilePathFromPNDesc(string pNDesc)
         {
             // Construct the file path based on the parsed information and the upload directory
@@ -59,6 +90,7 @@ namespace SFG.Services
 
             return filePath;
         }
+
         public string GetExportedExcel(string projectName)
         {
             string uploadsDirectory = Path.Combine(_webHostEnvironment.WebRootPath, _exportedExcelDirectory);

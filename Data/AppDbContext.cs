@@ -7,8 +7,8 @@ namespace SFG.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-
         }
+
         public DbSet<UsersModel> Users { get; set; }
         public DbSet<LastPurchaseInfoModel> LastPurchaseInfo { get; set; }
         public DbSet<QuotationModel> Quotations { get; set; }
@@ -16,6 +16,5 @@ namespace SFG.Data
         public DbSet<MRPBOMProductModel> MRPBOMProducts { get; set; }
         public DbSet<RFQModel> RFQ { get; set; }
         public DbSet<RFQProjectModel> RFQProjects { get; set; }
-        
     }
 }

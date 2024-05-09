@@ -106,9 +106,10 @@ function getMRPData(data) {
     let rowData = table.row($(this).closest("tr")).data();
 
     // Display the current status and remarks in the edit modal
+    $("#no").val(no);
     $("#editStatus").val(rowData.status);
     $("#editRemarks").val(rowData.remarks);
-    $("#editId").val(no);
+    $("#partNumber").val(rowData.partNumber);
   });
 
   // Handle click event on update button
@@ -118,7 +119,7 @@ function getMRPData(data) {
     // Retrieve updated status and remarks from modal fields
     let updatedStatus = $("#editStatus").val();
     let updatedRemarks = $("#editRemarks").val();
-    let partId = $("#editId").val();
+    let partId = $("#no").val();
 
     let rowData = table.row(partId - 1).data(); // Retrieve row data
     rowData.status = updatedStatus; // Update status

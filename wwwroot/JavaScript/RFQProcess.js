@@ -3,53 +3,30 @@
   return urlParams.get(name);
 }
 let qC = getQueryStringParameter("quotationCode");
-console.log(qC);
 
 $("#SRFQTbl").DataTable({
   responsive: true,
 });
-function uploadExcel(file) {
-  // $.ajax({
-  //   type: "POST",
-  //   url: UploadRFQInfo,
-  //   data: file,
-  //   dataType: "json",
-  //   success: function (response) {
-  //     console.log(response);
-  //     if (response.success) {
-  //       // Display success message using SweetAlert
-  //       Swal.fire({
-  //         icon: "success",
-  //         title: "Success",
-  //         text: response.message,
-  //         toast: true,
-  //         position: "top-end",
-  //         showConfirmButton: false,
-  //         timer: 3000,
-  //       });
-  //       // window.location.reload();
-  //     } else {
-  //       // Display error message using SweetAlert
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Error",
-  //         text: response.message,
-  //         toast: true,
-  //         position: "top-end",
-  //         showConfirmButton: false,
-  //         timer: 3000,
-  //       });
-  //     }
-  //   },
-  // });
+function uploadExcel(file, projectName) {
+  Swal.fire({
+    title: "Please wait...",
+    html: '<div class="m-2" id="loading-spinner"><div class="loader3"><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div></div></div>',
+    showCancelButton: false,
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+  });
 
-  fetch(UploadRFQInfo, {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("fileName", projectName);
+
+  fetch(UploadRFQ, {
     method: "POST",
-    body: file,
+    body: formData,
   })
     .then((response) => response.json())
     .then((response) => {
-      console.log(response);
       if (response.success) {
         // Display success message using SweetAlert
         Swal.fire({
@@ -60,8 +37,9 @@ function uploadExcel(file) {
           position: "top-end",
           showConfirmButton: false,
           timer: 3000,
+        }).then(function () {
+          window.location.href = "/Dashboard/Dashboard";
         });
-        // window.location.reload();
       } else {
         // Display error message using SweetAlert
         Swal.fire({
@@ -89,8 +67,10 @@ function uploadExcel(file) {
       });
     });
 }
+
 function checkExcel() {
   const excelFile = $("#excelFileInput")[0];
+  const projectName = $("#projectName").val();
 
   if (!excelFile.files || !excelFile.files[0]) {
     // Check if a file was selected
@@ -109,71 +89,9 @@ function checkExcel() {
     const formData = new FormData(); // Create a FormData object
     formData.append("file", file); // Append the file to FormData
 
-    // $.ajax({
-    //   type: "POST",
-    //   url: CheckRFQInfo,
-    //   data: formData,
-    //   processData: false,
-    //   contentType: false,
-    //   success: function (response) {
-    //     console.log(response);
-    //     if (response.success) {
-    //       // Display success message using SweetAlert
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "Success",
-    //         text: response.message,
-    //         toast: true,
-    //         position: "top-end",
-    //         showCancelButton: true,
-    //         confirmButtonColor: "#3085d6",
-    //         confirmButtonText: "Submit",
-    //         cancelButtonText: "Cancel",
-    //       })
-    //         .then((result) => {
-    //           if (result.isConfirmed) {
-    //             Swal.fire({
-    //               title: "Loading...",
-    //               html: '<div class="m-2" id="loading-spinner"><div class="loader3"><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div></div></div>',
-    //               showCancelButton: false,
-    //               showConfirmButton: false,
-    //               allowOutsideClick: false,
-    //               allowEscapeKey: false,
-    //             });
-    //             uploadExcel(formData);
-    //           }
-    //         })
-    //         .catch((err) => {});
-    //     } else {
-    //       // Display error message using SweetAlert
-    //       Swal.fire({
-    //         icon: "warning",
-    //         title: "Warning",
-    //         text: response.message,
-    //         toast: true,
-    //         position: "top-end",
-    //       });
-    //     }
-    //   },
-    //   error: function (xhr, status, error) {
-    //     // Display error message using SweetAlert
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Error",
-    //       text: "An error occurred while uploading the file.",
-    //       toast: true,
-    //       position: "top-end",
-    //       showConfirmButton: false,
-    //       timer: 3000,
-    //     });
-    //     console.error("Error:", error);
-    //   },
-    // });
     fetch(CheckRFQInfo, {
       method: "POST",
       body: formData,
-      processData: false,
-      contentType: false,
     })
       .then((response) => response.json())
       .then((response) => {
@@ -199,7 +117,8 @@ function checkExcel() {
                 allowOutsideClick: false,
                 allowEscapeKey: false,
               });
-              uploadExcel(formData);
+              uploadExcel(file, projectName);
+              // Swal.close();
             }
           });
         } else {
@@ -211,6 +130,7 @@ function checkExcel() {
             toast: true,
             position: "top-end",
           });
+          Swal.close();
         }
       })
       .catch((error) => {
@@ -224,6 +144,7 @@ function checkExcel() {
           showConfirmButton: false,
           timer: 3000,
         });
+        Swal.close();
         console.error("Error:", error);
       });
   }

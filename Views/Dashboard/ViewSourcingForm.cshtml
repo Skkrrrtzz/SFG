@@ -16,7 +16,7 @@
         </div>
         <div class="row">
             <div class="table-responsive mb-2">
-                <table class="table table-bordered table-hover table-sm compact" id="sourcingTbl" style="width: 100%">
+                <table class="table table-bordered table-hover table-striped table-sm compact" id="sourcingTbl" style="width: 100%">
                     <thead class="table-primary">
                         <tr>
                             <th>NO</th>
@@ -56,21 +56,22 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-      <div class="row g-3 align-items-center">
-          <div class="col-auto">
-            <label for="editId" class="form-label fw-bold">Part Number</label>
-          </div>
-          <div class="col-auto">
-                <input type="text" class="form-control" id="editId" />
-            </div>
-            <div class="col-6">
-                <label for="editStatus" class="form-label fw-bold">Status</label>
-                <input type="text" class="form-control" id="editStatus" />
-            </div>
-            <div class="col-6">
-                <label for="editRemarks" class="form-label fw-bold">Remarks</label>
-                <input type="text" class="form-control" id="editRemarks" />
-            </div>
+          <div class="row g-3 align-items-center">
+              <input type="hidden" class="form-control" id="no" />
+              <div class="col-auto">
+                  <label for="partNumber" class="form-label fw-bold">Part Number</label>
+              </div>
+              <div class="col-auto">
+                  <input type="text" class="form-control" id="partNumber" readonly />
+              </div>
+              <div class="col-6">
+                  <label for="editStatus" class="form-label fw-bold">Status</label>
+                  <input type="text" class="form-control" id="editStatus" />
+              </div>
+              <div class="col-6">
+                  <label for="editRemarks" class="form-label fw-bold">Remarks</label>
+                  <input type="text" class="form-control" id="editRemarks" />
+              </div>
           </div>
       </div>
       <div class="modal-footer">

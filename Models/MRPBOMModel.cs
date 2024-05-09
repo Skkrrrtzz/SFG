@@ -6,6 +6,7 @@ namespace SFG.Models
     {
         [Key]
         public int Id { get; set; }
+
         public string? Product { get; set; } = string.Empty;
         public string? PartNumber { get; set; } = string.Empty;
         public int? Item { get; set; } = 0;
@@ -20,6 +21,5 @@ namespace SFG.Models
         public string? Commodity { get; set; } = string.Empty;
         public string? MPN { get; set; } = string.Empty;
         public string? Manufacturer { get; set; } = string.Empty;
-
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using Dapper;
+﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SFG.Data;
@@ -10,11 +9,12 @@ namespace SFG.Controllers
     public class UsersController : Controller
     {
         private readonly AppDbContext _db;
+
         public UsersController(AppDbContext dataBase)
         {
             _db = dataBase;
         }
-        
+
         public async Task<IActionResult> GetUsers()
         {
             //dynamic data = new HomeController(null).GetData();
@@ -50,16 +50,15 @@ namespace SFG.Controllers
             try
             {
                 await new ATS_Library.Database.Accounts().DeleteAccount(Id);
-                
+
                 return Json(new { success = true, message = $"User deleted successfully" });
-               
             }
             catch (Exception ex)
             {
-
                 return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
+
         public async Task<IActionResult> EditUserAsync(UsersModel edit)
         {
             try
@@ -98,6 +97,7 @@ namespace SFG.Controllers
                 return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
+
         public async Task<IActionResult> AddUserAsync(UsersModel user)
         {
             try

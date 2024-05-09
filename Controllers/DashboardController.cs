@@ -14,12 +14,14 @@ namespace SFG.Controllers
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly UploadService _uploadService;
         private readonly IDashboardRepository _dashboardRepository;
+
         public DashboardController(AppDbContext dataBase, IWebHostEnvironment hostingEnvironment, UploadService uploadService, IDashboardRepository dashboardRepository) : base(dataBase)
         {
             _hostingEnvironment = hostingEnvironment;
             _uploadService = uploadService;
             _dashboardRepository = dashboardRepository;
         }
+
         public IActionResult Dashboard()
         {
             try
@@ -35,22 +37,27 @@ namespace SFG.Controllers
 
             return Checking();
         }
+
         public IActionResult Library()
         {
             return View();
         }
+
         public IActionResult ProjectSummaryReport()
         {
             return View();
         }
+
         public IActionResult OpenProjects()
         {
             return View();
         }
+
         public IActionResult Closed()
         {
             return View();
         }
+
         public async Task<IActionResult> GetPNandDescription()
         {
             var bomData = await _dashboardRepository.GetBOM();
@@ -59,6 +66,7 @@ namespace SFG.Controllers
 
             return Json(new { data = distinctPNAndDescriptions });
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllRFQProjects()
         {
@@ -73,16 +81,19 @@ namespace SFG.Controllers
                 return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
             }
         }
+
         [HttpGet]
         public IActionResult ViewSourcingForm()
         {
             return View();
         }
+
         public async Task<IActionResult> ViewRFQProjects()
         {
             var model = await GetAllRFQProjects();
             return View(model);
         }
+
         public async Task<IActionResult> ViewRFQForm(string quotationCode)
         {
             try
@@ -100,6 +111,7 @@ namespace SFG.Controllers
                 return StatusCode(500);
             }
         }
+
         private dynamic GetUsers(string Name)
         {
             using (SqlConnection conn = new(GetConnection()))
@@ -108,11 +120,12 @@ namespace SFG.Controllers
                 return acc == null ? null : acc;
             }
         }
+
         public async Task<IActionResult> IncomingRFQProjects()
         {
             try
             {
-               var result = await _dashboardRepository.GetOpenRFQProjects();
+                var result = await _dashboardRepository.GetOpenRFQProjects();
 
                 return Json(new { data = result });
             }
@@ -121,6 +134,7 @@ namespace SFG.Controllers
                 return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
             }
         }
+
         public async Task<IActionResult> GetExcelFile(string pNDesc)
         {
             // Construct the path to the Excel file based on the provided pNDesc
@@ -151,6 +165,7 @@ namespace SFG.Controllers
             // Return the PDF file as a FileStreamResult with the appropriate content type
             return File(fileStream, "application/pdf", fileName);
         }
+
         public async Task<IActionResult> DownloadExcelFile(string projectName)
         {
             // Construct the path to the Excel file based on the provided pNDesc
@@ -170,6 +185,7 @@ namespace SFG.Controllers
             // Return the PDF file as a FileStreamResult with the appropriate content type
             return File(fileStream, "application/xlsx", fileName);
         }
+
         public async Task<IActionResult> UploadLastPurchaseInfo(IFormFile file)
         {
             try
@@ -191,7 +207,6 @@ namespace SFG.Controllers
                     string tableName = "LastPurchaseInfo";
                     await UploadingExcelFile(file, tableName);
                 }
-
             }
             catch (Exception ex)
             {
@@ -199,6 +214,7 @@ namespace SFG.Controllers
             }
             return Json(new { success = true, message = "File uploaded successfully" });
         }
+
         public async Task<IActionResult> UploadQuotation(IFormFile file)
         {
             try
@@ -220,7 +236,6 @@ namespace SFG.Controllers
                     string tableName = "Quotations";
                     await UploadingExcelFile(file, tableName);
                 }
-
             }
             catch (Exception ex)
             {
@@ -228,6 +243,7 @@ namespace SFG.Controllers
             }
             return Json(new { success = true, message = "File uploaded successfully" });
         }
+
         public async Task<IActionResult> UploadMRPBOM(IFormFile file)
         {
             try
@@ -249,7 +265,6 @@ namespace SFG.Controllers
                     string tableName = "MRPBOM";
                     await ProcessMRPQBOM(file);
                 }
-
             }
             catch (Exception ex)
             {
@@ -257,6 +272,7 @@ namespace SFG.Controllers
             }
             return Json(new { success = true, message = "File uploaded successfully" });
         }
+
         private async Task<LastPurchaseInfoModel> SaveLastPurchaseInfo(ExcelWorksheet worksheet, int row)
         {
             return new LastPurchaseInfoModel
@@ -274,6 +290,7 @@ namespace SFG.Controllers
                 FGName = worksheet.Cells[row, 12].Value?.ToString()
             };
         }
+
         private async Task<QuotationModel> SaveQuotations(ExcelWorksheet worksheet, int row)
         {
             return new QuotationModel
@@ -281,6 +298,7 @@ namespace SFG.Controllers
                 PartNumber = worksheet.Cells[row, 1].Value?.ToString()
             };
         }
+
         private async Task<MRPBOMModel> SaveMRPBOM(ExcelWorksheet worksheet, int row)
         {
             return new MRPBOMModel
@@ -301,6 +319,7 @@ namespace SFG.Controllers
                 Manufacturer = worksheet.Cells[row, 12].Value?.ToString()
             };
         }
+
         private async Task<MRPBOMProductModel> SaveMRPBOMProducts(ExcelWorksheet worksheet)
         {
             return new MRPBOMProductModel
@@ -314,11 +333,13 @@ namespace SFG.Controllers
                 ReviewedBy = GetValueOrDefault(worksheet.Cells[4, 12].Value),
             };
         }
+
         private async Task<string> SaveUploadedFileAndReturnPath(IFormFile file, string partNumber, string description)
         {
             string filePath = await _uploadService.SaveUploadedFile(file, partNumber, description);
             return filePath;
         }
+
         private async Task ProcessMRPQBOM(IFormFile file)
         {
             try
@@ -338,6 +359,7 @@ namespace SFG.Controllers
                 throw new Exception("An error occurred while uploading the Excel file.", ex);
             }
         }
+
         private async Task ProcessMRPQBOMFile(ExcelPackage package, IFormFile file)
         {
             using (var worksheet = package.Workbook.Worksheets[1])
@@ -350,7 +372,7 @@ namespace SFG.Controllers
 
                 // Save uploaded file and get its path
                 string filePath = await SaveUploadedFileAndReturnPath(file, partNumber, description);
-                
+
                 for (int i = 9; i <= rowCount; i++)
                 {
                     bool rowHasValue = false;
@@ -389,6 +411,7 @@ namespace SFG.Controllers
                 }
             }
         }
+
         private async Task UploadingExcelFile(IFormFile file, string tableName)
         {
             try
@@ -422,7 +445,6 @@ namespace SFG.Controllers
                                     tableName = "Unknown";
                                     break;
                             }
-
                         }
                     }
                 }
@@ -432,12 +454,14 @@ namespace SFG.Controllers
                 throw new Exception("An error occurred while uploading the Excel file.", ex.InnerException);
             }
         }
+
         private bool IsSupportedFileExtension(string fileExtension)
         {
             // Add more supported extensions if needed
             string[] supportedExtensions = { ".xlsx", ".xls", ".csv" };
             return supportedExtensions.Contains(fileExtension.ToLower());
         }
+
         private string GetValueOrDefault(object value)
         {
             return value?.ToString() ?? string.Empty;

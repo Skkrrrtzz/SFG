@@ -268,7 +268,7 @@ function RFQ() {
     contentType: "application/json",
     dataType: "JSON",
     success: function (response) {
-      console.log(response);
+      // console.log(response);
       // Display a SweetAlert2 success message
       Swal.fire({
         icon: "success",

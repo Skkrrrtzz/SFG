@@ -252,21 +252,23 @@ $("#btnSubmit").click(function (e) {
       return false; // Exit the loop
     }
   });
-  console.log(annualForecasts);
+
   if (!isValid) {
     return; // Exit the function if invalid input is detected
   }
   const partNumber = $("#projectName").val();
+
+  const formData = new FormData();
+  formData.append("ids", JSON.stringify(currentIds));
+  formData.append("annualForecasts", JSON.stringify(annualForecasts));
+
   // Send AJAX request to the controller
   fetch(AddAFUrl, {
     method: "POST",
+    body: JSON.stringify({ ids: currentIds, annualForecasts: annualForecasts }),
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      ids: currentIds,
-      annualForecasts: annualForecasts,
-    }),
   })
     .then((response) => {
       if (response.ok) {
@@ -278,8 +280,9 @@ $("#btnSubmit").click(function (e) {
           position: "top-end",
           timer: 3000,
           showConfirmButton: false,
+        }).then(function () {
+          project(partNumber);
         });
-        project(partNumber);
       } else {
         throw new Error("Failed to save data.");
       }

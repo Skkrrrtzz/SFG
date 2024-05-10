@@ -29,4 +29,9 @@ namespace SFG.Models
         public List<RFQModel> RFQData { get; set; }
         public List<RFQProjectModel> RFQProjectData { get; set; }
     }
+    public class AddAnnualForecastRequest
+    {
+        public List<int> Ids { get; set; }
+        public List<int> AnnualForecasts { get; set; }
+    }
 }

@@ -22,7 +22,6 @@ namespace SFG
             builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
             builder.Services.AddScoped<UploadService>();
             builder.Services.AddScoped<Emailing>();
-            builder.Services.AddScoped<Exporting>();
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             builder.Services.AddSession(options => {
                 options.Cookie.HttpOnly = true;

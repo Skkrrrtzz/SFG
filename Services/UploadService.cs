@@ -1,4 +1,6 @@
 ﻿using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml;
+using SFG.Models;
 
 namespace SFG.Services
 {
@@ -8,6 +10,7 @@ namespace SFG.Services
         private readonly string _excelDirectory = "Uploads\\Excel";
         private readonly string _pdfDirectory = "Uploads\\PDF";
         private readonly string _exportedExcelDirectory = "ExportedExcel";
+        private readonly string _excelTemplate = "Template\\Sourcing Form.xlsx";
 
         public UploadService(IWebHostEnvironment webHostEnvironment)
         {
@@ -171,6 +174,100 @@ namespace SFG.Services
             finally
             {
                 obj = null;
+            }
+        }
+
+        //public async Task<string> WriteToExcel(IEnumerable<RFQModel> rfqData, RFQProjectModel rfqProject, string? projectName, int rfqDataStartColumn)
+        public async Task<bool> WriteToExcel(IEnumerable<RFQModel> rfqData, RFQProjectModel rfqProject, string? projectName)
+        {
+            try
+            {
+                string uploadsDirectory = Path.Combine(_webHostEnvironment.WebRootPath, _exportedExcelDirectory);
+                string filePath = Path.Combine(uploadsDirectory, $"{projectName}.xlsx");
+
+                // If the directory doesn't exist, create it
+                if (!Directory.Exists(uploadsDirectory))
+                {
+                    Directory.CreateDirectory(uploadsDirectory);
+                }
+
+                // Load the Excel template
+                using (var package = new ExcelPackage(new FileInfo(Path.Combine(_webHostEnvironment.WebRootPath, _excelTemplate))))
+                {
+                    // Access the first worksheet
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+
+                    // Check if cells from E5 to E10 already have values
+                    bool hasValues = CheckRFQProjectDataExists(worksheet, "E5", "E10");
+
+                    if (!hasValues)
+                    {
+                        // Insert values of RFQProjectModel
+                        InsertRFQProjectData(worksheet, rfqProject, "E5");
+                    }
+
+                    // Insert values of rfqData
+                    InsertRFQData(worksheet, rfqData, 14);
+
+                    // Save the Excel file to the specified path asynchronously
+                    await package.SaveAsAsync(new FileInfo(filePath));
+
+                    // Return true indicating successful saving
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error exporting Excel: {ex.Message}");
+                throw;
+                return false;
+            }
+        }
+
+        private bool CheckRFQProjectDataExists(ExcelWorksheet worksheet, string startCell, string endCell)
+        {
+            for (int row = worksheet.Cells[startCell].Start.Row; row <= worksheet.Cells[endCell].End.Row; row++)
+            {
+                for (int col = worksheet.Cells[startCell].Start.Column; col <= worksheet.Cells[endCell].End.Column; col++)
+                {
+                    if (worksheet.Cells[row, col].Value != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void InsertRFQProjectData(ExcelWorksheet worksheet, RFQProjectModel rfqProject, string startCell)
+        {
+            worksheet.Cells[startCell].Value = rfqProject.ProjectName;
+            worksheet.Cells[startCell].Offset(1, 0).Value = rfqProject.Customer;
+            worksheet.Cells[startCell].Offset(2, 0).Value = rfqProject.QuotationCode;
+            worksheet.Cells[startCell].Offset(3, 0).Value = rfqProject.NoItems;
+            worksheet.Cells[startCell].Offset(4, 0).Value = rfqProject.RequestDate;
+            worksheet.Cells[startCell].Offset(5, 0).Value = rfqProject.RequiredDate;
+        }
+
+        private void InsertRFQData(ExcelWorksheet worksheet, IEnumerable<RFQModel> rfqData, int startRow)
+        {
+            int row = startRow;
+
+            foreach (var rfqModel in rfqData)
+            {
+                worksheet.Cells[row, 1].Value = rfqModel.Id;
+                worksheet.Cells[row, 2].Value = rfqModel.CustomerPartNumber;
+                worksheet.Cells[row, 3].Value = rfqModel.Rev;
+                worksheet.Cells[row, 5].Value = rfqModel.Description;
+                worksheet.Cells[row, 6].Value = rfqModel.OrigMPN;
+                worksheet.Cells[row, 7].Value = rfqModel.OrigMFR;
+                worksheet.Cells[row, 12].Value = rfqModel.Commodity;
+                worksheet.Cells[row, 13].Value = rfqModel.Eqpa;
+                worksheet.Cells[row, 14].Value = rfqModel.AnnualForecast;
+                worksheet.Cells[row, 15].Value = rfqModel.UoM;
+                worksheet.Cells[row, 16].Value = rfqModel.Status;
+
+                row++;
             }
         }
     }

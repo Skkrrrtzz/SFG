@@ -317,7 +317,7 @@ function viewRFQProjects(table, data) {
 $("#incomingRFQTable").on("click", ".view-btn", function () {
   let quotationCode = $(this).data("id");
   let url = ViewRFQForm + "?quotationCode=" + quotationCode;
-  console.log(url);
+  // console.log(url);
   // Redirect to the generated URL
   window.location.href = url;
 });
@@ -327,14 +327,14 @@ $("#incomingRFQTable").on("click", ".download-btn", function () {
   let url =
     "/Dashboard/DownloadExcelFile?projectName=" +
     encodeURIComponent(projectName);
-  console.log(url);
+  // console.log(url);
   window.location.href = url;
 });
 
 $("#libraryTable").on("click", ".view-btn", function () {
   let quotationCode = $(this).data("name");
 
-  console.log(quotationCode);
+  // console.log(quotationCode);
 });
 // Function to format the date
 function formatDate(dateString) {

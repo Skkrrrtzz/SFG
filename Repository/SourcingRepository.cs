@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using SFG.Models;
 
@@ -133,7 +134,7 @@ namespace SFG.Repository
             }
         }
 
-        public async Task<bool> InsertAnnualForecast(List<int> ids, List<string> annualForecasts)
+        public async Task<bool> InsertAnnualForecast(AddAnnualForecastRequest request)
         {
             try
             {
@@ -141,9 +142,9 @@ namespace SFG.Repository
                 {
                     string query = "UPDATE RFQ SET AnnualForecast = @AnnualForecast WHERE Id = @Id";
 
-                    for (int i = 0; i < ids.Count; i++)
+                    for (int i = 0; i < request.Ids.Count; i++)
                     {
-                        await conn.ExecuteAsync(query, new { Id = ids[i], AnnualForecast = annualForecasts[i] });
+                        await conn.ExecuteAsync(query, new { Id = request.Ids[i], AnnualForecast = request.AnnualForecasts[i] });
                     }
                 }
                 return true;

@@ -1,4 +1,5 @@
-﻿using SFG.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using SFG.Models;
 
 namespace SFG.Repository
 {
@@ -12,7 +13,7 @@ namespace SFG.Repository
 
         public Task<bool> UpdateById(RFQModel formData);
 
-        public Task<bool> InsertAnnualForecast(List<int> ids, List<string> annualForecasts);
+        public Task<bool> InsertAnnualForecast(AddAnnualForecastRequest request);
 
         public Task<bool> InsertRFQ(RFQProjectModel rfqProjects, List<RFQModel> rfqData);
 

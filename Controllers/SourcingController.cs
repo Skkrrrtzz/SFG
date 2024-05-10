@@ -12,13 +12,11 @@ namespace SFG.Controllers
     public class SourcingController : HomeController
     {
         private readonly Emailing _emailingService;
-        private readonly Exporting _exportingService;
         private readonly ISourcingRepository _sourcingRepository;
         private readonly UploadService _uploadService;
 
-        public SourcingController(AppDbContext dataBase, Exporting exportingService, Emailing emailingService, ISourcingRepository sourcingRepository, UploadService uploadService) : base(dataBase)
+        public SourcingController(AppDbContext dataBase, Emailing emailingService, ISourcingRepository sourcingRepository, UploadService uploadService) : base(dataBase)
         {
-            _exportingService = exportingService;
             _emailingService = emailingService;
             _sourcingRepository = sourcingRepository;
             _uploadService = uploadService;
@@ -114,23 +112,23 @@ namespace SFG.Controllers
         }
 
         [HttpPost]
-        public async Task<bool> AddAnnualForecast(List<int> ids, List<string> annualForecasts)
+        public async Task<IActionResult> AddAnnualForecast([FromBody] AddAnnualForecastRequest request)
         {
             try
             {
-                if (ids.Count != annualForecasts.Count)
+                if (request.Ids.Count != request.AnnualForecasts.Count)
                 {
-                    return false;
+                    return Json(new { success = false, message = "Error: ids and annualForecasts must have the same length" });
                 }
 
-                var result = await _sourcingRepository.InsertAnnualForecast(ids, annualForecasts);
+                var result = await _sourcingRepository.InsertAnnualForecast(request);
 
-                return true;
+                return Json(result);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error adding annual forecasts: {ex.Message}");
-                return false;
+                return Json(new { success = false, message = $"Error adding annual forecasts: {ex.Message}" });
             }
         }
 
@@ -171,7 +169,7 @@ namespace SFG.Controllers
                 }
 
                 // WriteToExcel method to write data to Excel
-                var result = await _exportingService.WriteToExcel(rfqData, rfqProjectData, projectName, 1);
+                var result = await _uploadService.WriteToExcel(rfqData, rfqProjectData, projectName);
 
                 // Send the email with the temporary image file path
                 var checkEmail = await SendEmail(tempImagePath);
@@ -185,7 +183,7 @@ namespace SFG.Controllers
                 // Check if the writing process was successful
                 if (result == false || checkEmail == false)
                 {
-                    return View("Error Writing to Excel File or Sending Email");
+                    return Json(new { success = false, message = $"Error Writing to Excel File or Sending Email" });
                 }
 
                 // Return a view or other appropriate action result
@@ -193,8 +191,7 @@ namespace SFG.Controllers
             }
             catch (Exception ex)
             {
-                // Return an error view with the exception details
-                return View("Error", ex);
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
 

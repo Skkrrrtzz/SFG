@@ -10,9 +10,13 @@
         public const string hanServerDetails = ";user id=SYSTEM;password=Administrator1;currentschema=PIMESLIVE;";
         public const string sqlServerDetails = "; Database=PCV55_PIMES;User Id=sa; Password=Pkunzip@112";
 
-        public const string contentDB = @"\\192.168.0.50";
-        public const string contentPassword = "-@q|!5";
-        public const string contentPass = "AtVtbx";
+        public const string mysqlConnString = "DataSource=" + databaseIP + mysqlDetails;
+        public const string hanaConnString = "Server=" + hanDatabaseIP + hanServerDetails;
+        public const string sqlserverConnString = "Server=" + sqlserverDatabaseIP + sqlServerDetails;
+
+
+        public const string lnkLogin = "http://192.168.0.188:8081";
+
 
         public const string mailServer = "mail.pimes.com.ph";
         public const string mailAccount = "no-reply@pimes.com.ph";
@@ -45,21 +49,23 @@
         public static readonly string gmailAccount = "noreply2.pimes@gmail.com";
         public static readonly string gmailPassword = "xdstjltvmglhtalp";
 
-        public const string mysqlConnString = "DataSource=" + databaseIP + mysqlDetails;
-        public const string hanaConnString = "Server=" + hanDatabaseIP + hanServerDetails;
-        public const string sqlserverConnString = "Server=" + sqlserverDatabaseIP + sqlServerDetails;
 
-        public const string serverLauncherINI = @"\\192.168.0.50\update\apps\launcher.ini";
-        public const string localLauncherINI = @"c:\PIMES App\launcher.ini";
-        public const string serverLocation = @"\\192.168.0.50\update\apps\";
-        public const string serverFile = @"\\192.168.0.50\update\apps\launcher.zip";
-        public const string localFolder = @"c:\PIMES App\";
 
-        public const string appsFolder = @"c:\PIMES App\Apps\";
+        //public const string serverLauncherINI = @"\\192.168.0.50\update\apps\launcher.ini";
+        //public const string localLauncherINI = @"c:\PIMES App\launcher.ini";
+        //public const string serverLocation = @"\\192.168.0.50\update\apps\";
+        //public const string serverFile = @"\\192.168.0.50\update\apps\launcher.zip";
+        //public const string localFolder = @"c:\PIMES App\";
 
-        public const string pdfPassword = @"wQ!RGgn6QHV+q@";
-        public const double normalWidthWindow = 1024;
 
-        public const string serverLauncher = @"\\192.168.0.50\update\apps\Launcher\";
+        //public const string appsFolder = @"c:\PIMES App\Apps\";
+
+        //public const string pdfPassword = @"wQ!RGgn6QHV+q@";
+        //public const double normalWidthWindow = 1024;
+
+        //public const string serverLauncher = @"\\192.168.0.50\update\apps\Launcher\";
+        //public const string contentDB = @"\\192.168.0.50";
+        //public const string contentPassword = "-@q|!5";
+        //public const string contentPass = "AtVtbx";
     }
 }

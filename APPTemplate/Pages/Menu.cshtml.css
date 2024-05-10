@@ -1,0 +1,44 @@
+﻿.divcontainer {
+    width: 450px;
+    height: auto;
+    caret-color : transparent;
+    cursor:default;
+}
+
+.divheader {
+    height: 40px;
+    background-color: var(--colorMain1)
+}
+
+.divbody {
+    height: 300px;
+    background-color: dimgray
+}
+
+.divfooter {
+    height: 60px;
+    background-color: dimgrey
+}
+
+
+ul .list-group-item {
+    display: inline-flex;
+    align-items: center;
+    height: 30px;
+    border: 0px;
+    border-radius: 0px !important;
+}
+
+ul .list-group-item:hover {
+    background-color: var(--colorHighLightSemi) !important;
+    cursor: pointer;
+}
+
+
+ul .list-group-item.active {
+    background-color: var(--colorHighLight)!important;
+
+}
+
+
+

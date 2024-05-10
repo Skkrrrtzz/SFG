@@ -48,6 +48,13 @@ $(function () {
     // #region Login
 
     $("#txtPassword").focus();
+
+    $('#txtPassword').on("keypress", function (e) {
+        if (e.key === "Enter") {
+            $("#btnLogin").trigger("click");
+        }
+    });
+
     $("#btnLogin").on("click", function (e) {
         $.ajax({
             url: "Login?handler=UserLogin",
@@ -94,15 +101,24 @@ $(function () {
     // #endregion Login
 
     // #region Menu
-    $("#tblPending tbody tr").on("dblclick", function (e) {
-        var rowData = $(this).find('td').map(function () {
-            return $(this).text();
-        }).get();
-        //alert(rowData[3]);
-        window.location.href = "http://192.168.0.188:8083";
+    //$("#tblPending tbody tr").on("dblclick", function (e) {
+    //    var rowData = $(this).find('td').map(function () {
+    //        return $(this).text();
+    //    }).get();
+    //    //alert(rowData[3]);
+    //    window.location.href = "http://192.168.0.188:8083";
 
-        e.preventDefault();
-    })
+    //    e.preventDefault();
+    //})
+
+
+    var table = $('#tblPending').DataTable({searching:false, paging:false,info:false});
+    $('#tblPending tbody').on('dblclick', 'tr', function () {
+        var rowData = table.row(this).data();
+        console.log(rowData[3]);
+    });
+
+
 
     // #endregion Menu
 });

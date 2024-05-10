@@ -47,6 +47,21 @@ function showMessage(paramode) {
 $(function () {
     // #region Login
 
+    $('#myList a').on('click', function (e) { 
+        e.preventDefault()
+        $(this).tab('show')
+    })
+
+    $("#ulBU .list-group-item").on('click', function (e) {
+        $("#ulBU .list-group-item").removeClass("active");
+        $(e.target).addClass("active");
+    });
+
+    $("#ulRole .list-group-item").on('click',function (e) {
+        $("#ulRole .list-group-item").removeClass("active");
+        $(e.target).addClass("active");
+    });
+
     $("#btnLogin").on("click", function (e) {
         $.ajax({
             url: "Login?handler=UserLogin",

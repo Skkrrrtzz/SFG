@@ -24,7 +24,7 @@ namespace APPLogin.Pages
 
         #endregion Constructor
 
-        #region OnGet
+        #region Get
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -32,6 +32,6 @@ namespace APPLogin.Pages
             return RedirectToPage("/Login");
         }
 
-        #endregion OnGet
+        #endregion Get
     }
 }

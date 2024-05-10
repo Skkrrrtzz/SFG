@@ -47,7 +47,7 @@ namespace APPLogin.Pages
 
         #endregion Constructor
 
-        #region OnGet
+        #region Get
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -96,7 +96,7 @@ namespace APPLogin.Pages
             }
         }
 
-        #endregion OnGet
+        #endregion Get
 
     }
 }

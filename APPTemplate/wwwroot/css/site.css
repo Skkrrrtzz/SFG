@@ -1,3 +1,4 @@
+/* || Colors */
 :root {
     --colorMain1: #010038;
     --colorMain2: #0f1c57;
@@ -6,6 +7,12 @@
     --colorMain5: #537EC5;
     --colorMain5: #658bcb;
     --colorDimGray: #696969;
+    --colorHighLight: #F39422;
+    --colorHighLightSemi: #FFD580;
+    --colorHighLightText: White;
+    --colorHighLight1: #4DF39422;
+    --colorWindow: DimGray;
+    --colorDialog: #515151;
 }
 
 html {
@@ -27,7 +34,85 @@ html {
 body {
     background-color: #2e2e2e;
     background-image: url("https://www.transparenttextures.com/patterns/dark-tire.png");
-    /* This is mostly intended for prototyping; please download the pattern and re-host for production environments. Thank you! */
-
-    margin-bottom: 60px;
+    margin-bottom: 0px;
 }
+
+
+
+
+
+/* Positioning */
+
+.divcenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1px;
+    margin: auto;
+}
+
+.poscenter {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.posleft {
+    display: inline-flex;
+    justify-content: left;
+    align-items: center;
+    height: 100%;
+}
+
+.posright {
+    display: inline-flex;
+    justify-content: right;
+    align-items: center;
+    height: 100%;
+}
+/* Positioning */
+
+
+
+
+
+
+.success-header {
+    background-color: #5cb85c;
+}
+
+.success-body {
+    background-color: #eca9a7;
+}
+
+.error-header {
+    background-color: #d9534f;
+}
+
+.error-body {
+    background-color: #aedcae;
+}
+
+/* Scrollbar */
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+/* Scrollbar */

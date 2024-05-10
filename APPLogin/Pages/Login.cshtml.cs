@@ -37,7 +37,7 @@ namespace APPLogin.Pages
 
         #endregion Constructor
 
-        #region OnGet
+        #region Get
 
         public void OnGet()
         {
@@ -68,6 +68,6 @@ namespace APPLogin.Pages
             return new JsonResult(result);
         }
 
-        #endregion OnGet
+        #endregion Get
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using APPCommon.Class;
+using APPTemplate.Repository;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 
@@ -6,72 +8,84 @@ namespace APPTemplate.Pages
 {
     public class IndexModel : PageModel
     {
+
+        #region Declaration
+
         private readonly ILogger<IndexModel> _logger;
         private readonly IHttpContextAccessor _httpContext;
+        private readonly ILaptopPassRepository _laptopPassRepository;
 
-        [BindProperty]
-        public string MyProperty1 { get; set; }
-        public string MyProperty2 { get; set; }
 
-        public string MyProperty3 { get; set; }
+        #endregion Declaration
 
-        public IndexModel(ILogger<IndexModel> logger, IHttpContextAccessor httpContextAccessor)
+        #region Binding
+
+        #endregion Binding
+
+        #region Constructor
+
+        public IndexModel(ILogger<IndexModel> logger, IHttpContextAccessor httpContextAccessor, ILaptopPassRepository laptopPassRepository)
         {
             _logger = logger;
             _httpContext = httpContextAccessor;
+            _laptopPassRepository = laptopPassRepository;
+
         }
 
-        public async Task<IActionResult> OnGetAsync(string user,string pass,string mode)
+        #endregion Constructor
+
+        #region Function
+        public async Task setRole(string strtitle, string z, string y, string x, string w)
         {
-            MyProperty1 = user;
-            MyProperty2 = pass;
-            MyProperty3 = mode;
-
-            //var cookieOptions = new CookieOptions
-            //{
-            //    Path = "/",
-            //    HttpOnly = false,
-            //    Secure = true,
-            //    SameSite = SameSiteMode.None,
-            //    Expires = DateTime.Now.AddSeconds(14)
-            //};
-
-            //MyProperty1 = _httpContext.HttpContext.Request.Cookies["MyUser"];
-
-            //MyProperty2 = _httpContext.HttpContext.Request.Cookies["MyPassword"];
-
-            //MyProperty3 = _httpContext.HttpContext.Request.Cookies["MyLoginMode"];
+            _httpContext.HttpContext.Session.SetString("MyTitle", strtitle);
+            _httpContext.HttpContext.Session.SetString("MyUser", z);
+            _httpContext.HttpContext.Session.SetString("MyMode", y);
+            _httpContext.HttpContext.Session.SetString("MyBUCode", x);
+            _httpContext.HttpContext.Session.SetString("MyRole", w);
 
 
-            //var cookieOptions = new CookieOptions
-            //{
-            //    Path="/",
-            //    HttpOnly = false,
-            //    Secure = true,
-            //    SameSite = SameSiteMode.None,
-            //    Expires = DateTime.Now.AddDays(30)
-            //};
-            // _httpContext.HttpContext.Response.Cookies.Append("MyCookie", "fromjeckcookies", cookieOptions);
+            var varlist = await _laptopPassRepository.GetRole();
+
+            var varuserid = varlist.Where(x => x.username == z)
+                                   .Select(x => x.userid).FirstOrDefault();
+            var varemail = varlist.Where(x => x.username == z)
+                                  .Select(x => x.email).FirstOrDefault();
+            var varlocalno = varlist.Where(x => x.username == z)
+                                 .Select(x => x.localno).FirstOrDefault();
+
+            _httpContext.HttpContext.Session.SetInt32("MyUserId", varuserid);
+            _httpContext.HttpContext.Session.SetString("MyEmail", varemail);
+            _httpContext.HttpContext.Session.SetString("MyLocalNo", varlocalno);
+        }
+
+        #endregion Function
+
+        #region Get
+
+        public async Task<IActionResult> OnGetAsync(string z, string y, string x, string w)
+        {
+            //Remove  this when publishing
+            z = "JERICO VILLANUEVA";
+            y = "MENU";
+            x = "";
+            w = "";
 
 
+            if (string.IsNullOrEmpty(z))
+            {
+                return Redirect(PIMESSettings.lnkLogin);
+            }
+            else
+            {
+                await setRole("LAPTOP PASS", z, y, x, w);
 
-
-
-            //var jeck = _httpContext.HttpContext.Request.Cookies["MyCookie"];
-
-
-
-            //var jeck = _httpContext.HttpContext.Session.GetString("MyUser");
-
-            //if (string.IsNullOrEmpty(_httpContext.HttpContext.Session.GetString("MyUser")))
-            //{
-            //    return Redirect("http://192.168.0.188:8081");
-            //}
-            //else
-            //{
-            return Page();
-            //}
+                return RedirectToPage("Menu");
+            }
 
         }
+
+        #endregion Get
+
+
     }
 }

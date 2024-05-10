@@ -1,5 +1,4 @@
 using APPTemplate.Repository;
-using Microsoft.AspNetCore.CookiePolicy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,31 +10,9 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        builder =>
-        {
-            builder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
-});
-
-
-//builder.Services.Configure<CookiePolicyOptions>(options =>
-//{
-//    options.MinimumSameSitePolicy = SameSiteMode.None;
-//    options.HttpOnly = HttpOnlyPolicy.None;
-//    options.Secure = CookieSecurePolicy.None;
-//});
-
-
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddTransient<ILoginRepository, LoginRepository>();
 builder.Services.AddTransient<ILaptopPassRepository, LaptopPassRepository>();
 
 var app = builder.Build();
@@ -55,10 +32,6 @@ app.UseStaticFiles();
 app.UseSession();
 
 app.UseRouting();
-
-app.UseCors("AllowAll");
-
-//app.UseCookiePolicy();
 
 app.UseAuthorization();
 

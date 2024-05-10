@@ -1,3 +1,4 @@
+using APPCommon.Class;
 using APPLogin.Models;
 using APPLogin.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -15,14 +16,18 @@ namespace APPLogin.Pages
 
         public IEnumerable<UserLoginModel> userLogin { get; set; }
 
+
         #endregion Declaration
 
         #region Binding
 
         [BindProperty]
-        public string pagetitle { get; set; }
+
+        public string loader { get; set; } = PIMESProcedures.randomLoader();
+        public string pagetitle { get; set; } = "LOGIN";
 
         public string webversion { get; set; } = APPCommon.RevisionHistory.RevisionHistory.appVersion.ToString("N2");
+    
 
         #endregion Binding
 
@@ -41,6 +46,7 @@ namespace APPLogin.Pages
 
         public void OnGet()
         {
+
             //_httpContext.HttpContext.Session.SetString("MyTitle", "LOGIN");
 
             //pagetitle = _httpContext.HttpContext.Session.GetString("MyTitle");

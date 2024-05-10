@@ -51,6 +51,7 @@ $(function () {
 
     $('#txtPassword').on("keypress", function (e) {
         if (e.key === "Enter") {
+            $("#loading").fadeIn();
             $("#btnLogin").trigger("click");
         }
     });
@@ -67,7 +68,7 @@ $(function () {
                     window.location.href = "/Menu";
                 }
                 else {
-                    // $("#stkRole").hide();
+                    $("#loading").fadeOut();
                     $("#txtPassword").select();
                     showMessage('error');
                 }

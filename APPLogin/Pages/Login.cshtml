@@ -4,26 +4,34 @@
     ViewBag.Title = "LOGIN";
 }
 
-<div class="vstack divLogin centerdiv">
-    <div class="row" style="height:20%; background-color:var(--colorMain1)">
-         <img src="img/svg/pimeslogo.svg" alt="pimeslogo" style="padding-top:35px;display:block;margin:0 auto; width:60%; z-index:1" />
+<div id="loading">
+    <div id="loadingcontent" class="divcenter">
+        <div class="vstack divcenter text-center">
+            <img src=@Model.loader style="width:120px" />
+            <span class="fs-6 text-white mt-2">Please wait</span>
+        </div>
     </div>
-    <div class="row divLoginBG" style="height:80%;">
+</div>
+
+ <div class="vstack divcontainer divcenter">
+    <div class="row divheader">
+        <img class="imglogo" src="img/svg/pimeslogo.svg" alt="pimeslogo" />
+    </div>
+    <div class="row divbody">
         <div class="vstack mt-5">
-            <div class="mx-auto mt-4 text-center" >
-                <h6 class="display-6 text-white" style="letter-spacing:5px">@Model.pagetitle</h6>
-           </div>
-            <div class="mx-auto mt-2">
-               <label class="form-label" for="txtPassword"></label>
-                <input id="txtPassword" type="password" class="form-control text-center" placeholder="Enter password">
+            <div class="poscenter" style="height:65px;">
+                <span class="fs-1 divtitle">@Model.pagetitle</span>
             </div>
-            <div class="mx-auto mt-5 text-center" style="height:50px">
-                <button id="btnLogin" class="btn btn-primary text-center"><i class="bi bi-box-arrow-in-right"></i> Login</button>
+            <div class="poscenter mx-5" style="height:70px; ">
+                <input id="txtPassword" type="password" class="form-control text-center" placeholder="Enter password" />
+            </div>
+            <div class="poscenter" style="height:70px">
+                <button id="btnLogin" class="btn btn-primary text-center"><i class="bi bi-box-arrow-in-right"></i>Login</button>
             </div>
         </div>
     </div>
-    <div style="margin-top:-25px" >
-       <p class="text-white" style="font-size:12px">Ver. @Model.webversion</p>
+    <div style="margin-top:-25px">
+        <p class="text-white" style="font-size:12px">Ver. @Model.webversion</p>
     </div>
 </div>
 
@@ -37,7 +45,7 @@
             <div class="modal-body">
             </div>
             <div class="modal-footer">
-                <button id="btnNext" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-arrow-right-circle-fill"></i> Continue</button
+                <button id="btnNext" type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="bi bi-arrow-right-circle-fill"></i> Continue</button>
             </div>
         </div>
     </div>

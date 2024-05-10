@@ -488,6 +488,13 @@ namespace APPCommon.Class
 
         #region Random
 
+        public static string randomLoader()
+        {
+            Random rnd = new Random();
+
+           return "img/loaders/" + rnd.Next(1, 7).ToString() + ".svg";
+        }
+
         public static string randomID(int length)
         {
             Random rnd = new Random();

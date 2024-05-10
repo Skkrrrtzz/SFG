@@ -8,12 +8,15 @@
     --colorMain5: #658bcb;
     --colorDimGray: #696969;
     --colorHighLight: #F39422;
-    --colorHighLightSemi: #99F39422;
+    --colorHighLightSemi: #FFD580;
     --colorHighLightText: White;
+    --colorText: White;
     --colorHighLight1: #4DF39422;
     --colorWindow: DimGray;
     --colorDialog: #515151;
 }
+/* || Colors */
+
 
 html {
     font-size: 14px;
@@ -37,7 +40,9 @@ body {
     margin-bottom: 0px;
 }
 
-.centerdiv {
+/* Positioning */
+
+.divcenter {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -45,6 +50,29 @@ body {
     padding: 1px;
     margin: auto;
 }
+
+.poscenter {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.posleft {
+    display: inline-flex;
+    justify-content: left;
+    align-items: center;
+    height: 100%;
+}
+
+.posright {
+    display: inline-flex;
+    justify-content: right;
+    align-items: center;
+    height: 100%;
+}
+/* Positioning */
+
 
 .success-header {
     background-color: #5cb85c;

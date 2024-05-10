@@ -1,11 +1,32 @@
-﻿.divMenu {
+﻿
+.divcontainer {
     width: 1000px;
     height: 500px;
+    color: var(--colorText);
 }
 
-.lstLink {
+.divcol1 {
+    height: 100%;
+    background-color: var(--colorMain1);
+}
+
+.divcol2 {
+    height: 100%;
+    padding:3px;
+    background-color: var(--colorMain2);
+}
+
+.divcol3 {
+    height: 100%;
+    padding:0;
+    background-color: dimgray;
+}
+
+.lstlink {
     background-color: transparent;
     max-height: 400px;
+    height:100%;
+    overflow:auto;
     margin-bottom: 5px;
     -webkit-overflow-scrolling: touch;
 }
@@ -22,7 +43,7 @@ a:hover {
     font-weight: bold;
 }
 
-#tblPending {
+#tblpending {
     background-color: transparent !important;
     font-size: 14px;
 }

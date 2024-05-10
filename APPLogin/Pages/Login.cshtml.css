@@ -2,18 +2,21 @@
 .divcontainer {
     width: 300px;
     height: auto;
-    caret-color: transparent;
     cursor: default;
+    color: var(--colorText);
 }
 
 .divheader {
-    height: 40px;
-    background-color: var(--colorMain1)
+    height: 100px;
+    background-color: var(--colorMain1);
 }
 
 .divbody {
-    height: 300px;
-    background-color: dimgray
+    height: 350px;
+    background-color: dimgray;
+    background-image: linear-gradient(rgba(105,105,105,0.7),rgba(105,105,105,0.7)), url('img/bg/menu_bg1.png');
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .divfooter {
@@ -21,22 +24,56 @@
     background-color: dimgrey
 }
 
-
-
-
-
-
-
-
-
-
 .divLogin {
     width: 300px;
     height: 450px;
 }
 
-.divLoginBG {
-    background-image: linear-gradient(rgba(105,105,105,0.7),rgba(105,105,105,0.7)), url('img/bg/menu_bg1.png');
-    background-size: cover;
-    background-repeat: no-repeat;
+.imglogo {
+    padding-top: 45px;
+    display: block;
+    margin: 0 auto;
+    width: 60%;
+    z-index: 1;
 }
+
+.divtitle {
+    letter-spacing: 5px;
+}
+
+#loading {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 1000;
+}
+
+#loadingcontent {
+    width: 200px;
+    height: 200px;
+    background-color: darkblue;
+    border-radius: 10px;
+    letter-spacing: 3px;
+}
+
+/*/*#loadingcontent {
+    display: table;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#loadingspinner {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+    text-align: center;
+    font-size: larger;
+    padding-top: 80px;
+}*/

@@ -19,8 +19,8 @@ namespace APPLogin.Pages
         #region Binding
 
         [BindProperty]
-        public string user { get; set; }
 
+        public string user { get; set; }
         public string mode { get; set; }
         public string bucode { get; set; }
         public string role { get; set; }
@@ -28,6 +28,8 @@ namespace APPLogin.Pages
         public string greetings { get; set; }
         public string trivia { get; set; }
         public string webversion { get; set; } = APPCommon.RevisionHistory.RevisionHistory.appVersion.ToString("N2");
+
+
 
         public IEnumerable<UserMenuModel> userMenu { get; set; }
         public IEnumerable<UserPendingModel> userPending { get; set; }

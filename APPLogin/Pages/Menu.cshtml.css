@@ -1,5 +1,4 @@
-﻿
-.divcontainer {
+﻿.divcontainer {
     width: 1000px;
     height: 500px;
     color: var(--colorText);
@@ -12,21 +11,21 @@
 
 .divcol2 {
     height: 100%;
-    padding:3px;
+    padding: 3px;
     background-color: var(--colorMain2);
 }
 
 .divcol3 {
     height: 100%;
-    padding:0;
+    padding: 0;
     background-color: dimgray;
 }
 
 .lstlink {
     background-color: transparent;
     max-height: 400px;
-    height:100%;
-    overflow:auto;
+    height: 100%;
+    overflow: auto;
     margin-bottom: 5px;
     -webkit-overflow-scrolling: touch;
 }

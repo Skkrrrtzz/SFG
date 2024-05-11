@@ -17,7 +17,6 @@
 }
 /* || Colors */
 
-
 html {
     font-size: 14px;
     font-family: Mulish;
@@ -73,7 +72,6 @@ body {
 }
 /* Positioning */
 
-
 .success-header {
     background-color: #5cb85c;
 }
@@ -111,8 +109,6 @@ body {
     }
 
 /* Scrollbar */
-
-
 
 /*.ui-dialog-titlebar {
     background-color: #c2c2c2;

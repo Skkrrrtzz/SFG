@@ -3,9 +3,7 @@ using APPLogin.Models;
 using APPLogin.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace APPLogin.Pages
 {
@@ -23,12 +21,11 @@ namespace APPLogin.Pages
         #region Binding
 
         [BindProperty]
-
         public string loader { get; set; } = PIMESProcedures.randomLoader();
+
         public string pagetitle { get; set; } = "LOGIN";
 
         public string webversion { get; set; } = APPCommon.RevisionHistory.RevisionHistory.appVersion.ToString("N2");
-
 
         #endregion Binding
 
@@ -59,7 +56,6 @@ namespace APPLogin.Pages
 
                 var result = string.Empty;
 
-
                 if (!userLogin.Any())
                 {
                     result = JsonSerializer.Serialize(new { Success = false });
@@ -80,6 +76,7 @@ namespace APPLogin.Pages
                 return StatusCode(500, new { errorMessage = ex.Message });
             }
         }
+
         #endregion Get
     }
 }

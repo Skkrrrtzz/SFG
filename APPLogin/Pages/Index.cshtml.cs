@@ -12,8 +12,6 @@ namespace APPLogin.Pages
 
         #endregion Declaration
 
-
-
         #region Constructor
 
         public IndexModel(ILogger<IndexModel> logger, IHttpContextAccessor httpContextAccessor)

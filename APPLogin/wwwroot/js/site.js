@@ -7,7 +7,6 @@ function DialogError(xhr) {
     $("#dialogerror").html("");
     try {
         $("#dialogerror").append("<div><b>Exception</b><hr />" + responseJson.errorMessage + "<br /><br /></div>");
-
     } catch (e) {
         responseText = xhr.responseText;
         $("#dialogerror").html(responseText);
@@ -62,8 +61,6 @@ function ShowMessage(paramode) {
     var visibleToast = new bootstrap.Toast(toaster, { 'autohide': true, 'delay': 3000 });
     visibleToast.show();
 }
-
-
 
 //#endregion Function
 
@@ -135,14 +132,11 @@ $(function () {
     //    e.preventDefault();
     //})
 
-
     var table = $('#tblPending').DataTable({ searching: false, paging: false, info: false });
     $('#tblPending tbody').on('dblclick', 'tr', function () {
         var rowData = table.row(this).data();
         console.log(rowData[3]);
     });
-
-
 
     // #endregion Menu
 });

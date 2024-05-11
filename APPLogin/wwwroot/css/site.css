@@ -111,3 +111,14 @@ body {
     }
 
 /* Scrollbar */
+
+
+
+/*.ui-dialog-titlebar {
+    background-color: #c2c2c2;
+}
+*/
+.ui-dialog .ui-dialog-titlebar-close {
+    background-image: url("../img/svg/x.svg");
+    z-index: 999999;
+}

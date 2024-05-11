@@ -3,7 +3,9 @@ using APPLogin.Models;
 using APPLogin.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace APPLogin.Pages
 {
@@ -16,7 +18,6 @@ namespace APPLogin.Pages
 
         public IEnumerable<UserLoginModel> userLogin { get; set; }
 
-
         #endregion Declaration
 
         #region Binding
@@ -27,7 +28,7 @@ namespace APPLogin.Pages
         public string pagetitle { get; set; } = "LOGIN";
 
         public string webversion { get; set; } = APPCommon.RevisionHistory.RevisionHistory.appVersion.ToString("N2");
-    
+
 
         #endregion Binding
 
@@ -46,34 +47,39 @@ namespace APPLogin.Pages
 
         public void OnGet()
         {
-
             //_httpContext.HttpContext.Session.SetString("MyTitle", "LOGIN");
-
             //pagetitle = _httpContext.HttpContext.Session.GetString("MyTitle");
         }
 
         public async Task<IActionResult> OnGetUserLoginAsync(string parapass)
         {
-            userLogin = await _loginRepository.GetLogin(parapass);
-
-            var result = string.Empty;
-
-            if (!userLogin.Any())
+            try
             {
-                result = JsonSerializer.Serialize(new { Success = false });
+                userLogin = await _loginRepository.GetLogin(parapass);
+
+                var result = string.Empty;
+
+
+                if (!userLogin.Any())
+                {
+                    result = JsonSerializer.Serialize(new { Success = false });
+                }
+                else
+                {
+                    _httpContext.HttpContext.Session.SetString("MyPassword", userLogin.Select(x => x.password).FirstOrDefault());
+                    _httpContext.HttpContext.Session.SetString("MyUser", userLogin.Select(x => x.username).FirstOrDefault());
+                    _httpContext.HttpContext.Session.SetString("MyEmpNo", userLogin.Select(x => x.employeeno).FirstOrDefault());
+
+                    result = JsonSerializer.Serialize(new { Success = true });
+                }
+
+                return new JsonResult(result);
             }
-            else
+            catch (Exception ex)
             {
-                _httpContext.HttpContext.Session.SetString("MyPassword", userLogin.Select(x => x.password).FirstOrDefault());
-                _httpContext.HttpContext.Session.SetString("MyUser", userLogin.Select(x => x.username).FirstOrDefault());
-                _httpContext.HttpContext.Session.SetString("MyEmpNo", userLogin.Select(x => x.employeeno).FirstOrDefault());
-
-                result = JsonSerializer.Serialize(new { Success = true });
+                return StatusCode(500, new { errorMessage = ex.Message });
             }
-
-            return new JsonResult(result);
         }
-
         #endregion Get
     }
 }

@@ -53,48 +53,55 @@ namespace APPLogin.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
-            if (string.IsNullOrEmpty(_httpContext.HttpContext.Session.GetString("MyUser")))
+            try
             {
-                return RedirectToPage("/Login");
-            }
-            else
-            {
-                userMenu = await _loginRepository.GetMenu(_httpContext.HttpContext.Session.GetString("MyPassword"));
-                userPending = await _loginRepository.GetPending(_httpContext.HttpContext.Session.GetString("MyUser"));
-
-                imgstring = "data:image/png;base64," + Convert.ToBase64String(await _loginRepository.GetEmployeeImage(PIMESProcedures.ToInt16OrDefault(_httpContext.HttpContext.Session.GetString("MyEmpNo"))));
-                user = (_httpContext.HttpContext.Session.GetString("MyUser")).ToUpper();
-                greetings = PIMESProcedures.getGreeting();
-
-                using (var sr = new StreamReader(Path.Combine(_webHostEnvironment.WebRootPath, @"txt/trivia.txt")))
+                if (string.IsNullOrEmpty(_httpContext.HttpContext.Session.GetString("MyUser")))
                 {
-                    PIMESVariables.TriviaDB = sr.ReadToEnd().Split('\n');
+                    return RedirectToPage("/Login");
                 }
-                trivia = PIMESProcedures.getTrivia(PIMESVariables.TriviaDB);
+                else
+                {
+                    userMenu = await _loginRepository.GetMenu(_httpContext.HttpContext.Session.GetString("MyPassword"));
+                    userPending = await _loginRepository.GetPending(_httpContext.HttpContext.Session.GetString("MyUser"));
 
-                mode = "MENU";
-                bucode = "";
-                role = "";
+                    imgstring = "data:image/png;base64," + Convert.ToBase64String(await _loginRepository.GetEmployeeImage(PIMESProcedures.ToInt16OrDefault(_httpContext.HttpContext.Session.GetString("MyEmpNo"))));
+                    user = (_httpContext.HttpContext.Session.GetString("MyUser")).ToUpper();
+                    greetings = PIMESProcedures.getGreeting();
 
-                //Do not remove Cookie Implementation
+                    using (var sr = new StreamReader(Path.Combine(_webHostEnvironment.WebRootPath, @"txt/trivia.txt")))
+                    {
+                        PIMESVariables.TriviaDB = sr.ReadToEnd().Split('\n');
+                    }
+                    trivia = PIMESProcedures.getTrivia(PIMESVariables.TriviaDB);
 
-                //var cookieOptions = new CookieOptions
-                //{
-                //    Path = "/",
-                //    HttpOnly = false,
-                //    Secure = true,
-                //    SameSite = SameSiteMode.None,
-                //    Expires = DateTime.Now.AddSeconds(14)
-                //};
+                    mode = "MENU";
+                    bucode = "";
+                    role = "";
 
-                //_httpContext.HttpContext.Response.Cookies.Append("MyUser", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
-                //_httpContext.HttpContext.Response.Cookies.Append("MyPassword", _httpContext.HttpContext.Session.GetString("MyPassword"), cookieOptions);
-                //_httpContext.HttpContext.Response.Cookies.Append("MyLoginMode", "MENU", cookieOptions);
-                //_httpContext.HttpContext.Response.Cookies.Append("MyProgramName", userMenu., cookieOptions);
-                //_httpContext.HttpContext.Response.Cookies.Append("MyBUNmame", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
-                //_httpContext.HttpContext.Response.Cookies.Append("MyRole", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
+                    //Do not remove Cookie Implementation
 
-                return Page();
+                    //var cookieOptions = new CookieOptions
+                    //{
+                    //    Path = "/",
+                    //    HttpOnly = false,
+                    //    Secure = true,
+                    //    SameSite = SameSiteMode.None,
+                    //    Expires = DateTime.Now.AddSeconds(14)
+                    //};
+
+                    //_httpContext.HttpContext.Response.Cookies.Append("MyUser", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
+                    //_httpContext.HttpContext.Response.Cookies.Append("MyPassword", _httpContext.HttpContext.Session.GetString("MyPassword"), cookieOptions);
+                    //_httpContext.HttpContext.Response.Cookies.Append("MyLoginMode", "MENU", cookieOptions);
+                    //_httpContext.HttpContext.Response.Cookies.Append("MyProgramName", userMenu., cookieOptions);
+                    //_httpContext.HttpContext.Response.Cookies.Append("MyBUNmame", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
+                    //_httpContext.HttpContext.Response.Cookies.Append("MyRole", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
+
+                    return Page();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errorMessage = ex.Message });
             }
         }
 

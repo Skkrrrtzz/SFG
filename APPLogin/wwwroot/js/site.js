@@ -1,17 +1,38 @@
 ﻿// #region Function
 
-$("#dialog").dialog({
-    autoOpen: false,
-    show: {
-        effect: "fade",
-        duration: 500
-    },
-    hide: {
-        effect: "fade",
-        duration: 500
+function DialogError(xhr) {
+    $("#loading").fadeOut();
+    var responseJson = JSON.parse(xhr.responseText);
+    var responseText;
+    $("#dialogerror").html("");
+    try {
+        $("#dialogerror").append("<div><b>Exception</b><hr />" + responseJson.errorMessage + "<br /><br /></div>");
+
+    } catch (e) {
+        responseText = xhr.responseText;
+        $("#dialogerror").html(responseText);
     }
-});
-function showMessage(paramode) {
+
+    $("#dialogerror").dialog({
+        title: "ERROR",
+        autoOpen: true,
+        show: {
+            effect: "fade",
+            duration: 320
+        },
+        hide: {
+            effect: "fade",
+            duration: 300
+        },
+        width: 300,
+        //buttons: {
+        //    Close: function () {
+        //        $(this).dialog('close');
+        //    }
+        //}
+    });
+}
+function ShowMessage(paramode) {
     var toaster = document.getElementById("toastMessage");
     var toasterHeader = document.getElementById("toastHeader");
     var toasterBody = document.getElementById("toastBody");
@@ -42,6 +63,8 @@ function showMessage(paramode) {
     visibleToast.show();
 }
 
+
+
 //#endregion Function
 
 $(function () {
@@ -63,19 +86,19 @@ $(function () {
             data: { parapass: $("#txtPassword").val() },
             success: function (data) {
                 if (JSON.parse(data)["Success"] === true) {
-                    //$("#partialModal .modal-body").load("/Role");
-                    //$("#partialModal").modal('show');
                     window.location.href = "/Menu";
                 }
                 else {
                     $("#loading").fadeOut();
                     $("#txtPassword").select();
-                    showMessage('error');
+                    ShowMessage('error');
                 }
-            }
-        })
+            },
+            error: DialogError
+        });
         e.preventDefault();
-    })
+    });
+
     $("#btnNext").on("click", function (e) {
         var varbu = $("#optBU option:selected").text();
         var varbuid = $("#optBU option:selected").val();
@@ -113,7 +136,7 @@ $(function () {
     //})
 
 
-    var table = $('#tblPending').DataTable({searching:false, paging:false,info:false});
+    var table = $('#tblPending').DataTable({ searching: false, paging: false, info: false });
     $('#tblPending tbody').on('dblclick', 'tr', function () {
         var rowData = table.row(this).data();
         console.log(rowData[3]);

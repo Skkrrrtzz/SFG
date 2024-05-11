@@ -1,16 +1,36 @@
 ﻿// #region Function
+function DialogError(xhr) {
+    $("#loading").fadeOut();
+    var responseJson = JSON.parse(xhr.responseText);
+    var responseText;
+    $("#dialogerror").html("");
+    try {
+        $("#dialogerror").append("<div><b>Exception</b><hr />" + responseJson.errorMessage + "<br /><br /></div>");
 
-$("#dialog").dialog({
-    autoOpen: false,
-    show: {
-        effect: "fade",
-        duration: 500
-    },
-    hide: {
-        effect: "fade",
-        duration: 500
+    } catch (e) {
+        responseText = xhr.responseText;
+        $("#dialogerror").html(responseText);
     }
-});
+
+    $("#dialogerror").dialog({
+        title: "ERROR",
+        autoOpen: true,
+        show: {
+            effect: "fade",
+            duration: 320
+        },
+        hide: {
+            effect: "fade",
+            duration: 300
+        },
+        width: 300,
+        //buttons: {
+        //    Close: function () {
+        //        $(this).dialog('close');
+        //    }
+        //}
+    });
+}
 function showMessage(paramode) {
     var toaster = document.getElementById("toastMessage");
     var toasterHeader = document.getElementById("toastHeader");

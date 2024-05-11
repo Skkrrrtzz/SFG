@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\lib\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\APPCommon\APPCommon.csproj" />
   </ItemGroup>
 

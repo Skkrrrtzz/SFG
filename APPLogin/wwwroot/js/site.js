@@ -67,6 +67,13 @@ function ShowMessage(paramode) {
 $(function () {
     // #region Login
 
+    var table = $('#tblPending').DataTable({ searching: false, paging: false, info: false });
+    $('#tblPending tbody').on('dblclick', 'tr', function () {
+        var rowData = table.row(this).data();
+        console.log(rowData[3]);
+    });
+
+
     $("#txtPassword").focus();
 
     $('#txtPassword').on("keypress", function (e) {
@@ -132,11 +139,7 @@ $(function () {
     //    e.preventDefault();
     //})
 
-    var table = $('#tblPending').DataTable({ searching: false, paging: false, info: false });
-    $('#tblPending tbody').on('dblclick', 'tr', function () {
-        var rowData = table.row(this).data();
-        console.log(rowData[3]);
-    });
+
 
     // #endregion Menu
 });

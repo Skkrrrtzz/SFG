@@ -1,0 +1,32 @@
+﻿#tbldirectory {
+    background-color: transparent !important;
+    font-size: 14px;
+}
+
+.table-hover tbody tr:hover td {
+    background-color: var(--colorHighLight) !important;
+    cursor: pointer;
+}
+
+th {
+    color: black;
+    background-color: darkgray;
+    line-height: 15px;
+    min-height: 15px;
+    height: 15px;
+}
+
+td {
+    color: black;
+    border-bottom: 0.5px solid transparent;
+    background-color: transparent !important;
+}
+
+tr {
+    line-height: 15px;
+    min-height: 15px;
+    height: 15px;
+}
+
+
+

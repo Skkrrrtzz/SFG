@@ -3,9 +3,11 @@ namespace APPCommon.RevisionHistory
 {
     public static class RevisionHistory
     {
-        public const double appVersion = 1.12;
+        public const double appVersion = 1.09;
 
-        //--> Version : 1.07 May 12, 2024
+        //--> Version : 1.09 May 14, 2024
+        //Add Directory system
+        //--> Version : 1.08 May 12, 2024
         //Add error handler for ajax request
         //--> Version : 1.07 May 11, 2024
         //Add random loader

@@ -2,23 +2,89 @@
     ViewData["Title"] = "Sourcing RFQ Prices";
 }
 <div class="row">
+    <div class="col-12 mb-2">
+        <h4 class="d-inline-block mr-2">Project Name: </h4>
+        <h5 id="projectName" class="d-inline-block"></h5>
+    </div>
     <div class="col-sm-4 col-lg-4 mb-2">
-        <div class="mb-2">
-            <button class="btn btn-success btn-sm" type="button"><i class="fa-solid fa-check"></i> Proceed</button>
-            <button class="btn btn-warning btn-sm" type="button"><i class="fa-solid fa-arrow-left"></i> Return</button>
+        <div class="mb-3">
+            <label for="PartNumber" class="form-label fw-bold">Part Numbers</label>
+            <select class="form-select" aria-label="part numbers" id="partNumbers">
+                <option selected>Select Part Numbers</option>
+            </select>
         </div>
-        <table class="table table-striped table-bordered table-sm" style="width:100%" id="incomingTbl">
-            <thead class="table-primary">
-                <tr>
-                    <th>Quotation No.</th>
-                    <th>Date Requested</th>
-                    <th>Part Numbers</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-              
-            </tbody>
-        </table>
+        <div class="card p-3">
+            <div class="mb-2">
+                <label for="PartNumber" class="form-label fw-bold">Part Number</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="PartNumber">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="Description" class="form-label fw-bold">Description</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="Description">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="MPN" class="form-label fw-bold">MPN</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="MPN">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="Manufacturer" class="form-label fw-bold">Manufacturer</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="Manufacturer">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="Commodity" class="form-label fw-bold">Commodity</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="Commodity">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="Qty" class="form-label fw-bold">Quantity Per Assembly</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="Qty">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="UOM" class="form-label fw-bold">UOM</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="UOM">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="Parts" class="form-label fw-bold">Common or Unique Parts</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="Parts">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8 col-lg-8">
+        <div class="row">
+            <div class="col-12 mb-2">
+                <div class="card text-white bg-secondary">
+                    <h4 class="ms-2">1st BEST PRICE</h4>
+                    <div id="example"></div>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="card bg-secondary-subtle">
+                    <h4 class="ms-2">2nd BEST PRICE</h4>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="card">
+                    <h4 class="ms-2">3rd BEST PRICE</h4>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+@section Scripts {
+    <script src="~/JavaScript/RFQPrices.js"></script>
+}

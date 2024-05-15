@@ -11,13 +11,11 @@ namespace SFG.Controllers
 {
     public class DashboardController : HomeController
     {
-        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly UploadService _uploadService;
         private readonly IDashboardRepository _dashboardRepository;
 
-        public DashboardController(AppDbContext dataBase, IWebHostEnvironment hostingEnvironment, UploadService uploadService, IDashboardRepository dashboardRepository) : base(dataBase)
+        public DashboardController(AppDbContext dataBase, UploadService uploadService, IDashboardRepository dashboardRepository) : base(dataBase)
         {
-            _hostingEnvironment = hostingEnvironment;
             _uploadService = uploadService;
             _dashboardRepository = dashboardRepository;
         }

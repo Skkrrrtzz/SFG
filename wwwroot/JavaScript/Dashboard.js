@@ -1,4 +1,36 @@
-﻿function lastPurchaseFileUpload() {
+﻿fetch(GetAllRFQProjects)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then((data) => {
+    let count = data.data.length;
+    $("#rfqCount").text(count);
+    viewRFQProjects("#libraryTable", data.data);
+  })
+  .catch((error) => {
+    alert("Error: " + error.message);
+  });
+
+fetch(ViewRFQProjects)
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then((data) => {
+    let count = data.data.length;
+    $("#incoming").text(count);
+    viewRFQProjects("#incomingRFQTable", data.data);
+  })
+  .catch((error) => {
+    alert("Error: " + error.message);
+  });
+
+function lastPurchaseFileUpload() {
   const fileInput = $("#excelFileInput")[0];
 
   $("#uploadButton").prop("disabled", true); // Disable the button while the file is being uploaded
@@ -297,16 +329,26 @@ function viewRFQProjects(table, data) {
       {
         data: null,
         render: function (row) {
-          return (
-            '<a href="#" class="text-primary view-btn fs-4" data-id="' +
-            row.quotationCode +
-            ' " data-name="' +
-            row.projectName +
-            '"><i class="fa-solid fa-eye"></i></a> ' +
-            ' <a href="#" class="text-success download-btn fs-4" data-id="' +
-            row.projectName +
-            '"><i class="fa-solid fa-download"></i></a>'
-          );
+          if (department == "Cost Engineering") {
+            return (
+              '<a href="#" class="text-primary list-btn fs-4" data-id="' +
+              row.quotationCode +
+              '" data-name="' +
+              row.projectName +
+              '"><i class="fa-solid fa-list"></i></a>'
+            );
+          } else {
+            return (
+              '<a href="#" class="text-primary view-btn fs-4" data-id="' +
+              row.quotationCode +
+              '" data-name="' +
+              row.projectName +
+              '"><i class="fa-solid fa-eye"></i></a> ' +
+              '<a href="#" class="text-success download-btn fs-4" data-id="' +
+              row.projectName +
+              '"><i class="fa-solid fa-download"></i></a>'
+            );
+          }
         },
       },
     ],
@@ -328,6 +370,18 @@ $("#incomingRFQTable").on("click", ".download-btn", function () {
     "/Dashboard/DownloadExcelFile?projectName=" +
     encodeURIComponent(projectName);
   // console.log(url);
+  window.location.href = url;
+});
+
+$("#incomingRFQTable").on("click", ".list-btn", function () {
+  let projectName = $(this).data("name");
+  let quotation = $(this).data("id");
+  let url =
+    "/Sourcing/SourcingRFQPrices?projectName=" +
+    projectName +
+    "&quotationCode=" +
+    quotation;
+
   window.location.href = url;
 });
 

@@ -4,7 +4,7 @@
     // string department = ViewBag.Department;
     string department = "Cost Engineering";
 }
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
+
 <div class="row">
     <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
         <div class="card shadow bg-warning border-3 border-warning-subtle">
@@ -428,7 +428,7 @@
 <div class="modal fade" id="incomingRFQ" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="incomingRFQLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header text-bg-primary">
                 <h1 class="modal-title fs-5" id="incomingRFQLabel"> <i class="fa-solid fa-file-arrow-up"></i> Sourcing Form | <span class="badge text-bg-dark">Processor</span></h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -471,7 +471,6 @@
             autoWrapCol: true,
             licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
         });
-        $(document).ready(function () {
             // Assuming department is retrieved from your backend
             let department = "@department";
 
@@ -489,49 +488,14 @@
                 $(".encoder, .processor, .viewer").show();
             }
 
-            $.ajax({
-                type: "GET",
-                url: '@Url.Action("GetAllRFQProjects", "Dashboard")',
-                dataType: "json",
-                success: function (response) {
-                    // Count the number of responses
-                    let count = response.data.length;
-
-                    // Update the element with ID 'rfqCount' with the count
-                    $("#rfqCount").text(count);
-
-                    // Call the viewRFQProjects function with the data
-                    viewRFQProjects("#libraryTable", response.data);
-                },
-                error: function (xhr, status, error) {
-                    // Handle the error
-                    alert("Error: " + error);
-                },
-            });
-            $.ajax({
-                type: "GET",
-                url: '@Url.Action("IncomingRFQProjects", "Dashboard")',
-                dataType: "json",
-                success: function (response) {
-                    // Count the number of responses
-                    let count = response.data.length;
-
-                    $("#incoming").text(count);
-                    // Call the viewRFQProjects function with the data
-                    viewRFQProjects("#incomingRFQTable", response.data);
-                },
-                error: function (xhr, status, error) {
-                    // Handle the error
-                    alert("Error: " + error);
-                },
-            });
-        });
         const GetPNandDescription = '@Url.Action("GetPNandDescription", "Dashboard")';
         const UploadQuotation = '@Url.Action("UploadQuotation", "Dashboard")';
         const UploadLastPurchaseInfo = '@Url.Action("UploadLastPurchaseInfo", "Dashboard")';
         const UploadMRPBom = '@Url.Action("UploadMRPBom", "Dashboard")';
         const ViewRFQForm = '@Url.Action("ViewRFQForm", "Dashboard")';
         const downloadPdfUrl = '@Url.Action("DownloadExcelFile", "Dashboard")';
+        const ViewRFQProjects = '@Url.Action("IncomingRFQProjects", "Dashboard")';
+        const GetAllRFQProjects = '@Url.Action("GetAllRFQProjects", "Dashboard")';
     </script>
     <script src="~/JavaScript/Dashboard.js"></script>
 }

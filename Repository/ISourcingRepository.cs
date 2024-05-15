@@ -23,6 +23,8 @@ namespace SFG.Repository
 
         public Task<IEnumerable<dynamic>> RFQQuery(string partNumber, string tableName);
 
+        public Task<IEnumerable<RFQModel>> GetRFQPartNumbers(string projectName, string quotationCode);
+
         public Task<bool> TableExists(string tableName);
     }
 }

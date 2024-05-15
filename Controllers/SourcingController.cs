@@ -26,7 +26,10 @@ namespace SFG.Controllers
         {
             return View();
         }
-
+        public IActionResult SourcingRFQPrices()
+        {
+            return View();
+        }
         public IActionResult Success()
         {
             // This action method can be used to display a success message after form submission
@@ -195,6 +198,19 @@ namespace SFG.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetRFQPartNumbers(string projectName, string quotationCode)
+        {
+            try
+            {
+                var result = await _sourcingRepository.GetRFQPartNumbers(projectName, quotationCode);
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
         public async Task<IActionResult> SourcingRFQForm(string partNumber)
         {
             try

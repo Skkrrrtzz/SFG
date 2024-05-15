@@ -6,16 +6,11 @@ namespace SFG.Services
 {
     public class UploadService
     {
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly string _excelDirectory = "Uploads\\Excel";
-        private readonly string _pdfDirectory = "Uploads\\PDF";
-        private readonly string _exportedExcelDirectory = "ExportedExcel";
-        private readonly string _excelTemplate = "Template\\Sourcing Form.xlsx";
-
-        public UploadService(IWebHostEnvironment webHostEnvironment)
-        {
-            _webHostEnvironment = webHostEnvironment;
-        }
+        private readonly string _networkDirectory = @"\\Dashboardpc\bc sfg\SFG Files";
+        private readonly string _excelDirectory = "\\Uploads\\Excel";
+        private readonly string _pdfDirectory = "\\Uploads\\PDF";
+        private readonly string _exportedExcelDirectory = "\\ExportedExcel";
+        private readonly string _excelTemplate = "\\Template\\Sourcing Form.xlsx";
 
         public async Task<string> SaveUploadedFile(IFormFile file, string partNumber, string description)
         {
@@ -28,12 +23,12 @@ namespace SFG.Services
             string fileName = $"{partNumber} - {description}{Path.GetExtension(file.FileName)}";
 
             // Define the directory path where the file will be saved
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", "Excel");
+            string networkFolderPath = _networkDirectory + _excelDirectory; // Network folder path
 
             // If the directory doesn't exist, create it
-            if (!Directory.Exists(uploadsFolder))
+            if (!Directory.Exists(networkFolderPath))
             {
-                Directory.CreateDirectory(uploadsFolder);
+                Directory.CreateDirectory(networkFolderPath);
             }
 
             // Sanitize the file name to remove invalid characters
@@ -43,7 +38,7 @@ namespace SFG.Services
             sanitizedFileName = sanitizedFileName.Replace("/", "_");
 
             // Combine the directory path with the unique file name to get the full path
-            string filePath = Path.Combine(uploadsFolder, sanitizedFileName);
+            string filePath = Path.Combine(networkFolderPath, sanitizedFileName);
 
             // Save the file to the specified path
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -65,7 +60,7 @@ namespace SFG.Services
             string fileName = $"RFQ - {description}{Path.GetExtension(file.FileName)}";
 
             // Define the directory path where the file will be saved
-            string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", "Excel", "RFQ");
+            string uploadsFolder = Path.Combine(_networkDirectory + _excelDirectory, "RFQ");
 
             // If the directory doesn't exist, create it
             if (!Directory.Exists(uploadsFolder))
@@ -88,7 +83,8 @@ namespace SFG.Services
         public string GetFilePathFromPNDesc(string pNDesc)
         {
             // Construct the file path based on the parsed information and the upload directory
-            string uploadsDirectory = Path.Combine(_webHostEnvironment.WebRootPath, _excelDirectory);
+            string uploadsDirectory = _networkDirectory + _excelDirectory;
+
             string filePath = Path.Combine(uploadsDirectory, pNDesc + ".xlsx");
 
             return filePath;
@@ -96,7 +92,13 @@ namespace SFG.Services
 
         public string GetExportedExcel(string projectName)
         {
-            string uploadsDirectory = Path.Combine(_webHostEnvironment.WebRootPath, _exportedExcelDirectory);
+            string uploadsDirectory = _networkDirectory + _exportedExcelDirectory;
+
+            if (!Directory.Exists(uploadsDirectory))
+            {
+                Directory.CreateDirectory(uploadsDirectory);
+            }
+
             string filePath = Path.Combine(uploadsDirectory, projectName + ".xlsx");
 
             return filePath;
@@ -108,7 +110,7 @@ namespace SFG.Services
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(excelFilePath);
 
             // Construct the PDF file path based on the Excel file path and the PDF directory
-            string pdfDirectory = Path.Combine(_webHostEnvironment.WebRootPath, _pdfDirectory);
+            string pdfDirectory = _networkDirectory + _pdfDirectory;
 
             // If the directory doesn't exist, create it
             if (!Directory.Exists(pdfDirectory))
@@ -182,7 +184,7 @@ namespace SFG.Services
         {
             try
             {
-                string uploadsDirectory = Path.Combine(_webHostEnvironment.WebRootPath, _exportedExcelDirectory);
+                string uploadsDirectory = _networkDirectory + _exportedExcelDirectory;
                 string filePath = Path.Combine(uploadsDirectory, $"{projectName}.xlsx");
 
                 // If the directory doesn't exist, create it
@@ -192,7 +194,7 @@ namespace SFG.Services
                 }
 
                 // Load the Excel template
-                using (var package = new ExcelPackage(new FileInfo(Path.Combine(_webHostEnvironment.WebRootPath, _excelTemplate))))
+                using (var package = new ExcelPackage(_networkDirectory + _excelTemplate))
                 {
                     // Access the first worksheet
                     ExcelWorksheet worksheet = package.Workbook.Worksheets[0];

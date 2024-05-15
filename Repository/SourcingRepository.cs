@@ -251,5 +251,24 @@ namespace SFG.Repository
                 return null;
             }
         }
+
+        public async Task<IEnumerable<RFQModel>> GetRFQPartNumbers(string projectName, string quotationCode)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    string query = "SELECT CustomerPartNumber, Description, OrigMPN, OrigMFR, Commodity, Eqpa , UoM, Status FROM RFQ WHERE ProjectName = @ProjectName AND QuotationCode = @QuotationCode";
+
+                    return await conn.QueryAsync<RFQModel>(query, new { ProjectName = projectName, QuotationCode = quotationCode });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing query: {ex.Message}");
+                return null;
+            }
+
+        }
     }
 }

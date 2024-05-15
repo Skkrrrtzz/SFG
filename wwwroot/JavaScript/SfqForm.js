@@ -261,7 +261,6 @@ $("#btnSubmit").click(function (e) {
   const formData = new FormData();
   formData.append("ids", JSON.stringify(currentIds));
   formData.append("annualForecasts", JSON.stringify(annualForecasts));
-
   // Send AJAX request to the controller
   fetch(AddAFUrl, {
     method: "POST",

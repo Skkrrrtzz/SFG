@@ -194,17 +194,18 @@ function getSourcingRowsAndSumEqpa() {
         remarks: remarks,
       };
       sourcingRows.push(row);
+      // Add eqpa to the total sum of "eqpa" values
+      totalEqpaForSourcing += eqpa;
     }
-
-    // Add eqpa to the total sum of "eqpa" values
-    totalEqpaForSourcing += eqpa;
   });
+
   // Return both the array of sourcing rows and the total sum of "eqpa" values
   return {
     sourcingRows: sourcingRows,
     totalEqpaForSourcing: totalEqpaForSourcing,
   };
 }
+
 // Handle form submission
 $("#rfqForm").on("submit", function (e) {
   e.preventDefault();
@@ -260,6 +261,15 @@ function RFQ() {
     sourcingData: sourcingData, // Pass the sourcing row data array
   };
   let reqData = JSON.stringify(requestData);
+
+  Swal.fire({
+    title: "Loading...",
+    html: '<div class="m-2" id="loading-spinner"><div class="loader3"><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div></div></div>',
+    showCancelButton: false,
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+  });
   // Make the AJAX request
   $.ajax({
     type: "POST",
@@ -277,6 +287,7 @@ function RFQ() {
         timer: 3000,
         showConfirmButton: false,
       }).then(function () {
+        Swal.close();
         window.location.href = uploadSRFQForm;
       });
 
@@ -292,6 +303,7 @@ function RFQ() {
         showConfirmButton: false,
       });
       console.error("Error:", error);
+      Swal.close();
     },
   });
 }

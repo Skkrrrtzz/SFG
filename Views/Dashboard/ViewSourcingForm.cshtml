@@ -7,9 +7,10 @@
     </div>
     <div class="">
         <div class="row">
-            <div class="col d-flex align-items-center-sm m-2">
-                <div class="bg-primary bg-opacity-75 border border-primary rounded me-3">
-                    <h5 class="p-1 fw-bold" id="pNDesc"></h5>
+            <div class="col d-flex align-items-center-sm m-1">
+                <div class=" me-3">
+                    <h4 class="d-inline-block mr-2">Project Name: </h4>
+                    <h5 class="d-inline-block" id="pNDesc"></h5>
                 </div>
                 <button class="btn btn-danger border-3 border-danger-subtle btn-sm" type="button" onclick="downloadPdf()"> Download PDF <i class="fa-solid fa-download"></i></button>
             </div>
@@ -150,7 +151,7 @@
         const checkQuotationsUrl = '@Url.Action("CheckQuotations", "Sourcing")';
         const downloadPdfUrl = '@Url.Action("GetExcelFile", "Dashboard")';
         const uploadRFQUrl = '@Url.Action("RFQUpload", "Sourcing")';
-       
+        
     </script>
     <script src="~/JavaScript/SourcingProcess.js"></script>
 }

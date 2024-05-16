@@ -204,7 +204,15 @@ namespace SFG.Controllers
             try
             {
                 var result = await _sourcingRepository.GetRFQPartNumbers(projectName, quotationCode);
-                return Json(result);
+                int count = result.Count();
+                if (result.Any())
+                {
+                    return Json(new { success = true, message = $"{count} RFQ part numbers found.", data = result });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "No RFQ part numbers found for the Project." });
+                }
             }
             catch (Exception ex)
             {

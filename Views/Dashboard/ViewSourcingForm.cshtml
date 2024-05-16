@@ -2,48 +2,44 @@
     ViewData["Title"] = "ViewSourcingForm";
 }
 <div class="">
-    <div class="border-3 border-bottom border-dark">
+    <div class="border-2 border-bottom border-dark">
         <h4 class="fw-bold">MRP BOM</h4>
     </div>
-    <div class="">
-        <div class="row">
-            <div class="col d-flex align-items-center-sm m-1">
-                <div class=" me-3">
-                    <h4 class="d-inline-block mr-2">Project Name: </h4>
-                    <h5 class="d-inline-block" id="pNDesc"></h5>
-                </div>
-                <button class="btn btn-danger border-3 border-danger-subtle btn-sm" type="button" onclick="downloadPdf()"> Download PDF <i class="fa-solid fa-download"></i></button>
+    <div class="row mt-1">
+        <div class="col-md-6 col-lg-6 d-flex align-items-center">
+            <div class="me-3">
+                <h4 class="d-inline-block mr-2">Project Name: </h4>
+                <h5 class="d-inline-block" id="pNDesc"></h5>
             </div>
         </div>
-        <div class="row">
-            <div class="table-responsive mb-2">
-                <table class="table table-bordered table-hover table-striped table-sm compact" id="sourcingTbl" style="width: 100%">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>NO</th>
-                            <th>PART NUMBER</th>
-                            <th>DESCRIPTION</th>
-                            <th>REV</th>
-                            <th>COMMODITY</th>
-                            <th>1ST MPN</th>
-                            <th>1ST MFR</th>
-                            <th>SUM OF EQPA</th>
-                            <th>UOM</th>
-                            <th>STATUS</th>
-                            <th>INVENTORY QTY</th>
-                            <th>LAST PURCHASE DATE</th>
-                            <th>REMARKS</th>
-                            <th>ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+        <div class="col-sm-2 col-md-6 col-lg-6 d-flex align-items-center justify-content-end gap-2">
+            <button class="btn btn-danger border-3 border-danger-subtle" type="button" onclick="downloadPdf()"> Download PDF <i class="fa-solid fa-download"></i></button>
+            <button class="btn btn-primary border-3 border-primary-subtle fw-bold shadow" id="btnSourcing" data-bs-toggle="modal" data-bs-target="#createSourcingForm"><i class="fa-solid fa-circle-plus"></i> Create Sourcing Form </button>
         </div>
-        <div class="row">
-            <div class="d-flex justify-content-end my-2">
-                <button id="btnSourcing" class="btn btn-primary border-3 border-primary-subtle fw-bold shadow" data-bs-toggle="modal" data-bs-target="#createSourcingForm"><i class="fa-solid fa-circle-plus"></i> Create Sourcing Form </button>
-            </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive mb-2">
+            <table class="table table-bordered table-hover table-striped table-sm compact" id="sourcingTbl" style="width: 100%">
+                <thead class="table-primary">
+                    <tr>
+                        <th>NO</th>
+                        <th>PART NUMBER</th>
+                        <th>DESCRIPTION</th>
+                        <th>REV</th>
+                        <th>COMMODITY</th>
+                        <th>1ST MPN</th>
+                        <th>1ST MFR</th>
+                        <th>SUM OF EQPA</th>
+                        <th>UOM</th>
+                        <th>STATUS</th>
+                        <th>INVENTORY QTY</th>
+                        <th>LAST PURCHASE DATE</th>
+                        <th>REMARKS</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -151,7 +147,6 @@
         const checkQuotationsUrl = '@Url.Action("CheckQuotations", "Sourcing")';
         const downloadPdfUrl = '@Url.Action("GetExcelFile", "Dashboard")';
         const uploadRFQUrl = '@Url.Action("RFQUpload", "Sourcing")';
-        
     </script>
     <script src="~/JavaScript/SourcingProcess.js"></script>
 }

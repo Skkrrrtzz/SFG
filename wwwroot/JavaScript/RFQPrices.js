@@ -7,7 +7,7 @@ function getQueryParam(name) {
 // Get the projectName and quotationCode from the URL query parameters
 const projectName = getQueryParam("projectName");
 const quotationCode = getQueryParam("quotationCode");
-console.log(projectName);
+// console.log(projectName);
 $("#projectName").text(projectName);
 // Function to make the GET request
 function fetchRFQPartNumbers(projectName, quotationCode) {
@@ -23,8 +23,43 @@ function fetchRFQPartNumbers(projectName, quotationCode) {
       return response.json();
     })
     .then((data) => {
-      //   console.log(data);
-      populateSelect(data);
+      // console.log(data);
+      if (data.success) {
+        // Display a SweetAlert2 warning message
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 4000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "info",
+          title: data.message,
+        });
+        populateSelect(data.data);
+      } else {
+        // Display a SweetAlert2 warning message
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 4000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "info",
+          title: data.message,
+        });
+      }
     })
     .catch((error) => {
       // Handle errors

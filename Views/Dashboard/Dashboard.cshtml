@@ -2,6 +2,7 @@
     ViewData["Title"] = "Dashboard Page";
 
     // string department = ViewBag.Department;
+    // string department = "Sourcing";
     string department = "Cost Engineering";
 }
 
@@ -287,7 +288,6 @@
             </div>
         </div>
     </div>
-    <div id="example"></div>
 </div>
 <!-- Upload Last Purchase Info Modal -->
 <div class="modal fade" id="uploadLastPurchase" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadLastPurchaseLabel" aria-hidden="true">
@@ -453,40 +453,22 @@
     </div>
 </div>
 @section Scripts {
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
     <script>
-        const container = document.querySelector('#example');
+        let department = "@department";
 
-        const hot = new Handsontable(container, {
-            data: [
-                ['', 'Tesla', 'Volvo', 'Toyota', 'Ford'],
-                ['2019', 10, 11, 12, 13],
-                ['2020', 20, 11, 14, 13],
-                ['2021', 30, 15, 12, 13]
-            ],
-            rowHeaders: true,
-            colHeaders: true,
-            height: 'auto',
-            autoWrapRow: true,
-            autoWrapCol: true,
-            licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
-        });
-            // Assuming department is retrieved from your backend
-            let department = "@department";
+        // Hide all buttons initially
+        $(".encoder, .processor, .viewer").hide();
 
-            // Hide all buttons initially
-            $(".encoder, .processor, .viewer").hide();
-
-            // Show buttons based on department
-            if (department === "Cost Engineering") {
-                $(".encoder, .processor, .viewer").show();
-            } else if (department === "Sourcing") {
-                $(".processor, .viewer").show();
-            } else if (department === "Purchasing" || department === "Business Control") {
-                $(".viewer").show();
-            } else {
-                $(".encoder, .processor, .viewer").show();
-            }
+        // Show buttons based on department
+        if (department === "Cost Engineering") {
+            $(".encoder, .processor, .viewer").show();
+        } else if (department === "Sourcing") {
+            $(".processor, .viewer").show();
+        } else if (department === "Purchasing" || department === "Business Control") {
+            $(".viewer").show();
+        } else {
+            $(".encoder, .processor, .viewer").show();
+        }
 
         const GetPNandDescription = '@Url.Action("GetPNandDescription", "Dashboard")';
         const UploadQuotation = '@Url.Action("UploadQuotation", "Dashboard")';

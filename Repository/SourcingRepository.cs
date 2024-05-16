@@ -266,7 +266,7 @@ namespace SFG.Repository
             catch (Exception ex)
             {
                 Console.WriteLine($"Error processing query: {ex.Message}");
-                return null;
+                throw;
             }
 
         }

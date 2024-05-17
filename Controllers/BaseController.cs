@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SFG.Data;
 
 namespace SFG.Controllers
 {
@@ -10,13 +9,6 @@ namespace SFG.Controllers
         protected string GetConnection()
         {
             return ConnectionString;
-        }
-
-        protected readonly AppDbContext _db;
-
-        public BaseController(AppDbContext dataBase)
-        {
-            _db = dataBase;
         }
     }
 }

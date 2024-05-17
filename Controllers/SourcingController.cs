@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using OfficeOpenXml;
-using SFG.Data;
 using SFG.Models;
 using SFG.Repository;
 using SFG.Services;
@@ -15,7 +14,7 @@ namespace SFG.Controllers
         private readonly ISourcingRepository _sourcingRepository;
         private readonly UploadService _uploadService;
 
-        public SourcingController(AppDbContext dataBase, Emailing emailingService, ISourcingRepository sourcingRepository, UploadService uploadService) : base(dataBase)
+        public SourcingController(Emailing emailingService, ISourcingRepository sourcingRepository, UploadService uploadService)
         {
             _emailingService = emailingService;
             _sourcingRepository = sourcingRepository;
@@ -36,46 +35,46 @@ namespace SFG.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult SourcingForm(RFQModel RFQ, RFQProjectModel RFQProject)
-        {
-            if (ModelState.IsValid)
-            {
-                var RFQData = new RFQModel
-                {
-                    ProjectName = RFQ.ProjectName,
-                    Customer = RFQ.Customer,
-                    QuotationCode = RFQ.QuotationCode,
-                    CustomerPartNumber = RFQ.CustomerPartNumber,
-                    Rev = RFQ.Rev,
-                    Description = RFQ.Description,
-                    OrigMFR = RFQ.OrigMFR,
-                    OrigMPN = RFQ.OrigMPN,
-                    Commodity = RFQ.Commodity,
-                    Eqpa = RFQ.Eqpa,
-                    UoM = RFQ.UoM,
-                    Status = RFQ.Status
-                };
+        //[HttpPost]
+        //public IActionResult SourcingForm(RFQModel RFQ, RFQProjectModel RFQProject)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var RFQData = new RFQModel
+        //        {
+        //            ProjectName = RFQ.ProjectName,
+        //            Customer = RFQ.Customer,
+        //            QuotationCode = RFQ.QuotationCode,
+        //            CustomerPartNumber = RFQ.CustomerPartNumber,
+        //            Rev = RFQ.Rev,
+        //            Description = RFQ.Description,
+        //            OrigMFR = RFQ.OrigMFR,
+        //            OrigMPN = RFQ.OrigMPN,
+        //            Commodity = RFQ.Commodity,
+        //            Eqpa = RFQ.Eqpa,
+        //            UoM = RFQ.UoM,
+        //            Status = RFQ.Status
+        //        };
 
-                var RFQProjectData = new RFQProjectModel
-                {
-                    ProjectName = RFQProject.ProjectName,
-                    Customer = RFQProject.Customer,
-                    QuotationCode = RFQProject.QuotationCode,
-                    NoItems = RFQProject.NoItems,
-                    RequestDate = RFQProject.RequestDate,
-                    RequiredDate = RFQProject.RequiredDate,
-                    Status = "OPEN"
-                };
+        //        var RFQProjectData = new RFQProjectModel
+        //        {
+        //            ProjectName = RFQProject.ProjectName,
+        //            Customer = RFQProject.Customer,
+        //            QuotationCode = RFQProject.QuotationCode,
+        //            NoItems = RFQProject.NoItems,
+        //            RequestDate = RFQProject.RequestDate,
+        //            RequiredDate = RFQProject.RequiredDate,
+        //            Status = "OPEN"
+        //        };
 
-                _db.RFQ.Add(RFQData);
-                _db.RFQProjects.Add(RFQProjectData);
-                _db.SaveChanges();
+        //        _db.RFQ.Add(RFQData);
+        //        _db.RFQProjects.Add(RFQProjectData);
+        //        _db.SaveChanges();
 
-                return RedirectToAction("Success");
-            }
-            return View();
-        }
+        //        return RedirectToAction("Success");
+        //    }
+        //    return View();
+        //}
 
         [HttpGet]
         public async Task<IActionResult> FindId(int id)

@@ -1,18 +1,16 @@
-﻿using Dapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SFG.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using SFG.Models;
+using SFG.Repository;
 
 namespace SFG.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly AppDbContext _db;
+        private readonly IUserRepository _userRepository;
 
-        public UsersController(AppDbContext dataBase)
+        public UsersController(IUserRepository userRepository)
         {
-            _db = dataBase;
+            _userRepository = userRepository;
         }
 
         public async Task<IActionResult> GetUsers()
@@ -26,15 +24,7 @@ namespace SFG.Controllers
 
             try
             {
-                IEnumerable<dynamic> Users;
-                using (var con = _db.Database.GetDbConnection())
-                {
-                    Users = con.Query($"SELECT A.AccountID, A.AccountName, A.Department, A.Email, SA.PortalRole " +
-                                      $"FROM Accounts A INNER JOIN SubAccounts SA ON A.AccountID = SA.AccountID " +
-                                      $"WHERE SA.PortalID = 3");
-                }
-
-                // Return the data in JSON format inside the try block
+                var Users = await _userRepository.GetUsers();
                 return Json(new { data = Users });
             }
             catch (Exception ex)
@@ -49,13 +39,14 @@ namespace SFG.Controllers
         {
             try
             {
-                await new ATS_Library.Database.Accounts().DeleteAccount(Id);
-
-                return Json(new { success = true, message = $"User deleted successfully" });
+                var result = await _userRepository.DeleteUser(Id);
+                return Json(result);
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
+                // Log the exception or handle it appropriately
+                Console.WriteLine($"Error deleting user: {ex.Message}");
+                return StatusCode(500, "An error occurred while deleting the user.");
             }
         }
 
@@ -63,38 +54,14 @@ namespace SFG.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    // Fetch the user to be updated asynchronously
-                    var updateUser = await _db.Users.FirstOrDefaultAsync(j => j.Id == edit.Id);
-
-                    if (updateUser != null)
-                    {
-                        // Update user properties
-                        updateUser.Name = edit.Name;
-                        updateUser.Email = edit.Email;
-                        updateUser.Role = edit.Role;
-
-                        // Update the user in the database asynchronously
-                        _db.Users.Update(updateUser);
-                        await _db.SaveChangesAsync();
-
-                        return Json(new { success = true, message = $"User updated successfully" });
-                    }
-                    else
-                    {
-                        return Json(new { success = false, message = $"User not found or failed to update." });
-                    }
-                }
-                else
-                {
-                    return Json(new { success = false, message = $"Invalid model state." });
-                }
+                var result = await _userRepository.EditUserAsync(edit);
+                return Json(result);
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it accordingly
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
+                // Log the exception or handle it appropriately
+                Console.WriteLine($"Error updating user: {ex.Message}");
+                return StatusCode(500, "An error occurred while updating the user.");
             }
         }
 
@@ -102,26 +69,14 @@ namespace SFG.Controllers
         {
             try
             {
-                // Check if username, email, or department already exists
-                if (await _db.Users.AnyAsync(u => u.Email == user.Email))
-                {
-                    return Json(new { success = false, message = $"User with the same email already exists." });
-                }
-
-                // If none of the checks failed, add the user to the database asynchronously
-                _db.Users.Add(user);
-                await _db.SaveChangesAsync();
-
-                return Json(new { success = true, message = $"User added successfully" });
+                var result = await _userRepository.AddUserAsync(user);
+                return Json(result);
             }
             catch (Exception ex)
             {
-                // Log the exception for debugging purposes
-                // You may want to use a logging library or log to a file/database
+                // Log the exception or handle it appropriately
                 Console.WriteLine($"Error adding user: {ex.Message}");
-
-                // Return an error response to the client
-                return Json(new { success = false, message = $"An error occurred while adding the user." });
+                return StatusCode(500, "An error occurred while adding the user.");
             }
         }
     }

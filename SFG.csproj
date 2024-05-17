@@ -7,9 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\**" />
+    <Compile Remove="Migrations\**" />
     <Compile Remove="wwwroot\Assets\bootstrap-icons\**" />
+    <Content Remove="Data\**" />
+    <Content Remove="Migrations\**" />
     <Content Remove="wwwroot\Assets\bootstrap-icons\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="Migrations\**" />
     <EmbeddedResource Remove="wwwroot\Assets\bootstrap-icons\**" />
+    <None Remove="Data\**" />
+    <None Remove="Migrations\**" />
     <None Remove="wwwroot\Assets\bootstrap-icons\**" />
   </ItemGroup>
 
@@ -18,16 +26,6 @@
     <PackageReference Include="EPPlus" Version="7.1.2" />
     <PackageReference Include="ExcelDna.Interop" Version="15.0.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>

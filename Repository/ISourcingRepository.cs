@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SFG.Models;
+﻿using SFG.Models;
 
 namespace SFG.Repository
 {

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using OfficeOpenXml;
-using SFG.Data;
 using SFG.Models;
 using SFG.Repository;
 using SFG.Services;
@@ -14,7 +13,7 @@ namespace SFG.Controllers
         private readonly UploadService _uploadService;
         private readonly IDashboardRepository _dashboardRepository;
 
-        public DashboardController(AppDbContext dataBase, UploadService uploadService, IDashboardRepository dashboardRepository) : base(dataBase)
+        public DashboardController(UploadService uploadService, IDashboardRepository dashboardRepository)
         {
             _uploadService = uploadService;
             _dashboardRepository = dashboardRepository;

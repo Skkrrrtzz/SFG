@@ -6,7 +6,6 @@ namespace SFG.Models
     {
         [Key]
         public int Id { get; set; }
-
         public string ProjectName { get; set; } = string.Empty;
         public string Customer { get; set; } = string.Empty;
         public string QuotationCode { get; set; } = string.Empty;

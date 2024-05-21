@@ -24,6 +24,8 @@ namespace SFG.Repository
 
         public Task<IEnumerable<RFQModel>> GetRFQPartNumbers(string projectName, string quotationCode);
 
+        public Task<PartData> FindPartNumber(string fileName, string partNumber);
+
         public Task<bool> TableExists(string tableName);
     }
 }

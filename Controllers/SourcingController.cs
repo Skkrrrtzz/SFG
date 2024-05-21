@@ -6,6 +6,7 @@ using SFG.Repository;
 using SFG.Services;
 using System.Globalization;
 
+
 namespace SFG.Controllers
 {
     public class SourcingController : HomeController
@@ -218,6 +219,37 @@ namespace SFG.Controllers
                 return Json(new { success = false, message = $"Error: {ex.Message}" });
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetPrices([FromBody] PartData data)
+        {
+            try
+            {
+                var fileName = _uploadService.GetFilePathFromPNDesc(data.ProjectName);
+
+                if (fileName == null)
+                {
+                    return NotFound(new { message = "File not found for the provided project name." });
+                }
+
+                var result = await _sourcingRepository.FindPartNumber(fileName, data.PartNumber);
+
+                if (result != null)
+                {
+                    return Json(new { success = true, data = result });
+                }
+                else
+                {
+                    return NotFound(new { message = "Part number not found." });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception if necessary
+                return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
+            }
+        }
+
         public async Task<IActionResult> SourcingRFQForm(string partNumber)
         {
             try

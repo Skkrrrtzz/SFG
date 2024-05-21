@@ -1,12 +1,13 @@
 ﻿@{
     ViewData["Title"] = "Sourcing RFQ Prices";
 }
+
 <div class="row">
-    <div class="col-12 mb-2">
+    <div class="col-12">
         <h4 class="d-inline-block mr-2">Project Name: </h4>
         <h5 id="projectName" class="d-inline-block"></h5>
     </div>
-    <div class="col-sm-4 col-lg-4 mb-2">
+    <div class="col-sm-4 col-lg-4">
         <div class="mb-3">
             <label for="PartNumber" class="form-label fw-bold">Part Numbers</label>
             <select class="form-select" aria-label="part numbers" id="partNumbers">
@@ -65,23 +66,7 @@
         </div>
     </div>
     <div class="col-sm-8 col-lg-8">
-        <div class="row">
-            <div class="col-12 mb-2">
-                <div class="card text-white bg-secondary">
-                    <h4 class="ms-2">1st BEST PRICE</h4>
-                    <div id="example"></div>
-                </div>
-            </div>
-            <div class="col-12 mb-2">
-                <div class="card bg-secondary-subtle">
-                    <h4 class="ms-2">2nd BEST PRICE</h4>
-                </div>
-            </div>
-            <div class="col-12 mb-2">
-                <div class="card">
-                    <h4 class="ms-2">3rd BEST PRICE</h4>
-                </div>
-            </div>
+        <div class="row" id="prices-container">
         </div>
     </div>
 </div>

@@ -1,7 +1,11 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml;
 using SFG.Models;
+using System.Drawing.Drawing2D;
+using System.Text.RegularExpressions;
 
 namespace SFG.Repository
 {
@@ -268,7 +272,397 @@ namespace SFG.Repository
                 Console.WriteLine($"Error processing query: {ex.Message}");
                 throw;
             }
-
         }
+
+        public async Task<PartData> FindPartNumber(string fileName, string partNumber)
+        {
+            var partData = await ReadExcelFile(fileName, partNumber);
+            return partData;
+        }
+        private async Task<PartData> ReadExcelFile(string filePath, string partNumber)
+        {
+            var partData = new PartData { PartNumber = partNumber };
+
+            try
+            {
+                using (var package = new ExcelPackage(new FileInfo(filePath)))
+                {
+                    var worksheet = package.Workbook.Worksheets[0];
+                    int rowCount = worksheet.Dimension.Rows;
+                    int colCount = worksheet.Dimension.Columns;
+
+                    int partNumberColumn = 2;
+                    int startDataColumn = 20;
+
+                    // Read headers and keep track of non-hidden columns
+                    var headers = new List<string>();
+                    var headerCount = new Dictionary<string, int>();
+                    var nonHiddenColumns = new List<int>();
+
+                    for (int col = startDataColumn; col <= colCount; col++)
+                    {
+                        var column = worksheet.Column(col);
+                        if (column.Hidden) // Skip hidden columns
+                        {
+                            continue;
+                        }
+
+                        string header = worksheet.Cells[13, col].Text.Trim();
+
+                        // Skip if the header value is "1"
+                        if (header == "1")
+                        {
+                            continue;
+                        }
+
+                        if (headerCount.ContainsKey(header))
+                        {
+                            headerCount[header]++;
+                            header = $"{header}_{headerCount[header]}";
+                        }
+                        else
+                        {
+                            headerCount[header] = 1;
+                        }
+
+                        headers.Add(header);
+                        nonHiddenColumns.Add(col);
+                    }
+
+                    // Find the row containing the partNumber
+                    int partNumberRow = 0;
+                    for (int row = 14; row <= rowCount; row++)
+                    {
+                        if (worksheet.Cells[row, partNumberColumn].Text.Equals(partNumber, StringComparison.OrdinalIgnoreCase))
+                        {
+                            partNumberRow = row;
+                            break;
+                        }
+                    }
+
+                    // If partNumberRow is still 0, the partNumber was not found
+                    if (partNumberRow == 0)
+                    {
+                        throw new Exception($"Part number '{partNumber}' not found in the Excel sheet.");
+                    }
+
+                    // Initialize the supplier details dictionary
+                    var supplierDetailsDict = new Dictionary<int, SupplierCostDetail>();
+
+                    // Get values and pair them with headers
+                    for (int i = 0; i < headers.Count; i++)
+                    {
+                        string header = headers[i];
+                        int col = nonHiddenColumns[i];
+                        string cellValue = worksheet.Cells[partNumberRow, col].Text;
+                        if (string.IsNullOrWhiteSpace(cellValue))
+                        {
+                            continue;
+                        }
+
+                        try
+                        {
+                            var match = Regex.Match(header.Trim(), @"^(.*?)(?:_(\d+))?$", RegexOptions.Singleline);
+                            string baseHeader = match.Groups[1].Value.Trim();
+                            int supplierIndex = match.Groups[2].Success ? int.Parse(match.Groups[2].Value) : 1;
+
+                            if (!supplierDetailsDict.ContainsKey(supplierIndex))
+                            {
+                                supplierDetailsDict[supplierIndex] = new SupplierCostDetail();
+                            }
+
+                            var supplierDetail = supplierDetailsDict[supplierIndex];
+
+                            switch (baseHeader)
+                            {
+                                case string s when s.StartsWith("Unit Cost"):
+                                    var qtyMatch = Regex.Match(s, @"x(\d+)");
+                                    if (qtyMatch.Success)
+                                    {
+                                        int quantity = int.Parse(qtyMatch.Groups[1].Value);
+                                        if (decimal.TryParse(cellValue, out decimal cost))
+                                        {
+                                            supplierDetail.UnitCosts[quantity] = cost;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine($"Failed to parse cost '{cellValue}' for quantity '{quantity}'");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine($"Failed to match quantity in header '{header}'");
+                                    }
+                                    break;
+                                case "Currency":
+                                    supplierDetail.Currency = cellValue;
+                                    break;
+                                case "Supplier":
+                                    supplierDetail.Supplier = cellValue;
+                                    break;
+                                case "MOQ":
+                                    if (int.TryParse(cellValue, out int moq))
+                                    {
+                                        supplierDetail.MOQ = moq;
+                                    }
+                                    break;
+                                case "SPQ":
+                                    supplierDetail.SPQ = string.IsNullOrWhiteSpace(cellValue) ? (int?)null : int.Parse(cellValue);
+                                    break;
+                                case "Purchasing UOM":
+                                    supplierDetail.PurchasingUOM = cellValue;
+                                    break;
+                                case "Parts Lead Time (Weeks)":
+                                    if (int.TryParse(cellValue, out int leadTime))
+                                    {
+                                        supplierDetail.LeadTimeWeeks = leadTime;
+                                    }
+                                    break;
+                                case "Location":
+                                    supplierDetail.Location = cellValue;
+                                    break;
+                                case "Quote Validity":
+                                    supplierDetail.QuoteValidity = cellValue;
+                                    break;
+                                case "Sourcing Remarks":
+                                    supplierDetail.SourcingRemarks = cellValue;
+                                    break;
+                                case "Tooling Cost":
+                                    supplierDetail.ToolingCost = string.IsNullOrWhiteSpace(cellValue) ? (decimal?)null : decimal.Parse(cellValue);
+                                    break;
+                                case "Tooling Lead Time (weeks)":
+                                    supplierDetail.ToolingLeadTimeWeeks = string.IsNullOrWhiteSpace(cellValue) ? (int?)null : int.Parse(cellValue);
+                                    break;
+                                case "Tooling Sourcing Remarks":
+                                    supplierDetail.ToolingSourcingRemarks = cellValue;
+                                    break;
+                                case "Cost Engineer's Suggested Supplier":
+                                    partData.SuggestedSupplier = cellValue;
+                                    break;
+                                case "Comments":
+                                    partData.Comments = cellValue;
+                                    break;
+                                default:
+                                    Console.WriteLine($"Unrecognized header '{header}'");
+                                    break;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error processing header '{header}': {ex.Message}");
+                        }
+                    }
+
+                    partData.SupplierDetails = supplierDetailsDict.Values.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading Excel file: {ex.Message}");
+            }
+
+            return partData;
+        }
+
+
+
+        //private async Task<PartData> ReadExcelFile(string filePath, string partNumber)
+        //{
+        //    var partData = new PartData { PartNumber = partNumber };
+
+        //    try
+        //    {
+        //        using (var package = new ExcelPackage(new FileInfo(filePath)))
+        //        {
+        //            var worksheet = package.Workbook.Worksheets[0];
+        //            int rowCount = worksheet.Dimension.Rows;
+        //            int colCount = worksheet.Dimension.Columns;
+
+        //            int partNumberColumn = 2;
+        //            int startDataColumn = 20;
+
+        //            // Read headers
+        //            var headers = new List<string>();
+        //            var headerCount = new Dictionary<string, int>();
+
+        //            for (int col = startDataColumn; col <= colCount; col++)
+        //            {
+        //                string header = worksheet.Cells[13, col].Text.Trim();
+
+        //                // Skip if the header value is "1"
+        //                if (header == "1")
+        //                {
+        //                    headers.Add(null); // Add a null placeholder to keep indexing consistent
+        //                    continue;
+        //                }
+
+        //                if (headerCount.ContainsKey(header))
+        //                {
+        //                    headerCount[header]++;
+        //                    header = $"{header}_{headerCount[header]}";
+        //                }
+        //                else
+        //                {
+        //                    headerCount[header] = 1;
+        //                }
+
+        //                headers.Add(header);
+        //            }
+
+        //            // Find the row containing the partNumber
+        //            int partNumberRow = 0;
+        //            for (int row = 14; row <= rowCount; row++)
+        //            {
+        //                if (worksheet.Cells[row, partNumberColumn].Text.Equals(partNumber, StringComparison.OrdinalIgnoreCase))
+        //                {
+        //                    partNumberRow = row;
+        //                    break;
+        //                }
+        //            }
+
+        //            // If partNumberRow is still 0, the partNumber was not found
+        //            if (partNumberRow == 0)
+        //            {
+        //                throw new Exception($"Part number '{partNumber}' not found in the Excel sheet.");
+        //            }
+
+        //            // Initialize the supplier details dictionary
+        //            var supplierDetailsDict = new Dictionary<int, SupplierCostDetail>();
+
+        //            // Get values and pair them with headers
+        //            for (int col = startDataColumn; col <= colCount; col++)
+        //            {
+        //                string header = headers[col - startDataColumn];
+
+        //                // Skip values corresponding to skipped headers
+        //                if (header == null)
+        //                {
+        //                    continue;
+        //                }
+
+        //                string cellValue = worksheet.Cells[partNumberRow, col].Text;
+        //                if (string.IsNullOrWhiteSpace(cellValue))
+        //                {
+        //                    continue;
+        //                }
+
+        //                try
+        //                {
+        //                    var match = Regex.Match(header.Trim(), @"^(.*?)(?:_(\d+))?$", RegexOptions.Singleline);
+        //                    string baseHeader = match.Groups[1].Value.Trim();
+        //                    int supplierIndex = match.Groups[2].Success ? int.Parse(match.Groups[2].Value) : 1;
+
+        //                    if (!supplierDetailsDict.ContainsKey(supplierIndex))
+        //                    {
+        //                        supplierDetailsDict[supplierIndex] = new SupplierCostDetail();
+        //                    }
+
+        //                    var supplierDetail = supplierDetailsDict[supplierIndex];
+
+        //                    switch (baseHeader)
+        //                    {
+        //                        case string s when s.StartsWith("Unit Cost"):
+        //                            var qtyMatch = Regex.Match(s, @"x(\d+)");
+        //                            if (qtyMatch.Success)
+        //                            {
+        //                                int quantity = int.Parse(qtyMatch.Groups[1].Value);
+        //                                if (decimal.TryParse(cellValue, out decimal cost))
+        //                                {
+        //                                    supplierDetail.UnitCosts[quantity] = cost;
+        //                                }
+        //                                else
+        //                                {
+        //                                    Console.WriteLine($"Failed to parse cost '{cellValue}' for quantity '{quantity}'");
+        //                                }
+        //                            }
+        //                            else
+        //                            {
+        //                                Console.WriteLine($"Failed to match quantity in header '{header}'");
+        //                            }
+        //                            break;
+
+        //                        case "Currency":
+        //                            supplierDetail.Currency = cellValue;
+        //                            break;
+
+        //                        case "Supplier":
+        //                            supplierDetail.Supplier = cellValue;
+        //                            break;
+
+        //                        case "MOQ":
+        //                            if (int.TryParse(cellValue, out int moq))
+        //                            {
+        //                                supplierDetail.MOQ = moq;
+        //                            }
+        //                            break;
+
+        //                        case "SPQ":
+        //                            supplierDetail.SPQ = string.IsNullOrWhiteSpace(cellValue) ? (int?)null : int.Parse(cellValue);
+        //                            break;
+
+        //                        case "Purchasing UOM":
+        //                            supplierDetail.PurchasingUOM = cellValue;
+        //                            break;
+
+        //                        case "Parts Lead Time (Weeks)":
+        //                            if (int.TryParse(cellValue, out int leadTime))
+        //                            {
+        //                                supplierDetail.LeadTimeWeeks = leadTime;
+        //                            }
+        //                            break;
+
+        //                        case "Location":
+        //                            supplierDetail.Location = cellValue;
+        //                            break;
+
+        //                        case "Quote Validity":
+        //                            supplierDetail.QuoteValidity = cellValue;
+        //                            break;
+
+        //                        case "Sourcing Remarks":
+        //                            supplierDetail.SourcingRemarks = cellValue;
+        //                            break;
+
+        //                        case "Tooling Cost":
+        //                            supplierDetail.ToolingCost = string.IsNullOrWhiteSpace(cellValue) ? (decimal?)null : decimal.Parse(cellValue);
+        //                            break;
+
+        //                        case "Tooling Lead Time (weeks)":
+        //                            supplierDetail.ToolingLeadTimeWeeks = string.IsNullOrWhiteSpace(cellValue) ? (int?)null : int.Parse(cellValue);
+        //                            break;
+
+        //                        case "Tooling Sourcing Remarks":
+        //                            supplierDetail.ToolingSourcingRemarks = cellValue;
+        //                            break;
+
+        //                        case "Cost Engineer's Suggested Supplier":
+        //                            partData.SuggestedSupplier = cellValue;
+        //                            break;
+
+        //                        case "Comments":
+        //                            partData.Comments = cellValue;
+        //                            break;
+
+        //                        default:
+        //                            Console.WriteLine($"Unrecognized header '{header}'");
+        //                            break;
+        //                    }
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    Console.WriteLine($"Error processing header '{header}': {ex.Message}");
+        //                }
+        //            }
+
+        //            partData.SupplierDetails = supplierDetailsDict.Values.ToList();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error reading Excel file: {ex.Message}");
+        //    }
+
+        //    return partData;
+        //}
     }
 }

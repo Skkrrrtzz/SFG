@@ -3,16 +3,27 @@
     public static class PIMESSettings
     {
         public const string databaseIP = "192.168.0.7";
+
         public const string hanDatabaseIP = "192.168.0.8:30015";
         public const string sqlserverDatabaseIP = "192.168.0.9";
+        public const string atssqlserverDatabaseIP = "DASHBOARDPC";
 
         public const string mysqlDetails = ";username=imesclient;password=14J@nuary;database=pimes_system_db;sslmode=none;character set=utf8";
         public const string hanServerDetails = ";user id=SYSTEM;password=Administrator1;currentschema=PIMESLIVE;";
         public const string sqlServerDetails = "; Database=PCV55_PIMES;User Id=sa; Password=Pkunzip@112";
 
+
+        public const string atsAuditDatabase = ";Initial Catalog=QA_AUDIT";
+        public const string atsSFGDatabase = ";Initial Catalog=SFGDb";
+        public const string atssqlServerDetails = ";Persist Security Info=True;User ID=sa;Password=test@123;Encrypt=False;Trust Server Certificate=True; MultipleActiveResultSets=true;Authentication=SqlPassword";
+
         public const string mysqlConnString = "DataSource=" + databaseIP + mysqlDetails;
         public const string hanaConnString = "Server=" + hanDatabaseIP + hanServerDetails;
         public const string sqlserverConnString = "Server=" + sqlserverDatabaseIP + sqlServerDetails;
+
+
+        public const string atsAuditConnString = "DataSource=" + atsAuditDatabase + atssqlServerDetails;
+        public const string atsSFGConnString = "DataSource=" + atsSFGDatabase + atssqlServerDetails;
 
 
         public const string lnkLogin = "http://192.168.0.188:8081";

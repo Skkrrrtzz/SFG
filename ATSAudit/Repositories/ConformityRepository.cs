@@ -12,7 +12,9 @@ using System.Data;
 using QA_Audit_Fresh.Models.Dto;
 using System.ComponentModel;
 using QA_Audit_Fresh.Repositories;
-using MySqlConnector;
+// using MySqlConnector;'
+using Microsoft.Data.SqlClient;
+
 using APPCommon.Class;
 
 namespace QA_Audit_Fresh.Repositories
@@ -28,7 +30,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<ConformityModel>> GetConformities()
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[Conformities]";
                 return await connection.QueryAsync<ConformityModel>(query);
@@ -37,7 +39,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<ConformityModel>> GetConformitiesByAuditPlan(int planId)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[Conformities] where PlanId = @PlanId";
                 return await connection.QueryAsync<ConformityModel>(query, new { PlanId = planId });
@@ -46,7 +48,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<ConformityModel>> GetConformity(int conformityId)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[Conformities] where ConformityId = @ConformityId";
                 return await connection.QueryAsync<ConformityModel>(query, new { ConformityId = conformityId });
@@ -55,7 +57,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<int> PostConformity(ConformityModel conformity) 
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 string query = @"insert into [dbo].[Conformities] 
                     (PlanId, ConformityDescription, ConformityAreaSection) 
@@ -73,7 +75,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<int> DeleteConformity(int conformityId)
         {
-            using (var connection = new MySqlConnection(_connectionString)) 
+            using (var connection = new SqlConnection(_connectionString)) 
             {
                 // Console.WriteLine("ConformityId" + conformityId);
 

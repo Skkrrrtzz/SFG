@@ -1,0 +1,99 @@
+.cell {
+    display: flex;
+    flex-direction: column-reverse;
+    /* padding: 5rem; */
+}
+
+.auditplan {
+    border-radius: 5px;
+}
+
+.auditplan.open {
+    background-color: green;
+}
+
+textarea {
+    max-height:80px;
+    min-height: 20px;
+}
+
+
+/* #conformitiesTable {
+    overflow-y: scroll;
+} */
+
+.tableWrapper {
+    overflow-y: scroll;
+    height: 50%;
+}
+
+#readAuditPlan {
+    display: block;
+}
+
+#createAuditPlan {
+    display: none;
+}
+
+/* #dashboard {
+    background-color: '#9A9A9A';
+} */
+
+/* .emptyTable {
+    display: none;
+} */
+
+.emptyTable {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+
+    /* height: 32vh;
+    max-height: 32vh; */
+}
+
+#readAuditPlan {
+    display: none;
+    height: 100%;
+}
+
+#readAuditPlanDetails > * {
+    padding-bottom: 0.5rem;
+    /* font-size: 0.8rem; */
+}
+
+#dashboard {
+    height: 100vh;
+    /* height: 80vh; */
+    max-height: 75vh; 
+}
+
+#conformitiesTable {
+    table-layout: fixed;
+    border-collapse: separate;
+    height: 100%;
+}
+
+
+/* #auditPlanManagerApproval {
+    display: flex;
+} */
+
+.today {
+    border: 2px solid #c41414 !important;
+    color: #c41414 !important;
+    font-weight: bold;
+}
+
+.clicked {
+    border: 3px solid #0d6efd !important;
+}
+
+.header {
+    position: sticky;
+    top: 0;
+}
+
+.conformity-delete > * {
+    pointer-events: none;
+}

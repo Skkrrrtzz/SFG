@@ -1,0 +1,62 @@
+<div class="card" id="createAuditPlan">
+    <h6 class="card-header bg-primary text-light">Creating Audit Plan</h6>    
+    <div class="card-body">
+        <form id="auditPlanForm" autocomplete="off">
+            <div class="row">
+                <div class="col-12">
+                    <div class="my-1">
+                        <div>
+                            <p class="form-label" >For Date:</p>
+                        </div>
+                        <input class="form-control text-center" id="createAuditPlanDate" readonly required/>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="my-1">
+                        <div>
+                            <p class="form-label">Department:</p>
+                        </div>
+                        <div>
+                            <select class="form-select" id="createAuditPlanDepartments" name="department" required>
+                                <option selected hidden value="">Select Department</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="my-1">
+                        <div>
+                            <p class="form-label">Audit Category:</p>
+                        </div>
+                        <div>
+                            <select class="form-select" name="auditCategory" id="createAuditPlanAuditCategory" required>
+                                <option selected hidden value="">Select Audit Category</option>
+                                <option>MPA</option>
+                                <option>SA</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="my-1">
+                        <div>
+                            <p class="form-label">Time Start:</p>
+                        </div>
+                        <div>
+                            <input type="time" class="form-control" name="timeStart" id="createAuditPlanTimeStart" required/>
+                        </div>
+                    </div>
+                    <div class="my-1">
+                        <div>
+                            <p class="form-label">Time End:</p>
+                        </div>
+                        <div>
+                            <input type="time" class="form-control" name="timeEnd" id="createAuditPlanTimeEnd" required/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary" type="button" id="createAuditPlanSubmit">Submit</button>
+        </form>           
+    </div>
+</div>

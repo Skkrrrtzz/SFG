@@ -1,0 +1,50 @@
+<div class="modal fade" id="createConformity" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h6 class="modal-title text-light">Creating Good Observation / Conformity</h6>    
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="conformityForm" class="grid row-gap-3" autocomplete="off">
+                    <input type="text" id="viewerPlanId" name="viewerPlanId" hidden required />
+                    <div class="my-1">
+                        <p class="form-label">Description:</p>
+                        <input class="form-control" name="description" id="createConformityDescription" />
+                    </div>
+                    <div class="my-1">
+                        <p class="form-label">Area / Section:</p>
+                        <input class="form-control" name="areaSection" id="createConformityAreaSection" />
+                    </div>
+                </form>           
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" id="createConformitySubmit" data-bs-dismiss="modal">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Launch static backdrop modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal""></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div> *@

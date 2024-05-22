@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-lg-6">
+        <nav>
+            <div class="nav nav-tabs " id="dashboardTab" role="tablist">
+                <button class="nav-link active" id="calendarTab" data-bs-toggle="tab" data-bs-target="#calendarTabPane" type="button" role="tab">
+                    Audit Plan Calendar
+                </button> 
+                <button class="nav-link" id="statsTab" data-bs-toggle="tab" data-bs-target="#statsTabPane" type="button" role="tab">
+                    Statistics
+                </button>
+            </div>
+        </nav>
+        <div class="tab-content" id="dashboardTabContent">
+            <div class="tab-pane show active" id="calendarTabPane" role="tabpanel" tabindex="0">
+                <partial name="Partials/_Calendar"></partial>
+            </div>  
+            <div class="tab-pane" id="statsTabPane" role="tabpanel" tabindex="0">
+                <partial name="Partials/_Stats"></partial>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6" id="sidepane">
+        <partial name="Partials/_CreateAuditPlan"></partial>
+        <partial name="Partials/_ReadAuditPlan"></partial>
+    </div>
+</div>

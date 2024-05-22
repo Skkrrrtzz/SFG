@@ -1,0 +1,69 @@
+@* @model QA_Audit_Fresh.Views.AuditPlan.Partials.AuditPlansModal *@
+@* @model QA_Audit_Fresh.Models.ViewModels.AuditPlansViewModel; *@
+
+<div class="modal fade" id="createAuditPlanModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <p class="modal-title fw-bold text-white">Audit Plans</p>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="auditPlanForm">
+                <div class="modal-body">
+                   @* <input value="" id="inputDay" name="day" hidden required />
+                   <input id="inputMonth" name="month" hidden required />
+                   <input id="inputYear" name="year" hidden required /> *@
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="my-1">
+                                <div>
+                                    <p class="form-label">Department:</p>
+                                </div>
+                                <div>
+                                    <select class="form-select" id="createAuditPlanDepartments" name="department">
+                                        <option selected hidden value="">Select Department</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="my-1">
+                                <div>
+                                    <p class="form-label">Audit Category:</p>
+                                </div>
+                                <div>
+                                    <select class="form-select" name="auditCategory" id="createAuditPlanAuditCategory" required>
+                                        <option selected hidden value="">Select Audit Category</option>
+                                        <option>MPA</option>
+                                        <option>SA</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="my-1">
+                                <div>
+                                    <p class="form-label">Time Start:</p>
+                                </div>
+                                <div>
+                                    <input type="time" class="form-control" name="timeStart" id="createAuditPlanTimeStart" />
+                                </div>
+                            </div>
+                            <div class="my-1">
+                                <div>
+                                    <p class="form-label">Time End:</p>
+                                </div>
+                                <div>
+                                    <input type="time" class="form-control" name="timeEnd" id="createAuditPlanTimeEnd" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               <div class="modal-footer">
+                   <button class="btn btn-primary" type="button" id="createAuditPlanSubmit">Submit</button>
+               </div>
+            </form>           
+        </div>
+    </div>
+</div>

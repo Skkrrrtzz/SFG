@@ -1,0 +1,519 @@
+﻿@* @using QA_AUDIT.Controllers *@
+@{
+    ViewData["Title"] = "HomePage";
+}
+
+<link href="~/css/homepage.css" rel="stylesheet" />
+<style>
+    textarea{
+        max-height:80px;
+        min-height: 20px;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12 col-lg-6">
+            <div class="card">
+                <div class="card-header bg-primary">
+                    <p class="text-white fw-bold text-center my-auto">Audit Plan</p>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-center h-100">
+                        <div class="my-auto">
+                            <button class="btn btn-toolbar" onclick="SelectMonth('-')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="mx-3 h-100">
+                            <p class="fw-bold text-center my-auto" id="monthSpecifier">DATE HERE</p>
+                        </div>
+                        <div class="my-auto">
+                            <button class="btn btn-toolbar" onclick="SelectMonth('+')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive-sm">                       
+                        <table class="table table-bordered text-center" id="calendar" style="height:70vh">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Sunday
+                                    </th>
+                                    <th>
+                                        Monday
+                                    </th>
+                                    <th>
+                                        Tuesday
+                                    </th>
+                                    <th>
+                                        Wednesday
+                                    </th>
+                                    <th>
+                                        Thursday
+                                    </th>
+                                    <th>
+                                        Friday
+                                    </th>
+                                    <th>
+                                        Saturday
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="w-25">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        <div class="col-sm-14 col-lg-16">
+            <div class="row">               
+                <div class="col">
+                    <div class="card">
+                        <div class="cardcontent">
+                            <div class="card-header text-white bg-primary fw-bold">
+                                Complete and Not Complete
+                            </div>
+                            <div class="card-body">
+                                <canvas id="completeAndNotYetCompleted"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header text-white bg-primary fw-bold">
+                            Close Open
+                        </div>
+                        <div class="card-body">
+                            <canvas id="openAndClose"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <div class="card mx-auto">
+                        <div class="card-header text-white bg-primary fw-bold">
+                            Responded and Not Responded
+                        </div>
+                        <div class="card-body">
+                            <canvas class="barChart" id="responseChart" width="100" height="23"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals --> 
+<div class="modal fade" id="createAuditPlanModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <p class="modal-title fw-bold text-white">Create Audit Plan</p>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="auditPlanForm" asp-controller="Home" asp-action="ValidateAndProcessAuditPlan">
+                <div class="modal-body">
+                   <input value="" id="inputDay" name="day" hidden required />
+                   <input id="inputMonth" name="month" hidden required />
+                   <input id="inputYear" name="year" hidden required />
+                   <div class="row">
+                        <div class="col-12">
+                            <div class="my-1">
+                                <div>
+                                    <p class="form-label">Department:</p>
+                                </div>
+                                <div>
+                                    <select class="form-select" id="createAuditPlansDepartments" name="department" required>
+                                        <option selected hidden value="">Select Department</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="my-1">
+                                <div>
+                                    <p class="form-label">Audit Category:</p>
+                                </div>
+                                <div>
+                                    <select class="form-select" name="auditCategory" required>
+                                        <option selected hidden value="">Select Audit Category</option>
+                                        <option>MPA</option>
+                                        <option>SA</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="my-1">
+                                <div>
+                                    <p class="form-label">Time Start:</p>
+                                </div>
+                                <div>
+                                    <input type="time" class="form-control" name="timeStart" />
+                                   @*  <select class="form-select dropdown-menu-end" name="timeStart" required>
+                                        <option selected hidden value="">Select Time</option>
+                                        <option>6:00 AM</option>
+                                        <option>6:30 AM</option>
+                                        <option>7:00 AM</option>
+                                        <option>7:30 AM</option>
+                                        <option>8:00 AM</option>
+                                        <option>8:30 AM</option>
+                                        <option>9:00 AM</option>
+                                        <option>9:30 AM</option>
+                                        <option>10:00 AM</option>
+                                        <option>10:30 AM</option>
+                                        <option>11:00 AM</option>
+                                        <option>11:30 AM</option>
+                                        <option>12:00 PM</option>
+                                        <option>12:30 PM</option>
+                                        <option>1:00 PM</option>
+                                        <option>1:30 PM</option>
+                                        <option>2:00 PM</option>
+                                        <option>2:30 PM</option>
+                                        <option>3:00 PM</option>
+                                        <option>3:30 PM</option>
+                                        <option>4:00 PM</option>
+                                        <option>4:30 PM</option>
+                                        <option>5:00 PM</option>
+                                        <option>5:30 PM</option>
+                                        <option>6:00 PM</option>
+                                        <option>6:30 PM</option>
+                                        <option>7:00 PM</option>
+                                        <option>7:30 PM</option>
+                                    </select> *@
+                                </div>
+                            </div>
+                            <div class="my-1">
+                                <div>
+                                    <p class="form-label">Time End:</p>
+                                </div>
+                                <div>
+                                    <input type="time" class="form-control" name="timeEnd" />
+                                    @* <select class="form-select dropdown-menu-end" name="timeEnd" required>
+                                        <option selected hidden value="">Select Time</option>
+                                        <option>6:00 AM</option>
+                                        <option>6:30 AM</option>
+                                        <option>7:00 AM</option>
+                                        <option>7:30 AM</option>
+                                        <option>8:00 AM</option>
+                                        <option>8:30 AM</option>
+                                        <option>9:00 AM</option>
+                                        <option>9:30 AM</option>
+                                        <option>10:00 AM</option>
+                                        <option>10:30 AM</option>
+                                        <option>11:00 AM</option>
+                                        <option>11:30 AM</option>
+                                        <option>12:00 PM</option>
+                                        <option>12:30 PM</option>
+                                        <option>1:00 PM</option>
+                                        <option>1:30 PM</option>
+                                        <option>2:00 PM</option>
+                                        <option>2:30 PM</option>
+                                        <option>3:00 PM</option>
+                                        <option>3:30 PM</option>
+                                        <option>4:00 PM</option>
+                                        <option>4:30 PM</option>
+                                        <option>5:00 PM</option>
+                                        <option>5:30 PM</option>
+                                        <option>6:00 PM</option>
+                                        <option>6:30 PM</option>
+                                        <option>7:00 PM</option>
+                                        <option>7:30 PM</option>
+                                    </select> *@
+                                </div>
+                            </div>
+                        </div>
+                   </div>
+                </div>
+               <div class="modal-footer">
+                   <button class="btn btn-primary" type="submit">Submit</button>
+               </div>
+            </form>           
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="planViewer">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <p class="modal-title text-white fw-bold">Audit Plan Details</p>
+                <button class="btn-close" data-bs-dismiss="modal" onclick="viewerFooter.style.display = 'none'"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label class="w-100 form-label fw-bold text-center">Status:</label>
+                        <input class="form-control text-center" id="viewerStatus" readonly/>
+                    </div>
+                    <div class="col-sm-12 col-lg-6">
+                        <label class="w-100 form-label fw-bold text-center">Department:</label>
+                        <input class="form-control text-center" id="viewerDepartment" readonly />
+                    </div>
+                    <div class="col-sm-12 col-lg-6">
+                        <label class="w-100 form-label fw-bold text-center">Audit Category:</label>
+                        <input class="form-control text-center" id="viewerCategory" readonly />
+                    </div>
+                    <div class="col-sm-12 col-lg-6">
+                        <label class="w-100 form-label fw-bold text-center">Target Date:</label>
+                        <input class="form-control text-center" id="viewerTargetDate" readonly />
+                    </div>
+                    <div class="col-sm-12 col-lg-6">
+                        <label class="w-100 form-label fw-bold text-center">Time:</label>
+                        <input class="form-control text-center" id="viewerTimeStart" readonly />
+                    </div>
+                    <div class="col-sm-12 col-lg-6">
+                        <label class="w-100 form-label fw-bold text-center">QA Manager Approved Status:</label>
+                        <input class="form-control text-center" id="viewerQAManager" readonly />
+                    </div>
+                    <div class="col-sm-12 col-lg-6">
+                        <label class="w-100 form-label fw-bold text-center">Auditee Manager Approved Status:</label>
+                        <input class="form-control text-center" id="viewerAuditeeManager" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="planViewerFooter" style="display:none">
+                <button class="btn btn-primary w-100" onclick="OpenResultModal()">Result</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="k" data-bs-backdrop="static">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <p class="modal-title text-white fw-bold">Result</p>
+                <button class="btn-close" data-bs-dismiss="modal" onclick=""></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="form-label fw-bold">Findings Status:</p>
+                        <select class="form-select" onchange="FindingsStatus(this.value)">
+                            <option selected hidden>Select</option>
+                            <option value="false">Without Findings</option>
+                            <option value="true">With Findings</option>
+                        </select>
+                    </div>
+                    <script>
+                        function FindingsStatus(type){
+                            if (type == 'true') {
+                                document.getElementById('withFindings').style.display = 'block';
+                                document.getElementById('withoutFindings').style.display = 'none';
+                            }
+                            else {
+                                document.getElementById('withoutFindings').style.display = 'block';
+                                document.getElementById('withFindings').style.display = 'none';
+                            }                           
+                        }
+                    </script>
+
+                    <div class="col-12" id="withFindings" style="display:none">
+                        <p class="form-label fw-bold">Findings Type:</p>
+                        <select class="form-select" onchange="MajorMinorOrObservation(this.value)" required>
+                            <option value="" selected hidden>Select findings type</option>
+                            <option value="Observation">Observation</option>
+                            <option value="Major">Major</option>
+                            <option value="Minor">Minor</option>
+                        </select>
+                        <script>
+                            function MajorMinorOrObservation(type) {
+                                if (type == 'Major' || type == 'Minor') {
+                                    $('#majorMinorModal').modal('show');
+                                }
+                                else{
+                                    $('#observationModal').modal('show');
+                                }
+
+                                $.ajax({
+                                    url: '@Url.Action("GetQAAuditAccounts", "Observation")',
+                                    success: function (response) {
+                                        response.auditors.forEach(function (auditor) { 
+                                            document.getElementById('listOfAuditors').innerHTML += '<option value="' + auditor + '">' + auditor + '</option>';
+                                        });
+                                        response.auditees.forEach(function (auditee) {
+                                            document.getElementById('listOfAuditees').innerHTML += '<option value="' + auditee + '">' + auditee + '</option>';
+                                        });
+                                    }
+                                });
+
+                                
+                            }
+                        </script>
+                    </div>
+                    <div class="col-12" id="withoutFindings" style="display:none">
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="form-label fw-bold">Date:</p>
+                                @* <input class="form-control w-100" id="datee" type="date" /> *@
+                            </div>
+                        </div>
+                    </div>
+                   @*  <div class="col-12">
+                        <p class="form-label fw-bold">Department:</p>
+                        <input class="form-control" id="viewerDepartment" readonly />
+                    </div> *@
+                    
+                </div>
+            </div>
+            @* <div class="modal-footer" id="">
+                <button class="btn btn-primary w-100" onclick="console.log($('#datee').val())">Submit</button>
+            </div> *@
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="majorMinorModal" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <p class="modal-title text-white fw-bold">Major or Minor</p>
+                <button class="btn-close" data-bs-dismiss="modal" onclick="viewerFooter.style.display = 'none'"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <p class="form-label fw-bold">Status:</p>
+                        <input class="form-control" id="viewerStatus" readonly />
+                    </div>
+                    <div class="col-12">
+                        <p class="form-label fw-bold">Department:</p>
+                        <input class="form-control" id="viewerDepartment" readonly />
+                    </div>
+                    <div class="col-12">
+                        <p class="form-label fw-bold">Audit Category:</p>
+                        <input class="form-control" id="viewerCategory" readonly />
+                    </div>
+                    <div class="col-12">
+                        <p class="form-label fw-bold">Target Date:</p>
+                        <input class="form-control" id="viewerTargetDate" readonly />
+                    </div>
+                    <div class="col-12">
+                        <p class="form-label fw-bold">Time:</p>
+                        <input class="form-control" id="viewerTimeStart" readonly />
+                    </div>
+                    <div class="col-12">
+                        <p class="form-label fw-bold">QA Manager Approved Status:</p>
+                        <input class="form-control" id="viewerQAManager" readonly />
+                    </div>
+                    <div class="col-12">
+                        <p class="form-label fw-bold">Auditee Manager Approved Status:</p>
+                        <input class="form-control" id="viewerAuditeeManager" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="planViewerFooter" style="display:none">
+                <button class="btn btn-primary w-100" onclick="OpenResultModal()">Result</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="observationModal" data-bs-backdrop="static">
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+        <form class="modal-content" id="observationForm">
+            <div class="modal-header bg-primary">
+                <p class="modal-title text-white fw-bold">Observation</p>
+                <button class="btn-close" data-bs-dismiss="modal" onclick=""></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-lg-3">
+                        <div class="form-floating">
+                            <input class="form-control" id="observationAuditors" type="text" placeholder="Auditor/s" name="auditors" required readonly/>
+                            <label for="observationAuditors">Auditor/s</label>                         
+                        </div>
+                        <select class="form-select" onchange="AppendName(this.value, 'observationAuditors', this)" id="listOfAuditors">
+                            <option value="" hidden selected>Select Auditor</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <div class="form-floating">
+                            <input class="form-control" id="observationAuditees" type="text" placeholder="Auditee/s" name="auditees" required readonly/>
+                            <label for="observationAuditees">Auditee/s</label>
+                        </div>
+                        <select class="form-select" onchange="AppendName(this.value, 'observationAuditees', this)" id="listOfAuditees">
+                            <option value="" hidden selected>Select Auditee</option>
+                        </select>
+                    </div>
+                  
+                    <div class="col-sm-12 col-lg-3">
+                        <div class="form-floating">                           
+                            <input class="form-control" type="date" id="observationRequiredOn" name="responseDate" required />
+                            <label for="observationRequiredOn">Response Required On:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                       <div class="form-floating">                      
+                            <input class="form-control" id="observationAuditManager" name="auditManager" required />
+                            <label for="observationAuditManager">Audit Manager:</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-lg-3">
+                        <div class="d-flex">
+                            <div class="col-8 col-lg-9">
+                                <div class="form-floating">
+                                    <input class="form-control" type="number" id="observationCount" placeholder="Observation Count" name="observationCount" required readonly/>
+                                    <label for="observationCount">Observation Count</label>
+                                </div>
+                            </div>
+                            <div class="col-4 col-lg-3 d-flex justify-content-center align-items-center">
+                                <div class="">
+                                    <button class="btn btn-primary btn-sm mx-auto" type="button" id="observationAddButton" onclick="GenerateObservationElement()">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 row" id="observationMainCol">
+                        <div class="card position-relative" id="observationCard">
+                            <span class="btn position-absolute badge fw-bolder fs-2 top-0 end-0 text-dark" onclick="ElementGenerator(this)">+</span>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-2 h -100">
+                                        <textarea class="form-control" placeholder="Element/Control No." id="element" name="element"></textarea>
+                                    </div>
+                                    <div class="col-10 flex-column h-100" id="observationCol">
+                                        <div class="col-12 d-flex justify-content-evenly" id="observationRow">
+                                            <input id="indexer" name="Indexer" value="1" hidden readonly/>
+                                            <div class="col-3">
+                                                <textarea class="form-control" placeholder="Audit Finding" id="audit" name="Audit"></textarea>
+                                            </div>
+                                            <div class="col-3">
+                                                <textarea class="form-control" placeholder="Improvement Action" id="improvement" name="Improvement"></textarea>
+                                            </div>
+                                            <div class="col-3">
+                                                <textarea class="form-control" placeholder="Responsible" id="responsible" name="Responsible"></textarea>
+                                            </div>
+                                            <div class="col-3">
+                                                <input class="form-control w-75" placeholder="Implementation Date" id="implementationDate" type="date" name="ImplementationDate" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary w-100" type="submit" onclick="">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/JS/ChartLogic.js"</script>
+<script src="./JS/AppendName.js"></script>
+<script src="./JS/TableLogic.js"></script>
+<script src="./JS/CalendarLogic.js"></script>

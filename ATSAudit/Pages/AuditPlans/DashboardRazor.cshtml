@@ -1,0 +1,23 @@
+@page "/"
+@model QA_Audit_Fresh.Views.AuditPlans.DashboardRazor
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<link href="~/frontend/css/homepage.css" rel="stylesheet" />
+<link href="~/frontend/css/dashboard.css" rel="stylesheet" />
+
+<div class="container-fluid" id="dashboard">
+    @* <partial name="Partials/_ReadAuditPlanModal"></partial> *@
+    <partial name="Partials/_Visualization"></partial>
+</div>
+
+@section Scripts {
+    <script src="~/frontend/JS/ReadAuditPlan.js"></script>
+    <script src="~/frontend/JS/CreateAuditPlan.js"></script>
+    <script src="~/frontend/JS/CreateConformity.js"></script>
+    <script src="~/frontend/JS/CreateCPAR.js"></script>
+    <script src="~/frontend/JS/Sidebar.js"></script>
+    <script src="~/frontend/JS/Calendar.js"></script>
+    '<script src="/_framework/aspnetcore-browser-refresh.js"></script>
+}

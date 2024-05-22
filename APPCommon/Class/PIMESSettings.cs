@@ -6,7 +6,7 @@
 
         public const string hanDatabaseIP = "192.168.0.8:30015";
         public const string sqlserverDatabaseIP = "192.168.0.9";
-        public const string atssqlserverDatabaseIP = "DASHBOARDPC";
+        public const string atsDatabaseIP = "DASHBOARDPC";
 
         public const string mysqlDetails = ";username=imesclient;password=14J@nuary;database=pimes_system_db;sslmode=none;character set=utf8";
         public const string hanServerDetails = ";user id=SYSTEM;password=Administrator1;currentschema=PIMESLIVE;";
@@ -22,8 +22,8 @@
         public const string sqlserverConnString = "Server=" + sqlserverDatabaseIP + sqlServerDetails;
 
 
-        public const string atsAuditConnString = "DataSource=" + atsAuditDatabase + atssqlServerDetails;
-        public const string atsSFGConnString = "DataSource=" + atsSFGDatabase + atssqlServerDetails;
+        public const string atsAuditConnString = "Data Source=" + atsDatabaseIP + atssqlServerDetails;
+        public const string atsSFGConnString = "Data Source=" + atsDatabaseIP + atsSFGDatabase + atssqlServerDetails;
 
 
         public const string lnkLogin = "http://192.168.0.188:8081";

@@ -1,0 +1,58 @@
+<div class="modal fade" id="createCPAR" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h6 class="modal-title text-light">Creating Corrective & Preventive Action Report</h6>    
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="CPARForm" class="grid row-gap-3" autocomplete="off">
+                    <input type="text" id="viewerPlanId" name="viewerPlanId" hidden required />
+
+                    <input type="text" id="viewerPlanId" name="viewerPlanId" hidden required />
+                    <div class="my-1">
+                        <p class="form-label">Respondent:</p>
+                        <input class="form-control" name="description" id="createCPARRespondent" />
+                    </div>
+                    <div class="my-1">
+                        <p class="form-label">Requestor:</p>
+                        <input class="form-control" name="areaSection" id="createCPARRequestor" />
+                    </div>
+
+                    @* <div class="my-1">
+                        <p class="form-label">Issue Date:</p>
+                        <input class="form-control" name="description" id="createCPARDescription" />
+                    </div> *@
+                    @* <div class="my-1">
+                        <p class="form-label">Approval Date:</p>
+                        <input class="form-control" name="areaSection" id="createCPARAreaSection" />
+                    </div> *@
+                    <div class="my-1">
+                        <p class="form-label">Response Due Date:</p>
+                        <input type="date" min="1993-12-1"class="form-control" name="description" id="createCPARResponseDueDate" />
+                    </div>
+
+                    <div class="my-1">
+                        <p class="form-label">Problem Statement:</p>
+                        <input class="form-control" name="areaSection" id="createCPARProblemStatement" />
+                    </div>
+                    <div class="my-1">
+                        <p class="form-label">Prepared By:</p>
+                        <input class="form-control" name="description" id="createCPARPreparedBy" />
+                    </div>
+                    @* <div class="my-1">
+                        <p class="form-label">Checked By:</p>
+                        <input class="form-control" name="areaSection" id="createCPARAreaSection" />
+                    </div>
+                    <div class="my-1">
+                        <p class="form-label">Approved By:</p>
+                        <input class="form-control" name="description" id="createCPARDescription" />
+                    </div> *@
+                </form>           
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" id="createCPARSubmit" data-bs-dismiss="modal">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>

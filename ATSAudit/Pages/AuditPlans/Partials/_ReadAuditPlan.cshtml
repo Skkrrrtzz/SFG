@@ -1,0 +1,56 @@
+<div class="card" id="readAuditPlan">
+    <div class="card-header bg-primary text-light d-flex justify-content-between">
+        <h6 class="align-middle">Viewing Audit Plan</h6>    
+        <div>
+            <button class="btn btn-secondary">
+                <i class="fa-solid fa-pen-to-square"></i> 
+            </button>
+            <button class="btn btn-danger" id="readAuditPlanDelete">
+                <i class="fa-solid fa-trash"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body mx-2">
+        @* <div class="row">
+            <button class="btn btn-secondary">Edit</button>
+            <button class="btn btn-danger" id="readAuditPlanDelete">Delete</button>
+        </div> *@
+        <div class="row">
+            <div class="col-sm-6 col-lg-12 row row-cols-2" id="readAuditPlanDetails">
+                <input type="text" id="readAuditPlanId" hidden readonly>
+                <div class="col">
+                    <label class="w-100 form-label fw-bold">Target Date:</label>
+                    <input class="form-control text-center" id="readAuditPlanTargetDate" readonly />
+                </div>
+                <div class="col">
+                    <label class="w-100 form-label fw-bold">Time:</label>
+                    <input class="form-control text-center" id="readAuditPlanTimeStart" readonly />
+                </div>
+                <div class="col-12">
+                    <label class="w-100 form-label fw-bold ">Status:</label>
+                    <input class="form-control text-center" id="readAuditPlanStatus" readonly/>
+                </div>
+                <div class="col">
+                    <label class="w-100 form-label fw-bold">Audit Category:</label>
+                    <input class="form-control text-center" id="readAuditPlanAuditCategory" readonly />
+                </div>
+                <div class="col">
+                    <label class="w-100 form-label fw-bold">Department:</label>
+                    <input class="form-control text-center" id="readAuditPlanDepartment" readonly />
+                </div>
+                <div class="col-sm-12 col-lg-6">
+                    <label class="w-100 form-label fw-bold">QA Manager Approval:</label>
+                    <input class="form-control text-center" id="readAuditPlanAuditorApproved" readonly />
+                </div>
+                <div class="col-sm-12 col-lg-6">
+                    <label class="w-100 form-label fw-bold">Auditee Manager Approval:</label>
+                    <input class="form-control text-center" id="readAuditPlanAuditeeApproved" readonly />
+                </div>
+            </div>
+        </div>
+        <div class="row col-12">
+            <partial name="Partials/_AuditPlanManagerApproval"></partial>
+            <partial name="Partials/_Tables"></partial>
+        </div>
+    </div>
+</div>

@@ -79,7 +79,7 @@ async function renderCalendar(year, month, firstDay, totalDays) {
             
             if (currentDateFlag) {
                 invalidDate = true;
-                cell.classList.add('invalid');
+                cell.classList.add('previousDay');
                 cell.classList.add('today');
             }
 
@@ -93,12 +93,12 @@ async function renderCalendar(year, month, firstDay, totalDays) {
                     return;
                 } 
 
-                //Grey out invalid dates
+                //Grey out previous dates
                 if (cellDate < todaysDate) {
-                    cell.style.backgroundColor = '#cacaca'; 
-                    cell.style.color = '#6d6d6d';
+                    // cell.style.backgroundColor = '#cacaca'; 
+                    // cell.style.color = '#6d6d6d';
                     invalidDate = true;
-                    cell.classList.add('invalid');
+                    // cell.classList.add('previousDay');
                 }
 
                 //Weekend
@@ -196,7 +196,7 @@ async function renderCalendar(date) {
             
             if (currentDateFlag) {
                 // invalidDate = true;
-                cell.classList.add('invalid');
+                cell.classList.add('previousDay');
                 cell.classList.add('today');
             }
 
@@ -204,28 +204,34 @@ async function renderCalendar(date) {
             //Days outside of calendar days
             if ((week == 0 && day < firstDay) || (currentDayCount > totalDays)) {
                 cell.style.backgroundColor = '#9a9a9a'; 
-                // invalidDate = true;
+                invalidDate = true;
                 cell.classList.add('invalid');
                 return;
             } 
-
-            //Grey out invalid dates
-            if (cellDate < todaysDate) {
-                cell.style.backgroundColor = '#cacaca'; 
-                cell.style.color = '#6d6d6d';
-                // invalidDate = true;
-                cell.classList.add('invalid');
-            }
-
+            
             //Weekend
             if ( cellDate.getDay() == 0 || cellDate.getDay() == 6) {
                 // cell.classList.add('text-danger');
                 cell.classList.add('fw-bolder');
                 cell.style.backgroundColor = '#9a9a9a'; 
                 cell.style.color = '#7c7c7c';
-                // invalidDate = true;
+                invalidDate = true;
                 cell.classList.add('invalid');
             } 
+
+            //Grey out previousDay divs
+            if (cellDate < todaysDate && !invalidDate) {
+                cell.style.backgroundColor = '#cacaca'; 
+                cell.style.color = '#6d6d6d';
+                // invalidDate = true;
+                cell.classList.add('previousDay');
+            }
+
+            //Add inline styles to previousDay divs
+            $('.previousDay').css({
+                'background-color': '#cacaca',
+                'color': '#6d6d6d'
+            })
 
             //Every other cell is valid and either has no audit plan or has audit plan
             if (plansByDate.length > 0) { //Has Audit Plan

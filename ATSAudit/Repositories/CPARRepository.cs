@@ -37,30 +37,25 @@ namespace QA_Audit_Fresh.Repositories
 
         }
 
+        public async Task<IEnumerable<CPARModel>> GetCPARsByAuditPlan(int planId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                string query = "select * from [dbo].[CPARs] where PlanId = @PlanId";
+                return await connection.QueryAsync<CPARModel>(query, new { PlanId = planId });
+            }
+        }
+
         public async Task<IEnumerable<CPARModel>> PostCPAR(CPARModel cpar)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 // string query = "select * from [dbo].[CPARs] where cparId = @ConformityId";
-                string query = @"insert into dbo.CPARs(
-                        PlanId,
-                        Respondent,
-                        Requestor,
-                        ResponseDueDate,
-                        ProblemStatement,
-                        PreparedBy
-                    )
-
-                    output inserted.*
-                    
-                    values(
-                        @PlanId,
-                        @Respondent,
-                        @Requestor,
-                        @ResponseDueDate,
-                        @ProblemStatement,
-                        @PreparedBy
-                    )";
+                string query = @"insert into dbo.CPARs
+                                (PlanId, Respondent, Requestor, ResponseDueDate, ProblemStatement, PreparedBy)
+                                output inserted.*
+                                values
+                                (@PlanId, @Respondent, @Requestor, @ResponseDueDate, @ProblemStatement, @PreparedBy)";
 
                 object parameters = new {
                     PlanId = cpar.PlanId,
@@ -74,6 +69,7 @@ namespace QA_Audit_Fresh.Repositories
                     // CheckedBy = cpar.CheckedBy
                     // ApprovedBy = cpar.ApprovedBy
                 };
+                
                 return await connection.QueryAsync<CPARModel>(query, parameters);
             }
         }

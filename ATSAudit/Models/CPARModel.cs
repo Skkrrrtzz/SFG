@@ -26,8 +26,8 @@ namespace QA_Audit_Fresh.Models
 
         public string Respondent { get; set; }
         public string Requestor { get; set; }
-        public DateTime IssueDate { get; set; }
-        public DateTime ApprovalDate { get; set; }
+        public DateTime? IssueDate { get; set; }
+        public DateTime? ApprovalDate { get; set; }
         public DateTime? ResponseDueDate { get; set; }       
         public string ProblemStatement { get; set; }
         public string PreparedBy { get; set; }

@@ -8,7 +8,9 @@ builder.Services.AddRepositories();
 
 // Add services to the container.
 // builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options => {
+    options.Conventions.AddPageRoute("/AuditPlans/DashboardRazor", "");
+});
 
 // Swagger for API testing
 builder.Services.AddEndpointsApiExplorer();

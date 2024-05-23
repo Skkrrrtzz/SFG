@@ -26,6 +26,13 @@ namespace QA_Audit_Fresh.Controllers.Api
             return await _repository.GetCPARs();
         }
 
+        [HttpGet("~/api/auditplans/{planId:int}/cpars")] 
+        public async Task<IEnumerable<CPARModel>> GetCPARsByAuditPlan(int planId) 
+        {
+            var cpars = _repository.GetCPARsByAuditPlan(planId);
+            return await cpars; 
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IEnumerable<CPARModel>> PostCPAR([FromBody] CPARDto response)

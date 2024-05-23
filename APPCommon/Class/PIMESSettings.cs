@@ -15,14 +15,15 @@
 
         public const string atsAuditDatabase = ";Initial Catalog=QA_AUDIT";
         public const string atsSFGDatabase = ";Initial Catalog=SFGDb";
-        public const string atssqlServerDetails = ";Persist Security Info=True;User ID=sa;Password=test@123;Encrypt=False;Trust Server Certificate=True; MultipleActiveResultSets=true;Authentication=SqlPassword";
+
+        public const string atssqlServerDetails = ";Persist Security Info=True;User ID=sa;Password=test@123;Encrypt=False;Trust Server Certificate=True; MultipleActiveResultSets=true;Authentication=SqlPassword;";
 
         public const string mysqlConnString = "DataSource=" + databaseIP + mysqlDetails;
         public const string hanaConnString = "Server=" + hanDatabaseIP + hanServerDetails;
         public const string sqlserverConnString = "Server=" + sqlserverDatabaseIP + sqlServerDetails;
 
 
-        public const string atsAuditConnString = "Data Source=" + atsDatabaseIP + atssqlServerDetails;
+        public const string atsAuditConnString = "Data Source=" + atsDatabaseIP + atsAuditDatabase + atssqlServerDetails;
         public const string atsSFGConnString = "Data Source=" + atsDatabaseIP + atsSFGDatabase + atssqlServerDetails;
 
 

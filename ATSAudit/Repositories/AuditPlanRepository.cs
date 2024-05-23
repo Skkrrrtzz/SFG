@@ -12,7 +12,7 @@ using System.Data;
 // using Microsoft.AspNetCore.Http.HttpResults;
 // using Azure.Core;
 using QA_Audit_Fresh.Models.Dto;
-using MySqlConnector;
+using Microsoft.Data.SqlClient;
 using APPCommon.Class;
 
 namespace QA_Audit_Fresh.Repositories
@@ -28,7 +28,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<AuditPlanModel>> GetAuditPlans()
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[AuditPlans]";
                 return await connection.QueryAsync<AuditPlanModel>(query);
@@ -37,7 +37,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<AuditPlanModel>> GetAuditPlansByMonth(int month)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[AuditPlans] where month(TargetDate) = @Month";
                 // object[] parameters = [ new { Month = month } ];
@@ -47,7 +47,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<AuditPlanModel>> GetAuditPlan(int planId)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[AuditPlans] where PlanId = @PlanId";
                 return await connection.QueryAsync<AuditPlanModel>(query, new { PlanId = planId });
@@ -56,7 +56,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<AuditPlanModel>> PostAuditPlan(AuditPlanModel auditPlan) 
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 // string query = @"insert into [dbo].[AuditPlans](
                 //     Requestor,
@@ -97,7 +97,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<int> UpdateStatus(int planId, string status)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 // string query = "update [dbo].[AuditPlans]";
                 return await connection.ExecuteAsync(   "sp_UpdateStatus", 
@@ -108,7 +108,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<int> DeleteAuditPlan(int planId)
         {
-            using (var connection = new MySqlConnection(_connectionString)) 
+            using (var connection = new SqlConnection(_connectionString)) 
             {
                 var query = "delete from [dbo].[AuditPlans] where PlanId = @PlanId";
 

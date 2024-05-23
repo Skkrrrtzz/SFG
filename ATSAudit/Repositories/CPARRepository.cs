@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using MySqlConnector;
+using Microsoft.Data.SqlClient;
 using QA_Audit_Fresh.Models;
 using APPCommon.Class;
 
@@ -20,7 +20,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<CPARModel>> GetCPARs()
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[CPARs]";
                 return await connection.QueryAsync<CPARModel>(query);
@@ -29,7 +29,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<CPARModel>> GetCPAR(int cparId)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[CPARs] where cparId = @ConformityId";
                 return await connection.QueryAsync<CPARModel>(query, new { cparId = cparId });
@@ -39,7 +39,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<CPARModel>> PostCPAR(CPARModel cpar)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 // string query = "select * from [dbo].[CPARs] where cparId = @ConformityId";
                 string query = @"insert into dbo.CPARs(
@@ -80,7 +80,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<int> DeleteCPAR(int cparId)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "delete from [dbo].[CPARs] where CPARId = @CPARId";
                 return await connection.ExecuteAsync(query, new { CPARId = cparId });

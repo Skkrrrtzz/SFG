@@ -363,16 +363,16 @@ MigrationBackup/
 FodyWeavers.xsd
 
 
-# .gitignore for ATSAudit
-# Ignore everything 
-/ATSAudit/*
+# # .gitignore for ATSAudit
+# # Ignore everything 
+# /ATSAudit/*
 
-# Except
-!/ATSAudit/Api/
-!/ATSAudit/Models/
-!/ATSAudit/Pages/
-!/ATSAudit/Repositories/
-!/ATSAudit/wwwroot/
-!/ATSAudit/AddRepositoriesService.cs
-!/ATSAudit/APPTemplate.csproj
-!/ATSAudit/Program.cs
+# # Except
+# !/ATSAudit/Api/
+# !/ATSAudit/Models/
+# !/ATSAudit/Pages/
+# !/ATSAudit/Repositories/
+# !/ATSAudit/wwwroot/
+# !/ATSAudit/AddRepositoriesService.cs
+# !/ATSAudit/APPTemplate.csproj
+# !/ATSAudit/Program.cs

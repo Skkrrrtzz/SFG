@@ -1,9 +1,9 @@
+using OfficeOpenXml;
 using ATSSFG.Repository;
 using ATSSFG.Services;
-using OfficeOpenXml;
 
 var builder = WebApplication.CreateBuilder(args);
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddDistributedMemoryCache();
@@ -12,17 +12,17 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 
+// Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddRazorPages(options =>{ options.Conventions.AddPageRoute("/Dashboard/Dashboard", "");
-});
-
+builder.Services.AddTransient<IDirectoryRepository, DirectoryRepository>();
 builder.Services.AddTransient<IDirectoryRepository, DirectoryRepository>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ISourcingRepository, SourcingRepository>();
 builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<UploadService>();
 builder.Services.AddScoped<Emailing>();
+
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 //builder.Services.AddSession(options => {
 //    options.Cookie.HttpOnly = true;

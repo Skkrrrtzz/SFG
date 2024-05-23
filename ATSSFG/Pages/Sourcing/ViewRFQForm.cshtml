@@ -1,0 +1,126 @@
+﻿@page
+@model ATSSFG.Pages.Sourcing.ViewRFQFormModel
+@{
+    ViewData["Title"] = "View RFQ Form";
+}
+<div>
+    <div class="border-3 border-bottom border-dark">
+        <h4 class="fw-bold">SOURCING RFQ FORM</h4>
+    </div>
+    <div class="">
+        <div class="row">
+            <div class="p-2 col-sm-6 col-lg-6 m-2" id="capture">
+                <div class="table-responsive">
+                    <table class="table table-bordered " id="ProjectTbl">
+                        @* <tbody>
+                            <tr>
+                                <th class="col-sm col-lg-2 text-primary">Project Name</th>
+                                <td class="col-sm col-lg-4">
+                                    <input type="text" id="projectName" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[0]?.ProjectName" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm col-lg-2 text-primary">Customer</th>
+                                <td>
+                                    <input type="text" id="customer" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[0]?.Customer" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm col-lg-2 text-primary">Quotation Code/Purchase Request Code</th>
+                                <td>
+                                    <input type="text" id="quotationCode" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[0]?.QuotationCode" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm col-lg-2 text-primary">Number of Items</th>
+                                <td>
+                                    <input type="text" id="customerPartNumber" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[0]?.NoItems" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm col-lg-2 text-primary">Request Date</th>
+                                <td>
+                                    <input type="text" id="requestDate" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[0]?.RequestDate.ToShortDateString()" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm col-lg-2 text-primary">Required Completion Date</th>
+                                <td>
+                                    <input type="text" id="requiredDate" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[0]?.RequiredDate.ToShortDateString()" readonly>
+                                </td>
+                            </tr>
+                        </tbody> *@
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <div class="mx-2 mt-2">
+                    <i class="">Upload the excel file</i>
+                </div>
+                <div class="input-group p-2">
+                    <input type="file" class="form-control" accept=".xlsx, .xls" id="excelFileInput">
+                    <button class="btn btn-success" type="button" onclick="checkExcel()"><i class="fa-solid fa-upload"></i> Upload</button>
+                </div>
+            </div>
+        </div>
+        <div class="p-2 mb-1">
+            <div class="table-responsive">
+                <table class="table table-sm compact table-bordered table-hover table-striped text-wrap" id="SRFQTbl" style="width: 100%">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Item No</th>
+                            <th>Customer Part Number</th>
+                            <th>Rev</th>
+                            <th>Description</th>
+                            <th>Original MPN/Raw Material for Fab Parts</th>
+                            <th>Original Manufacturer/Finishing for Fab Parts</th>
+                            <th>Commodity</th>
+                            <th>Quantity per Assembly</th>
+                            <th>Annual Forecast Quantity</th>
+                            <th>BOM UOM</th>
+                            <th>Common or Unique Parts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       @*  @foreach (var item in Model.RFQData)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.CustomerPartNumber</td>
+                                <td>@item.Rev</td>
+                                <td>@item.Description</td>
+                                <td>@item.OrigMPN</td>
+                                <td>@item.OrigMFR</td>
+                                <td>@item.Commodity</td>
+                                <td>@item.Eqpa</td>
+                                <td>@item.AnnualForecast</td>
+                                <td>@item.UoM</td>
+                                <td>
+                                    @if (item.Status == "COMMON")
+                                    {
+                                        <span class="badge rounded-pill text-bg-secondary">@item.Status</span>
+                                    }
+                                    else if (item.Status == "UNIQUE")
+                                    {
+                                        <span class="badge rounded-pill text-bg-primary">@item.Status</span>
+                                    }
+                                    else
+                                    {
+                                        @item.Status
+                                    }
+                                </td>
+                            </tr>
+                        } *@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        const CheckRFQInfo = '@Url.Action("CheckingUploadedFile", "Sourcing")';
+        const UploadRFQ = '@Url.Action("UploadRFQExcelFile", "Sourcing")';
+    </script>
+    <script src="~/JavaScript/RFQProcess.js"></script>
+}

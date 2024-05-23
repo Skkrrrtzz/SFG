@@ -64,7 +64,7 @@ namespace ATSSFG.Pages
 
         public async Task<IActionResult> OnGetAsync(string z, string y, string x, string w)
         {
-            return RedirectToPage("Directory");
+            return RedirectToPage("Dashboard/Dashboard");
 
         }
 

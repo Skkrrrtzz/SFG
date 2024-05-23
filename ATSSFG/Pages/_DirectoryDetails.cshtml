@@ -1,0 +1,59 @@
+﻿@model ATSSFG.Models.DirectoryModel
+
+<h4>@Model.fullname</h4>
+<hr />
+
+<div class="hstack">
+    <div class="card w-100">
+        <div class="card-body">
+            <div class="hstack">
+                @if (@TempData["imgEmployee"] == null)
+                {
+                    <img src="img/blankprofile.png" class="border bg-white" style="max-width: 100%; width:120px; height:auto;">
+                }
+                else
+                {
+                    <img src=@TempData["imgEmployee"] class="border" oncontextmenu="return false;" style="max-width: 100%; width:120px; height:auto;">
+                }
+                <dl class="row ms-1 w-100">
+                    <dt class="col-sm-3">Email </dt>
+                    <dd class="col-sm-9">@Model.email</dd>
+                    <dt class="col-sm-3">Local No.</dt>
+                    <dd class="col-sm-9">@Model.localno</dd>
+                </dl>
+            </div>
+            <br />
+            <div class="fs-6">CALLING OUTSIDE</div>
+            <ol>
+                <li class="fs-6">Input DIAL ACCESS (6-83)</li>
+                <ul>
+                    <li class="fs-6">6 - NDD&nbsp;|&nbsp;7 - Cavite&nbsp;|&nbsp;8 - IDD</li>
+                    <li class="fs-6">81 - GLOBE&nbsp;|&nbsp;82 - SMART&nbsp;|&nbsp;83 - Others (e.g. Sun)</li>
+                </ul>
+                <li class="fs-6">Input LOCK CODE (issued by Admin)</li>
+                <li class="fs-6">Dial telephone number</li>
+            </ol>
+            <div class="row">
+                <div class="col-md-5 col">
+                    <div class="hstack">
+                        <img src="~/img/asstd/emergency.png" style="max-width: 100%; width:120px; height:auto;" />
+                        <div class="fs-4" style="margin-left:10px;">DIAL 5911</div>
+                    </div>
+                </div>
+                <div class="w-100 d-md-none d-sm-block"></div>
+                <div class="col-md-7 col mt-3 mt-md-0">
+                    <div class="hstack">
+                        <img src="~/img/asstd/siren.png" style="max-width: 100%; width:40px; height:auto;" />
+                        <div class="fs-6" style="margin-left:10px;">CEZ Fire and <br /> Ambulance Services</div>
+                        <div class="fs-5" style="margin-left:10px;">437-1999</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

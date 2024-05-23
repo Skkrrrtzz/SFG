@@ -1,4 +1,5 @@
-﻿@model List<RFQProjectModel>
+﻿@page
+@model ATSSFG.Pages.Dashboard.IncomingModel
 @{
     ViewBag.Title = "Incoming";
 }
@@ -19,7 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+               @*  @foreach (var item in Model)
                 {
                     <tr>
                         <td>@item.QuotationCode</td>
@@ -27,7 +28,7 @@
                         <td>@item.ProjectName</td>
                         <td>@item.Status</td>
                     </tr>
-                }
+                } *@
             </tbody>
         </table>
     </div>

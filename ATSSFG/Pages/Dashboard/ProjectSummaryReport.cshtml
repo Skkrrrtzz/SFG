@@ -1,29 +1,26 @@
-﻿
+﻿@page
+@model ATSSFG.Pages.Dashboard.ProjectSummaryReportModel
 @{
     ViewData["Title"] = "Project Summary Report";
 }
-
-<div>
-    <h4 class="fw-bold">Project Summary Report</h4>
-    <div class="table-responsive p-2">
-        <table class="table table-striped" style="width:100%" id="projectSummaryTbl">
-            <thead class="table-secondary">
-                <tr>
-                    <th>Project Name</th>
-                    <th>Quotation Code</th>
-                    <th>Date Requested</th>
-                    <th>Required Submission Date</th>
-                    <th>Actual Completion Date</th>
-                    <th>STD TAT</th>
-                    <th>TAT</th>
-                    <th>No of Items</th>
-                    <th>Unique Parts</th>
-                    <th>Common Parts</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+<h4 class="fw-bold">Project Summary Report</h4>
+<div class="table-responsive p-2">
+    <table class="table table-striped" style="width:100%" id="projectSummaryTbl">
+        <thead class="table-secondary">
+            <tr>
+                <th>Project Name</th>
+                <th>Quotation Code</th>
+                <th>Date Requested</th>
+                <th>Required Submission Date</th>
+                <th>Actual Completion Date</th>
+                <th>STD TAT</th>
+                <th>TAT</th>
+                <th>No of Items</th>
+                <th>Unique Parts</th>
+                <th>Common Parts</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </div>
-<script src="~/javascript/projectsummaryreport.js"></script>

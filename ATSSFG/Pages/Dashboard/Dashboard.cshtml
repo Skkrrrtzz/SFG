@@ -1,11 +1,12 @@
-﻿@{
-    ViewData["Title"] = "Dashboard Page";
+﻿@page "/Dashboard/Dashboard"
+@model ATSSFG.Pages.Dashboard.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard";
 
     // string department = ViewBag.Department;
     // string department = "Sourcing";
     string department = "Cost Engineering";
 }
-
 <div class="row">
     <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
         <div class="card shadow bg-warning border-3 border-warning-subtle">
@@ -47,8 +48,8 @@
     </div>
     <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
         <div class="row mx-0">
-            <a asp-action="ProjectSummaryReport" asp-controller="Dashboard" class="btn btn-primary border-3 border-primary-subtle my-2">Project Summary Report</a>
-            <a asp-action="OpenProjects" asp-controller="Dashboard" class="btn btn-primary border-3 border-primary-subtle my-2">OPEN Projects</a>
+            <a asp-page="/Dashboard/ProjectSummaryReport" class="btn btn-primary border-3 border-primary-subtle my-2">Project Summary Report</a>
+            <a asp-page="/Dashboard/OpenProjects" class="btn btn-primary border-3 border-primary-subtle my-2">OPEN Projects</a>
         </div>
     </div>
     <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
@@ -64,8 +65,8 @@
     </div>
 </div>
 <div>
-    <p>@Context.Session.GetString("uniqueKey")</p>
-    
+    @* <p>@Context.Session.GetString("uniqueKey")</p> *@
+
     <!--Menu Modal -->
     <div class="modal fade" id="menuSFG" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="menuSFGLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-dialog-centered">
@@ -172,7 +173,7 @@
                 <div class="modal-body">
                     <div class="row row-cols-2 g-2">
                         <div class="col">
-                            <a asp-action="Library" asp-controller="Dashboard">
+                            <a asp-page="/Dasboard/Library">
                                 <div class="card text-bg-primary border-3 border-primary-subtle" type="button">
                                     <div class="card-body">
                                         <div class="row align-items-center">
@@ -387,7 +388,7 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <a asp-action="SourcingForm" asp-controller="Sourcing" class="btn btn-primary border-3 border-primary-subtle">
+                <a asp-action="/Sourcing/SourcingForm" class="btn btn-primary border-3 border-primary-subtle">
                     <i class="fa-solid fa-circle-plus"></i> Create Sourcing Form without BOM
                 </a>
                 <button type="button" class="btn btn-primary border-3 border-primary-subtle d-none" onload="viewSourcingForm()" id="viewPNDesc"><i class="fa-solid fa-eye"></i> View</button>
@@ -406,19 +407,19 @@
             </div>
             <div class="modal-body">
                 <div class="table-responsive mb-2">
-                   <table class="table table-striped" id="libraryTable" style="width: 100%;">
-                       <thead class="table-primary">
-                           <tr>
-                               <th>Quotation Number</th>
-                               <th>Request Date</th>
-                               <th>Part Number</th>
-                               <th>Status</th>
-                               <th>Action</th>
-                           </tr>
-                       </thead>
-                       <tbody>
-                       </tbody>
-                   </table>
+                    <table class="table table-striped" id="libraryTable" style="width: 100%;">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Quotation Number</th>
+                                <th>Request Date</th>
+                                <th>Part Number</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

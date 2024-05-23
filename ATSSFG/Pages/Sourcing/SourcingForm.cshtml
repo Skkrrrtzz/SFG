@@ -1,4 +1,6 @@
-﻿@{
+﻿@page
+@model ATSSFG.Pages.Sourcing.SourcingFormModel
+@{
     ViewData["Title"] = "Sourcing Form";
 }
 <style>
@@ -64,7 +66,7 @@
                                     <input type="text" id="rev" class="form-control form-control-sm" name="Rev" aria-describedby="rev" required>
                                 </div>
                             </div>
-                            
+
                         </div>
                         <div class="mb-2">
                             <label for="description" class="col-form-label fw-bold">Description</label>
@@ -85,7 +87,6 @@
                             </div>
                         </div>
                         <div class="mb-2">
-                            
                         </div>
                         <div class="mb-2">
                             <div class="row">
@@ -118,7 +119,7 @@
         </div>
     </div>
 </div>
-@section Scripts{
+@section Scripts {
     <script>
         $("#customer").change(function () {
             let selectedOption = $(this).val();

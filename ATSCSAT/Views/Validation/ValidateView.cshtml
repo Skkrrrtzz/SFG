@@ -1,0 +1,127 @@
+﻿@model PIMES_DMS.Models.IssueModel
+
+@{
+    ViewData["Title"] = "Validate Claim";
+}
+
+<div class="d-flex justify-content-center">
+    <div>
+        <h1>Validation</h1>
+    </div>
+</div>
+
+<hr />
+<div class="d-flex" style="height:500px">
+    <div class="w-50 h-100">
+
+        <table class="table">
+            <tr>
+                <th>
+                    Issue Creator:
+                </th>
+                <td>
+                    @Model.IssueCreator
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Issue #:
+                </th>
+                <td>
+                    @Model.IssueNo
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Date Found:
+                </th>
+                <td>
+                    @Model.DateFound
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Product:
+                </th>
+                <td>
+                    @Model.Product
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Serial #:
+                </th>
+                <td>
+                    @Model.SerialNo
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Affected P/N:
+                </th>
+                <td>
+                    @Model.AffectedPN
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Description:
+                </th>
+                <td>
+                    @Model.Desc
+                </td>
+            </tr>
+            <tr style="height:auto">
+                <th>
+                    Problem Description:
+                </th>
+                <td>
+                    @Model.ProbDesc
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="w-50 h-100 d-block justify-content-center" style="background-color:grey; border:3px solid">
+        <div class="d-block w-100 mt-3 align-self-center" style="height:10%">
+            <div class="w-100 d-flex justify-content-center">
+                <p style="font-weight:bold">
+                    VALIDATION FORM
+                </p>
+            </div>          
+        </div>
+        <form asp-controller="Validation" asp-action="SubmitValidation" enctype="multipart/form-data" method="post">
+            <input type="hidden" asp-for="IssueID" name="id"/>
+            <div class="d-flex justify-content-center flex-column">
+                <div class="form-group mt-1">
+                    <label class="form-label" style="font-weight:bold">Report:</label>
+                    <select class="form-select" style="width:50%" name="validation">
+                        <option value="CAPA">
+                            CAPA
+                        </option>
+                        <option value="8D">
+                            8D
+                        </option>
+                        <option value="INV">
+                            VALIDATION REPORT
+                        </option>
+                    </select>                    
+                </div>
+                <div class="form-group mt-1">
+                    <label class="form-label" style="font-weight:bold">Attachment: </label>
+                    <input class="form-control" style="width:50%; height:100%" type="file" name="valrep" accept=".pdf"/>
+                </div>
+                <div class="form-group mt-1">
+                    <label class="form-label" style="font-weight:bold">Validation Summary Report:</label>
+                    <div class="mt-1 d-flex justify-content-center">
+                        <textarea class="form-control" style="height:100px; max-height:100px; min-height:100px" name="valsumrep">Report here</textarea>
+                    </div>
+                </div>
+                <div class="mt-2 w-100 d-flex justify-content-center">
+                    <input type="submit" value="Submit" class="btn btn-primary w-50 h-50" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+

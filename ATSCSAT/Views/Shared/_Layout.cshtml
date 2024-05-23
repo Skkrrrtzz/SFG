@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+@{
+    string? EN = TempData["EN"] as string;
+    string? Role = TempData["Role"] as string;
+    TempData.Keep();
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ATS QA</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PIMES_DMS.styles.css" asp-append-version="true" />
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" sizes="32x32">
+</head>
+<body style="background-color:lightgray"> 
+    <header class="header-nav">
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color:blue">
+            <div class="container-fluid">
+                <div class="navbar-brand d-flex">
+                    <div class="d-flex align-items-center">
+                        <img style="height:30px; margin-right:10px" src="~/photos/pimeslogo.png" />
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <a class="text-white billsfont text-decoration-none overflow-hidden" asp-controller="Home" asp-action="AdminHome">P. IMES Corp.</a>
+                    </div>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link active text-white" aria-current="page" asp-controller="Home" asp-action="AdminHome">Home</a>
+                        <a class="nav-link active text-white" aria-current="page" asp-controller="Dashboard" asp-action="DashView">Dashboard</a>
+                        @*@{
+                            if (Role == "Admin")
+                            {
+                                <a class="nav-link active text-white" asp-controller="Notif" asp-action="ShowNotif">Actions</a>
+                            }
+                        }*@
+                        <form class="align-content-center" asp-controller="Issue" asp-action="ArchiveFunct" onchange="this.submit()">
+                            <select class="nav-link form-select bg-primary text-white bg-primary border-0 w-auto" name="aval">
+                                <option class="bg-white text-black" selected hidden>&#128270; More</option>
+                                <option class="bg-white text-black" value="Invalid">&#128309; Invalid Claims</option>
+                                <option class="bg-white text-black" value="Valid">&#128308; Valid Claims</option>
+                                <option class="bg-white text-black" value="CR">&#128203; C.R & E.R.A</option>
+                                <option class="bg-white text-black" value="8D">&#9989; Closed C.A.P.A</option>
+                                <option class="bg-white text-black" value="RMA">&#128229; R.M.A</option>
+                            </select>
+                         </form>
+                    </div>
+                    <div class="d-flex float-end">
+                        <div class="align-items-center text-white d-flex justify-content-center" style="margin-left:15px">
+                            <form asp-controller="Home" asp-action="LogoutOptions" id="logout" onchange="this.submit()">
+                                <select class="form-select bg-primary w-auto text-white border-0" name="Accs">
+                                        <option selected hidden>
+                                            &#10004;
+                                            @EN
+                                        </option>
+                                        @if (Role == "Admin")
+                                        {
+                                            <option class="bg-white text-black" value="Accounts">
+                                                &#128101;
+                                                Accounts
+                                            </option>
+                                            <option class="bg-white text-black" value="Actions">
+                                                &#128190;
+                                                Actions
+                                            </option>
+                                            <option class="bg-white text-black" value="Announcements">
+                                                &#128204;
+                                                Announcements
+                                            </option>
+                                        }
+                                    <option class="text-danger bg-white" value="Log-out">&#9889; Log-out</option>
+                                    </select>
+                            </form>
+                            <img style="height:30px; margin-inline:10px" src="~/photos/ats wbg.png" />
+                        </div>
+                    </div>
+                </div>                      
+            </div>
+        </nav>
+    </header>
+    <div style="margin-top:65px">
+        <main role="main">
+            @RenderBody()           
+        </main>
+    </div>
+    <footer class="loginfooter">
+        <div class="w-100 h-100">
+            <p class="text-white mt-1 mx-3">
+                &copy; 2023 - P. IMES - ATS QUALITY ASSURANCE
+            </p>
+        </div>
+    </footer>
+    <script>
+        function submitForm() {
+            document.getElementById("myForm").submit();
+        }
+    </script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,131 @@
+﻿@model IssueModel
+@{
+    ViewData["Title"] = "Containment Report >";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <form asp-controller="ER" asp-action="Create_Containment" method="post">
+        <input value="@Model.IssueNo" name="issueno" hidden />
+        <div class="d-flex justify-content-between">
+            <div>
+                <h1>Containment Report</h1>
+            </div>
+            <div class="align-self-center">
+                <div>
+                    <label class="fw-bold">Control No.</label>
+                    <input class="text-center fw-bold" value="@Model.ControlNumber" name="controlno" readonly />
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="d-flex mx-auto table-responsive">
+            <table class="table table-striped text-center">
+                <thead>
+                    <tr>
+                        <th class="">PHASE</th>
+                        <th>SOH</th>
+                        <th>GOOD</th>
+                        <th>N.G</th>
+                        <th>DISPOSITION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>WHSE</th>
+                        <td><input class="form-control w-100 text-center" type="number" name="whsoh" /></td>
+                        <td><input class="form-control w-100 text-center" type="number" name="whgood" /></td>
+                        <td><input class="form-control w-100 text-center" type="number" name="whnogood" /></td>
+                        <td>
+                            <select class="form-select w-100" name="whdis">
+                                <option value="Use as is">Use as is</option>
+                                <option value="Scrap">Scrap</option>
+                                <option value="Rework">Rework</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>IQA</th>
+                        <td><input class="form-control w-100 text-center" type="number" name="iqsoh" /></td>
+                        <td><input class="form-control w-100 text-center" type="number" name="iqgood" /></td>
+                        <td><input class="form-control w-100 text-center" type="number" name="iqnogood" /></td>
+                        <td>
+                            <select class="form-select w-100" name="iqdis">
+                                <option value="Use as is">Use as is</option>
+                                <option value="Scrap">Scrap</option>
+                                <option value="Rework">Rework</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>WIP</th>
+                        <td><input class="form-control w-100 text-center" type="number" name="wisoh" /></td>
+                        <td><input class="form-control w-100 text-center" type="number" name="wigood" /></td>
+                        <td><input class="form-control w-100 text-center" type="number" name="winogood" /></td>
+                        <td>
+                            <select class="form-select w-100" name="widis">
+                                <option value="Use as is">Use as is</option>
+                                <option value="Scrap">Scrap</option>
+                                <option value="Rework">Rework</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>FG</th>
+                        <td><input class="form-control w-100 text-center" type="number" name="fgsoh" /></td>
+                        <td><input class="form-control w-100 text-center" type="number" name="fggood" /></td>
+                        <td><input class="form-control w-100 text-center" type="number" name="fgnogood" /></td>
+                        <td>
+                            <select class="form-select w-100"  name="fgdis">
+                                <option value="Use as is">Use as is</option>
+                                <option value="Scrap">Scrap</option>
+                                <option value="Rework">Rework</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="flex-column">
+            <div class="flex-column h-50">
+                <div>
+                    <label class="fw-bold">Emergency Response</label>
+                </div>
+                <div class="w-50">
+                    <label class="form-label">Need Replacement?</label>
+                    <select class="form-select w-50" name="rep">
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                    </select>
+                </div>
+            </div>
+            <hr class="mt-4"/>
+            <div class="d-flex justify-content-evenly align-content-end">               
+                <div class="w-25 align-self-end">
+                    <a class="btn btn-danger w-100" asp-controller="ER" asp-action="Create_ContainmentView">Discard</a>
+                </div>
+                <div class="w-25 align-self-end">
+                    <input class="btn btn-primary w-100" type="submit" />
+                </div>               
+            </div>
+            <hr />
+        </div>
+    </form>
+</div>
+
+<div id="loading-icon" class="loading-icon"></div>
+
+<script>
+
+    $('#loading-icon').removeClass('loading');
+    $('#loading-icon').hide();
+
+    function showLoadingIcon() {
+        $('#loading-icon').addClass('loading');
+        $('#loading-icon').show();
+    }
+</script>

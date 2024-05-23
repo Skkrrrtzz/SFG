@@ -1,0 +1,73 @@
+﻿@model IEnumerable<PIMES_DMS.Models.IssueModel>
+
+@{
+    ViewData["Title"] = "On-Process";
+    var mod = Model.OrderByDescending(j => j.DateCreated).ToList();
+}
+
+@section scripts {
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" />
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                searching: true,
+                lengthChange: false,
+                pageLength: 6,
+                order: [],
+                ordering: false
+            });
+        });
+    </script>
+}
+
+<div class="container">
+
+    <h1 class="text-center">On-Process Claims</h1>
+    <hr />
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center align-content-center" id="myTable">
+            <thead>
+                <tr>
+                    <th>
+                        Issue#
+                    </th>
+                    <th>
+                        Found
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th>
+                        Product
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in mod)
+                {
+                    <tr>
+                        <td>
+                            @item.IssueNo
+                        </td>
+                        <td>
+                            @item.DateFound.ToShortDateString()
+                        </td>
+                        <td>
+                            @item.DateCreated.ToShortDateString()
+                        </td>
+                        <td>
+                            @item.Product
+                        </td>
+                        <td>
+                            <a class="btn btn-primary w-100" asp-controller="Issue" asp-action="IssueDetails" asp-route-id="@item.IssueID">Validate/Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

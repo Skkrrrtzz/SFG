@@ -1,0 +1,351 @@
+﻿@model DMD_Prototype.Controllers.MTIListModel
+
+@{
+    string[]? accData = TempData["EN"] as string[];
+    string? prod = TempData["Subj"] as string;
+    string doc = TempData["DocType"] as string ?? "MPI";
+    string viewType = "View";
+    string viewColorType = "btn-primary";
+    string tableLength = "container-fluid";
+    string actionLength = "width: 40%";
+    TempData.Keep();
+
+    ViewData["Title"] = $"{prod} {doc} List";
+
+    if (accData[1] != "ADMIN")
+    {
+        if (accData[1] == "USER")
+        {
+            viewType = "WORK";
+            viewColorType = "btn-warning";
+        }
+        
+        tableLength = "container";
+        actionLength = "width: 10%";
+    }
+}
+
+<div class="@tableLength flex-column">
+    <div class="row my-2">
+        @if (accData[1] == "ADMIN" || accData[1] == "ORIGINATOR")
+        {
+            <div class="col-sm-12 col-md-6 col-lg-2 text-nowrap">
+                <a class="btn btn-success d-flex" asp-controller="MTI" asp-action="CreateMTIView">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-plus-fill my-auto" viewBox="0 0 16 16">
+                        <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0z" />
+                    </svg>
+                    <p class="my-auto mx-1">Add Document</p>
+                </a>
+            </div>
+        }
+        <div class="col-sm-12 col-md-6 col-lg-3 mt-3 mt-md-0">
+            <form asp-controller="Home" asp-action="MTIList" id="doctypeselect">
+                <input value="@prod" name="whichDoc" hidden />
+                <div class="d-flex">
+                    <label class="form-label mx-2 text-nowrap my-auto fw-bold">Select Document Type:</label>
+                    <select class="form-select" name="whichType" onchange="document.getElementById('doctypeselect').submit()">
+                        <option value="" selected hidden>@doc</option>
+                        <option>MPI</option>
+                        <option>MTI</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center table-sm" id="myTable">
+            <thead class="table-primary text-nowrap">
+                <tr>
+                    <th>
+                        Document Number
+                    </th>
+                    <th>
+                        Assembly P/N
+                    </th>
+                    <th>
+                        Assembly Description
+                    </th>
+                    <th>
+                        Rev. #
+                    </th>
+                    <th>
+                        Date Created
+                    </th>
+                    <th style="@actionLength">
+                        Menu
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.list)
+                {
+                    @if(item.ObsoleteStat && accData[1] == "USER")
+                    {
+                        continue;
+                    }
+
+                    string obsolete = "";
+
+                    if (item.ObsoleteStat) obsolete = "table-danger";
+
+                    <tr class="@obsolete">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DocumentNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AssemblyPN)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AssemblyDesc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RevNo)
+                        </td>
+                        <td>
+                            @item.DateCreated.ToShortDateString()
+                        </td>
+                        <td>
+                            <div class="w-100 d-flex text-nowrap justify-content-around">
+                                <a class="btn @viewColorType d-flex btn-sm mx-1" asp-controller="MTI" asp-action="MTIView" asp-route-docuNumber="@item.DocumentNumber">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-binoculars-fill my-auto " viewBox="0 0 16 16">
+                                        <path d="M4.5 1A1.5 1.5 0 0 0 3 2.5V3h4v-.5A1.5 1.5 0 0 0 5.5 1h-1zM7 4v1h2V4h4v.882a.5.5 0 0 0 .276.447l.895.447A1.5 1.5 0 0 1 15 7.118V13H9v-1.5a.5.5 0 0 1 .146-.354l.854-.853V9.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v.793l.854.853A.5.5 0 0 1 7 11.5V13H1V7.118a1.5 1.5 0 0 1 .83-1.342l.894-.447A.5.5 0 0 0 3 4.882V4h4zM1 14v.5A1.5 1.5 0 0 0 2.5 16h3A1.5 1.5 0 0 0 7 14.5V14H1zm8 0v.5a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5V14H9zm4-11H9v-.5A1.5 1.5 0 0 1 10.5 1h1A1.5 1.5 0 0 1 13 2.5V3z" />
+                                    </svg>
+                                    <p class="mx-1 my-auto">@viewType</p>
+                                </a>
+
+                                @if (accData[1] == "ADMIN" || (accData[1] == "ORIGINATOR" && item.OriginatorName == accData[2]))
+                                {
+                                    <button class="btn btn-success d-flex btn-sm mx-1" data-bs-toggle="modal" data-bs-target="#editDetModal" onclick="SetDets('@item.DocumentNumber', '@item.AssemblyPN', '@item.AssemblyDesc', '@item.RevNo', '@item.AfterTravLog', '@item.LogsheetDocNo', '@item.LogsheetRevNo', '@item.DocType', '@item.ObsoleteStat')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square my-auto" viewBox="0 0 16 16">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                        </svg>
+                                        <p class="my-auto mx-1">Edit Details</p>
+                                    </button>
+                                    <a class="btn btn-secondary d-flex btn-sm mx-1" asp-controller="MTI" asp-action="EditDocumentView" asp-route-docuNo="@item.DocumentNumber">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-diff-fill my-auto" viewBox="0 0 16 16">
+                                            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8 6a.5.5 0 0 1 .5.5V8H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V9H6a.5.5 0 0 1 0-1h1.5V6.5A.5.5 0 0 1 8 6zm-2.5 6.5A.5.5 0 0 1 6 12h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5z" />
+                                        </svg>
+                                        <p class="my-auto mx-1">Update Documents</p>
+                                    </a>
+                                }
+
+                                @if (accData[1] == "ADMIN")
+                                {
+                                    <button type="button" class="btn btn-warning d-flex mx-1" data-bs-toggle="modal" data-bs-target="#changeownermodal" onclick="OrigName('@item.OriginatorName', '@item.DocumentNumber')">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill-gear my-auto" viewBox="0 0 16 16">
+                                            <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Zm9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382l.045-.148ZM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
+                                        </svg>
+                                        <p class="my-auto mx-1">Transfer Owner</p>
+                                    </button>
+                                }
+
+                                <script>
+                                    function SetDets(doc, assypn, assydesc, rev, after, logDoc, logRev, dtype, obstat)
+                                    {
+                                        if (after === 'T')
+                                        {
+                                            document.getElementById('editDetLogType').innerHTML = 'Test Equipment Log';
+                                        }
+                                        else if (after === 'C')
+                                        {
+                                            document.getElementById('editDetLogType').innerHTML = 'Configuration Log';
+                                        }
+                                        else
+                                        {
+                                            document.getElementById('editDetLogType').innerHTML = 'None';
+                                            document.getElementById('editDetLogDocNo').removeAttribute('required');
+                                            document.getElementById('editDetLogRevNo').removeAttribute('required');
+                                            document.getElementById('logDocDiv').style.display = 'none';
+                                            document.getElementById('logRevDiv').style.display = 'none';
+                                        }
+
+                                        document.getElementById('editDetDocNo').value = doc;
+                                        document.getElementById('editDetAssyPN').value = assypn;
+                                        document.getElementById('editDetAssyDesc').value = assydesc
+                                        document.getElementById('editDetRevNo').value = rev;
+                                        document.getElementById('editDetLogType').value = after;
+                                        document.getElementById('editDetLogDocNo').value = logDoc;
+                                        document.getElementById('editDetLogRevNo').value = logRev;
+                                        document.getElementById('editDetDocType').value = dtype;
+
+                                        var ob = document.getElementById('obsoleteId');
+
+                                        if (obstat === 'True'){
+                                            ob.value = 'true';
+                                            ob.innerHTML = 'Yes';
+                                        }
+                                        else{
+                                            ob.value = 'false';
+                                            ob.innerHTML = 'No';
+                                        }
+                                    }
+                                </script>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function OrigName(userId, docno)
+    {
+        $(function () {
+            $.ajax({
+                url: '@Url.Action("GetOrigName", "Home")',
+                data: {userId: userId},
+                success: function (response) {
+                    document.getElementById('currentowner').innerHTML = response.Name;
+                    $('#coDocNoo').val(docno);
+                }
+            });
+        });
+    }
+</script>
+
+<div class="modal fade" data-bs-backdrop="static" id="changeownermodal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <div class="modal-title d-flex text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-fill-gear my-auto" viewBox="0 0 16 16">
+                        <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h5.256A4.493 4.493 0 0 1 8 12.5a4.49 4.49 0 0 1 1.544-3.393C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Zm9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382l.045-.148ZM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z" />
+                    </svg>
+                    <p class="fs-5 fw-bold my-auto mx-2">Change Owner</p>
+                </div>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-controller="MTI" asp-action="ChangeDocOwner">
+                <div class="modal-body">
+                    <div class="d-flex justify-content-around">
+                        <div>
+                            <label class="form-label">Document No.</label>
+                            <input class="form-control" id="coDocNoo" name="docNo" required readonly />
+                        </div>
+                        <div class="mx-1"></div>
+                        <div>
+                            <label class="form-label">Owner</label>
+                            <select class="form-select" name="docOwner" limit>
+                                <option id="currentowner" selected hidden></option>
+                                @foreach (string orig in Model.Originators)
+                                {
+                                    <option>@orig</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary d-flex">
+                        <p class="mx-1 my-auto">Submit</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-plus-fill my-auto" viewBox="0 0 16 16">
+                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                            <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z" />
+                        </svg>                       
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" id="editDetModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <div class="modal-title d-flex text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill my-auto" viewBox="0 0 16 16">
+                        <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                    </svg>
+                    <p class="fs-5 fw-bold my-auto mx-2">Edit Document Details</p>
+                </div>               
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-controller="MTI" asp-action="EditDocumentDetails" asp-route-user="@accData[0]">
+            <input name="DocType" value="" id="editDetDocType" hidden required/>
+                <div class="modal-body row">
+                    <div class="col-6">
+                        <div>
+                            <label class="form-label">Document Number</label>
+                            <input class="form-control" name="DocumentNumber" value="" id="editDetDocNo" required readonly />
+                        </div>
+                        <div>
+                            <label class="form-label">Assembly Part Number</label>
+                            <input class="form-control" name="AssemblyPN" value="" id="editDetAssyPN" required />
+                        </div>
+                        <div>
+                            <label class="form-label">Assembly Description</label>
+                            <input class="form-control" name="AssemblyDesc" value="" id="editDetAssyDesc" required />
+                        </div>
+                        <div>
+                            <label class="form-label">Revision Number</label>
+                            <input class="form-control" name="RevNo" value="" id="editDetRevNo" required />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div>
+                            <label class="form-label">Obsolete?</label>
+                            <select class="form-select" name="ObsoleteStat">
+                                <option value="" id="obsoleteId" selected hidden></option>
+                                <option value="false">No</option>
+                                <option value="true">Yes</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label">Logsheet Type</label>
+                            <select class="form-select" name="AfterTravLog" onchange="ChangeLogType(this.value)" required>
+                                <option id="editDetLogType" selected hidden></option>
+                                <option value="N">None</option>
+                                <option value="C">Configuration Log</option>
+                                <option value="T">Test Equipment Log</option>
+                            </select>
+                            <script>
+                                function ChangeLogType(logType) {
+                                    if (logType === 'N') {
+                                        document.getElementById('logDocDiv').style.display = 'none';
+                                        document.getElementById('logRevDiv').style.display = 'none';
+                                        document.getElementById('editDetLogDocNo').removeAttribute('required');
+                                        document.getElementById('editDetLogRevNo').removeAttribute('required');
+                                        document.getElementById('editDetLogDocNo').value = '';
+                                        document.getElementById('editDetLogRevNo').value = '';
+                                    }
+                                    else {
+                                        document.getElementById('logDocDiv').style.display = 'block';
+                                        document.getElementById('logRevDiv').style.display = 'block';
+                                        document.getElementById('editDetLogDocNo').setAttribute('required', 'true');
+                                        document.getElementById('editDetLogRevNo').setAttribute('required', 'true');
+                                    }
+                                }
+                            </script>
+                        </div>
+                        <div id="logDocDiv">
+                            <label class="form-label">Logsheet Document Control Number</label>
+                            <input class="form-control" name="LogsheetDocNo" value="" id="editDetLogDocNo" required />
+                        </div>
+                        <div id="logRevDiv">
+                            <label class="form-label">Logsheet Revision Number</label>
+                            <input class="form-control" name="LogsheetRevNo" value="" id="editDetLogRevNo" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#myTable').DataTable({
+        searching: true,
+        lengthChange: false,
+        pageLength: 7,
+        order: [],
+        ordering: false,
+        responsive: true,
+    });
+</script>

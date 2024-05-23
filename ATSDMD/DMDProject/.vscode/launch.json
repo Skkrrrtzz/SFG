@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C#: DMD_Prototype",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}\\DMD_Prototype.csproj",
+            "launchConfigurationId": "TargetFramework=;DMD_Prototype"
+        }
+    ],
+    "launchSettingsPrpfile": "IIS Express"
+}

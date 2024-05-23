@@ -1,0 +1,255 @@
+﻿@{
+    ViewData["Title"] = "Upload Documents";
+    string? subj = TempData["Subj"] as string;
+    string? type = TempData["DocType"] as string;
+    string[]? EN = TempData["EN"] as string[];
+    TempData.Keep();
+}
+@if (!string.IsNullOrEmpty(TempData["Error"] as string) && TempData["Error"] != null)
+{
+    <div class="alert alert-danger mt-1 border-3" role="alert">@TempData["Error"].ToString()</div>
+}
+<form asp-controller="MTI" asp-action="CreateMTI" asp-route-originator="@EN[0]" enctype="multipart/form-data" id="uploaddocumentform">
+    <input value="@type" name="doctype" hidden />
+    <input value="@subj" name="product" hidden/>
+<div class="container-fluid">
+    <div class="w-100 card border-dark border-3">
+        <div class="card-body d-flex justify-content-evenly">
+            <div class="d-flex mx-1">
+                <label class="form-label my-auto mx-1 text-nowrap text-danger">Doc #:</label>
+                <div class="d-flex align-items-center">
+                    <input class="form-control" type="text" name="documentnumber" id="docnumber" placeholder="Required" required autocomplete="off"/>
+                    <button class="btn btn-primary mx-1 h-100" type="button" id="checkdocno">
+                       <div class="d-flex align-items-center h-100">
+                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-binoculars" viewBox="0 0 16 16">
+                                <path d="M3 2.5A1.5 1.5 0 0 1 4.5 1h1A1.5 1.5 0 0 1 7 2.5V5h2V2.5A1.5 1.5 0 0 1 10.5 1h1A1.5 1.5 0 0 1 13 2.5v2.382a.5.5 0 0 0 .276.447l.895.447A1.5 1.5 0 0 1 15 7.118V14.5a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 14.5v-3a.5.5 0 0 1 .146-.354l.854-.853V9.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v.793l.854.853A.5.5 0 0 1 7 11.5v3A1.5 1.5 0 0 1 5.5 16h-3A1.5 1.5 0 0 1 1 14.5V7.118a1.5 1.5 0 0 1 .83-1.342l.894-.447A.5.5 0 0 0 3 4.882zM4.5 2a.5.5 0 0 0-.5.5V3h2v-.5a.5.5 0 0 0-.5-.5zM6 4H4v.882a1.5 1.5 0 0 1-.83 1.342l-.894.447A.5.5 0 0 0 2 7.118V13h4v-1.293l-.854-.853A.5.5 0 0 1 5 10.5v-1A1.5 1.5 0 0 1 6.5 8h3A1.5 1.5 0 0 1 11 9.5v1a.5.5 0 0 1-.146.354l-.854.853V13h4V7.118a.5.5 0 0 0-.276-.447l-.895-.447A1.5 1.5 0 0 1 12 4.882V4h-2v1.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5zm4-1h2v-.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5zm4 11h-4v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5zm-8 0H2v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5z"/>
+                            </svg>
+                       </div>
+                    </button>
+                </div>
+            </div>
+            <div class="d-flex mx-1">
+                <label class="form-label my-auto mx-1 text-nowrap text-danger">Assy #:</label>
+                <input class="form-control" name="assynumber" type="text" id="apn" placeholder="Required" required autocomplete="off" />
+            </div>
+            <div class="d-flex mx-1">
+                <label class="form-label my-auto mx-1 text-nowrap text-danger">Assy. Desc:</label>
+                <input class="form-control" type="text" name="assydesc" id="ad" placeholder="Required" required autocomplete="off" />
+            </div>
+            <div class="d-flex mx-1">
+                <label class="form-label my-auto mx-1 text-nowrap text-danger">Rev. #:</label>
+                <input class="form-control" type="text" name="revnumber" id="rn" placeholder="Required" required autocomplete="off" />
+            </div>
+            <button class="btn btn-primary" type="submit" id="submitform" disabled>Submit</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-5">
+            <div class="card w-100 h-auto mt-2">
+                <div class="card-header bg-primary text-white">
+                    <p class="text-center card-title my-auto fs-5 fw-bold">Documents</p>
+                </div>
+                <div class="card-body" style="overflow-y:auto; max-height:450px">
+                        <div class="my-2 w-100">
+                            <div class="d-flex">
+                                <label class="form-label my-auto w-100 text-danger">
+                                    @{
+                                        Write(type + " Document");
+                                    }
+                                </label>
+                            </div>
+                            <input class="form-control w-100" type="file" name="mpti" accept=".pdf" id="mpti" required />
+                        </div>
+                        <div class="my-2 w-100" style="border-top:2px dotted;">
+                            <div class="d-flex">
+                                <label class="form-label my-auto w-100">
+                                    Assembly Drawing
+                                </label>
+                            </div>
+                            <input class="form-control w-100" type="file" name="assemblydrawing" id="assydrawing" accept=".pdf" />
+
+                        </div>
+                        <div class="my-2 w-100" style="border-top:2px dotted;">
+                            <div class="d-flex">
+                                <label class="form-label my-auto w-100">
+                                    Bills Of Material
+                                </label>
+                            </div>
+                            <input class="form-control w-100" type="file" name="billsofmaterial" id="bom" accept=".pdf" />
+
+                        </div>
+                        <div class="my-2 w-100" style="border-top:2px dotted;">
+                            <div class="d-flex">
+                                <label class="form-label my-auto w-100">
+                                    Schematic Diagram
+                                </label>                               
+                            </div>
+                            <input class="form-control w-100" type="file" name="schematicdiagram" id="schema" accept=".pdf" />
+
+                        </div>
+                        <div class="my-2 w-100" style="border-top:2px dotted;">
+                            <div class="d-flex">
+                                <label class="form-label my-auto w-100">
+                                    O.P.L (Multiple or None)
+                                </label>
+                            </div>
+                            <input class="form-control w-100" type="file" name="onepointlesson" id="opls" accept=".pdf" multiple />
+
+                        </div>
+                        <div class="w-100 my-2" style="border-top:2px dotted;">
+                            <div class="d-flex">
+                                <label class="form-label my-auto w-100">
+                                    PRCO (Multiple or None)
+                                </label>
+                            </div>
+                            <input class="form-control w-100" type="file" name="prco" accept=".pdf" id="prcos" multiple />
+
+                        </div>
+                        <div class="w-100 my-2" style="border-top:2px dotted;">
+                            <label class="form-label my-auto w-100">
+                                Derogation (Multiple or None)
+                            </label>
+                            <input class="form-control w-100" type="file" name="derogation" accept=".pdf" id="derogs" multiple />
+                        </div>
+                        <div class="w-100 my-2" style="border-top:2px dotted;">
+                            <div class="d-flex">
+                                <label class="form-label my-auto w-100">
+                                    MEMO (Multiple or None)
+                                </label>
+                            </div>
+                            <input class="form-control w-100" type="file" name="engineeringmemo" accept=".pdf" id="memos" multiple />
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+            <div class="card w-100 h-100 mt-2">
+                <div class="card-header text-white bg-primary">
+                    <p class="card-title my-auto fs-5 fw-bold text-center">More</p>
+                </div>
+                <div class="card-body">
+                    <div class="flex-column">
+                        <label class="form-label">Action After Traveler</label>
+                        <select class="form-select" name="afterTrav" onchange="CheckAfterTrav(this.value)" required>
+                            <option selected hidden value="N">None</option>
+                            <option value="N">None</option>
+                            <option value="C">Configuration Logsheet</option>
+                            <option value="T">Test Equipment Log</option>
+                        </select>
+                    </div>
+                    <div id="logsheetDiv" style="display: none">
+                        <div class="my-4">
+                            <label class="form-label">Logsheet Document Control Number</label>
+                            <input class="form-control" name="logsheetDocNo" value="" id="editDetLogDocNo"/>
+                        </div>
+                        <div>
+                            <label class="form-label">Logsheet Revision Number</label>
+                            <input class="form-control" name="logsheetRevNo" value="" id="editDetLogRevNo" />
+                        </div>
+                    </div>
+                    <div class="mt-5">
+                        <i>Note: Please Select which logsheet should be asked to the technicians after their traveler.</i>
+                    </div>
+                </div>            
+            </div>
+        </div>
+        <div class="col-md-12 col-lg-3">
+            <div class="card w-100 h-100 mt-2">
+                <div class="card-header text-white bg-primary">
+                    <p class="card-title fs-5 fw-bold text-center my-auto">Traveler</p>
+                </div>
+                <div class="card-body" style="max-height:400px; overflow-y:auto">
+                    <div class="d-flex">
+                        <label class="form-label my-auto">Template:</label>
+                        <a class="btn btn-success mx-auto" asp-controller="DocGenerator" asp-action="DownloadTravelerTemplate" asp-route-whichTraveler="mtiFileDir">MTI Traveler</a>
+                            <a class="btn btn-success mx-auto" asp-controller="DocGenerator" asp-action="DownloadTravelerTemplate" asp-route-whichTraveler="mpiFileDir">MPI Traveler</a>
+                    </div>
+                    <hr />
+                    <div class="flex-column my-3">
+                        <label class="form-label text-danger">Traveler</label>
+                        <input class="form-control" type="file" accept=".xlsx" name="TravelerFile" id="traveler" required />
+                    </div>
+                    <div class="mt-5">
+                        <i>Note: Please follow the proper template for traveler.</i>
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
+</form>
+
+<script>
+    function CheckAfterTrav(val)
+    {
+        var docNoInput = document.getElementById('editDetLogDocNo');
+        var revNoInput = document.getElementById('editDetLogRevNo');
+        var logSheetDiv = document.getElementById('logsheetDiv');
+
+        if (val === 'N') {
+            logSheetDiv.style.display = 'none';
+            docNoInput.removeAttribute('required');
+            revNoInput.removeAttribute('required');
+            docNoInput.value = '';
+            revNoInput.value = '';
+        } else {
+            logSheetDiv.style.display = 'block';
+            docNoInput.setAttribute('required', '');
+            revNoInput.setAttribute('required', '');
+        }
+    }
+
+    $(function (){
+        $('#checkdocno').click(function (e){
+            e.preventDefault();
+
+            if (document.getElementById('docnumber').value !== '')
+            {
+                $.ajax({
+                    url: '@Url.Action("ValidateDocNo", "MTI")',
+                    data: { DocNo: document.getElementById('docnumber').value },
+                    success: function (r) {
+                        $('#checkmodal').modal('show');
+
+                        if (r.Failed === '') {
+                            document.getElementById('checkmodalbody').innerHTML = 'Document number does not exist, feel free to continue.';
+                            document.getElementById('checkdocno').setAttribute('disabled', 'disabled');
+                            document.getElementById('docnumber').readOnly = true;
+                            document.getElementById('submitform').disabled = false;
+                        }
+                        else {
+                            document.getElementById('checkmodalbody').innerHTML = r.Failed;
+                            document.getElementById('checkdocno').removeAttribute('disabled');
+                            $('#docnumber').val('');
+                            document.getElementById('docnumber').readOnly = false;
+                            document.getElementById('submitform').disabled = true;
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<div class="modal fade" data-bs-backdrop="static" id="checkmodal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <div class="modal-title d-flex">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-info-circle-fill my-auto" viewBox="0 0 16 16">
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+                    </svg>
+                    <p class="fs-5 fw-bold mx-2 my-auto">Information</p>
+                </div>
+            </div>
+            <div class="modal-body" id="checkmodalbody">
+                
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-bs-dismiss="modal">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,147 @@
+﻿@using PIMES_DMS.Controllers;
+@model ActionModel;
+@{
+    ViewData["Title"] = "Validate RCV";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var vers = ViewData["Vers"] as List<ShowVerification>;
+}
+
+<div class="container">
+    <form asp-controller="RCV" asp-action="VerRCV" enctype="multipart/form-data" method="post">
+        <input value="@Model.ActionID" name="id" hidden />
+        <input value="@Model.Type" name="type" hidden />
+        <input value="@Model.ControlNo" name="controlno" hidden />
+        <div class="w-100 d-flex justify-content-between mt-3">
+            <div>
+                <h1 class="my-auto"> Submit Action Item </h1>
+            </div>            
+        </div>
+
+        <hr />
+
+        <div class="w-100">
+            <table class="table table-bordered text-center table-hover">
+                <thead>
+                    <tr>
+                        <th>Action Item</th>
+                        <th>PIC</th>
+                        <th>Target Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="width:20%">
+                            <textarea style="max-height:auto; max-width:100%; min-height:auto; min-width:100%; background-color:transparent" readonly>@Model!.Action</textarea>
+                        </td>
+                        <td style="width:20%">
+                            @Model.PIC
+                        </td>
+                        <td style="width:20%">
+                            <div>
+                                <input class="form-control w-100 text-center" value="@Model.TargetDate.ToShortDateString()" readonly />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered text-center table-hover">
+                <thead>
+                    <tr>
+                        <th class="w-25">Status</th>
+
+                        <th id="statustext" class="w-25"> Date</th>
+
+                        <th class="w-25">Evidence</th>
+
+                        <th class="w-25">Result</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <select class="form-select" name="status" onchange="DateHandler(this.value)" id="closeoropen" required>
+                                <option value="Open">OPEN</option>
+                                <option value="Closed">CLOSED</option>
+                            </select>
+                        </td>
+                        <td><input class="form-control" type="date" name="statusDate" onchange="CheckDate(this.value)" required /></td>
+                        <td><input class="form-control" type="file" name="evidence" accept=".pdf" required></td>
+                        <td><textarea style="max-height:100%; max-width:100%; min-height:100%; min-width:100%; background-color:transparent" name="result"></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="align-self-center d-flex justify-content-end w-100 mt-4">
+            <input class="btn btn-primary w-25" type="submit" />
+        </div>
+    </form>
+</div>
+
+<div class="modal-content w-50 h-25 border-dark" id="wrongDate">
+    <button class="modal-close btn btn-danger" onclick="CloseWrongDate()">Close</button>
+    <h4 class="modal-title text-center text-warning">Warning!</h4>
+    <hr />
+    <div class="mt-2">
+        <input class="form-control text-center" value="Please select a future date." readonly />
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    var date = document.getElementById('dateclose');
+    var closeOropen = document.getElementById('closeoropen');
+    var st = document.getElementById('statustext');
+    st.innerHTML = 'Recommit Date'; 
+    date.style.display = "none";
+
+    function ShowWrongDate()
+    {
+        var WrongDate = document.getElementById('wrongDate');
+        WrongDate.style.display = 'block';
+    }
+
+    function CloseWrongDate()
+    {
+        var WrongDate = document.getElementById('wrongDate');
+        WrongDate.style.display = 'none';
+    }
+
+    function DateHandler(str)
+    {
+        if (closeOropen.value === "Closed") {
+
+            st.innerHTML = 'Closed Date';
+        }
+        else
+        {
+            st.innerHTML = 'Recommit Date';
+        }
+    }
+
+    function openDateClosed()
+    {
+        date.style.display = "flex";
+    }
+
+    function closeDateClosed()
+    {
+        date.style.display = "none";
+    }
+
+    function CheckDate(selectedDate) {
+        const currentDate = new Date();
+        const inputDate = new Date(selectedDate);
+
+        if (inputDate < currentDate && inputDate.getDate() !== currentDate.getDate()) {
+            ShowWrongDate();
+            document.getElementsByName("statusDate")[0].value = '';
+        }
+    }
+</script>
+

@@ -1,0 +1,423 @@
+﻿@model MTIModel
+
+@{
+
+    string[]? EN = TempData["EN"] as string[];
+    TempData.Keep();
+
+    ViewData["Title"] = "Edit Engineering Documents";
+
+    List<string>? opls = ViewBag.opl as List<string>;
+    List<string>? derogations = ViewBag.derogation as List<string>;
+    List<string>? prcos = ViewBag.prco as List<string>;
+    List<string>? memos = ViewBag.memo as List<string>;
+}
+
+<style>
+    .btn-original {
+        background-color: red;
+    }
+
+    .btn-alternate {
+        background-color: blue;
+    }
+
+</style>
+
+<div class="loader" id="loadingIcon"></div>
+
+<form asp-controller="MTI" asp-action="EditDocument" asp-route-user="@EN[0]" enctype="multipart/form-data" onsubmit="document.getElementById('loadingIcon').style.display = 'block'">
+    <div class="card mb-2">
+        <div class="card-body d-flex">
+            <div class="row w-100 justify-content-lg-around">
+                <div class="col-sm-12 col-md-6 d-flex justify-content-sm-center row">
+                    <div class="d-sm-flex d-lg-flex col-sm-12 col-lg-6">
+                        <label class="form-label text-nowrap my-auto mx-2">Document #:</label>
+                        <input class="form-control" value="@Model.DocumentNumber" name="docuno" required readonly />
+                    </div>
+                    <div class="d-sm-flex d-lg-flex col-sm-12 col-lg-6">
+                        <label class="form-label text-nowrap my-auto mx-2">Assembly Part #:</label>
+                        <input class="form-control" value="@Model.AssemblyPN" readonly />
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6 d-flex justify-content-sm-center row">
+                    <div class="d-sm-flex d-lg-flex col-sm-12 col-lg-6">
+                        <label class="form-label text-nowrap my-auto mx-2">Assembly Desc.:</label>
+                        <input class="form-control" value="@Model.AssemblyDesc" readonly />
+                    </div>
+                    <div class="d-sm-flex d-lg-flex col-sm-12 col-lg-6">
+                        <label class="form-label text-nowrap my-auto mx-2">Revision #:</label>
+                        <input class="form-control" value="@Model.RevNo" id="revNo" name="revNo" readonly />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-6">
+            <div class="card h-100">
+                <div class="card-header w-100 fw-bold text-center">
+                    Engineering Documents
+                </div>                
+                <div class="card-body w-100 row">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="flex-column">
+                                <div class="d-flex">
+                                    <label class="w-100 text-nowrap mt-auto my-auto">Email option: </label>
+                                    <select class="form-select mx-2" name="emailPL" onchange="EmailOption(this.value)" required>
+                                        <option selected hidden value="">Please select</option>
+                                        <option value="true">Email PL/s</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                    <button class="btn btn-sm btn-primary" id="remarkbtn" type="button" data-bs-toggle="modal" data-bs-target="#remarkmodal" hidden>Remarks</button>
+
+                                    <script>
+
+                                        function EmailOption(opt){
+                                            if (opt === 'true') {
+                                                document.getElementById('remarkbtn').removeAttribute('hidden');
+                                            }
+                                            else{
+                                                document.getElementById('remarkbtn').setAttribute('hidden', '');
+                                            }
+                                        }
+                                    </script>
+
+                                    <div class="modal fade" data-bs-backdrop="static" id="remarkmodal">
+                                        <div class="modal-dialog modal-dialog-centered modal-sm">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-primary">
+                                                    <p class="modal-title fs-5 fw-bold text-white">Remarks</p>
+                                                    <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <textarea class="form-control" style="height: 100%; width:100%" name="remarks"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex">
+                                    <label class="w-100 text-nowrap mt-auto my-auto">Upload Type:</label>
+                                    <select class="form-select w-100 mx-2" name="mtpistatus" onchange="DocStatChange(this.value)">
+                                        @{
+                                            string currentStatus = Model.MTPIStatus == 'c' ? "Controlled" : "Interim";
+
+                                        }
+                                        <option selected hidden value="@Model.MTPIStatus">@currentStatus</option>
+                                        <option value="c">Controlled</option>
+                                        <option value="i">Interim</option>
+                                    </select>
+                                </div>
+                                <div class="d-flex">
+                                    <div class="d-flex w-100">
+                                        <label class="w-100 text-nowrap mt-auto">MPI/MTI: </label>
+                                        
+                                    </div>                                   
+                                </div>
+                                <input class="form-control w-100" type="file" name="mpti" accept=".pdf" />
+                            </div>
+                            <div class="flex-column">
+                                <label class="w-100 text-nowrap">BOM: </label>
+                                <input class="form-control" type="file" name="bom" accept=".pdf" />
+                            </div>
+                            <div class="flex-column">
+                                <label class="w-100 text-nowrap">Assembly Drawing: </label>
+                                <input class="form-control" type="file" name="drawing" accept=".pdf" />
+                            </div>
+                            <div class="flex-column">
+                                <label class="w-100 text-nowrap">Schematic Diagram: </label>
+                                <input class="form-control" type="file" name="schema" accept=".pdf" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="">
+                                <div>
+                                    <i>Note: By uploading a new MPI/MTI, PRCO, Derogation and/or Memo the system will automatically replace existing documents in the system. Take your time on uploading documents.</i>
+                                </div>
+                                <div>
+                                    <i class="text-danger">Do not edit documents or upload when system is in use by technicians. Try uploading when technicians are no longer working with the system.</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mt-md-2 mt-lg-0">
+            <div class="card h-100">
+                <div class="card-header w-100 fw-bold text-center">
+                    Deviation Documents
+                </div>
+                <div class="card-body">
+                    <div>
+                        <label class="form-label">One Point Lesson</label>
+                        <div class="d-flex justify-content-between">
+                            <input class="form-control" type="file" name="opl" multiple accept=".pdf"/>
+                            <button class="btn btn-primary mx-2" type="button" data-bs-toggle="modal" data-bs-target="#deviationModal" onclick="SelectWhichDev('o')">Show</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">Derogation</label>
+                        <div class="d-flex justify-content-between">
+                            <input class="form-control" type="file" name="derogation" multiple accept=".pdf" />
+                            <button class="btn btn-primary mx-2" type="button" data-bs-toggle="modal" data-bs-target="#deviationModal" onclick="SelectWhichDev('d')">Show</button>
+                        </div>
+                    </div>
+                     <div>
+                        <label class="form-label">PRCO</label>
+                        <div class="d-flex justify-content-between">
+                            <input class="form-control" type="file" name="prco" multiple accept=".pdf" />
+                            <button class="btn btn-primary mx-2" type="button" data-bs-toggle="modal" data-bs-target="#deviationModal" onclick="SelectWhichDev('p')">Show</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label">Memo</label>
+                        <div class="d-flex justify-content-between">
+                            <input class="form-control" type="file" name="memo" multiple accept=".pdf" />
+                            <button class="btn btn-primary mx-2" type="button" data-bs-toggle="modal" data-bs-target="#deviationModal" onclick="SelectWhichDev('m')">Show</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3 mt-sm-2 mt-lg-0">
+            <div class="card h-100">
+                <div class="card-header w-100 fw-bold text-center">
+                    Traveler
+                </div>
+                <div class="card-body">
+                    <div>
+                        <label class="form-label">Traveler</label>
+                        <input class="form-control" type="file" name="travFile" accept=".xlsx"/>
+                    </div>
+                    <div class="mt-5">
+                        <i>NOTE: As an originator, you will be given a template for the traveler. Please follow the steps given by the developer.</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card my-3">
+        <div class="card-body d-flex justify-content-evenly">
+            <input class="w-auto btn btn-primary" onclick="" type="submit" />
+        </div>
+    </div>
+
+    <script>
+
+        window.onload = DocStatChange('@Model.MTPIStatus');
+
+        function DocStatChange(str) {
+            var RevNo = document.getElementById('revNo');
+            if (str === 'c'){
+                RevNo.setAttribute('required', '');
+                RevNo.removeAttribute('readonly');
+                RevNo.placeholder = RevNo.value;
+                RevNo.value = '';               
+            }
+            else{
+                RevNo.setAttribute('readonly', '');
+                RevNo.value = '@Model.RevNo';
+            }
+        }
+
+        function SelectWhichDev(dev)
+        {
+            switch (dev)
+            {
+                case 'o':
+                {
+                    document.getElementById('oplDiv').style.display = 'block';
+                    document.getElementById('derogDiv').style.display = 'none';
+                    document.getElementById('prcoDiv').style.display = 'none';
+                    document.getElementById('memoDiv').style.display = 'none';
+                    document.getElementById('devTit').innerHTML = 'One Point Lesson/s';
+                    break;
+                }
+                case 'd':
+                {
+                    document.getElementById('oplDiv').style.display = 'none';
+                    document.getElementById('derogDiv').style.display = 'block';
+                    document.getElementById('prcoDiv').style.display = 'none';
+                    document.getElementById('memoDiv').style.display = 'none';
+                    document.getElementById('devTit').innerHTML = 'Derogation/s';
+                    break;
+                }
+                case 'p':
+                {
+                    document.getElementById('oplDiv').style.display = 'none';
+                    document.getElementById('derogDiv').style.display = 'none';
+                    document.getElementById('prcoDiv').style.display = 'block';
+                    document.getElementById('memoDiv').style.display = 'none';
+                    document.getElementById('devTit').innerHTML = 'PRCO/s';
+                    break;
+                }
+                case 'm':
+                {
+                    document.getElementById('oplDiv').style.display = 'none';
+                    document.getElementById('derogDiv').style.display = 'none';
+                    document.getElementById('prcoDiv').style.display = 'none';
+                    document.getElementById('memoDiv').style.display = 'block';
+                    document.getElementById('devTit').innerHTML = 'Memo/s';
+                    break;
+                }
+                default:
+                {
+                    document.getElementById('oplDiv').style.display = 'bnone';
+                    document.getElementById('derogDiv').style.display = 'none';
+                    document.getElementById('prcoDiv').style.display = 'none';
+                    document.getElementById('memoDiv').style.display = 'none';
+                    document.getElementById('devTit').innerHTML = '';
+                    break;
+                }
+            }
+        }
+    </script>
+
+    <div class="modal fade" data-bs-backdrop="static" id="deviationModal">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <p class="modal-title text-center text-white fs-5 fw-bold" id="devTit"></p>
+                    <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="flex-column">
+                        <div id="oplDiv" class="flex-column">
+                            @{
+                                foreach (string path in opls)
+                                {
+                                    string dirHere = System.IO.Path.GetFileName(path);
+                                    dirHere = dirHere.Replace("(o)", "");
+
+                                        <div class="d-flex justify-content-between my-2">
+                                            <button class="btn btn-primary w-75" type="button" onclick="OpenPDF('@dirHere')">@dirHere</button>
+
+                                            <button class="btn btn-danger" type="button" onclick="ToggleBackgroundColor(this, '@Html.Encode(System.IO.Path.GetFileName(path))', 'oplDiv')">Delete</button>
+                                        </div>
+                                }
+                            }
+                        </div>
+                        <div id="derogDiv" class="flex-column">
+                            @{
+                                foreach (string path in derogations)
+                                {
+                                    string dirHere = System.IO.Path.GetFileName(path);
+                                    dirHere = dirHere.Replace("(d)", "");
+
+                                        <div class="d-flex justify-content-between my-2">
+                                            <button class="btn btn-primary w-75" type="button" onclick="OpenPDF('@dirHere')">@dirHere</button>
+
+                                            <button class="btn btn-danger" type="button" onclick="ToggleBackgroundColor(this, '@Html.Encode(System.IO.Path.GetFileName(path))', 'derogDiv')">Delete</button>
+                                        </div>
+                                }
+                            }
+                        </div>
+                        <div id="prcoDiv" class="flex-column">
+                            @{
+                                foreach (string path in prcos)
+                                {
+                                    string dirHere = System.IO.Path.GetFileName(path);
+                                    dirHere = dirHere.Replace("(p)", "");
+
+                                        <div class="d-flex justify-content-between my-2">
+                                            <button class="btn btn-primary w-75" type="button" onclick="OpenPDF('@dirHere')">@dirHere</button>
+
+                                            <button class="btn btn-danger" type="button" onclick="ToggleBackgroundColor(this, '@Html.Encode(System.IO.Path.GetFileName(path))', 'prcoDiv')">Delete</button>
+                                        </div>
+                                }
+                            }
+                        </div>
+                        <div id="memoDiv" class="flex-column">
+                            @{
+                                foreach (string path in memos)
+                                {
+                                    string dirHere = System.IO.Path.GetFileName(path);
+                                    dirHere = dirHere.Replace("(m)", "");
+
+                                    <div class="d-flex justify-content-between my-2">
+                                            <button class="btn btn-primary w-75" type="button" onclick="OpenPDF(this.innerText)">@Html.Raw(dirHere)</button>
+                                            <button class="btn btn-danger" type="button" onclick="ToggleBackgroundColor(this, '@Html.Encode(System.IO.Path.GetFileName(path))', 'memoDiv')">Delete</button>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    let dirsToBeDeleted = [];
+
+    function OpenPDF(path) {
+
+        $('#showPdf').modal('show');
+
+        var frame = document.getElementById('showPdfIframe');
+
+        frame.src = '';
+        frame.src = '@Url.Action("ShowDoc", "MTI", new { docunumber = Model.DocumentNumber })' + '&whichDoc=' + path;
+    }
+
+    function ToggleBackgroundColor(button, dir, div) {
+
+        if (button.classList.contains('btn-danger')) {
+            button.classList.remove('btn-danger');
+            button.classList.add('btn-primary');
+            button.innerHTML = 'Undo';
+            PushToDirectory(div, dir);
+        } else {
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-danger');
+            button.innerHTML = 'Delete';
+            RemoveFromDirectory(div);
+        }        
+    }
+
+    function RemoveFromDirectory(div)
+    {
+        var putinputs = document.getElementById(div);
+        var inputField = putinputs.querySelector('input[name="DirsToBeDeleted"]');
+        if (inputField) {
+            putinputs.removeChild(inputField);
+        }
+    }
+
+    function PushToDirectory(div, dir)
+    {
+        var inputField = document.createElement('input');
+        inputField.name = 'DirsToBeDeleted';
+        inputField.value = unescapeSpecialCharacters(dir);
+        inputField.type = 'hidden';
+        document.getElementById(div).appendChild(inputField);
+    }
+
+    function unescapeSpecialCharacters(input) {
+        return input.replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"')
+            .replace(/&#x27;/g, "'");
+    }
+</script>
+
+<div class="modal fade" data-bs-backdrop="static" id="showPdf" style="z-index:2001">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <p id="docTit"></p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <iframe class="w-100" id="showPdfIframe" style="height:600px"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+

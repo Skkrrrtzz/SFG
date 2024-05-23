@@ -1,0 +1,98 @@
+﻿@model IEnumerable<PIMES_DMS.Models.IssueModel>
+
+@{
+    ViewData["Title"] = "List of Claims";
+    var mod = Model.OrderByDescending(j => j.DateCreated).ToList();
+
+    string? Role = TempData["Role"] as string;
+    TempData.Keep();
+
+}
+@section scripts {
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" />
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                searching: true,
+                lengthChange: false,
+                pageLength: 4,
+                order: [],
+                ordering: false
+            });
+        });
+    </script>
+}
+
+<div class="container">
+    <h1 class="w-100 text-center">Claims List</h1>
+    <hr />
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center align-content-center table-hover" id="myTable">
+            <thead>
+                <tr>
+                    <th>
+                        Issue#
+                    </th>
+                    <th>
+                        Creator
+                    </th>
+                    <th>
+                        Found
+                    </th>
+                    <th>
+                        Created
+                    </th>
+                    <th>
+                        Product
+                    </th>
+                    <th>
+                        Problem Description
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in mod)
+                {
+                    <tr class="text-wrap">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IssueNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IssueCreator)
+                        </td>
+                        <td>
+                            @item.DateFound.ToShortDateString()
+                        </td>
+                        <td>
+                            @item.DateCreated.ToShortDateString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product)
+                        </td>
+                        <td class="w-25">
+                            <textarea class="w-100" style="min-height:40px; max-height:100px" readonly>@item.ProbDesc</textarea>
+                        </td>
+                        <td class="text-nowrap">
+                            <div class="d-flex">
+                                @{
+                                    string textSetter = "Details";
+
+                                    if (Role == "Admin")
+                                    {
+                                        textSetter = "Acknowledge";
+                                        <a class="btn btn-success w-75 mx-2" asp-controller="Issue" asp-action="EditIssueView" asp-route-id="@item.IssueID">Edit</a>
+                                    }
+                                }
+                                <a class="btn btn-primary w-75" asp-controller="Issue" asp-action="IssueDetails" asp-route-id="@item.IssueID">@textSetter</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

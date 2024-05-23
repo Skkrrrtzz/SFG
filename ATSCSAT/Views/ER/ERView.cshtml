@@ -1,0 +1,85 @@
+﻿@model IEnumerable<PIMES_DMS.Models.IssueModel>
+
+@{
+    ViewData["Title"] = "C.R List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var mod = Model.OrderByDescending(j => j.DateCreated).ToList();
+
+    string? Role = TempData["Role"] as string;
+    TempData.Keep();
+}
+
+@section scripts {
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" />
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                searching: true,
+                lengthChange: false,
+                pageLength: 5,
+                ordering: false
+            });
+        });
+    </script>
+}
+
+<div class="container">
+    <div class="w-100">
+        <h1 class="text-center">Containment Reports</h1>
+    </div>
+    <hr />
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover" id="myTable">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.IssueNo)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ControlNumber)
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in mod)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IssueNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ControlNumber)
+                        </td>
+                        <td>
+                            <textarea class="text-dark bg-transparent" style="max-height: 100%; max-width:100%; min-width:100%; min-height:100%; border-color:transparent" readonly>@item.ProbDesc</textarea>
+                        </td>
+                        <td>
+                            @{
+                                if (Role == "Admin")
+                                {
+                                    <div class="d-flex">
+                                        <a class="btn btn-success w-100" asp-controller="ER" asp-action="EditERView" asp-route-id="@item.IssueNo">Edit</a>
+                                        <a class="btn btn-primary w-100" asp-controller="ER" asp-action="ERDet" asp-route-id="@item.IssueNo">Details</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-primary w-100" asp-controller="ER" asp-action="ERDet" asp-route-id="@item.IssueNo">Details</a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

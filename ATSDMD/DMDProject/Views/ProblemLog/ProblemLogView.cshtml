@@ -1,0 +1,943 @@
+﻿@model IEnumerable<DMD_Prototype.Controllers.ProblemLogViewModel>
+
+@{
+    ViewData["Title"] = "Problem Logs";
+    string[]? EN = TempData["EN"] as string[];
+    TempData.Keep();
+
+    string idtcd;
+    string sdtcd;
+}
+
+<script>
+    $(document).ready(function () {
+        $('#plTable').DataTable({
+            searching: true,
+            lengthChange: false,
+            pageLength: 8,
+            order: [],
+            ordering: false
+        });
+    });
+</script>
+<div class="loader" id="loadingIcon"></div>
+<div>
+    <div class="container-fluid">
+        <div class="row justify-content-between">
+            <div class="col-sm-12 col-md-3 justify-content-start">
+                <button class="btn btn-primary d-flex text-nowrap" data-bs-toggle="modal" data-bs-target="#downloadmodal" id="exportplbtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill my-auto" viewBox="0 0 16 16">
+                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z" />
+                    </svg>
+                    Export Problem Log
+                </button>
+            </div>
+           <div class="col-sm-12 col-md-4">
+                <i class="text-end w-100">NOTE: Click a row to see complete details.</i>
+           </div>
+        </div>       
+    </div>
+    <div class="modal fade" data-bs-backdrop="static" id="downloadmodal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <p class="modal-title fs-5 fw-bold text-white">Download Problem Log</p>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-3 col-lg-2">
+                            <button class="btn btn-primary mx-2 text-nowrap" onclick="ExportBtn('Year')">This Year</button>
+                        </div>
+                        <div class="col-3 col-lg-2">
+                            <button class="btn btn-primary mx-2 text-nowrap" onclick="ExportBtn('Month')">This Month</button>
+                        </div>
+                        <div class="row col-12 my-2">
+                            <div class="d-flex col-12 col-md-4">
+                                <label class="form-label my-auto mx-2">From: </label>
+                                <input type="date" class="form-control" name="from" id="from" />
+                            </div>
+                            <div class="d-flex col-12 col-md-4">
+                                <label class="form-label my-auto mx-2">To: </label>
+                                <input type="date" class="form-control" name="to" id="to" />
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <button class="btn btn-primary w-100" onclick="ExportBtn('Range')">Download</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        if ('@EN[1]' === 'VIEWER') {
+            document.getElementById('exportplbtn').disabled = true;
+        }
+    </script>
+
+    <script>
+        function ExportBtn(selection){
+            $(function (){
+                if (selection === 'Range'){
+                    var from = document.getElementById('from').value;
+                    var to = document.getElementById('to').value;
+
+                    if (from === '' || to === '') {
+                        $('#exportmodal').modal('show');
+                        document.getElementById('exportmodalbody').innerHTML = 'Please select From and To dates, both fields are cleared.';
+                        $('#from').val('');
+                        $('#to').val('');
+
+                        return;
+                    }
+
+                    $.ajax({
+                        url: '@Url.Action("CheckForPLData", "ProblemLog")',
+                        data: {selection: selection, from: from, to: to},
+                        success: function (r) {
+                            $('#from').val('');
+                            $('#to').val('');
+                            if (r.stat === false)
+                            {
+                                $('#exportmodal').modal('show');
+                                document.getElementById('exportmodalbody').innerHTML = r.message;
+                            }
+                            else{
+                                $('#exportmodal').modal('show');
+                                document.getElementById('exportmodalbody').innerHTML = r.message;
+                                window.location.href = '@Url.Action("DownloadFile", "ProblemLog")' + '?selection=' + selection + '&from=' + from + '&to=' + to;
+                            }                          
+                        }
+                    });
+                }
+                else{
+                    $.ajax({
+                        url: '@Url.Action("CheckForPLData", "ProblemLog")',
+                        data: { selection: selection },
+                        success: function (r) {
+                            if (r.stat === false) {
+                                $('#exportmodal').modal('show');
+                                document.getElementById('exportmodalbody').innerHTML = r.message;
+                            }
+                            else {
+                                $('#exportmodal').modal('show');
+                                document.getElementById('exportmodalbody').innerHTML = r.message;
+                                window.location.href = '@Url.Action("DownloadFile", "ProblemLog")' + '?selection=' + selection;
+                            }
+                        }
+                    });
+                }
+
+                $('#downloadmodal').modal('hide');
+            });
+        }
+    </script>
+
+    <div class="modal fade" data-bs-backdrop="static" id="exportmodal">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <div class="d-flex">
+                        <div class="my-auto mx-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="my-auto fs-5 fw-bold">Information</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p id="exportmodalbody"></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" data-bs-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover text-nowrap text-center" id="plTable">
+            <thead class="table-primary">
+                <tr>
+                    <th class="border-1 border-dark bg-danger">
+                        PL No.
+                    </th>
+                    <th>
+                        Log Date
+                    </th>
+                    <th>
+                        Affected Doc.
+                    </th>
+                    <th>
+                        Category
+                    </th>
+                    <th class="bg-secondary">
+                        Interim Doc.
+                    </th>
+                    <th class="bg-secondary">
+                        TCD
+                    </th>
+                    <th class="bg-secondary">
+                        Status
+                    </th>
+                    <th class="bg-warning">
+                        Standardized Doc.
+                    </th>
+                    <th class="bg-warning">
+                        TCD
+                    </th>
+                    <th class="bg-warning">
+                        Status
+                    </th>
+                    <th>
+                        Status (I)
+                    </th>
+                    <th>
+                        Status (S)
+                    </th>
+                    <th class="bg-dark text-white">
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    string cellbg = "";
+                    idtcd = "";
+                    sdtcd = "";
+
+                    if (item.PL.Validation == "Invalid")
+                    {
+                        cellbg = "table-success";
+                    }
+                    else if (item.PL.Validation == "Valid")
+                    {
+                        cellbg = "table-danger";
+                        idtcd = item.PL.IDTCD.Value.ToShortDateString();
+                        sdtcd = item.PL.SDTCD.Value.ToShortDateString();
+                    }
+
+                    <tr class="border-1 border-dark @cellbg" data-bs-target="#plDetails" data-bs-toggle="modal" onclick="SetDets('@item.PL.PLNo', '@item.PL.LogDate', '@item.PL.WorkWeek', '@item.PL.AffectedDoc', '@item.PL.PNDN',
+'@item.PL.Desc', '@item.PL.Problem', '@item.PL.Reporter', '@item.PL.Category', '@item.PL.RC', '@item.PL.CA', '@item.PL.InterimDoc', '@idtcd', '@item.PL.IDStatus', '@item.PL.StandardizedDoc', '@sdtcd', '@item.PL.SDStatus',
+'@item.PL.Validator', '@item.PL.PLIDStatus', '@item.PL.PLSDStatus', '@item.PL.PLRemarks', '@item.PL.OwnerRemarks', '@item.PL.Validation')">
+
+                        <td class="border-1 border-dark">
+                            @Html.DisplayFor(modelItem => item.PL.PLNo)
+                        </td>
+                        <td>
+                            @item.PL.LogDate.ToShortDateString()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PL.AffectedDoc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PL.Category)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PL.InterimDoc)
+                        </td>
+                        <td>
+                            @if (item.PL.IDTCD != null)
+                            {
+                                Write(item.PL.IDTCD.Value.ToShortDateString());
+                            }
+                            else
+                            {
+                                Write("");
+                            }
+                        <td>
+                                @item.PL.IDStatus
+                        </td>
+                        <td>
+                                @Html.DisplayFor(modelItem => item.PL.StandardizedDoc)
+                        </td>
+                        <td>
+                            @if (item.PL.SDTCD != null)
+                            {
+                                Write(item.PL.SDTCD.Value.ToShortDateString());
+                            }
+                            else
+                            {
+                                Write("");
+                            }
+                        </td>
+                        <td>
+                                @item.PL.SDStatus
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PL.PLIDStatus)
+                        </td>
+                        <td>
+                                @Html.DisplayFor(modelItem => item.PL.PLSDStatus)
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-between">
+                                @if (string.IsNullOrEmpty(item.PL.Validation) && (item.Owner == EN[2] || EN[1] == "ADMIN"))
+                                {
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#validatemodal" onclick="OpenValidatePL('@item.PL.PLID')">Validate</button>
+                                }
+                                else if ((item.Owner == EN[2] || EN[1] == "ADMIN") && item.PL.Validation == "Valid" && item.PL.PLSDStatus != "CLOSED")
+                                {
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editplvalidationmodal" onclick="EditValidation('@item.PL.PLID', '@item.PL.Validation', '@item.PL.RC', '@item.PL.CA', '@item.PL.InterimDoc', '@item.PL.StandardizedDoc', '@item.PL.IDStatus', '@item.PL.DocNo')">Update</button>
+                                }
+
+                                <div class="mx-1">
+
+                                </div>
+
+                                @if (EN[1] == "PL_INTERVENOR" || EN[1] == "ADMIN")
+                                {
+                                    if (item.PL.PLIDStatus == "OPEN" || item.PL.PLSDStatus == "OPEN")
+                                    {
+                                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#ackmodal" onclick="InterimDocValidation('@item.PL.PLID', '@item.PL.PLIDStatus', '@item.PL.DocNo', '@item.PL.InterimDoc', '@item.PL.StandardizedDoc')">Validate</button>
+                                    }                             
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    var docNumber;
+    var plID;
+
+    function GetDoc()
+    {        
+        $(function (){
+            document.getElementById('dociframe').src = '@Url.Action("GetPLDoc", "ProblemLog")' + '?docNo=' + docNumber + '&plID=' + plID;
+            $('#showdocmodal').modal('show');
+        });
+    }
+
+    function InterimDocValidation(plId, interimStat, docNo, id, pd) {
+        
+        $(function (){
+            plID = plId;
+            docNumber = docNo;
+            document.getElementById('plidPL').value = plId;
+            var idDiv = document.getElementById('IDiv');
+            var pdDiv = document.getElementById('PDiv');
+
+            $('#inputid').val(id);
+            $('#inputpd').val(pd);
+
+            if ('@EN[1]' !== 'ADMIN')
+            {
+                if (interimStat === 'OPEN') {
+                    idDiv.style.display = 'block';
+                    pdDiv.style.display = 'none';
+
+                    document.getElementById('ISel').setAttribute('required', '');
+                    document.getElementById('PSel').removeAttribute('required')
+                }
+                else if (interimStat === 'CLOSED') {
+                    idDiv.style.display = 'none';
+                    pdDiv.style.display = 'block';
+                    document.getElementById('PSel').setAttribute('required', '');
+                    document.getElementById('ISel').removeAttribute('required')
+                }
+            }
+
+            $.ajax({
+                url: '@Url.Action("GetDocStatus", "ProblemLog")',
+                data: {docNo: docNo},
+                success: function (r){
+                    document.getElementById('docStatus').innerHTML = r.status;                
+                }
+            });
+        });
+        
+    }
+
+    function EditValidation(plid, val, rc, ca, id, sd, idStat, docno) {
+        @* $('#editplvalidationmodal').modal('show'); *@
+        $('#editplid').val(plid);
+        $('#editrc').val(rc);
+        $('#editca').val(ca);
+        $('#editstand').val(sd);
+
+        if (idStat === 'OPEN'){
+            $('#editinterim').val(id);
+            document.getElementById('editinterimDiv').removeAttribute('hidden');
+        }
+        else{
+            @* document.getElementById('editinterimdoc').removeAttribute('required'); *@
+            document.getElementById('editinterimDiv').setAttribute('hidden', '');
+        }
+
+        docNumber = docno;
+    }
+
+    function OpenValidatePL(plid) {
+        @* $('#validatemodal').modal('show'); *@
+        $('#plidVal').val(plid);
+    }
+
+    function PLConc(val)
+    {
+        if (val === 'Valid'){
+            document.getElementById('plisValid').style.display = 'block';
+            document.getElementById('selectCat').setAttribute('required', '');
+            document.getElementById('remSetReq').removeAttribute('required');
+            document.getElementById('selectdoctype').setAttribute('required', '');
+
+            document.getElementById('rcVal').setAttribute('required', '');
+            document.getElementById('caVal').setAttribute('required', '');
+            document.getElementById('idVal').setAttribute('required', '');
+            document.getElementById('idtcdVal').setAttribute('required', '');
+            document.getElementById('sdtcdVal').setAttribute('required', '');
+        }
+        else if (val === 'Invalid') {
+            document.getElementById('plisValid').style.display = 'none';
+            document.getElementById('selectCat').removeAttribute('required');
+            document.getElementById('remSetReq').setAttribute('required', 'true');
+            document.getElementById('selectdoctype').removeAttribute('required');
+
+            document.getElementById('rcVal').removeAttribute('required');
+            document.getElementById('caVal').removeAttribute('required');
+            document.getElementById('idVal').removeAttribute('required');
+            document.getElementById('idtcdVal').removeAttribute('required');
+            document.getElementById('sdtcdVal').removeAttribute('required');
+        }
+    }
+
+    function SetDets(pl, log, wweek, aff, pn, des, pro, rep, cat, rcc, caa, id, idtcd, idstat, sd, sdtcd, sdstat, val, plidstat, plsdstat, plrem, orem, validation)
+    {
+
+        document.getElementById('plno').innerHTML = pl;
+        document.getElementById('logdate').innerHTML = log;
+        document.getElementById('ww').innerHTML = wweek;
+        document.getElementById('affected').innerHTML = aff;
+        document.getElementById('pndn').innerHTML = pn;
+        document.getElementById('desc').innerHTML = des;
+        document.getElementById('prob').innerHTML = pro;
+        document.getElementById('reporter').innerHTML = rep;
+
+        document.getElementById('cat').innerHTML = cat;
+        document.getElementById('rc').innerHTML = rcc;
+        document.getElementById('ca').innerHTML = caa;
+        document.getElementById('id').innerHTML = id;
+        document.getElementById('idtcd').innerHTML = idtcd;
+        document.getElementById('idstatus').innerHTML = idstat;
+        document.getElementById('sd').innerHTML = sd;
+        document.getElementById('sdtcd').innerHTML = sdtcd;
+        document.getElementById('sdstatus').innerHTML = sdstat;
+
+        document.getElementById('validatedby').innerHTML = val;
+        document.getElementById('plidStat').innerHTML = plidstat;
+        document.getElementById('plsdStat').innerHTML = plsdstat;
+        document.getElementById('plRem').innerHTML = plrem;
+
+        document.getElementById('oRem').innerHTML = orem;
+
+        if (cat === ''){
+            document.getElementById('showdetCatDiv').style.display = 'none';
+        }
+        else{
+            document.getElementById('showdetCatDiv').style.display = 'block';
+        }
+
+        if (val == ''){
+            document.getElementById('showdetValDiv').style.display = 'none';
+        }
+        else {
+            document.getElementById('showdetValDiv').style.display = 'block';
+        }
+
+        if(validation === 'Invalid'){
+            document.getElementById('caandrc').setAttribute('hidden', '');       
+        }
+        else if(validation === ""){
+            document.getElementById('caandrc').setAttribute('hidden', '');
+        }
+        else{
+            document.getElementById('caandrc').removeAttribute('hidden');
+        }
+    }
+
+    function ClearPLVal()
+    {
+        document.getElementById('idstatPL').value = '';
+        document.getElementById('sdstatPL').value = '';
+        document.getElementById('plRemark').value = '';
+    }
+</script>
+
+<div class="modal fade" data-bs-backdrop="static" id="showdocmodal" style="z-index:2002">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <div class="modal-title text-white d-flex">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-easel3 my-auto" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8.5 13.134V12h5a1.5 1.5 0 0 0 1.5-1.5V2h.5a.5.5 0 0 0 0-1H.5a.5.5 0 0 0 0 1H1v8.5A1.5 1.5 0 0 0 2.5 12h5v1.134a1 1 0 1 0 1 0ZM2 2v8.5a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 .5-.5V2H2Z" />
+                    </svg>
+                    <p class="mx-2 my-auto fs-5 fw-bold">View Document</p>                    
+                </div>
+                <button class="btn-close" data-bs-dismiss="modal" onclick="document.getElementById('dociframe').src = '';"></button>
+            </div>
+            <div class="modal-body">
+                <iframe src="" id="dociframe" class="w-100 my-0" style="height:580px"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function (){
+        $('#plSubmitForm').submit(function (event){
+            event.preventDefault();
+
+            var paras = '?plID=' + $('#plidPL').val() + '&Validator=' + $('#validator').val();
+
+            if ($('#ISel').val() !== ""){
+                window.location.href = '@Url.Action("InterimDocValidation", "ProblemLog")' + paras + '&PLIDStatus=' + $('#ISel').val() + '&PLRemarks=' + $('#plRemark').val();
+            }
+            else
+            {
+                window.location.href = '@Url.Action("PermanentDocValidation", "ProblemLog")' + paras + '&plStatus=' + $('#PSel').val() + '&PLRemarks=' + $('#plRemark').val();
+            }
+        });
+    });
+</script>
+
+<div class="modal fade" data-bs-backdrop="static" id="ackmodal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <div class="modal-title d-flex text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bookmark-check-fill my-auto" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm8.854-9.646a.5.5 0 0 0-.708-.708L7.5 7.793 6.354 6.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3z" />
+                    </svg>
+                    <p class="my-auto mx-2 fs-5 fw-bold">Acknowledgement</p>
+                </div>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+           <form id="plSubmitForm">
+               <input name="plID" id="plidPL" hidden/>
+                <div class="modal-body">
+                    <div>
+                        <div class="d-flex">
+                            <label class="form-label mx-2 my-auto">Validated by:</label>
+                            <input class="form-control w-auto text-center" value="@EN[0]" id="validator" readonly required />
+                        </div>
+                        <div class="d-flex align-items-center my-2 text-nowrap">                          
+                            <div class="flex-column">
+                                <div id="IDiv">
+                                    <div class="d-flex">
+                                        <label class="form-label text-nowrap my-auto mx-2">Interim Status: </label>
+                                        <select class="form-select w-auto" name="PLIDStatus" id="ISel">
+                                            <option selected hidden value="">Please Select Status</option>
+                                            <option>OPEN</option>
+                                            <option>CLOSED</option>
+                                        </select>
+                                        <div class="mx-3">
+                                            <input class="form-control" type="text" value="" id="inputid" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="PDiv">
+                                    <div class="d-flex my-2">
+                                        <label class="form-label text-nowrap my-auto mx-2">Standardized Status</label>
+                                        <select class="form-select w-auto" name="plStatus" id="PSel">
+                                            <option selected hidden value="">Please Select Status</option>
+                                            <option>OPEN</option>
+                                            <option>CLOSED</option>
+                                        </select>
+                                        <div class="mx-3">
+                                            <input class="form-control" type="text" value="" id="inputpd" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mx-3">
+                                <button class="btn btn-primary position-relative" type="button" onclick="GetDoc()">
+                                    View Document
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="docStatus">
+                                        
+                                    </span>
+                                </button>
+                            </div>                        
+                        </div>
+                        
+                        <div class="flex-column my-2">
+                            <label class="form-label text-center w-100">Your Remarks:</label>
+                            <textarea class="form-control w-100" id="plRemark" style="max-height:100px" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input class="btn btn-primary" type="submit"/>
+                </div>
+           </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" dat-bs-dismiss="modal" id="editplvalidationmodal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <form asp-controller="ProblemLog" asp-action="EditPLValidation" asp-route-user="@EN[0]">
+                <input id="editplid" name="plid" hidden/>
+                <div class="modal-header bg-primary text-white">
+                    <div class="modal-title d-flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square my-auto" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                        </svg>
+                        <p class="mx-2 my-auto w-100 text-center fs-5 fw-bold">Edit Validation</p>
+                    </div>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div>
+                            <label class="form-label">Root Cause</label>
+                            <textarea class="form-control" style="max-height:100px" id="editrc" name="rc" required></textarea>
+                        </div>
+                        <div>
+                            <label class="form-label">Corrective Action</label>
+                            <textarea class="form-control" style="max-height:100px" id="editca" name="ca" required></textarea>
+                        </div>
+                        <div id="editinterimDiv">
+                            <label class="form-label">Interim Document</label>
+                            <input class="form-control" id="editinterim" name="interimdoc" required />
+                        </div>
+                        <div>
+                            <label class="form-label">Standardized Document</label>
+                            <input class="form-control" id="editstand" name="standardizeddoc" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="w-100 d-flex justify-content-between">
+                        <button class="btn btn-warning" type="button" onclick="EditDoc()">Update Document</button>
+                        <input class="btn btn-primary" type="submit" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function EditDoc(){
+        window.location.href = '@Url.Action("EditDocumentView","MTI")' + '?docuNo=' + docNumber;
+    }
+
+    $(document).ready(function () {
+        $('#selectCat').change(function () {
+            var selectedValue = $(this).val();
+
+            $.ajax({
+                url: '@Url.Action("GetPLTCDDates", "ProblemLog")',
+                data: { val: selectedValue },
+                success: function (response) {
+   
+                    document.getElementById('idtcdVal').value = response.ID;
+                    document.getElementById('sdtcdVal').value = response.SD;
+                },
+                error: function (error) {
+
+                    console.error(error);
+                }
+            });
+
+        });
+    });
+</script>
+
+<div class="modal fade" data-bs-backdrop="static" id="validatemodal">
+    <div class="modal-dialog modal-lg" style="max-height:600px">
+        <div class="modal-content">
+            <form asp-controller="ProblemLog" asp-action="SubmitPLValidation" asp-route-Validator="@EN[0]" onsubmit="document.getElementById('loadingIcon').style.display = 'block'">
+                <input value="" id="plidVal" name="PLID" hidden/>
+                <div class="modal-header bg-primary text-white">
+                    <div class="modal-title d-flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-flag-fill my-auto" viewBox="0 0 16 16">
+                            <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001" />
+                        </svg>
+                        <p class="my-auto mx-2 w-100 fs-5 fw-bold">Validate Problem Log</p>
+                    </div>
+                    <button class="btn-close" data-bs-dismiss="modal" type="button" onclick="$('#validatemodal').find('input, textarea, select').val(''); document.getElementById('plisValid').style.display = 'none'"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="d-flex w-100">
+                            <div class="flex-column w-50">
+                                <label class="form-label">Validation</label>
+                                <select class="form-select" name="validation" onchange="PLConc(this.value)" id="valSelect" required>
+                                    <option hidden selected value="">Please Select</option>
+                                    <option>Valid</option>
+                                    <option>Invalid</option>
+                                </select>
+                            </div>
+                            <div class="flex-column w-50">
+                                <label class="form-label">Remarks</label>
+                                <textarea class="form-control w-100" name="OwnerRemarks" style="max-height:100px; min-height:40px; height: 40px" id="remSetReq" required></textarea>
+                            </div>
+                        </div>
+                        <div id="plisValid" style="display:none">
+                           <div class="d-flex">
+                                <div class="w-50">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select" id="selectCat" name="Category" onchange="">
+                                        <option hidden selected value="">Select Category</option>
+                                        <option>A</option>
+                                        <option>B</option>
+                                        <option>C</option>
+                                    </select>
+                                </div>
+                                <div class="w-50">
+                                    <label class="form-label">Affected Document</label>
+                                    <select class="form-select" id="selectdoctype" name="affectedDocIdentifier" onchange="DoctypeSetter(this.value)">
+                                        <option hidden selected value="">Select Document</option>
+                                        <option value="m">MPI/MTI</option>
+                                        <option value="c">CONFIGURATION LOGSHEET</option>
+                                        <option value="t">TEST EQUIPMENT LOGSHEET</option>
+                                        <option value="b">BOM</option>
+                                        <option value="s">SCHEMATIC DIAGRAM</option>
+                                        <option value="d">ASSEMBLY DRAWING</option>
+                                    </select>
+
+                                    <script>
+                                        function DoctypeSetter(str)
+                                        {
+                                            var interimIF = document.getElementById('idVal');
+                                            var sdIF = document.getElementById('sdVal');
+
+                                            if (str == 'b' || str == 's' || str == 'd'){
+                                                interimIF.removeAttribute('required');
+                                                interimIF.setAttribute('readonly', '');
+                                                interimIF.value = 'Not Required';
+
+                                                sdIF.setAttribute('required', '');
+                                            }
+                                            else{
+                                                interimIF.value = '';
+                                                interimIF.placeholder = 'Required';
+                                                interimIF.setAttribute('required', '');
+                                                interimIF.removeAttribute('readonly');
+                                                interimIF.placeholder = 'Required';
+
+                                                sdIF.removeAttribute('required');
+                                            }
+                                        }
+                                    </script>
+                                </div>
+                           </div>
+                            <div>
+                                <label class="form-label">Root Cause</label>
+                                <textarea class="form-control" name="RC" style="max-height:100px; min-height:40px; height: 40px" id="rcVal"></textarea>
+                            </div>
+                            <div>
+                                <label class="form-label">Correction Action</label>
+                                <textarea class="form-control" name="CA" style="max-height:100px; min-height:40px; height: 40px" id="caVal"></textarea>
+                            </div>
+                            <div>
+                                <div class="d-flex w-100 justify-content-evenly">
+                                    <div>
+                                        <label class="form-label">Interim Doc.</label>
+                                        <input class="form-control" placeholder="Interim Document" id="idVal" name="InterimDoc"/>
+                                    </div>
+                                    <div>
+                                        <label class="form-label">TCD</label>
+                                        <input class="form-control" type="date" id="idtcdVal" placeholder="Required" name="IDTCD" readonly/>
+                                    </div>
+                                </div>
+                                <div class="d-flex w-100 justify-content-evenly">
+                                    <div>
+                                        <label class="form-label">Standardized Doc.</label>
+                                        <input class="form-control" placeholder="Required" id="sdVal" name="StandardizedDoc"/>
+                                    </div>
+                                    <div>
+                                        <label class="form-label">TCD</label>
+                                        <input class="form-control" type="date" id="sdtcdVal" name="SDTCD" readonly/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit" onclick="">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade text-center" data-bs-backdrop="static" id="plDetails" style="z-index:2001">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <p class="modal-title text-center w-100 fs-5 fw-bold">More Details</p>
+                <button class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-success">
+                                <tr>
+                                    <th>
+                                        PL#
+                                    </th>
+                                    <th>
+                                        Log Date
+                                    </th>
+                                    <th>
+                                        Workweek
+                                    </th>
+                                    <th>
+                                        Affected Doc.
+                                    </th>
+                                    <th>
+                                        PN/D.C.N
+                                    </th>
+                                    <th>
+                                        Desc.
+                                    </th>
+                                    <th>
+                                        Reported By
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="plno">
+                                    </td>
+                                    <td id="logdate">
+                                    </td>
+                                    <td id="ww">
+                                    </td>
+                                    <td id="affected">
+                                    </td>
+                                    <td id="pndn">
+                                    </td>
+                                    <td id="desc">
+                                    </td>
+                                    <td id="reporter">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-start w-100 mb-3">
+                        <label class="form-label fw-bold w-100 text-center">Problem</label>
+                        <div class="w-100 d-flex justify-content-center">
+                            <textarea id="prob" class="form-control border-dark w-75" style="max-height:100px; min-height:50px" readonly></textarea>
+                        </div>
+                    </div>
+                    <div id="showdetCatDiv" class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-warning">
+                                <tr>
+                                    <th>
+                                        Category
+                                    </th>
+                                    <th>
+                                        Interim Doc.
+                                    </th>
+                                    <th>
+                                        TCD
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th>
+                                        SD.
+                                    </th>
+                                    <th>
+                                        TCD
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="cat">
+                                    </td>
+                                    <td id="id">
+                                    </td>
+                                    <td id="idtcd">
+                                    </td>
+                                    <td id="idstatus">
+                                    </td>
+                                    <td id="sd">
+                                    </td>
+                                    <td id="sdtcd">
+                                    </td>
+                                    <td id="sdstatus">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-start my-2">
+                        <div class="row" id="caandrc">
+                            <div class="col-6">
+                                <label class="form-label fw-bold w-100 text-center">Root Cause</label>
+                                <textarea id="rc" class="form-control border-dark" style="max-height:100px; min-height:50px" readonly></textarea>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label fw-bold w-100 text-center">Corrective Action</label>
+                                <textarea id="ca" class="form-control border-dark" style="max-height:100px; min-height:50px" readonly></textarea>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="form-label fw-bold w-100 text-center">Originator's Remarks</label>
+                            <div class="d-flex w-100 justify-content-center">
+                                <textarea id="oRem" class="form-control border-dark w-75" style="max-height:100px; min-height:50px" readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="showdetValDiv">
+                        <table class="table table-bordered">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th>
+                                        Validated by
+                                    </th>
+                                    <th>
+                                        Status (I)
+                                    </th>
+                                    <th>
+                                        Status (S)
+                                    </th>
+                                    <th>
+                                        Remarks
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td id="validatedby">
+                                    </td>
+                                    <td id="plidStat">
+                                    </td>
+                                    <td id="plsdStat">
+                                    </td>
+                                    <td id="plRem">
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>                    
+                </div>           
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1342 @@
+﻿@model DMD_Prototype.Controllers.MTIViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "DMD Portal - " + Model.DocumentNumber;
+    string[]? EN = TempData["EN"] as string[];
+    TempData.Keep();
+
+    string sesID = Model.SessionID!;
+
+    string afterTrav1 = "Property No. / Fixed Asset No.";
+    string afterTrav2 = "Description";
+    string afterTrav3 = "Calibration Due Date";
+    string afterTravTitle = "TEST EQUIPMENT LOG";
+
+    if (Model.AfterTravlog == "C")
+    {
+        afterTrav1 = "Part Number";
+        afterTrav2 = "Description";
+        afterTrav3 = "Serial Number";
+        afterTravTitle = "CONFIGURATION LOG";
+    }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ATS Engineering</title>
+    <link href="~/css/site.css" rel="stylesheet" />
+    <script src="~/js/site.js"></script>
+    <script src="~/chart.js/chart.js"></script>
+    <a href="~/lib/bootstrap/dist/css/bootstrap.min.css.map"></a>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <a href="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js.map"></a>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="~/datatables/datatable.min.css" rel="stylesheet" />
+    <script src="~/datatables/datatable.min.js"></script>
+    <style>
+        .modal {
+            z-index: 2002;
+        }
+    </style>
+</head>
+<body>
+    <div class="loader" id="loadingIcon"></div>
+    <div class="container-fluid flex-column">
+        <div class="container-fluid-block w-100" style="z-index:2001">
+            <div class="w-100">
+                <div class="d-flex bg-primary justify-content-between" style="height:8vh">
+                    <div class="d-flex align-items-center">
+                        <div class="my-auto mx-3">
+                            <img style="width:60px; height: 30px" src="~/pimeslogo.png" />
+                        </div>
+                        @if (!Model.WorkingStat)
+                        {
+                            <a class="btn btn-secondary mx-3" asp-controller="Home" asp-action="MTIList" asp-route-whichDoc="@Model.Product" asp-route-whichType="@Model.DocType">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-square-fill" viewBox="0 0 16 16">
+                                        <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1z" />
+                                    </svg>
+                                    <div class="mx-2">
+                                        Back
+                                    </div>
+                                </div>
+                            </a>
+
+                            <button class="btn bg-warning text-white mx-1" data-bs-toggle="modal" data-bs-target="#viewtravmodal" onclick="SeeTraveler()">
+                                <div class="d-flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text-fill my-auto" viewBox="0 0 16 16">
+                                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M4.5 9a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM4 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z" />
+                                    </svg>
+                                    <div class="mx-2 text-nowrap">
+                                        See Traveler
+                                    </div>
+                                </div>
+                            </button>
+
+                            <script>
+                                var travLoadChecker = false;
+
+                                function SeeTraveler() {
+
+                                    if (travLoadChecker === false) {
+                                        document.getElementById('viewtravmodalbody').src = '@Url.Action("ViewTraveler", "DocGenerator")' + '?docNo=' + '@Model.DocumentNumber';
+                                    }
+
+                                    travLoadChecker = true;
+                                }
+                            </script>
+
+                            <div class="modal fade" data-bs-backdrop="static" id="viewtravmodal">
+                                <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-primary">
+                                            <div class="modal-title d-flex text-white">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-easel-fill my-auto" viewBox="0 0 16 16">
+                                                    <path d="M8.473.337a.5.5 0 0 0-.946 0L6.954 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h1.85l-1.323 3.837a.5.5 0 1 0 .946.326L4.908 11H7.5v2.5a.5.5 0 0 0 1 0V11h2.592l1.435 4.163a.5.5 0 0 0 .946-.326L12.15 11H14a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H9.046L8.473.337z" />
+                                                </svg>
+                                                <p class="fs-5 fw-bold my-auto mx-2">View Traveler</p>
+                                            </div>
+                                            <button class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div>
+                                                <iframe class="w-100 border-3 border-dark" id="viewtravmodalbody" src="" style="height:85vh">Traveler Here</iframe>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <button class="btn btn-danger text-white mx-1" onclick="" id="twbtn">
+                                <div class="d-flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text-fill my-auto" viewBox="0 0 16 16">
+                                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M4.5 9a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM4 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z" />
+                                    </svg>
+                                    <div class="mx-2 text-nowrap">
+                                        Session
+                                    </div>
+                                </div>
+                            </button>
+                            <button class="btn btn-warning mx-1 text-white" onclick="GetTravProgress('readonly')">
+                                <div class="d-flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-text-fill my-auto" viewBox="0 0 16 16">
+                                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M4.5 9a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM4 10.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 1 0-1h4a.5.5 0 0 1 0 1z" />
+                                    </svg>
+                                    <div class="mx-2 text-nowrap">
+                                        Your Progress
+                                    </div>
+                                </div>
+                            </button>
+                        }
+                        @{
+                            if (EN[1] == "USER")
+                            {
+                                if (Model.WorkingStat)
+                                {
+                                    <button class="btn btn-success mx-2" data-bs-target="#pausemodal" data-bs-toggle="modal">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-btn-fill" viewBox="0 0 16 16">
+                                                <path d="M0 12V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm6.25-7C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C7.5 5.56 6.94 5 6.25 5zm3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C11 5.56 10.44 5 9.75 5z" />
+                                            </svg>
+                                            <div class="mx-2">
+                                                Pause
+                                            </div>
+                                        </div>
+                                    </button>
+                                }
+                                else
+                                {
+                                    if (!Model.ObsoleteStat)
+                                    {
+                                        <button class="btn btn-success mx-2" type="button" data-bs-target="#confirmStart" data-bs-toggle="modal">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-skip-start-circle-fill" viewBox="0 0 16 16">
+                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM9.71 5.093 7 7.028V5.5a.5.5 0 0 0-1 0v5a.5.5 0 0 0 1 0V8.972l2.71 1.935a.5.5 0 0 0 .79-.407v-5a.5.5 0 0 0-.79-.407z" />
+                                                </svg>
+                                                <div class="mx-2">
+                                                    Start
+                                                </div>
+                                            </div>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-danger fw-bold my-auto">
+                                            This is an obsolete document.
+                                        </p>
+
+                                        <script>
+                                            var marquee = document.getElementById('marq');
+                                            marquee.innerHTML = 'This is an obsolete document, please contact your originator for further assistance.';
+                                            marquee.style.color = 'red';
+                                        </script>
+                                    }
+                                }
+                            }
+                        }
+
+                    </div>
+
+                    <div class="d-flex align-items-center">
+                        @if (Model.WorkingStat)
+                        {
+                            <button type="button" class="btn btn-success mx-1" data-bs-toggle="modal" data-bs-target="#travmodal" id="travBtn">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check-fill" viewBox="0 0 16 16">
+                                        <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z" />
+                                        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z" />
+                                    </svg>
+                                    <div class="mx-2 text-nowrap">
+                                        Submit Traveler
+                                    </div>
+                                </div>
+                            </button>
+                            <button type="button" class="btn btn-danger text-nowrap mx-1" data-bs-toggle="modal" data-bs-target="#problemlogForm">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-exclamation-fill" viewBox="0 0 16 16">
+                                        <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1.5a.5.5 0 0 1-1 0V11a.5.5 0 0 1 1 0Zm0 3a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z" />
+                                    </svg>
+                                    <div class="mx-2">
+                                        Problem Log
+                                    </div>
+                                </div>
+                            </button>
+                        }
+                        <button class="btn btn-warning text-white mx-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#docs">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+                                </svg>
+                                <div class="mx-2">
+                                    Documents
+                                </div>
+                            </div>
+                        </button>
+                        <div class="my-auto mx-3">
+                            <img style="width:60px; height: 30px" src="~/ats wbg.png" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid w-100">
+            @* <div class="position-absolute bg-transparent end-0" style="height:60px; width:25%"> *@
+            </div>
+            <iframe class="w-100 border-3 border-dark" id="MainDoc" style="height:90vh" src="@Url.Action("ShowDoc", "MTI", new {docunumber = Model.DocumentNumber, whichDoc = "MainDoc.pdf"})"></iframe>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#twbtn').click(function () {
+                $('#twmodal').modal('show');
+                loadPartialView();
+            });
+
+            function loadPartialView() {
+                $.ajax({
+                    url: '@Url.Action("TWPartial", "TransferWork")',
+                    method: 'GET',
+                    success: function (data) {
+                        $('#twpartialhere').html(data);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        });
+    </script>
+
+    <div class="modal fade" data-bs-backdrop="static" id="twmodal" style="z-index:2002">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <p class="fw-bold fs-5 modal-title text-white">On-Going and Pending sessions</p>
+                    <button class="btn-close" data-bs-dismiss="modal" onclick="$('#twpartialhere').html('');"></button>
+                </div>
+                <div class="modal-body" id="twpartialhere" style="height:75vh">
+
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-danger" asp-controller="Work" asp-action="HoldSession" asp-route-sessionID="@Model.SessionID">Hold Session</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="travprogressedit" data-bs-backdrop="static" style="z-index: 2003">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <p class="modal-title text-white fs-5 fw-bold">Progress</p>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form asp-controller="Document" asp-action="SaveTravChanges" id="edittravform" asp-route-sessionId="@Model.SessionID">
+                    <div class="modal-body" style="height: 520px">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Step
+                                        </th>
+                                        <th class="w-50">
+                                            Instruction
+                                        </th>
+                                        <th>
+                                            Parameter
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="editprevtravbody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit" id="subbutton">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function (){
+            $('#edittravform').submit(function (e){
+                e.preventDefault();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        
+                    },
+                    error: function (error) {
+                        
+                    }
+                });
+
+                $('#travprogressedit').modal('hide');
+            });
+        });
+
+        function GetTravProgress(sub)
+        {
+            $(function () {
+
+                var DoneSig = '';
+                var editprogbody = document.getElementById('editprevtravbody');
+                var subb = document.getElementById('subbutton');
+                editprogbody.innerHTML = '';
+
+                if (sub === 'readonly' || '@Model.DocType' === 'MPI') {
+                    subb.style.display = 'none';
+                }
+                else
+                {
+                    subb.style.display = 'block';
+                }
+
+                $('#travprogressedit').modal('show');
+
+                $.ajax({
+                    url: '@Url.Action("GetTravDataForEdit", "Traveler")',
+                    data: {sessionId: '@Model.SessionID', doctype: '@Model.DocType'},
+                    success: function (r){
+                        r.r.forEach(function(line){
+
+                            if ('@Model.DocType' === 'MPI') {
+                                sub = 'readonly';
+                                line.SinglePara = 'Done';
+                            }
+
+                            if (line.isMerge === true){
+                                editprogbody.innerHTML += '<tr><td><input name="Step" class="form-control" value="' + line.Step + '" readonly /></td><td><textarea name="Instruction" class="form-control" readonly>' + line.Instruction + '</textarea></td><td><input name="SinglePara" placeholder="Required" class="form-control" value="' + line.SinglePara + '" ' + sub + ' /><input name="isMerge" value="' + line.isMerge + '" hidden /><input name="FirstThreePara" value="" hidden/><input name="SecondThreePara" value="" hidden/><input name="ThirdThreePara" value="" hidden/></td></tr>';
+                            }
+                            else{
+                                editprogbody.innerHTML += '<tr><td><input name="Step" class="form-control" value="' + line.Step + '" readonly /></td><td><textarea name="Instruction" class="form-control" readonly>' + line.Instruction + '</textarea></td><td><div class="d-flex"><input name="FirstThreePara" class="form-control" value="' + line.FirstThreePara + '" ' + sub + ' /><input name="SecondThreePara" class="form-control" value="' + line.SecondThreePara + '" ' + sub + ' /><input name="ThirdThreePara" class="form-control" value="' + line.ThirdThreePara + '" ' + sub + ' /></div><input name="isMerge" value="' + line.isMerge + '" hidden /></td> <input name="SinglePara" value="" hidden/></tr>';
+                            }
+
+                        });
+                    }
+                });
+            });
+        }
+    </script>
+
+    <div class="modal fade" id="confirmStart" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <form  id="startworkform">
+                <div class="modal-content">
+                    <div class="modal-header d-flex justify-content-start bg-primary text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-question-diamond-fill my-auto" viewBox="0 0 16 16">
+                            <path d="M9.05.435c-.58-.58-1.52-.58-2.1 0L.436 6.95c-.58.58-.58 1.519 0 2.098l6.516 6.516c.58.58 1.519.58 2.098 0l6.516-6.516c.58-.58.58-1.519 0-2.098L9.05.435zM5.495 6.033a.237.237 0 0 1-.24-.247C5.35 4.091 6.737 3.5 8.005 3.5c1.396 0 2.672.73 2.672 2.24 0 1.08-.635 1.594-1.244 2.057-.737.559-1.01.768-1.01 1.486v.105a.25.25 0 0 1-.25.25h-.81a.25.25 0 0 1-.25-.246l-.004-.217c-.038-.927.495-1.498 1.168-1.987.59-.444.965-.736.965-1.371 0-.825-.628-1.168-1.314-1.168-.803 0-1.253.478-1.342 1.134-.018.137-.128.25-.266.25h-.825zm2.325 6.443c-.584 0-1.009-.394-1.009-.927 0-.552.425-.94 1.01-.94.609 0 1.028.388 1.028.94 0 .533-.42.927-1.029.927z" />
+                        </svg>
+                        <p class="fs-5 fw-bold my-auto mx-2">Confirm</p>
+                    </div>
+                    <div class="modal-body flex-column">
+                        <div>
+                            <label class="form-label">Work Order:</label>
+                            <input class="form-control" name="wOrder" id="workorder" required />
+                        </div>
+                        <div>
+                            <label class="form-label">Module:</label>
+                            <input class="form-control" name="module" id="module" required />
+                        </div>
+                        <div>
+                            <label class="form-label">Serial No:</label>
+                            <input class="form-control" name="serialNo" id="serialno" required />
+                        </div>                       
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-flex justify-content-between w-100">
+                            <div>
+                                <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                            <div>
+                                <input class="btn btn-primary" type="submit"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        $(function (){
+            $('#startworkform').submit(function (e){
+                e.preventDefault();
+
+                var workOrder = document.getElementById('workorder').value;
+                var serialNo = document.getElementById('serialno').value;
+                var Module = document.getElementById('module').value;
+
+                $.ajax({
+                    url: '@Url.Action("ValidateModule", "Work")',
+                    data: {module: Module, serialNo: serialNo, workOrder: workOrder},
+                    success: function (response){
+
+                        if (response.response === 'go')
+                        {
+                            window.location.href = '@Url.Action("StartWork", "Work")' + '?docno=' + '@Model.DocumentNumber' + '&EN=' + '@EN[0]' + '&wOrder=' + workOrder + '&serialNo=' + serialNo + '&module=' + Module + '&docType=' + '@Model.DocType';
+                        }
+                        else{
+                            alert(response.message);
+                            $('#workorder').val('');
+                            $('#serialno').val('');
+                            $('#module').val('');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+    <div class="offcanvas offcanvas-end border-3 shadow" style="z-index:2001; background-color:#B5AD9A" data-bs-backdrop="static" id="docs">
+        <div class="offcanvas-header bg-primary border-5 border-dark">
+            <div class="d-flex justify-content-center w-100">
+                <h5 class="offcanvas-title text-center text-white fw-bolder" id="offcanvasExampleLabel">Documents</h5>
+            </div>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" id="closeoffcanvas"></button>
+        </div>
+        <div class="offcanvas-body overflow-auto flex-column">
+            <div class="w-100 h-100">
+                <div class="card border-3 border-dark">
+                    <div class="card-header text-white border-3 border-dark" style="background-color:darkslateblue">
+                        <h4 class="card-title text-center">Primary Docs</h4>
+                    </div>
+                    <div class="card-body flex-column justify-content-center w-100">
+                        <div class="d-flex justify-content-center">
+                            @if (Model.AssyDrawing)
+                            {
+                                <button class="my-1 btn btn-primary border-1 border-dark w-75" onclick="SetDoc('AssyDrawing.pdf', 'Assembly Drawing')" data-bs-toggle="modal" data-bs-target="#docuFrame">Assembly Drawing</button>
+                                @if (!Model.WorkingStat && EN[1] != "USER")
+                                {
+                                    <a class="btn btn-primary text-white border-1 border-dark btn-sm my-1 mx-1" asp-controller="DocGenerator" asp-action="DownloadMainDoc" asp-route-docNo="@Model.DocumentNumber" asp-route-whichDoc="assy">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                        </svg>
+                                    </a>
+                                }
+                            }
+                            
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            @if(Model.Bom)
+                            {
+                                <button class="my-1 btn btn-primary border-1 border-dark w-75" onclick="SetDoc('BOM.pdf', 'BOM')" data-bs-toggle="modal" data-bs-target="#docuFrame">Bills of Materials</button>
+                                @if (!Model.WorkingStat && EN[1] != "USER")
+                                {
+                                    <a class="btn btn-primary text-white border-1 border-dark btn-sm my-1 mx-1" asp-controller="DocGenerator" asp-action="DownloadMainDoc" asp-route-docNo="@Model.DocumentNumber" asp-route-whichDoc="bom">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                        </svg>
+                                    </a>
+                                }
+                            }
+                            
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            @if (Model.SchematicDiagram)
+                            {
+                                 <button class="my-1 btn btn-primary border-1 border-dark w-75" onclick="SetDoc('SchematicDiag.pdf', 'Schematic Diagram')" data-bs-toggle="modal" data-bs-target="#docuFrame">Schematic Diagram</button>
+                                @if (!Model.WorkingStat && EN[1] != "USER")
+                                {
+                                    <a class="btn btn-primary text-white border-1 border-dark btn-sm my-1 mx-1" asp-controller="DocGenerator" asp-action="DownloadMainDoc" asp-route-docNo="@Model.DocumentNumber" asp-route-whichDoc="schema">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                        </svg>
+                                    </a>
+                                }
+                            }
+                            
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button class="my-1 btn btn-primary border-1 border-dark w-75" onclick="SeeWS()" data-bs-toggle="modal" data-bs-target="#docuFrame">Workmanship Standard (MPI)</button>
+                            @if (!Model.WorkingStat && EN[1] != "USER")
+                            {
+                                <a class="btn btn-primary text-white border-1 border-dark btn-sm my-1 mx-1" asp-controller="DocGenerator" asp-action="DownloadWS">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                    </svg>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-1 border-3 border-dark">
+                    <div class="card-header text-white border-3 border-dark" style="background-color:darkslateblue">
+                        <h4 class="card-title text-center">One Point Lesson/s</h4>
+                    </div>
+                    <div class="card-body row">
+                        @{
+                            foreach (string opl in Model.Opl)
+                            {
+                                string filename = opl.Substring(3);
+                                <div class="w-100 d-flex justify-content-center my-1">
+                                    <button class="w-75 my-1 mx-auto btn btn-primary border-1 border-dark" onclick="WhichDev(this.innerText, 'o')" data-bs-toggle="modal" data-bs-target="#docuFrame">@filename</button>
+                                    @if (!Model.WorkingStat && EN[1] != "USER")
+                                    {
+                                        <a class="btn btn-primary text-white border-1 border-dark btn-sm my-auto mx-1" asp-controller="DocGenerator" asp-action="DownloadFileWithFileName" asp-route-docNo="@Model.DocumentNumber" asp-route-fileName="@opl">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                            </svg>
+                                        </a>
+                                    }
+                                </div>
+                            }
+
+                            if (Model.Opl.Count <= 0)
+                            {
+                                <p class="text-center w-100">No Document</p>
+                            }
+                        }                     
+                    </div>                
+                </div>
+                <div class="card mt-1 border-3 border-dark">
+                    <div class="card-header text-white border-3 border-dark" style="background-color:darkslateblue">
+                        <h4 class="card-title text-center">PRCO/s</h4>
+                    </div>
+                    <div class="card-body row">
+                        @{
+                            foreach (string prco in Model.Prco)
+                            {                                
+                                string filename = prco.Substring(3);
+                                <div class="w-100 d-flex justify-content-center my-1">
+                                    <button class="w-75 my-1 mx-auto btn btn-primary border-1 border-dark" onclick="WhichDev(this.innerText, 'p')" data-bs-toggle="modal" data-bs-target="#docuFrame">@filename</button>
+                                    @if (!Model.WorkingStat && EN[1] != "USER")
+                                    {
+                                        <a class="btn btn-primary text-white border-1 border-dark btn-sm my-auto mx-1" asp-controller="DocGenerator" asp-action="DownloadFileWithFileName" asp-route-docNo="@Model.DocumentNumber" asp-route-fileName="@prco">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                            </svg>
+                                        </a>
+                                    }
+                                </div>
+                            }
+
+                            if (Model.Prco.Count <= 0)
+                            {
+                                <p class="text-center w-100">No Document</p>
+                            }
+                        }                    
+                    </div>
+                </div>
+                <div class="card mt-1 border-3 border-dark">
+                    <div class="card-header text-white border-3 border-dark" style="background-color:darkslateblue">
+                        <h4 class="card-title text-center">Derogation/s</h4>
+                    </div>
+                    <div class="card-body row">
+                        @{
+                            foreach (string dero in Model.Derogation)
+                            {
+                                string filename = dero.Substring(3);
+                                <div class="w-100 d-flex justify-content-center my-1">
+                                    <button class="w-75 my-1 mx-auto btn btn-primary border-1 border-dark" onclick="WhichDev(this.innerText, 'd')" data-bs-toggle="modal" data-bs-target="#docuFrame">@filename</button>
+                                    @if (!Model.WorkingStat && EN[1] != "USER")
+                                    {
+                                        <a class="btn btn-primary text-white border-1 border-dark btn-sm my-auto mx-1" asp-controller="DocGenerator" asp-action="DownloadFileWithFileName" asp-route-docNo="@Model.DocumentNumber" asp-route-fileName="@dero">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                            </svg>
+                                        </a>
+                                    }
+                                </div>
+                            }
+
+                            if (Model.Derogation.Count <= 0)
+                            {
+                                <p class="text-center w-100">No Document</p>
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="card mt-1 border-3 border-dark">
+                    <div class="card-header text-white border-3 border-dark" style="background-color:darkslateblue">
+                        <h4 class="card-title text-center">Engineering Memo/s</h4>
+                    </div>
+                    <div class="card-body flex-column justify-content-center">
+                        @{
+                            foreach (string memo in Model.Memo)
+                            {
+                                string filename = memo.Substring(3);
+                                <div class="w-100 d-flex justify-content-center my-1">
+                                    <button class="w-75 my-1 mx-auto btn btn-primary border-1 border-dark" onclick="WhichDev(this.innerText, 'm')" data-bs-toggle="modal" data-bs-target="#docuFrame">@filename</button>
+                                    @if (!Model.WorkingStat && EN[1] != "USER")
+                                    {
+                                        <a class="btn btn-primary text-white border-1 border-dark btn-sm my-auto mx-1" asp-controller="DocGenerator" asp-action="DownloadFileWithFileName" asp-route-docNo="@Model.DocumentNumber" asp-route-fileName="@memo">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                                                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+                                            </svg>
+                                        </a>
+                                    }
+                                </div>
+                            }
+
+                            if (Model.Memo.Count <= 0)
+                            {
+                                <p class="text-center w-100">No Document</p>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="travmodal" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="traveler">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
+            <form id="submitTravForm" asp-controller="Work" asp-action="SubmitTravelerLog" class="modal-content">
+                <div class="modal-header bg-primary text-white">                   
+                    <div class="d-flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list-columns-reverse my-auto" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5Zm4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5Zm-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5Zm-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5Zm-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5Zm-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5Zm-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5Zm-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5Zm-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5Zm4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5Z" />
+                        </svg>
+                        <h1 class="modal-title fs-5 fw-bold my-auto mx-3" id="traveler">Traveler</h1>
+                    </div>
+                    <button type="button" id="closetravmodal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">                   
+                    <div>
+                        <table class="table table-hover table-bordered text-center">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th class="text-nowrap">
+                                        Step No.
+                                    </th>
+                                    <th class="w-75">
+                                        Task
+                                    </th>
+                                    <th class="w-25">
+                                        Parameter
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @{
+                                            <input value="" id="stepnoid" name="stepNo" class="form-control border-0 text-nowrap" readonly />
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @{
+                                            <textarea class="w-100" id="taskid" style="max-height:200px; min-height:120px" name="task" readonly></textarea>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <div style="display:none" id="three" class="w-100">
+                                                <div class="d-flex">
+                                                    <input class="form-control w-100" id="firstParaid" value="" placeholder="box 1" autocomplete="off"/>
+                                                    <input class="form-control w-100" id="secParaid" placeholder="box 2" autocomplete="off" />
+                                                    <input class="form-control w-100" id="thirdParaid" placeholder="box 3" autocomplete="off" />                                                
+                                                </div>
+                                            </div>
+                                            <div style="display:none" id="single" class="w-100">
+                                                <input class="form-control w-100" id="singleParaid" placeholder="Required" autocomplete="off" />
+                                                <div class="h-100">
+                                                    @if (Model.DocType == "MPI")
+                                                    {
+                                                        <button class="btn btn-primary w-100 mt-4" type="button" onclick="ParaDone()">Done</button>
+                                                    }
+                                                </div>
+                                                <script>
+                                                    function ParaDone()
+                                                    {
+                                                        document.getElementById('singleParaid').value = '@DateTime.Now.Date.ToShortDateString()';
+                                                        document.getElementById('submittravbtn').click();
+                                                    }
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @if (!Model.WorkingStat)
+                    {
+                        Write("You are currently viewing the document, click start to start working. Thank you!");
+                    }
+
+                    <input type="submit" class="btn btn-primary" id="submittravbtn" style="display:none"/>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="logsheet">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <form id="logForm" asp-controller="Work" asp-action="SubmitLog" asp-route-sessionId="@Model.SessionID" asp-route-logType="@Model.AfterTravlog">
+                    <div class="modal-header">
+                        <p class="modal-title fs-5 fw-bold">@afterTravTitle</p>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <table class="tale w-100 text-center">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @afterTrav1
+                                        </th>
+                                        <th>
+                                            @afterTrav2
+                                        </th>
+                                        <th>
+                                            @afterTrav3
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input class="form-control w-100" id="one" name="logcellone" autocomplete="off" required/>
+                                        </td>
+                                        <td>
+                                            <input class="form-control w-100" id="two" name="logcelltwo" autocomplete="off" required/>
+                                        </td>
+                                        <td>
+                                            <input class="form-control w-100" id="threetrav" name="logcellthree" autocomplete="off" required/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="d-flex justify-content-between w-100">                        
+                            <div class="d-flex">
+                                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#endsession" onclick="">Done</button>
+                                <button class="btn bg-warning fw-bold mx-4" onclick="GetConfigProgress('readonly')" type="button">View</button>
+                            </div>
+                            <input class="btn btn-primary" type="submit" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function () {
+            $('#submitTravForm').submit(function (event) {
+                event.preventDefault();
+                document.getElementById('loadingIcon').style.display = 'block';
+
+                var stepNumber = document.getElementById('stepnoid').value;
+                var Task = document.getElementById('taskid').value;
+                var Single = document.getElementById('singleParaid').value;
+                var Div = [];
+
+                if (divType === 't') {
+                    Div.push(document.getElementById('firstParaid').value);
+                    Div.push(document.getElementById('secParaid').value);
+                    Div.push(document.getElementById('thirdParaid').value);
+                }
+
+                if (Single === '' && Div.length === 0) {
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: { stepNo: stepNumber, tAsk: Task, byThree: Div, singlePara: Single, sessionID: '@sesID', tech: '@EN[0]', date: '@DateTime.Now.ToShortDateString()', docType: '@Model.DocType' },
+                    success: function (response) {
+                        document.getElementById('closetravmodal').click();
+                        DisableTravBtn();
+                        if (response.Task === "" || response.Task === null) {
+                            if ('@Model.AfterTravlog' !== 'N') {
+                                $('#startlogsession').modal('show');
+                            }
+                            else {
+                                $('#endsession').modal('show');
+                            }
+
+                        }
+                        else {
+                            $('#stepnoid').val(response.StepNo);
+                            $('#taskid').val(response.Task);
+                            $('#firstParaid').val('');
+                            $('#secParaid').val('');
+                            $('#thirdParaid').val('');
+                            $('#singleParaid').val('');
+
+                            divType = response.Div;
+                            var Sing = document.getElementById('single');
+                            var Thr = document.getElementById('three');
+
+                            if (response.Div === 't') {
+                                Sing.style.display = 'none';
+                                Thr.style.display = 'block';
+                                document.getElementById('firstParaid').setAttribute('required', '');
+                                document.getElementById('secParaid').setAttribute('required', '');
+                                document.getElementById('thirdParaid').setAttribute('required', '');
+                                document.getElementById('singleParaid').removeAttribute('required');
+                            }
+                            else {
+                                Sing.style.display = 'block';
+                                Thr.style.display = 'none';
+                                document.getElementById('firstParaid').removeAttribute('required');
+                                document.getElementById('secParaid').removeAttribute('required');
+                                document.getElementById('thirdParaid').removeAttribute('required');
+                                document.getElementById('singleParaid').setAttribute('required', '');
+                            }
+                        }
+
+                    },
+                    error: function (error) {
+                        console.error('An error occurred: ' + error.statusText);
+                    }
+                });
+
+                document.getElementById('loadingIcon').style.display = 'none';
+            });
+        });
+
+        document.querySelectorAll('input').forEach(function (input) {
+            input.setAttribute("autocomplete", "off");
+        });
+
+        window.onload = function () {
+            $(function () {
+                $.ajax({
+                    url: '@Url.Action("UserRefreshed", "Work")',
+                    data: { sessionId: '@Model.SessionID', docType: '@Model.DocType'},
+                    success: function (response) {
+
+                        $('#stepnoid').val(response.StepNo);
+                        $('#taskid').val(response.Task);
+
+                        if (response.StepNo === null && '@Model.WorkingStat' === 'True') {
+                            if ('@Model.AfterTravlog' !== 'N') {
+                                $('#startlogsession').modal('show');
+                            }
+                            else {
+                                $('#endsession').modal('show');
+                            }
+                        }
+                        else {
+                            var Sing = document.getElementById('single');
+                            var Thr = document.getElementById('three');
+                            divType = response.Div;
+
+                            if (response.Div === 't') {
+                                Sing.style.display = 'none';
+                                Thr.style.display = 'block';
+
+                                document.getElementById('firstParaid').setAttribute('required', '');
+                                document.getElementById('secParaid').setAttribute('required', '');
+                                document.getElementById('thirdParaid').setAttribute('required', '');
+                                document.getElementById('singleParaid').removeAttribute('required');
+                            }
+                            else {
+                                Sing.style.display = 'block';
+                                Thr.style.display = 'none';
+
+                                document.getElementById('firstParaid').removeAttribute('required');
+                                document.getElementById('secParaid').removeAttribute('required');
+                                document.getElementById('thirdParaid').removeAttribute('required');
+                                document.getElementById('singleParaid').setAttribute('required', '');
+                            }
+                        }
+
+                        if ('@Model.DocType' === 'MPI') {
+                            var sing = document.getElementById('singleParaid');
+                            sing.setAttribute('required', '');
+                            sing.setAttribute('hidden', '');
+                            document.getElementById('submittravbtn').setAttribute('hidden', '');
+                            document.getElementById('three').style.display = 'none';
+                            document.getElementById('single').style.display = 'block';
+                        }
+                    }
+                });
+            });
+        };
+
+        $(function () {
+            $('#logForm').submit(function (event) {
+                event.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function () {
+                        $('#one').val('');
+                        $('#two').val('');
+                        $('#threetrav').val('');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <div class="modal fade" id="startlogsession" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <form asp-controller="Work" id="logsheetform" asp-action="CreateLogsheet" asp-route-sessionId="@Model.SessionID" asp-route-logType="@Model.AfterTravlog">
+                    <div class="modal-header">
+                        Information
+                    </div>
+                    <div class="modal-body text-wrap">
+                        You still have @afterTravTitle.ToLower(), click continue to proceed. During this, you cannot pause or exit. Please, do not exit the browser. Thank you.
+                    </div>
+                    <div class="modal-footer">
+                        <input class="btn btn-primary" type="submit" value="Proceed"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function (){
+            $('#logsheetform').submit(function (event) {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function () {
+                        $('#startlogsession').modal('hide');
+
+                        $('#logsheet').modal('show');
+
+                    }
+                });
+            });
+        });
+    </script>
+
+    <div class="modal fade" id="endsession" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white d-flex justify-content-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-clipboard-check-fill my-auto" viewBox="0 0 16 16">
+                        <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3Zm3 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3Z" />
+                        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1A2.5 2.5 0 0 1 9.5 5h-3A2.5 2.5 0 0 1 4 2.5v-1Zm6.854 7.354-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708Z" />
+                    </svg>
+                    <p class="modal-title fs-5 fw-bolder my-auto mx-3">Finished Work</p>
+                </div>
+                <div class="modal-body">
+                    You have reached the end of your session..
+                </div>
+                <div class="modal-footer">
+                    <div class="w-100 d-flex justify-content-between">
+                        <div class="d-flex">
+                            <button class="btn bg-warning fw-bold text-nowrap" onclick="GetTravProgress('required')">Review Traveler</button>
+                            @if(Model.AfterTravlog != "N")
+                            {
+                                <button class="btn bg-warning fw-bold mx-4 text-nowrap" onclick="GetConfigProgress('required')">Review Logsheet</button>
+                            }
+                        </div>
+                        <a class="btn btn-primary" asp-controller="Work" asp-action="FinishWork" asp-route-sessionId="@sesID" asp-route-logType="@Model.AfterTravlog" asp-route-docNo="@Model.DocumentNumber" onclick="document.getElementById('loadingIcon').style.display = 'block'; this.setAttribute('hidden', '');">END</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="configprogressedit" data-bs-backdrop="static" style="z-index: 2003">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <p class="modal-title text-white fs-5 fw-bold">Logsheet</p>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form asp-controller="Document" asp-action="SaveConfigChanges" id="editconfigform" asp-route-sessionId="@Model.SessionID" onsubmit="">
+                    <div class="modal-body" style="height:520px">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            @afterTrav1
+                                        </th>
+                                        <th>
+                                            @afterTrav2
+                                        </th>
+                                        <th>
+                                            @afterTrav3
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="configeditbody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit" id="configbutton">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function (){
+            $('#editconfigform').submit(function (e){
+                e.preventDefault();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    success: function (r){
+
+                    }
+                });
+
+                $('#configprogressedit').modal('hide');
+            });
+        });
+
+        function GetConfigProgress(type) {
+            if (type === 'readonly'){
+                document.getElementById('configbutton').style.display = 'none';
+            }
+            else{
+                document.getElementById('configbutton').style.display = 'block';
+            }
+
+            var configbody = document.getElementById('configeditbody');
+            configbody.innerHTML = '';
+            
+            $(function () {
+
+                $('#configprogressedit').modal('show');
+
+                $.ajax({
+                    url: '@Url.Action("GetLogsheetDataForEdit", "Document")',
+                    data: { sessionId: '@Model.SessionID', logType: '@Model.AfterTravlog' },
+                    success: function (r) {
+                        r.r.forEach(function (line) {
+                            
+                            configbody.innerHTML += '<tr><td><input class="form-control" name="PN" value="' + line.PN + '" ' + type + ' required/></td><td><input class="form-control" name="Desc" value="' + line.Desc + '" ' + type + ' required/></td><td><input class="form-control" name="Parameter" value="' + line.Parameter + '" ' + type + ' required/></td></tr>'
+                        });
+                    }
+                });
+
+                $('#configprogressedit').modal('hide');
+            });
+        }
+    </script>
+
+    <script>
+        var divType = null;
+
+        function DisableTravBtn()
+        {
+            var button = document.getElementById("travBtn");
+            button.disabled = true;
+
+            setTimeout(function () {
+                button.disabled = false;
+            }, 5000);
+        }
+
+       
+    </script>
+
+    <div class="modal fade" id="docuFrame" data-bs-backdrop="true" data-bs-keyboard="false">
+        <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h1 class="modal-title fs-5 fw-bold" id="docTitle"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="document.getElementById('docFrame').src = ''"></button>
+                </div>
+                <div class="modal-body h-100">
+                    @* <div class="position-absolute bg-transparent end-0" style="height:60px; width:25%"> *@                       
+                    </div>
+                    <div>
+                        <iframe class="border-3 border-dark w-100" style="height:85vh" id="docFrame" src=""></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade text-center" id="problemlogForm" data-bs-backdrop="true" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <div class="d-flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bookmark-x-fill my-auto" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293 6.854 5.146z" />
+                        </svg>
+                        <p class="modal-title fs-5 fw-bold my-auto mx-2">Problem Log</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" id="closeproblog"></button>
+                </div>
+                <form asp-controller="Work" asp-action="SubmitProblemLog" asp-route-rDocNumber="@Model.DocumentNumber" id="probForm">
+                    @* <input value="@Model.DocumentNumber" id="plDocNo" name="docNo" hidden /> *@
+                    <div class="modal-body">
+                        <div class="d-flex mb-2">
+                            <div class="w-25 d-flex justify-content-between mx-2">
+                                <div class="align-self-center w-50 mx-2">
+                                    <label class="text-nowrap fw-bold">
+                                        Reported By:
+                                    </label>
+                                </div>
+                                <input class="form-control text-center w-auto" id="reporter" value="@EN[0]" name="reportedby" readonly/>
+                            </div>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>
+                                        Work Week
+                                    </th>
+                                    <th>
+                                        Product
+                                    </th>
+                                    <th>
+                                        Affected Part.
+                                    </th>
+                                    <th>
+                                        Document No. or P/N
+                                    </th>
+                                    <th>
+                                        Description
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input class="form-control" id="ww" value="" placeholder="Required" name="wweek" type="number" required />
+                                    </td>
+                                    <td>
+                                        <input class="form-control" value="@Model.Product" name="product" readonly/>
+                                    </td>
+                                    <td>
+                                        <input class="form-control" id="aff" value="@Model.AssyNo" name="affected" readonly />
+                                    </td>
+                                    <td>
+                                        <input class="form-control" id="doc" value="" placeholder="Required" name="docno" required />
+                                    </td>
+                                    <td>
+                                        <input class="form-control" id="de" value="" placeholder="Required" name="desc" required />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="flex-column">
+                            <label class="form-label fw-bold">Problem Description</label>
+                            <textarea class="form-control" style="min-height:120px; max-height:300px" name="probcon" id="pd" placeholder="Required" required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        @if (Model.WorkingStat)
+                        {
+                            <input type="submit" class="btn btn-primary"/>
+                        }
+                        else
+                        {
+                            Write("You are currently viewing the document, click start to start working. Thank you!");
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        $(function () {
+            $('#probForm').submit(function (event) {
+                event.preventDefault();
+
+                var LoadingIcon = document.getElementById('loadingIcon');
+
+                var formData = $(this).serialize();
+                LoadingIcon.style.display = 'block';
+
+                if (document.getElementById('reporter').value === '')
+                {
+                    document.getElementById('reporter').value = '@EN[0]';
+                }
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    data: formData,
+                    success: function (response){
+
+                        $('#closeproblog').click();
+
+                        // $('#aff').val('');
+                        $('#pro').val('');
+                        $('#doc').val('');
+                        $('#de').val('');
+                        $('#pd').val('');
+                        $('#ww').val('');
+
+                        LoadingIcon.style.display = 'none';
+
+                        $('#plConfirm').modal('show');
+                    },
+                    error: function (error) {
+                        console.error('An error occurred: ' + error.statusText);
+                    }
+                });
+            });
+        });
+
+    </script>
+
+    <div class="modal fade" data-bs-backdrop="true" id="plConfirm">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <div class="modal-title d-flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-info-square-fill my-auto" viewBox="0 0 16 16">
+                            <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm8.93 4.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM8 5.5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+                        </svg>
+                        <p class="text-center fs-5 fw-bold my-auto mx-2">Problem Log</p>
+                    </div>                   
+                </div>
+                <div class="modal-body">
+                    Problem Log submitted.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary btn w-auto" type="button" data-bs-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form asp-controller="Work" asp-action="PauseWork" asp-route-docNo="@Model.DocumentNumber" asp-route-EN="@EN[0]" class="modal fade" id="pausemodal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-2 border-danger">
+                <div class="modal-header">
+                    <p class="modal-title fs-5 fw-bold">Pause Work</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <label class="form-label">Pause Reason:</label>
+                        <textarea class="w-100" style="max-height:300px; min-height:200px" id="reasontext" name="reason" placeholder="Other Reason" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex justify-content-evenly">
+                        <button class="btn mx-2" type="button" onclick="SetReason('Timeout')">Timeout</button>
+                        <button class="btn mx-2" type="button" onclick="SetReason('Breaktime')">Breaktime</button>
+                        <input type="submit" class="btn btn-primary mx-2" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+<script>
+
+    var dTitle = document.getElementById('docTitle');
+
+    function WhichDev(docName, docType) {
+        document.getElementById('closeoffcanvas').click();
+        var Frame = document.getElementById('docFrame');
+
+        var baseUrl = '@Url.Action("ShowDoc", "MTI", new {docunumber = Model.DocumentNumber})';
+        Frame.src = baseUrl + '&whichDoc=' + docName + '&docType=' + docType;
+        dTitle.innerText = docName;
+    }
+
+    function SeeWS() {
+        document.getElementById('closeoffcanvas').click();
+        var Frame = document.getElementById('docFrame');
+
+        var baseUrl = '@Url.Action("ShowWS", "MTI")';
+        Frame.src = baseUrl;
+
+            dTitle.innerText = 'Workmanship Standard';
+    }
+
+    function SetDoc(doc, doctit) {
+        document.getElementById('closeoffcanvas').click();
+        var Frame = document.getElementById('docFrame');
+
+        var baseUrl = '@Url.Action("ShowDoc", "MTI", new {docunumber = Model.DocumentNumber})';
+        Frame.src = baseUrl + '&whichDoc=' + doc;
+        dTitle.innerText = doctit;
+    }
+
+    function SetReason(reason) {
+        document.getElementById('reasontext').value = reason;
+        document.getElementById('pausemodal').submit();
+    }
+    
+</script>
+    
+</body>
+
+</html>
+
+
+

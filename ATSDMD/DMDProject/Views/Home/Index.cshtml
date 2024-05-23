@@ -1,0 +1,479 @@
+﻿@model DMD_Prototype.Controllers.IndexModel
+@{
+    ViewData["Title"] = "Main Menu";
+
+    string[]? EN = TempData["EN"] as string[];
+    TempData.Keep();
+
+    string information = "";
+
+    if (ViewBag.Information != null)
+    {
+        information = ViewBag.Information;
+    }
+}
+<div class="container-fluid row mx-0">   
+    <div class="col-md-12 col-lg-4 mx-auto mb-md-2">       
+        <div class="card border-2 border-dark h-100" style="background-color:#E9E4E9">
+            <div class="card-header text-center border-2 border-dark fs-3" style="background-color:#B5AD9A">
+                <p class="modal-title fs-5 fw-bold text-center">Documents Menu</p>
+            </div>
+            <div class="card-body w-100 h-100 d-flex flex-column align-items-center justify-content-evenly">
+                @if (EN[1] != "USER")
+                {
+                    <div class="w-75 mx-auto h-auto">
+                        <button class="w-100 btn btn-warning border-2 border-dark" style="font-size:20px" data-bs-toggle="modal" data-bs-target="#wsmodal">Workmanship Standard</button>
+                    </div>
+
+                    <div class="modal fade" data-bs-backdrop="static" id="wsmodal" style="z-index: 2002">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header bg-primary text-white">
+                                    <div class="modal-title d-flex">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-file-binary-fill my-auto" viewBox="0 0 16 16">
+                                            <path d="M5.526 9.273c-.542 0-.832.563-.832 1.612 0 .088.003.173.006.252l1.56-1.143c-.126-.474-.375-.72-.733-.72zm-.732 2.508c.126.472.372.718.732.718.54 0 .83-.563.83-1.614 0-.085-.003-.17-.006-.25l-1.556 1.146z" />
+                                            <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM7.05 10.885c0 1.415-.548 2.206-1.524 2.206C4.548 13.09 4 12.3 4 10.885c0-1.412.548-2.203 1.526-2.203.976 0 1.524.79 1.524 2.203zm3.805 1.52V13h-3v-.595h1.181V9.5h-.05l-1.136.747v-.688l1.19-.786h.69v3.633h1.125z" />
+                                        </svg>
+                                        <p class="fs-5 mx-2 fw-bold my-auto">Workmanship Standard</p>
+                                    </div>
+                                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    @if (EN[1] == "ORIGINATOR" || EN[1] == "ADMIN")
+                                    {
+                                        <form class="d-flex mb-2" asp-controller="MTI" asp-action="UploadWS" enctype="multipart/form-data">
+                                            <div class="">
+                                                <input class="form-control" type="file" name="file" accept=".pdf" required />
+                                            </div>
+                                            <div>
+                                                <input class="btn btn-primary mx-3" type="submit" value="Upload" />
+                                            </div>
+                                        </form>
+                                    }
+                                    <iframe class="w-100" src="@Url.Action("ShowWS", "MTI")" style="height:70vh"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="w-75 mx-auto h-auto">
+                    <a class="w-100 btn btn-primary border-2 border-dark position-relative" style="font-size:20px" asp-controller="Home" asp-action="MTIList" asp-route-whichDoc="PNP">
+                        PNP HEAD MX
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @Html.Raw(Model.PNPCount)
+                        </span>
+                    </a>
+                </div>
+                <div class="w-75 mx-auto h-auto">
+                    <a class="w-100 btn btn-primary border-2 border-dark position-relative" style="font-size:20px" asp-controller="Home" asp-action="MTIList" asp-route-whichDoc="JLP">
+                        JLP
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @Html.Raw(Model.JLPCount)
+                        </span>
+                    </a>
+                </div>
+                <div class="w-75 mx-auto h-auto">
+                    <a class="w-100 btn btn-primary border-2 border-dark position-relative" style="font-size:20px" asp-controller="Home" asp-action="MTIList" asp-route-whichDoc="JTP">
+                        JTP
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @Html.Raw(Model.JTPCount)
+                        </span>
+                    </a>
+                </div>
+                <div class="w-75 mx-auto h-auto">
+                    <a class="w-100 btn btn-primary border-2 border-dark position-relative" style="font-size:20px" asp-controller="Home" asp-action="MTIList" asp-route-whichDoc="OLB">
+                        OLB
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @Html.Raw(Model.OLBCount)
+                        </span>
+                    </a>
+                </div>
+                <div class="w-75 mx-auto h-auto">
+                    <a class="w-100 btn btn-primary border-2 border-dark position-relative" style="font-size:20px" asp-controller="Home" asp-action="MTIList" asp-route-whichDoc="SWAP">
+                        SWAP
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @Html.Raw(Model.SWAPCount)
+                        </span>
+                    </a>
+                </div>
+                <div class="w-75 mx-auto h-auto">
+                    <a class="w-100 btn btn-primary border-2 border-dark position-relative" style="font-size:20px" asp-controller="Home" asp-action="MTIList" asp-route-whichDoc="SPARES">
+                        SPARES
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            @Html.Raw(Model.SPARESCount)
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (EN[1] != "USER")
+    {
+        <div class="col-md-12 col-lg-4 mb-md-2 mx-auto">
+            <div class="card border-2 border-dark h-100" style="background-color:#E9E4E9">
+                <div class="card-header border-2 border-dark fs-3" style="background-color:#B5AD9A">
+                    <p class="modal-title fs-5 fw-bold text-center">Documents Statuses</p>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-column h-100 justify-content-evenly">
+                        <div class="card border-2 border-dark">
+                            <div class="card-header border-2 border-dark" style="background-color:darkslateblue">
+                                <p class="card-title text-center fs-6 fw-bold text-white">Uploaded Documents</p>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-center fw-bold fs-1">@Model.ControlledVal</p>
+                            </div>
+                        </div>
+                        <div class="card border-2 border-dark my-2">
+                            <div class="card-header border-2 border-dark" style="background-color:darkslateblue">
+                                <p class="card-title text-center fs-6 fw-bold text-white">Interim Documents</p>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-center fw-bold fs-1">@Model.InterimVal</p>
+                            </div>
+                        </div>
+                        <div class="card border-2 border-dark">
+                            <div class="card-header border-2 border-dark" style="background-color:darkslateblue">
+                                <p class="card-title text-center fs-6 fw-bold text-white">Obsolete Documents</p>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-center fw-bold fs-1">@Model.ObsoleteVal</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-lg-4">
+            <div class="card border-2 border-dark" style="background-color:#E9E4E9">
+                <div class="card-header text-center border-2 border-dark" style="background-color:#B5AD9A">
+                    <p class="modal-title fs-5 fw-bold text-center">Problem Log</p>
+                </div>
+                <div class="card-body">
+                    <div class="flex-column">
+                        <div>
+                            <select class="form-select w-100 fw-bolder" onchange="GetPLValues(this.value)" id="plYearSelector">
+                                <option>@DateTime.Now.Year</option>
+                                @for (int i = DateTime.Now.Year - 1; i >= 2022; i--)
+                                {
+                                    <option>@i</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex flex-column h-100 justify-content-evenly">
+                            <div class="card border-2 border-dark my-2" style="background-color:white">
+                                <div class="" style="min-height: 50%">
+                                    <canvas id="problemlognumber"></canvas>
+                                </div>
+                            </div>
+                            <div class="card border-2 border-dark" style="background-color:white">
+                                <div class="" style="min-height: 50%">
+                                    <canvas id="ProblemLogOpenAndClosed"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+@*             openPopup();
+
+            function openPopup() {
+                var popupUrl = '@Url.Action("ShowDoc", "MTI", new { docunumber = "", whichdoc = "WS" })';
+
+                var popupWidth = 600;
+                var popupHeight = 400;
+
+                var leftPosition = (screen.width - popupWidth) / 2;
+                var topPosition = (screen.height - popupHeight) / 2;
+
+                var popupWindow = window.open(popupUrl, '_blank', 'width=' + popupWidth + ',height=' + popupHeight + ',top=' + topPosition + ',left=' + leftPosition);
+
+            }  *@
+
+            var openClosedPL = document.getElementById('ProblemLogOpenAndClosed');
+            var plCount = document.getElementById('problemlognumber');
+
+            var openidpl = '';
+            var closedidpl = '';
+            var opensdpl = '';
+            var closedsdpl = '';
+            var jtp = '';
+            var jlp = '';
+            var olb = '';
+            var pnp = '';
+            var swap = '';
+            var spares = '';
+
+            function getMonthsToCurrent(month) {
+                var months = [];
+                var monthNames = [
+                    'January', 'February', 'March', 'April', 'May', 'June',
+                    'July', 'August', 'September', 'October', 'November', 'December'
+                ];
+
+                for (var i = 0; i <= month; i++) {
+                    months.push(monthNames[i]);
+                }
+                return months;
+            }
+
+            var months = getMonthsToCurrent(new Date().getMonth());
+
+            var openClosedChart = new Chart(openClosedPL, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Open Interim',
+                            data: openidpl,
+                            backgroundColor: '#ffa600',
+                            borderColor: 'black',
+                            borderWidth: 0.5,
+                            pointStyle: 'rect',
+                            stack: '0'
+                        },
+                        {
+                            label: 'Open Standardized',
+                            data: opensdpl,
+                            backgroundColor: '#ef5675',
+                            borderColor: 'black',
+                            borderWidth: 0.5,
+                            pointStyle: 'rect',
+                            stack: '1'
+                        },
+                        {
+                            label: 'Closed Interim',
+                            data: closedidpl,
+                            backgroundColor: '#7a5195',
+                            borderColor: 'black',
+                            borderWidth: 0.5,
+                            pointStyle: 'rect',
+                            stack: '0'
+                        },
+                        {
+                            label: 'Closed Standardized',
+                            data: closedsdpl,
+                            backgroundColor: '#003f5c',
+                            borderColor: 'black',
+                            borderWidth: 0.5,
+                            pointStyle: 'rect',
+                            stack: '1'
+                        }
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {},
+                            ticks: {
+                                color: 'black',
+                                precision: 0
+                            },
+                            title: {
+                                color: 'black',
+                                display: true,
+                                text: ''
+                            },
+                            stacked: true
+                        },
+                        x: {
+                            ticks: {
+                                color: 'black',
+                            },
+                            stacked: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                usePointStyle: true,
+                            },
+
+                        }
+                    }
+                }
+            });
+
+            var products = ["JLP", "JTP", "PNP", "OLB", "SWAP", "SPARES"];
+            var bgiv = '';
+            var bgv = '#F57653';
+            
+            var plCountChart = new Chart(plCount, {
+                type: 'bar',
+                data: {
+                    labels: products,
+                    datasets: [
+                        {
+                            label: 'Problem Log Count',
+                            data: [jlp, jtp, pnp, olb, swap, spares],
+                            backgroundColor: '#ffa600',
+                            borderColor: 'black',
+                            borderWidth: .5,
+                            pointStyle: 'rect'
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {},
+                            ticks: {
+                                color: 'black',
+                                precision: 0,
+                                max: Math.max(...[3, 6, 1, 2], ...[3, 6, 1, 2]) + 2,
+                            },
+                            title: {
+                                color: 'black',
+                                display: true,
+                                text: ''
+                            },
+                        },
+                        x: {
+                            ticks: {
+                                color: 'black',
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                usePointStyle: true,
+                            }
+                        }
+                    }
+                }
+            });
+
+            GetPLValues(new Date().getFullYear());
+
+            function GetPLValues(year) {
+                var monthCount = 11;
+
+                if (year == new Date().getFullYear()){
+                    monthCount = new Date().getMonth();
+                }
+
+                $.ajax({
+                    url: '@Url.Action("GetPLDashboard", "Home")',
+                    data: { year: year },
+                    success: function (r) {
+
+                        openidpl = r.openIDPL;
+                        closedidpl = r.closedIDPL;
+                        opensdpl = r.openSDPL;
+                        closedsdpl = r.closedSDPL;
+                        jtp = r.jtp;
+                        jlp = r.jlp;
+                        olb = r.olb;
+                        pnp = r.pnp;
+                        swap = r.swap;
+                        spares = r.spares
+
+                        openClosedChart.data.labels = getMonthsToCurrent(monthCount);
+                        openClosedChart.data.datasets[0].data = openidpl;
+                        openClosedChart.data.datasets[1].data = opensdpl;
+                        openClosedChart.data.datasets[2].data = closedidpl;
+                        openClosedChart.data.datasets[3].data = closedsdpl;
+                        
+                        openClosedChart.update();
+
+                        plCountChart.data.datasets[0].data = [jlp, jtp, pnp, olb, swap, spares];
+                        plCountChart.update();
+
+                    }
+                });
+            }
+        </script>
+    }
+    else
+    {
+        <div class="col-md-12 col-lg-8">
+            <div class="card border-2 border-dark h-100" style="background-color:#E9E4E9">
+                <div class="card-header text-center border-2 border-dark" style="background-color:#B5AD9A">
+                    <p class="modal-title fs-5 fw-bold text-center">Documents List</p>
+                </div>
+                <div class="card-body" style="min-height:500px; max-height:500px">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="myTable">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>
+                                        Product
+                                    </th>
+                                    <th>
+                                        Doc #
+                                    </th>
+                                    <th>
+                                        Description
+                                    </th>
+                                    <th>
+                                        Part #
+                                    </th>
+                                    <th>
+                                        Rev
+                                    </th>
+                                    <th>
+                                        
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="useruibody">
+                                @foreach(var doc in Model.AllDocs)
+                                {
+                                    <tr>
+                                        <td>
+                                            @doc.Product
+                                        </td>
+                                        <td>
+                                            @doc.DocumentNumber
+                                        </td>
+                                        <td>
+                                            @doc.AssemblyDesc
+                                        </td>
+                                        <td>
+                                            @doc.AssemblyPN
+                                        </td>
+                                        <td>
+                                            @doc.RevNo
+                                        </td>
+                                        <td>
+                                            @doc.DocType
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-primary" asp-controller="MTI" asp-action="MTIView" asp-route-docuNumber="@doc.DocumentNumber">Go</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            $('#myTable').DataTable({
+                searching: true,
+                lengthChange: false,
+                pageLength: 7,
+                order: [],
+                ordering: false
+            });
+
+        </script>
+    }
+</div>
+
+

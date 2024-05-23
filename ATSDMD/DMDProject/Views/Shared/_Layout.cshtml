@@ -1,0 +1,430 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DMD Portal - @ViewData["Title"]</title>    
+    <link href="~/css/site.css" rel="stylesheet" />
+    <script src="~/js/site.js"></script>
+    <script src="~/chart.js/chart.js"></script>
+    <a href="~/lib/bootstrap/dist/css/bootstrap.min.css.map"></a>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <a href="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js.map"></a>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="~/datatables/datatable.min.css" rel="stylesheet" />
+    <script src="~/datatables/datatable.min.js"></script>
+    <style>
+        .modal {
+            z-index: 2001;
+        }
+        .header-nav {
+            z-index: 2000;
+        }
+    </style>
+    
+</head>
+
+<body class="" style="background-color: lightgray">
+    @{
+        string[] EN = TempData["EN"] as string[];
+        TempData.Keep();
+    }
+    <input value="@EN[2]" id="userName" hidden/>
+        <div class="w-100 d-flex justify-content-between align-self-start bluebg">
+            <div class="my-auto">
+                <img style="width:60px; height: 30px" src="~/pimeslogo.png" />
+            </div>
+            <div class="">
+                <h3 class="text-white fs-3 my-auto">ATS ENGINEERING - DMD PORTAL</h3>
+            </div>
+            <div class="my-auto">
+                <img style="width:60px; height: 30px" src="~/ats wbg.png" />
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-lg bluebg">
+            <div class="container-fluid" >               
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="d-flex btn text-white" asp-controller="Home" asp-action="Index">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill my-auto" viewBox="0 0 16 16">
+                                    <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5Z" />
+                                </svg>
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="d-flex btn text-white" asp-controller="Home" asp-action="ShowTravelers">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="mx-1 bi bi-person-lines-fill text-white my-auto" viewBox="0 0 16 16">
+                                    <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
+                                </svg>
+                                Travelers
+                            </a>
+                        </li>
+                        @if (EN[1] != "USER")
+                        {
+                            <li class="nav-item">
+                                <a class="d-flex btn text-white" asp-controller="ProblemLog" asp-action="ProblemLogView">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list-check text-white mx-1 my-auto" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z" />
+                                    </svg>
+                                    Problem Log
+                                </a>
+                            </li>
+                        }
+                        @if (EN[1] == "USER" || EN[1] == "ADMIN")
+                        {
+                            <li class="nav-item">
+                                <a class="d-flex btn text-white" asp-controller="TransferWork" asp-action="UserTWView">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-lines-fill text-white mx-1 my-auto" viewBox="0 0 16 16">
+                                        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
+                                    </svg>
+                                    Sessions
+                                    <span class="badge text-bg-danger mx-1 text-center align-self-center" id="SessionsCount">
+
+                                    </span>
+                                </a>
+                            </li>
+                        }
+
+                        @if (EN[1] == "SUPERVISOR" || EN[1] == "ADMIN")
+                        {
+                            <li class="nav-item">
+                                <a class="d-flex btn text-white" asp-controller="TransferWork" asp-action="SVTWView">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-card-list text-white mx-1 my-auto" viewBox="0 0 16 16">
+                                        <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z" />
+                                        <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zM4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z" />
+                                    </svg>
+                                    Approve Work Transfer
+                                    <span class="badge text-bg-danger mx-1 text-center align-self-center" id="rsCount">
+
+                                    </span>
+                                </a>
+                            </li>
+                        }
+@* 
+                        @if (EN[1] == "ORIGINATOR" || EN[1] == "ADMIN")
+                        {
+                            string text = "Downloads";
+
+                            if (EN[1] == "ADMIN") text = "UPLOAD/DOWNLOAD";
+                            <li class="nav-item">
+                                <button class="d-flex btn text-white" data-bs-target="#downloadModal" data-bs-toggle="modal">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-down-up mx-1 my-auto" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5" />
+                                    </svg>
+                                    @text
+                                </button>
+                            </li>
+                        } *@
+                    </ul>
+                    <div class="d-flex">
+                         <div class="d-flex align-items-center">
+                            <button class="btn btn-toolbar" data-bs-toggle="modal" data-bs-target="#searchDoc">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search text-white mx-1 my-auto" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div id="notifOn">
+                                <button class="btn btn-toolbar mx-2" onclick="SetUISession(0)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell my-auto text-white" viewBox="0 0 16 16">
+                                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div id="notifOff">
+                                <button class="btn btn-toolbar mx-2" onclick="SetUISession(1)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-slash my-auto text-white" viewBox="0 0 16 16">
+                                        <path d="M5.164 14H15c-.299-.199-.557-.553-.78-1-.9-1.8-1.22-5.12-1.22-6q0-.396-.06-.776l-.938.938c.02.708.157 2.154.457 3.58.161.767.377 1.566.663 2.258H6.164zm5.581-9.91a4 4 0 0 0-1.948-1.01L8 2.917l-.797.161A4 4 0 0 0 4 7c0 .628-.134 2.197-.459 3.742q-.075.358-.166.718l-1.653 1.653q.03-.055.059-.113C2.679 11.2 3 7.88 3 7c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0c.942.19 1.788.645 2.457 1.284zM10 15a2 2 0 1 1-4 0zm-9.375.625a.53.53 0 0 0 .75.75l14.75-14.75a.53.53 0 0 0-.75-.75z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <form asp-controller="Home" asp-action="LogoutOptions" id="logout" onchange="this.submit()">
+                                <select class="form-select bg-primary w-auto text-white border-1 border-dark" name="option">
+                                    <option selected hidden>
+                                        &#10004;
+                                        @EN[0]
+                                    </option>
+                                    @{
+                                        if (EN[1] == "ADMIN")
+                                        {
+                                            <option class="" value="Admin">
+                                                &#128101;
+                                                Admin
+                                            </option>
+                                        }
+                                    }
+                                    <option class="text-danger bg-white" value="Logout">
+                                        &#9889; Log-out
+                                    </option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+@*         <div class="modal fade" id="downloadModal">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header text-white bg-primary fw-bold">
+                        Download
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            @if (EN[1] == "ADMIN")
+                            {
+                                <div class="col-12">
+                                    <input class="form-control" type="file" id="downloadFile"/>
+                                </div>
+                            }
+                            <div class="col-12">
+                                <a class="btn btn-primary w-100" asp-controller="DocGenerator" asp-action="DownloadTravelerTemplate" asp-route-whichFile="mpiFileDir">MPI Traveler</a>
+                            </div>
+                            <div class="col-12 my-2">
+                                <a class="btn btn-primary w-100" asp-controller="DocGenerator" asp-action="DownloadTravelerTemplate" asp-route-whichFile="mtiFileDir">MTI Traveler</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> *@
+
+    <div class="toast-container position-fixed p-3 end-0 bottom-0" id="notifToast" style="z-index:2003" hidden>
+        <div class="toast show fade bg-white" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-primary">
+                <div class="mx-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell my-auto text-white" viewBox="0 0 16 16">
+                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
+                    </svg>
+                </div>
+                <strong class="me-auto text-white fs-6">DMD Portal Announcements</strong>
+                <button type="button" class="btn-close" aria-label="Close" onclick="SetUISession(0)"></button>
+            </div>
+            <div class="toast-body bg-white">
+                <div id="notifBody" class="my-2 flex-colum overflow-auto" style="max-height: 50vh; min-height:50vh">
+                    <hr class="mt-3" />
+                </div>
+            </div>
+            @if (EN[1] != "USER")
+            {
+                <form class="d-flex justify-content-between m-1 mt-0" id="announcementForm">
+                    <div class="w-75">
+                        <textarea class="form-control w-100" style="max-height: 50px; min-height:50px" id="announcementMessage" required></textarea>
+                    </div>
+                    <div class="w-25 h-100 my-auto">
+                        <button class="btn btn-primary btn-sm w-100 mx-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-plus text-white" viewBox="0 0 16 16">
+                                <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855a.75.75 0 0 0-.124 1.329l4.995 3.178 1.531 2.406a.5.5 0 0 0 .844-.536L6.637 10.07l7.494-7.494-1.895 4.738a.5.5 0 1 0 .928.372zm-2.54 1.183L5.93 9.363 1.591 6.602z" />
+                                <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5" />
+                            </svg>
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+
+    <script>
+        var notifOn = document.getElementById('notifOn');
+        var notifOff = document.getElementById('notifOff');
+        var toastBtn = document.getElementById('notifToast');
+        var notifBody = document.getElementById('notifBody');
+        var announcementTxt = document.getElementById('announcementMessage');
+
+        document.addEventListener('DOMContentLoaded', function () {
+            GetUISession();
+        });
+
+        $(function () {
+            $('#announcementForm').submit(function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '@Url.Action("SubmitAnnouncement", "Announcement")',
+                    data: { message: $('#announcementMessage').val(), announcer: $('#userName').val() },
+                    success: function (r) {
+                        announcementTxt.value = '';
+                        toastBtn.setAttribute('hidden', '');
+                        GetUISession();
+                        toastBtn.removeAttribute('hidden');
+                    }
+                });
+            });
+        });
+
+
+
+        function SetUISession(isVisible) {
+            $.ajax({
+                url: '@Url.Action("SetUISession", "Layout")',
+                data: { isVisible: isVisible },
+                success: function (r) {
+                    GetUISession();
+                }
+            });
+        }
+
+        function GetUISession() {
+            
+            $.ajax({
+                url: '@Url.Action("GetUISession", "Layout")',
+                success: function (r) {
+                    if (r.isVisible == 0) {
+                        toastBtn.setAttribute('hidden', '');
+
+                        notifOff.removeAttribute('hidden');
+                        notifOn.setAttribute('hidden', '');
+                    }
+                    else {
+                        toastBtn.removeAttribute('hidden');
+                        notifOn.removeAttribute('hidden');
+                        notifOff.setAttribute('hidden', '');
+                    }
+                    notifBody.innerHTML = '';
+                    if (r.announcements == null || r.announcements == undefined || r.announcements.length == 0) {
+                        notifBody.innerHTML += 'No Announcement';
+                    } else {
+                        for (let ann of r.announcements) {
+                            let deleteBtn = '';
+
+                            if ('@EN[0]' == ann.AnnouncementCreator || '@EN[1]' == 'ADMIN') {
+                                deleteBtn = '<button class="btn-close fs-6" onclick="DeleteAnnouncement(' + ann.AnnouncementID + ', this)"></button>';
+                            }
+                            notifBody.innerHTML += '<div class="card my-1"><div class="card-body"><h5 class="card-title d-flex justify-content-between">' + ann.AnnouncementCreator + deleteBtn + '</h5><p class="card-text">' + ann.AnnouncementMessage + '</p></div></div>';
+                        }
+                    }
+                }
+            });
+        }
+        
+        function DeleteAnnouncement(id, btn){
+            $.ajax({
+                url: '@Url.Action("RemoveAnnouncement", "Announcement")',
+                data: {id: id},
+                success: function (r){
+                    GetUISession();
+                }
+            });
+        }
+    </script>
+    <div class="container-fluid mt-4" style="height:80vh; z-index:2001">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <div class="modal fade" data-bs-backdrop="static" id="searchDoc" style="z-index:2002">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <div class="modal-title d-flex">
+                        <div class="mb-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                            </svg>
+                        </div>
+                        <p class="fs-5 fw-bold text-center my-auto mx-2">Search Document</p>                        
+                     </div>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="searchForm">
+                        <div class="d-flex">
+                            <input class="form-control" type="search" id="searchstring" placeholder="Search document" required/>
+                            <input class="btn btn-primary mx-3" value="Search" type="submit"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <i class="w-100 text-start">Note: Enter Document Number or Assembly Part Number.</i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="searchFailed" data-bs-backdrop="static">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <div class="modal-title d-flex">
+                        <div class="my-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-exclamation-diamond-fill" viewBox="0 0 16 16">
+                                <path d="M9.05.435c-.58-.58-1.52-.58-2.1 0L.436 6.95c-.58.58-.58 1.519 0 2.098l6.516 6.516c.58.58 1.519.58 2.098 0l6.516-6.516c.58-.58.58-1.519 0-2.098L9.05.435zM8 4c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995A.905.905 0 0 1 8 4zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                            </svg>
+                        </div>
+                        <p class="w-100 text-center fs-5 fw-bold text-white mx-3 my-auto">Document 404</p>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p class="w-100 text-center ">Search failed, no match found.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-bs-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            if (document.getElementById('rsCount') === null && document.getElementById('SessionsCount') === null) {
+                return;
+            }
+
+
+            $.ajax({
+                url: '@Url.Action("GetSessionsCount", "Home")',
+                success: function (r) {
+                    if (document.getElementById('rsCount') !== null) document.getElementById('rsCount').innerHTML = r.r;
+                    if (document.getElementById('SessionsCount') !== null) document.getElementById('SessionsCount').innerHTML = r.usCount;
+                }
+            });
+        }
+
+        $(function (){
+            $('#searchForm').submit(function (e){
+                e.preventDefault();
+
+                $.ajax({
+                    url: '@Url.Action("SearchDocument", "Home")',
+                    data: { searchString: document.getElementById('searchstring').value },
+                    success: function (r)
+                    {
+                        if (r.failed === 'f')
+                        {
+                            document.getElementById('searchstring').value = '';
+                            $('#searchDoc').modal('hide');
+                            $('#searchFailed').modal('show');
+                        }
+                        else
+                        {
+                            var link = '@Url.Action("MTIView", "MTI")' + '?docuNumber=' + r.documentNumber + '&workStat=' + false + '&sesID=' + null;
+                            window.location.href = link;
+
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+    @* <footer class="footerLayout">
+        <div class="w-100">
+            <p class="text-white mx-3">&copy; 2023 - DIGITALIZATION OF MANUFACTURING DOCUMENTS</p>
+        </div>
+    </footer> *@
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

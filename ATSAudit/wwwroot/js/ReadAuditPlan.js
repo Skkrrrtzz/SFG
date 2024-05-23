@@ -87,7 +87,8 @@ async function renderConformitiesTable() {
     let conformities = await getConformitiesByPlanId($('#readAuditPlanId').val());
 
     conformities.forEach(conformity => {
-        $('#conformitiesTable tbody').append(
+        console.log(conformity.planId)
+        $('#conformitiesTable').append(
             `<tr>` +
                 // '<td hidden>' + conformity.conformityId + '</td>' +
                 // '<td hidden>' + conformity.planId + '</td>' +
@@ -142,7 +143,7 @@ function getConformitiesByPlanId(planId) {
     })
     .then(response => response.json())
     .then(data => { 
-        console.log(data);
+        // console.log(data);
         return data;
     })
     .catch(error => console.log(error));
@@ -230,3 +231,8 @@ $('#readAuditPlanDelete').on('click', e => {
 //     })
 //     .catch(error => console.log(error));
 // });
+
+$('#conformitiesTab').on('click', e => {
+    renderConformitiesTable();
+});
+

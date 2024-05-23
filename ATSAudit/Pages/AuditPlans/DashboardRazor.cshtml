@@ -1,4 +1,4 @@
-@page "/"
+@page "/Dashboard"
 @model QA_Audit_Fresh.Views.AuditPlans.DashboardRazor
 @{
     ViewData["Title"] = "Dashboard";
@@ -12,12 +12,13 @@
     <partial name="Partials/_Visualization"></partial>
 </div>
 
-@* @section Scripts { *@
+@section Scripts {
     <script src="~/JS/ReadAuditPlan.js"></script>
     <script src="~/JS/CreateAuditPlan.js"></script>
     <script src="~/JS/CreateConformity.js"></script>
-    <script src="~/JS/CreateCPAR.js"></script>
+    @* <script src="~/JS/CreateCPAR.js"></script> *@
+    <script src="~/JS/CPARsTable.js"></script>
     <script src="~/JS/Sidebar.js"></script>
     <script src="~/JS/Calendar.js"></script>
-    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
-@* } *@
+    @* <script src="/_framework/aspnetcore-browser-refresh.js"></script> *@
+}

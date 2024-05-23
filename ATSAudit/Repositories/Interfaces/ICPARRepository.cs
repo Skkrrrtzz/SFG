@@ -10,6 +10,7 @@ namespace QA_Audit_Fresh.Repositories
     {
         public Task<IEnumerable<CPARModel>> GetCPARs();
         public Task<IEnumerable<CPARModel>> GetCPAR(int conformityId);
+        public Task<IEnumerable<CPARModel>> GetCPARsByAuditPlan(int planId);
         public Task<IEnumerable<CPARModel>> PostCPAR(CPARModel conformity);
         public Task<int> DeleteCPAR(int conformityId);
     }

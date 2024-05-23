@@ -85,6 +85,11 @@ textarea {
     font-weight: bold;
 }
 
+/* .previousDay {
+    background-color: #cacaca;
+    color: #6d6d6d
+} */
+
 .clicked {
     border: 3px solid #0d6efd !important;
 }

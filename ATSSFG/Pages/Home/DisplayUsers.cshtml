@@ -1,0 +1,200 @@
+﻿@{
+    ViewData["Title"] = "Users Account";
+}
+<div class="container">
+    <div>
+        <h4 class="fw-bold">Users Account</h4>
+    </div>
+    <div class="table-responsive py-2 my-2 border border-2 rounded">
+        <table class="table table-hover table-sm" id="userTbl" style="width: 100%">
+            <thead class="table-secondary fw-bold">
+                <tr>
+                    <th>No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Role</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@* Add Modal *@
+<div class="modal fade" id="addUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="addUserModalLabel">Add User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="alert alert-warning d-flex align-items-center mx-2 my-1 d-none" role="alert" id="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <span id="alert-text"></span>
+            </div>
+            <div class="modal-body">
+                <div class="row g-2">
+                    <div class="col-sm-6 mb-3">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control fw-bold" id="addUserField" name="name" required>
+                            <label for="addUserField">Name</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="addEmailField" name="email" required />
+                            <label class="form-label" for="addEmailField">Email address</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-sm-6 mb-3">
+                        <div class="form-outline">
+                            <input type="number" class="form-control" id="addEmpField" name="employee_id" required />
+                            <label class="form-label" for="addEmpField">Emp ID</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 mb-3">
+                        <div class="input-group">
+                            <input type="password" class="form-control" name="password" id="addPassField" placeholder="Password" required minlength="8" pattern=".{8,}" title="Password must be at least 8 characters long">
+                            <button class="btn btn-outline-primary" type="button" id="toggleAddPassword" data-mdb-ripple-color="dark">
+                                <i class="bi bi-eye-slash-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="form-floating col-sm-4 mb-3">
+                        <select class="form-select" id="addDeptField" name="department" required>
+                            <option value="">Choose Department</option>
+                            <option value="Business Control">Business Control</option>
+                            <option value="Purchasing">Purchasing</option>
+                            <option value="Sourcing">Sourcing</option>
+                            <option value="EVP">EVP</option>
+                        </select>
+                        <label class="form-label" for="addDeptField">Department</label>
+                    </div>
+                    <div class="form-floating col-sm-4 mb-3">
+                        <select class="form-select" id="addRoleField" name="role" required>
+                            <option value="">Choose role</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Viewer">Viewer</option>
+                            <option value="Approver 1">Approver 1</option>
+                            <option value="Approver 2">Approver 2</option>
+                            <option value="Approver 3">Approver 3</option>
+                            <option value="Optional Approver">Optional Approver</option>
+                            <option value="Requestor">Requestor</option>
+                        </select>
+                        <label class="form-label" for="addRoleField">Role</label>
+                    </div>
+                    <div class="form-floating col-sm-4 mb-3">
+                        <select class="form-select" id="addPosField" name="position" required>
+                            <option value="">Choose position</option>
+                            <option value="Admin">Admin</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Employee">Employee</option>
+
+                        </select>
+                        <label class="form-label" for="addPosField">Position</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="addBtn" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+@* // Edit Modal *@
+<div class="modal fade" id="editUserModal" data-mdb-keyboard="false" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="editUserModalLabel">Edit User</h5>
+                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editUserForm">
+                    <div class="row g-2">
+                        <div class="col-sm-6 mb-3">
+                            <div class="form-outline">
+                                <input type="text" class="form-control" id="editNameField" name="name" required />
+                                <label class="form-label" for="editNameField">Name</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <div class="form-outline">
+                                <input type="email" class="form-control" id="editEmailField" name="email" required />
+                                <label class="form-label" for="editEmailField">Email address</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-sm-6 mb-3">
+                            <div class="form-outline">
+                                <input type="number" class="form-control" id="editUserNameField" name="employee_id" required />
+                                <label class="form-label" for="editUserNameField">Username</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="password" id="editPassField" placeholder="Password" required minlength="8" pattern=".{8,}" title="Password must be at least 8 characters long">
+                                <button class="btn btn-outline-primary" type="button" id="toggleEditPassword" data-mdb-ripple-color="dark">
+                                    <i class="far fa-eye-slash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-sm form-floating">
+                            <select class="form-select" id="editDeptField" name="department" required>
+                                <option value="">Choose Department</option>
+                                <option value="Business Control">Business Control</option>
+                                <option value="Purchasing">Purchasing</option>
+                                <option value="Sourcing">Sourcing</option>
+                                <option value="EVP">EVP</option>
+                            </select>
+                            <label for="editDeptField">Department</label>
+                        </div>
+                        <div class="col-sm form-floating">
+                            <select class="form-select" id="editRoleField" name="role" required>
+                                <option value="">Choose role</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Viewer">Viewer</option>
+                                <option value="Approver 1">Approver 1</option>
+                                <option value="Approver 2">Approver 2</option>
+                                <option value="Approver 3">Approver 3</option>
+                                <option value="Optional Approver">Optional Approver</option>
+                                <option value="Requestor">Requestor</option>
+                            </select>
+                            <label for="editRoleField">Role</label>
+                        </div>
+                        <div class="form-floating col-sm-4 mb-3">
+                            <select class="form-select" id="editPosField" name="position" required>
+                                <option value="">Choose position</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Manager">Manager</option>
+                                <option value="Employee">Employee</option>
+                            </select>
+                            <label class="form-label" for="editPosField">Position</label>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" id="updateBtn" name="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const GetUsers = '@Url.Action("GetUsers", "Users")';
+    const AddUser = '@Url.Action("AddUser", "Users")';
+    const EditUser = '@Url.Action("EditUser", "Users")';
+    const DeleteUser = '@Url.Action("DeleteUser", "Users")';
+</script>
+<script src="~/JavaScript/Users.js"></script>

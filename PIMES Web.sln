@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APPTemplate", "APPTemplate\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMDirectory", "COMDirectory\COMDirectory.csproj", "{7AD5710F-C44E-4AE7-883C-6690413EB2C5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATSSFG", "ATSSFG\ATSSFG.csproj", "{F2671629-F238-48C4-8B26-DE6719BE37BA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7AD5710F-C44E-4AE7-883C-6690413EB2C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AD5710F-C44E-4AE7-883C-6690413EB2C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AD5710F-C44E-4AE7-883C-6690413EB2C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2671629-F238-48C4-8B26-DE6719BE37BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2671629-F238-48C4-8B26-DE6719BE37BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2671629-F238-48C4-8B26-DE6719BE37BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2671629-F238-48C4-8B26-DE6719BE37BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

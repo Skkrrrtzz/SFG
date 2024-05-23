@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIMES CORP. - @ViewData["Title"]</title>
+
+    <link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link href="~/Assets/icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="~/assets/css/custom.css" rel="stylesheet" />
+    <link href="~/assets/css/loading.css" rel="stylesheet" />
+    <link href="~/assets/css/fa-6.5.1-web/css/all.min.css" rel="stylesheet" />
+    <link href="~/assets/icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="~/lib/jqueryui/jquery-ui.css" rel="stylesheet" />
+    <link href="~/lib/jqueryui/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/assets/datatables/datatables.min.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/assets/css/site.css" rel="stylesheet" />
+    <link rel="icon" type="image/icon" href="~/img/icon/pimescorp.ico" sizes="32x32">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-0" style="background-color:var(--colorMain1)!important">
+            <div class="container">
+                <div class="hstack">
+                    <a asp-page="/Index">
+                        <img src="~/img/svg/pimeslogo.svg" height="40px";>
+                    </a>
+                    &nbsp;
+                    <div class="fs-4 text-white" style="letter-spacing:3px">
+                        @ViewData["Title"]
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container container-layout">
+        <main role="main" class="main-layout">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-white" style="background-color:var(--colorMain1)">
+        <div class="container">
+            &copy; 2024 - PIMES CORP.&nbsp;&nbsp;|&nbsp;&nbsp;@ViewData["Title"]&nbsp;&nbsp;|&nbsp;&nbsp;@ViewData["Version"]
+        </div>
+    </footer>
+
+    <div id="dialogerror"></div>
+
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="toastMessage" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div id="toastHeader" class="toast-header bg-danger">
+                <strong class="me-auto">  Error</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div id="toastBody" class="toast-body bg-danger-subtle">
+                <i class="bi bi-x-circle-fill"></i> Wrong password! Please try again.
+            </div>
+        </div>
+    </div>
+
+    <script src="~/assets/js/jquery-3.7.1.min.js"></script>
+    <script src="~/assets/js/sweetalert2.all.min.js"></script>
+    <script src="~/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/datatables/datatables.min.js"></script>
+    <script src="~/lib/jqueryui/jquery-ui.js"></script>
+    <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
+
+    <script src="~/assets/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

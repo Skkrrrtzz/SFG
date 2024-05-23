@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "Sourcing RFQ Prices";
+}
+<div class="row mb-1">
+    <div class="col-sm-4 col-lg-8">
+        <h4 class="d-inline-block mr-2">Project Name: </h4>
+        <h5 id="projectName" class="d-inline-block"></h5>
+    </div>
+    <div class="col-sm-2 col-md-6 col-lg-4 d-flex align-items-center justify-content-end gap-2">
+        <button class="btn btn-primary border-3 border-primary-subtle fw-bold shadow" id="btnSourcing" data-bs-toggle="modal" data-bs-target="#createSourcingForm"><i class="fa-solid fa-circle-plus"></i> Choose Price </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4 col-lg-4">
+        <div class="mb-3">
+            <label for="PartNumber" class="form-label fw-bold">Part Numbers</label>
+            <select class="form-select" aria-label="part numbers" id="partNumbers">
+                <option selected>Select Part Numbers</option>
+            </select>
+        </div>
+        <div class="card p-3">
+            <div class="mb-2">
+                <label for="PartNumber" class="form-label fw-bold">Part Number</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="PartNumber">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="Description" class="form-label fw-bold">Description</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="Description">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="MPN" class="form-label fw-bold">MPN</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="MPN">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="Manufacturer" class="form-label fw-bold">Manufacturer</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="Manufacturer">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="Commodity" class="form-label fw-bold">Commodity</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="Commodity">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="Qty" class="form-label fw-bold">Quantity Per Assembly</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="Qty">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="UOM" class="form-label fw-bold">UOM</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="UOM">
+                </div>
+            </div>
+            <div class="mb-2">
+                <label for="Parts" class="form-label fw-bold">Common or Unique Parts</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control bg-secondary-subtle" id="Parts">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8 col-lg-8">
+        <div class="row" id="prices-container">
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/JavaScript/RFQPrices.js"></script>
+}

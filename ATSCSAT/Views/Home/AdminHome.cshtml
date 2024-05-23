@@ -1,0 +1,413 @@
+﻿@{
+    ViewData["Title"] = "ATS QA - HOME";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string? Role = TempData["Role"] as string;
+    
+
+    TempData.Keep("Role");
+
+    IEnumerable<IssueModel>? InComingIssue = ViewData["InComingIssue"] as IEnumerable<IssueModel>;
+    IEnumerable<IssueModel>? Progress = ViewData["OnProgressIssue"] as IEnumerable<IssueModel>;
+    List<ActionModel>? Actions = ViewBag.Acts as List<ActionModel>;
+    List<AnnouncementModel>? anns = ViewBag.Announcements as List<AnnouncementModel>;
+
+    string? Warning = TempData["Existing8D"] as string;
+    string numberOfActions = Actions == null ? "0" : Actions.Count().ToString();
+    TempData.Remove("Existing8D");
+}
+
+@section scripts {
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" />
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                searching: false,
+                lengthChange: false,
+                pageLength: 2,
+                order: [],
+                ordering: false
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#pending').DataTable({
+                searching: false,
+                lengthChange: false,
+                pageLength: 2,
+                order: [],
+                ordering: false
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#process').DataTable({
+                searching: false,
+                lengthChange: false,
+                pageLength: 2,
+                order: [],
+                ordering: false
+            });
+        });
+    </script>
+}
+
+<div class="container"> 
+    <div class="w-100 d-flex justify-content-start align-items-center h-25 mb-2">
+        <form class="d-flex w-100" asp-controller="Home" asp-action="Search">
+            <marquee class="bg-black border-dark text-white w-50 mx-1" style="border:5px solid">
+                Welcome to CSat Portal! Do not hesitate to contact ATS-QA if you have concern or feedback. Have a great day!
+            </marquee>
+            <div class="w-50 d-flex">
+                <select class="form-select border-dark mx-auto w-25" name="type">
+                    <option value="IssueDetail">Issue Details</option>
+                    <option value="VR">Validation Report</option>
+                    <option value="CAPA">CAPA</option>
+                </select>
+                <input class="w-75 form-control border-dark" placeholder="Search" name="ss" />
+            </div>
+            <input type="submit" hidden />
+        </form>
+    </div>
+    @if (Warning != null)
+    {
+        <div class="d-flex justify-content-center my-0" >
+            <p class="text-center w-75" style="border:2px solid; border-color:hotpink; background-color:lightpink" role="alert">@Warning</p>
+        </div>
+    }
+    <div class="row">
+        <div class="col-sm-10 col-md-3 mt-2">
+            <div class="card bg-transparent h-100 border-3 border-dark">
+                <h4 class="card-header text-center bg-secondary text-white mb-2 border-3 border-dark" style="font-family:Impact">Q.I PROCESS</h4>
+                <div class="flex-column justify-content-center">
+                    @if (Role == "Admin")
+                    {
+                        <div class="d-flex justify-content-center align-items-center">
+                            <a asp-controller="Issue" asp-action="SubmitIssueView" class="btn btn-primary text-center w-100 my-2 mx-3 shadow">
+                                <div class="d-flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
+                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                                    </svg>
+                                    <div class="d-flex justify-content-start align-self-center m-auto">
+                                        Submit Claim&ensp;
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button class="btn btn-primary text-center w-100 my-2 shadow mx-3" onclick="Open8DModal()">
+                                <div class="d-flex">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-paperclip" viewBox="0 0 16 16">
+                                        <path d="M4.5 3a2.5 2.5 0 0 1 5 0v9a1.5 1.5 0 0 1-3 0V5a.5.5 0 0 1 1 0v7a.5.5 0 0 0 1 0V3a1.5 1.5 0 1 0-3 0v9a2.5 2.5 0 0 0 5 0V5a.5.5 0 0 1 1 0v7a3.5 3.5 0 1 1-7 0V3z" />
+                                    </svg>
+                                    <div class="d-flex justify-content-start align-self-center m-auto">
+                                        Submit 8D
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    }
+                    <div class="d-flex justify-content-center">
+                        <a asp-controller="Issue" asp-action="IssuesList" class="btn btn-primary text-center w-100 my-2 shadow mx-3">
+                            <div class="d-flex justify-content-between">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-card-list" viewBox="0 0 16 16">
+                                    <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z" />
+                                    <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zM4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z" />
+                                </svg>
+                                <div class="d-flex justify-content-start align-self-center m-auto">
+                                    Unacknowldeged Claims
+                                </div>
+                                <div>
+                                    <span class="badge text-bg-secondary bg-danger">@ViewBag.Claims</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <a asp-controller="Issue" asp-action="AcknowledgedIssues" class="btn btn-primary text-center w-100 my-2 shadow mx-3">
+                            <div class="d-flex justify-content-between">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-hourglass-split" viewBox="0 0 16 16">
+                                    <path d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2h-7zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48V8.35zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z" />
+                                </svg>
+                                <div class="d-flex justify-content-start align-self-center m-auto">
+                                    Awaiting V.R
+                                </div>
+                                <div>
+                                    <span class="badge text-bg-secondary bg-danger">@ViewBag.OnProcess</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    @if (Role == "Admin")
+                    {
+                        <div class="d-flex justify-content-center">
+                            <a asp-controller="Validation" asp-action="ForGERVal" class="btn btn-primary text-center w-100 my-2 shadow mx-3">
+                                <div class="d-flex justify-content-between">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z" />
+                                        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                                        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                                    </svg>
+                                    <div class="d-flex justify-content-start align-self-center m-auto">
+                                        Submit C.R & E.R.A
+                                    </div>
+                                    <div>
+                                        <span class="badge text-bg-secondary bg-danger">@ViewBag.ERA</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                    <div class="d-flex justify-content-center mb-4">
+                        <a asp-controller="RCV" asp-action="RCVList" class="btn btn-primary text-center w-100 mt-2 shadow mx-3">
+                            <div class="d-flex justify-content-between">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-clipboard2-pulse" viewBox="0 0 16 16">
+                                    <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5h3Z" />
+                                    <path d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-12Z" />
+                                    <path d="M9.979 5.356a.5.5 0 0 0-.968.04L7.92 10.49l-.94-3.135a.5.5 0 0 0-.926-.08L4.69 10H4.5a.5.5 0 0 0 0 1H5a.5.5 0 0 0 .447-.276l.936-1.873 1.138 3.793a.5.5 0 0 0 .968-.04L9.58 7.51l.94 3.135A.5.5 0 0 0 11 11h.5a.5.5 0 0 0 0-1h-.128L9.979 5.356Z" />
+                                </svg>
+                                <div class="d-flex justify-content-start align-self-center m-auto">
+                                    RC, CAPA & Ver.
+                                </div>
+                                <div>
+                                    <span class="badge text-bg-secondary bg-danger">@ViewBag.RC</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4 mx-auto mt-2">
+            <div class="card w-100 h-100 bg-transparent border-3 border-dark">
+                <h4 class="card-header text-center bg-secondary text-white border-3 border-dark" style="font-family:Impact">
+                    Pending (@InComingIssue.Count())
+               </h4>
+                <div class="card-body table-data table-responsive h-100">
+                    <table class="table table-striped table-hover text-center fw-bold" id="pending">
+                        <thead>
+                            <tr>
+                                <th class="text-nowrap w-auto">
+                                    ISSUE #
+                                </th>
+                                <th class="w-auto">
+                                    Date Posted
+                                </th>
+                                <th class="w-auto">
+                                    Details
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="align-text-bottom">
+                            @{
+                                
+                                if (InComingIssue != null)
+                                {
+                                    foreach (var obj in InComingIssue!)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @obj.IssueNo
+                                            </td>
+                                            <td>
+                                                @obj.DateCreated.ToString("MM/dd/yyy")
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-primary" asp-controller="Issue" asp-action="IssueDetails" asp-route-id="@obj.IssueID">View</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+           </div>
+        </div>
+
+        <div class="col-12 col-md-4 mt-2">
+            <div class="card w-100 h-100 bg-transparent border-3 border-dark">
+                <h4 class="card-header text-center bg-secondary text-white border-3 border-dark" style="font-family:Impact">
+                    On-Process (@Progress.Count())
+                </h4>
+                <div class="card-body table-data table-responsive h-100">
+                    <table class="table table-striped table-hover fw-bold text-center" id="process">
+                        <thead>
+                            <tr>
+                                <th class="text-nowrap w-auto">ISSUE #</th>
+                                <th class="w-auto">DAYS</th>
+                                <th class="w-auto">
+                                    Details
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="align-text-bottom">
+                            @{
+                                
+                                if (Progress != null)
+                                {
+                                    foreach (var obj in Progress!)
+                                    {
+                                        DateTime dateack = Convert.ToDateTime(obj.DateAck);
+                                        DateTime today = Convert.ToDateTime(DateTime.Now);
+                                        TimeSpan res = today - dateack;
+                                        int resDay = res.Days;
+
+                                        if (resDay >= 4)
+                                        {
+                                            <tr class="bg-danger">
+                                                <td>
+                                                    @obj.IssueNo
+                                                </td>
+                                                <td>
+                                                    @{
+                                                        Write(resDay);
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-primary" asp-controller="Issue" asp-action="IssueDetails" asp-route-id="@obj.IssueID">View</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                        else if (resDay == 3 || resDay == 2)
+                                        {
+                                            <tr class="bg-success">
+                                                <td>
+                                                    @obj.IssueNo
+                                                </td>
+                                                <td>
+                                                    @{
+                                                        Write(resDay);
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-primary" asp-controller="Issue" asp-action="IssueDetails" asp-route-id="@obj.IssueID">View</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                        else if (resDay <= 1)
+                                        {
+                                            <tr class="bg-primary">
+                                                <td>
+                                                    @obj.IssueNo
+                                                </td>
+                                                <td>
+                                                    @{
+                                                        Write(resDay);
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-primary border-white text-white" asp-controller="Issue" asp-action="IssueDetails" asp-route-id="@obj.IssueID">View</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    @if (Role != "Admin")
+    {
+        <div class="card bg-transparent mt-2 border-dark border-3">
+            <h4 class="card-header text-center bg-secondary text-white border-3 border-dark" style="font-family:Impact">Pending Action Item/s (@numberOfActions)</h4>
+            <div class="table-responsive">
+                <table class="w-100 text-center mt-1 table table-striped" id="myTable">
+                    <thead class="bg-primary">
+                        <tr>
+                            <th class="w-25">
+                                PIC
+                            </th>
+                            <th>
+                                Control#
+                            </th>
+                            <th class="w-50">
+                                Action Item
+                            </th>
+                            <th>
+                                TCD
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            if (Actions != null)
+                            {
+                                foreach (var action in Actions)
+                                {
+                                    string tdColor = "";
+                                    if (action.TargetDate < DateTime.Now)
+                                    {
+                                        tdColor = "background-color: red; color: white";
+                                    }
+                                    <tr>
+                                        <td>
+                                            @action.PIC
+                                        </td>
+                                        <td>
+                                            @action.ControlNo
+                                        </td>
+                                        <td>
+                                            @action.Action
+                                        </td>
+                                        <td style="@tdColor">
+                                            @action.TargetDate.ToShortDateString()
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="modal-content w-auto h-auto" id="8dmodal">
+    <form asp-controller="Home" asp-action="CheckFor8D" enctype="multipart/form-data" method="post">
+    <button class="btn btn-danger modal-close" onclick="Close8DModal()">Close</button>
+    <p class="modal-title text-center">Submit 8D Report</p>
+    <hr />
+    <div class="w-100 modal-body" style="height:80%">
+        <div class="input-group flex-column w-100">
+            <label class="form-label">Control Number</label>
+            <input class="w-100 form-control" name="controlno" required/>
+        </div>
+        <div class="input-group flex-column w-100 mt-2">
+            <label class="form-label">8D File</label>
+            <input class="w-100 form-control" type="file" accept="application/pdf" name="attachment" required/>
+        </div>       
+    </div>
+        <div class="w-100 d-flex justify-content-end mt-auto">
+            <input type="submit" class="btn btn-primary w-50" />
+        </div>
+    </form>
+</div>
+
+<script>
+
+    function Open8DModal()
+    {
+        var modal = document.getElementById('8dmodal');
+
+        modal.style.display = "block";
+    }
+
+    function Close8DModal() 
+    {
+        var modal = document.getElementById('8dmodal');
+
+        modal.style.display = "none";
+    }
+</script>

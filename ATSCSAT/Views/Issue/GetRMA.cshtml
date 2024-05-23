@@ -1,0 +1,233 @@
+﻿@model IEnumerable<PIMES_DMS.Models.RMAModel>
+
+@{
+    ViewData["Title"] = "Get RMA";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string Role = TempData["Role"] as string;
+    TempData.Keep();
+}
+
+@section scripts {
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" />
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                searching: true,
+                lengthChange: false,
+                pageLength: 5,
+                order: [],
+                ordering: false
+            });
+        });
+    </script>
+}
+
+<div class="container">
+    <div class="flex-column justify-content-center">
+        <h1 class="text-center mb-0">RMA Monitoring</h1>
+        <p class="mt-0 text-center">RETURN MATERIAL ARTICLE</p>
+    </div>
+    <hr />
+    <form asp-controller="RMA" asp-action="SelectedDate" method="get">
+        <div class="w-100 d-flex justify-content-center mt-3 align-items-center">
+            <div class="mx-2 d-flex">
+                <select class="form-select" id="yearSelect" name="year">
+                    <option value="0">Year</option>
+                </select>
+            </div>
+            <div class="mx-2 align-items-center">
+                <select class="form-select" id="monthSelect" name="month">
+                    <option value="0">Month</option>
+                </select>
+            </div>
+            <div class="mx-2 align-items-center">
+                <input class="btn btn-primary" type="submit" value="Download" />
+            </div>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped text-center table-hover" id="myTable">
+            <thead class="text-nowrap">
+                <tr>
+                    <th>
+                        RMA#
+                    </th>
+                    <th>
+                        Issue#
+                    </th>
+                    <th>
+                        Product
+                    </th>
+                    <th>
+                        Aff. P/N
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Prob. Desc.
+                    </th>
+                    <th>
+                        Quantity
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RMANo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IssueNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AffectedPN)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            <textarea class="w-100 border-0 bg-transparent" style="min-height:50px; max-height:200px">@item.ProblemDesc
+                            </textarea>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QTY)
+                        </td>
+                        <td class="text-nowrap">
+                           <div class="d-flex justify-content-between">
+                                @{
+                                    if (Role == "Admin")
+                                    {
+                                        if (item.FA == null || item.FA.Length == 0)
+                                        {
+                                            <button class="btn btn-success w-100" onclick="OpenFA('@item.RMAID')">F.A</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-success w-100 text-nowrap" onclick="OpenViewFA('@item.RMAID')">View F.A</button>
+                                        }
+                                    }
+                                }
+                                <a class="btn btn-primary w-100 mx-2 align-self-center" asp-controller="RMA" asp-action="GenerateExcelFile" asp-route-id="@item.RMAID">Download</a>
+                           </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-content w-auto h-auto" id="famodal">
+    <form asp-controller="RMA" asp-action="UploadFA" enctype="multipart/form-data" method="post">
+        <input value="" name="id" id="rmaid" hidden/>
+        <button class="modal-close btn btn-danger" onclick="CloseFA()">X</button>
+        <p class="modal-title text-center fw-bolder">Upload F.A</p>
+        <hr />
+        <div class="modal-body flex-column justify-content-center">
+            <div>
+                <label class="form-label fw-bolder">Date Received:</label>
+                <input class="form-control w-100" type="date" name="date" required/>
+            </div>
+            <div>
+                <label class="form-label fw-bolder">F.A Attachment:</label>
+                <input class="form-control w-100" type="file" name="attachment" accept=".pdf" required/>
+            </div>
+            <div class="my-3">
+                <input type="submit" class="btn btn-primary" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-content w-75 h-100" style="z-index:2001" id="viewfa">
+    <button class="btn btn-danger modal-close" onclick="CloseViewFA()">Close</button>
+    <p class="modal-title text-center">FAILURE ANALYSIS</p>
+    <div class="modal-body w-100 mt-2" style="height:95%; border:2px solid">
+        <iframe class="w-100 h-100" src="">pdf here</iframe>
+    </div>
+</div>
+
+<script>
+    function OpenViewFA(str)
+    {
+        var ViewFA = document.getElementById('viewfa');
+        var pdfFrame = ViewFA.querySelector('iframe');
+        pdfFrame.src = '@Url.Action("ShowFA", "RMA", new { id = "__ID__" })'.replace('__ID__', str);
+        ViewFA.style.display = "block";
+    }
+
+    function CloseViewFA()
+    {
+        var modal = document.getElementById('viewfa');
+        var pdfFrame = modal.querySelector('iframe');
+        pdfFrame.src = ''; // Clear the iframe src
+        modal.style.display = 'none';
+    }
+
+    function OpenFA(str)
+    {
+        var FAmodal = document.getElementById('famodal');
+        var RMAID = document.getElementById('rmaid');
+
+        FAmodal.style.display = "block";
+        RMAID.value = str;
+    }
+
+    function CloseFA()
+    {
+        var FAmodal = document.getElementById('famodal');
+        FAmodal.style.display = "none";
+    }
+
+    var yearSelect = document.getElementById('yearSelect');
+    var monthSelect = document.getElementById('monthSelect');
+
+    function populateMonthOptions(year) {
+        var currentYear = new Date().getFullYear();
+        var currentMonth = new Date().getMonth();
+
+        monthSelect.innerHTML = '';
+
+        if (year === currentYear) {
+            for (var month = 0; month <= currentMonth + 1; month++) {
+                var monthOpt = document.createElement("option");
+                monthOpt.text = month;
+                monthOpt.value = month;
+                monthSelect.appendChild(monthOpt);
+            }
+        } else {
+            for (var month = 0; month <= 12; month++) {
+                var monthOpt = document.createElement("option");
+                monthOpt.text = month;
+                monthOpt.value = month;
+                monthSelect.appendChild(monthOpt);
+            }
+        }
+    }
+
+    yearSelect.addEventListener('change', function () {
+        var selectedYear = parseInt(yearSelect.value);
+        populateMonthOptions(selectedYear);
+    });
+
+    var currentYear = new Date().getFullYear();
+    for (var year = currentYear; year >= 2022; year--) {
+        var yearOpt = document.createElement("option");
+        yearOpt.text = year;
+        yearOpt.value = year;
+        yearSelect.appendChild(yearOpt);
+    }
+
+    populateMonthOptions(currentYear);
+</script>
+

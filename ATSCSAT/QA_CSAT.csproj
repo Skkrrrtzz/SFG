@@ -1,0 +1,163 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20230428084143_AddIssueModel.cs" />
+    <Compile Remove="Migrations\20230428084143_AddIssueModel.Designer.cs" />
+    <Compile Remove="Migrations\20230428092126_AddAccs.cs" />
+    <Compile Remove="Migrations\20230428092126_AddAccs.Designer.cs" />
+    <Compile Remove="Migrations\20230503003026_Addmigration.cs" />
+    <Compile Remove="Migrations\20230503003026_Addmigration.Designer.cs" />
+    <Compile Remove="Migrations\20230503004425_addmigration.cs" />
+    <Compile Remove="Migrations\20230503004425_addmigration.Designer.cs" />
+    <Compile Remove="Migrations\20230504050439_Migrate.cs" />
+    <Compile Remove="Migrations\20230504050439_Migrate.Designer.cs" />
+    <Compile Remove="Migrations\20230504060012_Migrate.cs" />
+    <Compile Remove="Migrations\20230504060012_Migrate.Designer.cs" />
+    <Compile Remove="Migrations\20230505000113_addmigration.cs" />
+    <Compile Remove="Migrations\20230505000113_addmigration.Designer.cs" />
+    <Compile Remove="Migrations\20230505001947_updatedb.cs" />
+    <Compile Remove="Migrations\20230505001947_updatedb.Designer.cs" />
+    <Compile Remove="Migrations\20230509064340_update.cs" />
+    <Compile Remove="Migrations\20230509064340_update.Designer.cs" />
+    <Compile Remove="Migrations\20230509064539_update.cs" />
+    <Compile Remove="Migrations\20230509064539_update.Designer.cs" />
+    <Compile Remove="Migrations\20230509085412_update.cs" />
+    <Compile Remove="Migrations\20230509085412_update.Designer.cs" />
+    <Compile Remove="Migrations\20230509091645_update.cs" />
+    <Compile Remove="Migrations\20230509091645_update.Designer.cs" />
+    <Compile Remove="Migrations\20230511043659_update.cs" />
+    <Compile Remove="Migrations\20230511043659_update.Designer.cs" />
+    <Compile Remove="Migrations\20230511044802_update.cs" />
+    <Compile Remove="Migrations\20230511044802_update.Designer.cs" />
+    <Compile Remove="Migrations\20230511050342_update.cs" />
+    <Compile Remove="Migrations\20230511050342_update.Designer.cs" />
+    <Compile Remove="Migrations\20230511065042_update.cs" />
+    <Compile Remove="Migrations\20230511065042_update.Designer.cs" />
+    <Compile Remove="Migrations\20230511071020_update.cs" />
+    <Compile Remove="Migrations\20230511071020_update.Designer.cs" />
+    <Compile Remove="Migrations\20230511074339_update.cs" />
+    <Compile Remove="Migrations\20230511074339_update.Designer.cs" />
+    <Compile Remove="Migrations\20230511084130_update.cs" />
+    <Compile Remove="Migrations\20230511084130_update.Designer.cs" />
+    <Compile Remove="Migrations\20230512021405_update.cs" />
+    <Compile Remove="Migrations\20230512021405_update.Designer.cs" />
+    <Compile Remove="Migrations\20230512021637_update.cs" />
+    <Compile Remove="Migrations\20230512021637_update.Designer.cs" />
+    <Compile Remove="Migrations\20230512021847_update.cs" />
+    <Compile Remove="Migrations\20230512021847_update.Designer.cs" />
+    <Compile Remove="Migrations\20230512022033_update.cs" />
+    <Compile Remove="Migrations\20230512022033_update.Designer.cs" />
+    <Compile Remove="Migrations\20230512022219_update.cs" />
+    <Compile Remove="Migrations\20230512022219_update.Designer.cs" />
+    <Compile Remove="Migrations\20230512022356_update.cs" />
+    <Compile Remove="Migrations\20230512022356_update.Designer.cs" />
+    <Compile Remove="Migrations\20230512050403_update.cs" />
+    <Compile Remove="Migrations\20230512050403_update.Designer.cs" />
+    <Compile Remove="Migrations\20230515023334_update.cs" />
+    <Compile Remove="Migrations\20230515023334_update.Designer.cs" />
+    <Compile Remove="Migrations\20230515050354_update.cs" />
+    <Compile Remove="Migrations\20230515050354_update.Designer.cs" />
+    <Compile Remove="Migrations\20230516012638_update.cs" />
+    <Compile Remove="Migrations\20230516012638_update.Designer.cs" />
+    <Compile Remove="Migrations\20230516023054_update.cs" />
+    <Compile Remove="Migrations\20230516023054_update.Designer.cs" />
+    <Compile Remove="Migrations\20230516024012_update.cs" />
+    <Compile Remove="Migrations\20230516024012_update.Designer.cs" />
+    <Compile Remove="Migrations\20230517004633_update.cs" />
+    <Compile Remove="Migrations\20230517004633_update.Designer.cs" />
+    <Compile Remove="Migrations\20230517004807_update.cs" />
+    <Compile Remove="Migrations\20230517004807_update.Designer.cs" />
+    <Compile Remove="Migrations\20230517005634_update.cs" />
+    <Compile Remove="Migrations\20230517005634_update.Designer.cs" />
+    <Compile Remove="Migrations\20230517010719_update.cs" />
+    <Compile Remove="Migrations\20230517010719_update.Designer.cs" />
+    <Compile Remove="Migrations\20230517012700_update.cs" />
+    <Compile Remove="Migrations\20230517012700_update.Designer.cs" />
+    <Compile Remove="Migrations\20230517012808_update.cs" />
+    <Compile Remove="Migrations\20230517012808_update.Designer.cs" />
+    <Compile Remove="Migrations\20230517013049_update.cs" />
+    <Compile Remove="Migrations\20230517013049_update.Designer.cs" />
+    <Compile Remove="Migrations\20230517013959_update.cs" />
+    <Compile Remove="Migrations\20230517013959_update.Designer.cs" />
+    <Compile Remove="Migrations\20230517061937_update.cs" />
+    <Compile Remove="Migrations\20230517061937_update.Designer.cs" />
+    <Compile Remove="Migrations\20230519012226_update.cs" />
+    <Compile Remove="Migrations\20230519012226_update.Designer.cs" />
+    <Compile Remove="Migrations\20230525005355_update.cs" />
+    <Compile Remove="Migrations\20230525005355_update.Designer.cs" />
+    <Compile Remove="Migrations\20230526013830_update.cs" />
+    <Compile Remove="Migrations\20230526013830_update.Designer.cs" />
+    <Compile Remove="Migrations\20230526020805_update.cs" />
+    <Compile Remove="Migrations\20230526020805_update.Designer.cs" />
+    <Compile Remove="Migrations\20230529045456_update.cs" />
+    <Compile Remove="Migrations\20230529045456_update.Designer.cs" />
+    <Compile Remove="Migrations\20230529052105_update.cs" />
+    <Compile Remove="Migrations\20230529052105_update.Designer.cs" />
+    <Compile Remove="Migrations\20230601001809_updateSerialNumbertoString.cs" />
+    <Compile Remove="Migrations\20230601001809_updateSerialNumbertoString.Designer.cs" />
+    <Compile Remove="Migrations\20230601022736_compnametoBU.cs" />
+    <Compile Remove="Migrations\20230601022736_compnametoBU.Designer.cs" />
+    <Compile Remove="Migrations\20230602070619_AddSMTPtoDB.cs" />
+    <Compile Remove="Migrations\20230602070619_AddSMTPtoDB.Designer.cs" />
+    <Compile Remove="Migrations\20230602075009_Fixsmtpemails.cs" />
+    <Compile Remove="Migrations\20230602075009_Fixsmtpemails.Designer.cs" />
+    <Compile Remove="Migrations\20230606003901_addDatecreatedinaction.cs" />
+    <Compile Remove="Migrations\20230606003901_addDatecreatedinaction.Designer.cs" />
+    <Compile Remove="Migrations\20230606014746_addValresinIssue.cs" />
+    <Compile Remove="Migrations\20230606014746_addValresinIssue.Designer.cs" />
+    <Compile Remove="Migrations\20230608043808_addForceClose.cs" />
+    <Compile Remove="Migrations\20230608043808_addForceClose.Designer.cs" />
+    <Compile Remove="Migrations\20230613005912_AddART8D.cs" />
+    <Compile Remove="Migrations\20230613005912_AddART8D.Designer.cs" />
+    <Compile Remove="Migrations\20230614004915_addValNo.cs" />
+    <Compile Remove="Migrations\20230614004915_addValNo.Designer.cs" />
+    <Compile Remove="Migrations\20230616023902_addTESDb.cs" />
+    <Compile Remove="Migrations\20230616023902_addTESDb.Designer.cs" />
+    <Compile Remove="Migrations\20230616025915_Addcontrolnototes.cs" />
+    <Compile Remove="Migrations\20230616025915_Addcontrolnototes.Designer.cs" />
+    <Compile Remove="Migrations\20230616053411_changetesrc.cs" />
+    <Compile Remove="Migrations\20230616053411_changetesrc.Designer.cs" />
+    <Compile Remove="Migrations\20230616075537_changeactionmodeltsc.cs" />
+    <Compile Remove="Migrations\20230616075537_changeactionmodeltsc.Designer.cs" />
+    <Compile Remove="Migrations\20230616082119_addstatustoaction.cs" />
+    <Compile Remove="Migrations\20230616082119_addstatustoaction.Designer.cs" />
+    <Compile Remove="Migrations\20230616082349_addactionmodel.cs" />
+    <Compile Remove="Migrations\20230616082349_addactionmodel.Designer.cs" />
+    <Compile Remove="Models\ECActionModel.cs" />
+    <Compile Remove="Models\ECVersModel.cs" />
+    <Compile Remove="Models\SCActionModel.cs" />
+    <Compile Remove="Models\SCVersModel.cs" />
+    <Compile Remove="Models\SumRepModel.cs" />
+    <Compile Remove="Models\TCActionModel.cs" />
+    <Compile Remove="Models\TCVersModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Validation\ShowClientandQARep.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Chart.js" Version="3.7.1" />
+    <PackageReference Include="EPPlus" Version="6.2.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="Modernizr" Version="2.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
+</Project>

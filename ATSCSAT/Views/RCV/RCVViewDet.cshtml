@@ -1,0 +1,269 @@
+﻿@{
+    ViewData["Title"] = "View Verification";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var action = ViewData["Action"] as ActionModel;
+    var td = ViewBag.td as TargetDateModel;
+    var ver = ViewData["Ver"] as IEnumerable<Vermodel>;
+
+    ver = ver!.OrderByDescending(j => j.DateVer).ToList();
+
+    string? Role = TempData["Role"] as string;
+    TempData.Keep();
+
+}
+
+<script>
+    const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+</script>
+
+<div class="container">
+    <h1 class="text-center">View Verification > @action!.ControlNo</h1>
+    <hr />
+
+    <div class="justify-content-between d-lg-flex">
+        <div class="card bg-success mx-2 mt-2 w-100">
+            <h6 class="card-title text-center my-2">Action Item Details</h6>
+            <table class="table table-bordered text-center border-white table-hover">
+                <thead>
+                    <tr>
+                        <th>PIC</th>
+                        <th>Action</th>
+                        <th>Target Date</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+                    <tr>
+                        <td>
+                            <input class="form-control text-center" value="@action!.PIC" readonly />
+                        </td>
+                        <td>
+                            <button class="btn btn-primary text-nowrap" type="button" data-bs-toggle="collapse" data-bs-target="#actionitemdet" aria-expanded="false" aria-controls="collapseExample">
+                                View Action
+                            </button>
+                            <div class="collapse" id="actionitemdet">
+                                <div class="card card-body border-2 border-dark">
+                                    @action!.Action
+                                </div>
+                            </div>                            
+                        </td>
+                        <td>
+                            <input class="form-control w-100 text-center" value="@td?.TD.ToShortDateString()" readonly />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        @if (action.VerStatus)
+        {
+            <div class="card bg-primary mx-2 mt-2 w-100">
+                <h6 class="card-title text-center my-2">Verification Details</h6>
+                <table class="table table-bordered text-center border-white table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width:20%">Status</th>
+                            <th>Date Verified</th>
+                            <th>Evidence</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        <tr>
+                            <td>
+                                <input class="form-control text-center" value="@action!.ActionStatus" readonly />
+                            </td>
+                            <td>
+                                <input class="w-100 form-control text-center" value="@action.DateVerified.Value.ToShortDateString()" readonly />
+                            </td>
+                            <td>
+                                <button class="btn btn-primary" onclick="document.getElementById('reportContent').style.display = 'block'">Show Report</button>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#verremark" aria-expanded="false" aria-controls="collapseExample">
+                                    View Remarks
+                                </button>
+                                <div class="collapse" id="verremark">
+                                    <div class="card card-body border-2 border-dark">
+                                        @action!.VerRemarks
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="container">
+    <div class="card mx-2 mt-2 bg-secondary">
+        <h5 class="card-title text-center my-2">C.F.T Reports</h5>
+        <table class="table table-bordered text-center table-hover">
+            <thead>
+                <tr>
+                    <th class="w-25 desktop-only">Report Creator</th>
+                    <th class="w-25">Action Item Status</th>
+                    <th style="width:40%">Remarks</th>
+                    <th style="width:10%"> </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white">
+                @{
+                    foreach (var obj in ver!)
+                    {
+                        string? style;
+                        string? stat;
+
+                        if (obj.Status == "Open")
+                        {
+                            style = "background-color:hotpink; width:20%";
+                            stat = "OPEN";
+                        }
+                        else
+                        {
+                            style = "background-color:mediumseagreen; width:20%";
+                            stat = "CLOSED";
+                        }
+
+                        <tr>
+                            <td class="desktop-only"><input class="form-control text-center w-100 h-100" type="text" value="@obj.Verificator" readonly /></td>
+                            <td style="@style">
+                                <input class="form-control text-center w-100 h-100" type="text" value="@stat" readonly />
+                                @{
+                                    string print = "Closed Date";
+
+                                    if (obj.Status == "Open")
+                                    {
+                                        print = "Recommit Date";
+                                    }
+                                }
+                                <input class="form-control text-center mt-2" type="text" value="@print: @obj.StatusDate.ToShortDateString()" readonly />
+                            </td>
+                            <td><textarea style="max-height:100px; max-width:100%; min-height:100px; min-width:100%; background-color:transparent" readonly>@obj.Result</textarea></td>
+                            <td>
+                                @if (obj.Files != null || obj.Files.Count() > 0)
+                                {
+                                    <button class="btn btn-secondary mt-2 w-100 mt-1" onclick="getsrc('@Url.Action("ShowFile", "RCV", new {ID = obj.VerID})')">File</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="modalContent" class="modal-content">
+    <h2 class="text-center">Evidence</h2>
+    <iframe class="w-100" style="height:90%" id="pdfsrc" src="">No File...</iframe>
+    <button class="modal-close btn btn-danger" onclick="closeModal()">Close</button>
+</div>
+
+<div id="reportContent" class="modal-content">
+    <h4 class="text-center modal-title">Evidence</h4>
+    <button class="modal-close btn btn-danger" onclick="document.getElementById('reportContent').style.display = 'none'">X</button>
+    <iframe class="w-100" style="height:90%" src="@Url.Action("ShowVerPdf", "RCV", new { ID = action.ActionID})" >No File</iframe>
+    
+</div>
+
+
+   @* <div id="statusModal" class="modal-content w-75 h-75 bg-gradient">
+        <form asp-controller="RCV" asp-action="UpdateVER" method="post" enctype="multipart/form-data">
+            <input id="ver" value="" name="ID" type="text" hidden/>
+            <h2 class="text-center">Update/Edit Verification</h2>
+            <div>
+                <label class="form-label">Date Verified:</label>
+                <input class="form-control w-25 border-dark" id="date" type="date" name="datever" value="" required/>
+            </div>
+            <div class="d-flex w-100 justify-content-start">
+                <div class="w-25">
+                    <label class="form-label">Status:</label>
+                <select class="form-select w-100 border-dark" name="status" id="updatestatus" onchange="statchanged()" required>
+                        <option value="Open">OPEN</option>
+                        <option value="Closed">CLOSED</option>
+                    </select>
+                </div>
+                <div class="w-25 align-self-end" style="margin-left:10px">
+                    <input class="form-control w-100 border-dark" type="date" id="closeddateinupdate" name="statusDate"/>
+                </div>
+            </div>
+            <div>
+                <label class="form-label">Evidence:</label>
+                <input class="form-control border-dark w-25" type="file" name="file" accept=".pdf"/>
+            </div>
+            <div>
+                <label class="form-label">Result:</label>
+                <textarea class="form-control bg-transparent border-dark" style="min-height:100px; max-height:100px; min-width:100%; max-width:100%" id="resultid" value="" name="Uresult"></textarea>
+            </div>
+            <div class="mt-3">
+                <input class="btn btn-success" type="submit"/>   
+            </div>
+        </form>
+    <button class="modal-close btn btn-danger" onclick="CloseUpdate()">Close</button>
+    </div>*@
+
+<script>
+    var stat = document.getElementById('updatestatus');
+    var eviModal = document.getElementById('modalContent');
+    var modal = document.getElementById('statusModal');
+    var closedStatinUpdate = document.getElementById('closeddateinupdate');
+
+    closedStatinUpdate.style.display = "none";
+    closedStatinUpdate.required = false;
+
+    function getsrc(pdfurl)
+    {       
+       var pdfsrc = document.getElementById("pdfsrc");
+       pdfsrc.src = pdfurl;
+       eviModal.style.display = "block";
+    }
+
+    function closeModal() 
+    {
+        eviModal.style.display = "none";
+    }
+
+    function OpenUpdate(ID, result, datee)
+    {      
+        var Ver = document.getElementById('ver');
+        var Result = document.getElementById('resultid');
+        var Date = document.getElementById('date');
+
+        Ver.value = ID;
+        Result.value = result;
+        Date.value = datee;
+        modal.style.display = "block";
+    }
+
+    function CloseUpdate() 
+    {
+        modal.style.display = "none";
+    }
+
+    function showclosedDate()
+    {
+        closedStatinUpdate.style.display = "flex";
+        closedStatinUpdate.required = true;
+    }
+
+    function hideclosedDate()
+    {
+        closedStatinUpdate.style.display = "none";
+        closedStatinUpdate.required = false;
+    }
+
+    function statchanged()
+    {
+        if (stat.value == "Closed")
+        {
+            showclosedDate();
+        }
+        else
+        {
+            hideclosedDate();
+        }
+    }
+</script>

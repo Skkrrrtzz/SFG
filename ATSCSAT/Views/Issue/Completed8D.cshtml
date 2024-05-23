@@ -1,0 +1,65 @@
+﻿@model IEnumerable<PIMES_DMS.Models.IssueModel>
+@{
+    ViewData["Title"] = "Completed QI";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts {
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" />
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                searching: true,
+                lengthChange: false,
+                pageLength: 6,
+                order: [],
+                ordering: false
+            });
+        });
+    </script>
+}
+
+<div class="container">
+    <h1 class="text-center">Closed Issues</h1>
+    <hr />
+    <div class="table-responsive">
+        <table class="table table-striped text-center table-hover" id="myTable">
+            <thead>
+                <tr>
+                    <th>
+                        Issue#
+                    </th>
+                    <th class="text-nowrap">
+                        Prob. Desc.
+                    </th>
+                    <th>
+                        Control#
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderByDescending(j => j.DateCreated))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IssueNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ProbDesc)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ControlNumber)
+                        </td>
+                        <td>
+                            <a class="btn btn-primary w-100" asp-controller="RCV" asp-action="TESActions" asp-route-id="@item.ControlNumber">View</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

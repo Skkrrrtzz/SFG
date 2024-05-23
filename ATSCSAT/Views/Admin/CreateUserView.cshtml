@@ -1,0 +1,101 @@
+﻿@model PIMES_DMS.Models.AccountsModel
+
+@{
+    ViewData["Title"] = "Create User";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div>
+            <h1>Create User</h1>
+        </div>
+    </div>
+
+    <hr />
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <form asp-controller="Admin" asp-action="CreateUser" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="AccName" class="control-label"></label>
+                    <input asp-for="AccName" class="form-control" name="accname" required />
+                    <span asp-validation-for="AccName" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-2">
+                    <label asp-for="Section" class="control-label"></label>
+                    <select asp-for="Section" class="form-select" name="compname">
+                        @foreach (var sect in Enum.GetValues(typeof(Sections)))
+                        {
+                            <option value="@sect.ToString()">@sect.ToString()</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group mt-2">
+                    <label asp-for="Role" class="control-label"></label>
+                    <select asp-for="Role" class="form-select" name="role">
+                        @foreach (var role in Enum.GetValues(typeof(Roles)))
+                        {
+                            <option value="@role.ToString()">@role.ToString()</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group mt-2">
+                    <label asp-for="Email" class="control-label"></label>
+                   <div class="d-flex">
+                        <input asp-for="Email" class="form-control" name="email"/>
+                        <select class="form-select" name="sec">
+                            <option>&#64;pimes</option>
+                            <option>&#64;gmail</option>
+                            <option>&#64;yahoo</option>
+                            <option>&#64;outlook</option>
+                        </select>
+                        <select class="form-select" name="dom">                           
+                            <option>.com.ph</option>
+                            <option>.com</option>
+                        </select>
+                   </div>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-2">
+                    <label asp-for="UserName" class="control-label"></label>
+                    <input asp-for="UserName" class="form-control" name="username" required />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-2 d-flex">
+                   <div class="w-50">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control" name="password" required />
+                   </div>
+                    <div class="align-self-end w-50">
+                        <button type="button" class="btn btn-success w-100" onclick="generatePassword()">Generate Password</button>
+                    </div>
+                </div>
+                <div class="form-group mt-5 d-flex justify-content-between">
+                    <input type="submit" value="Create" class="btn btn-primary w-50" />
+                    <a class="btn btn-danger span" asp-controller="Admin" asp-action="AdminView">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function generatePassword() {
+        var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        var password = "";
+        var charsetLength = charset.length;
+
+        while (password.length < 8) {
+            var randomIndex = Math.floor(Math.random() * charsetLength);
+            var randomChar = charset.charAt(randomIndex);
+
+            if (password.indexOf(randomChar) === -1) {
+                password += randomChar;
+            }
+        }
+
+        var passwordInput = document.querySelector('[name="password"]');
+        passwordInput.value = password;
+    }
+</script>
+

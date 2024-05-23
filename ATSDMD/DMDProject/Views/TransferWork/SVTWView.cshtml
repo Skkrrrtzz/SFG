@@ -1,0 +1,108 @@
+﻿@model IEnumerable<DMD_Prototype.Controllers.SVSesViewModel>
+@{
+    ViewData["Title"] = "Approve Get Session Request";
+}
+
+<div class="container-fluid">
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered" id="myTable">
+            <thead class="table-primary text-white text-center">
+                <tr>
+                    <th>
+                        Doc#
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Work Order
+                    <th>
+                        Module
+                    </th>
+                    <th>
+                        Serial No
+                    </th>
+                    <th>
+                        Current Technician
+                    </th>
+                    <th>
+                        Requestor
+                    </th>
+                    <th>
+                        
+                    </th>
+                </tr>
+            </thead>
+            <tbody @*id="tablebody"*@>
+                @foreach(var line in Model)
+                {
+                    <tr>
+                        <td>
+                            @line.DocNo
+                        </td>
+                        <td>
+                            @line.Desc
+                        </td>
+                        <td>
+                            @line.WorkOrder
+                        </td>
+                        <td>
+                            @line.Module
+                        </td>
+                        <td>
+                            @line.SerialNo
+                        </td>
+                        <td>
+                            @line.CurrentTech
+                        </td>
+                        <td>
+                            @line.Requestor
+                        </td>
+                        <td>
+                            <button class="btn btn-primary w-100 btn-sm" data-bs-toggle="modal" data-bs-target="#confirmAction" onclick="reqId = '@line.ReqId'">Actions</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $('#myTable').DataTable({
+        searching: true,
+        lengthChange: false,
+        pageLength: 7,
+        order: [],
+        ordering: false
+    });
+
+    function ConfirmAction(){
+        window.location.href = '@Url.Action("ApproveSessionRequest", "TransferWork")' + '?RSID=' + reqId;
+    }
+
+    function RemoveRequest() {
+        window.location.href = '@Url.Action("RemoveSessionRequest", "TransferWork")' + '?RSID=' + reqId;
+    }
+
+</script>
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="confirmAction">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white fs-5 fw-bold">               
+                Approval
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure?
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-between w-100">
+                    <button class="btn btn-danger" onclick="RemoveRequest()">Deny</button>
+                    <button class="btn btn-primary" onclick="ConfirmAction()">Approve</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

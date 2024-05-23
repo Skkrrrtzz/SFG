@@ -1,0 +1,283 @@
+﻿     @model PIMES_DMS.Models.IssueModel
+@{
+    ViewData["Title"] = "Details > " + Model.IssueNo;
+
+    string? error = TempData["NoEmailSnip"] as string;
+
+    string? Role = TempData["Role"] as string;
+    TempData.Keep();
+}
+
+<div class="container">
+    <br />
+    <div>
+        <div class="d-flex w-100">
+            <div>
+                <h1 class="text-nowrap">Claim Details</h1>
+            </div>
+            <div class="d-flex justify-content-end w-100">
+                <div class="align-self-center mx-2 d-flex justify-content-end">
+                    @if (Role == "Admin" && !Model.ValidatedStatus)
+                    {
+                        if (!Model.Acknowledged)
+                        {
+                            <a class="btn btn-success" asp-route-id="@Model.IssueID" asp-controller="Issue" asp-action="AcknowledgeIssue">Acknowledge</a>
+                        }
+                        else if (Model.Acknowledged)
+                        {
+                            <button class="btn btn-primary" onclick="openValModal()">Validate</button>
+                        }
+                    }
+                </div>             
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="w-100 mt-2">
+        <div>
+            <div style="margin-left:10px">
+                Creator: @Model.IssueCreator
+            </div>
+            <div>
+                <table class="table table-bordered table-striped border-dark border-2">
+                    <thead>
+                        <tr class="text-center align-content-center">
+                            <th>
+                                Issue#
+                            </th>
+                            <th class="desktop-only">
+                                Date Found
+                            </th>
+                            <th>
+                                Product
+                            </th>
+                            <th>
+                                Serial
+                            </th>
+                            <th>
+                                Affected P/N
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                Ack. Stat.
+                            </th>
+                            <th>
+                                Date Ack.
+                            </th>
+                            <th>
+                                Attachment
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <tr>
+                            <td>
+                                @Model.IssueNo
+                            </td>
+                            <td>
+                                @Model.DateFound.ToShortDateString()
+                            </td>
+                            <td>
+                                @Model.Product
+                            </td>
+                            <td>
+                                @Model.SerialNo
+                            </td>
+                            <td>
+                                @Model.AffectedPN
+                            </td>
+                            <td>
+                                <textarea style="min-height:70px" class="bg-transparent border-0 w-100">@Model.Desc</textarea>
+                            </td>
+                            @if (Model.Acknowledged)
+                            {
+                                <td style="background-color:green" class="desktop-only">
+                                    YES
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="background-color:red" class="desktop-only">
+                                    NO
+                                </td>
+                            }
+                            <td>
+                                @if (Model.Acknowledged)
+                                {
+                                    Write(Model.DateAck.ToShortDateString());
+                                }
+                                else
+                                {
+                                    Write("Not yet");
+                                }
+                            </td>
+                            <td>
+                                <div class="align-self-center">
+                                    @if (Model.ClientRep != null)
+                                    {
+                                        <button class="btn btn-primary" onclick="openAttachModal()">Show Attachment</button>
+                                    }
+                                    else
+                                    {
+                                        Write("None");
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="w-100 h-100 d-flex justify-content-center">
+                    <table class="table table-bordered w-75 border-dark">
+                        <thead>
+                            <tr>
+                                <th class="text-center">
+                                    Problem Description
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <textarea style="min-height:200px; max-height:200px; min-width:100%; max-width:100%" class="w-auto h-100 form-control bg-transparent">@Model.ProbDesc</textarea>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="validateModal" class="modal-content w-auto h-auto" style="background-color:darkgray; z-index:2001">
+    <button class="modal-close btn btn-danger" onclick="closeValModal()">X</button>
+    <div class="flex-column justify-content-center">
+        <div>
+            <p class="text-center" style="font-weight:bolder">
+                Validate Claim
+            </p>
+        </div>
+        <hr />
+        <div>
+            <form asp-controller="Validation" asp-action="SubmitValidation" enctype="multipart/form-data" method="post">
+                <input value="@Model.IssueID" name="id" hidden/>
+                <div class="d-flex w-100 h-25">
+                    <div>
+                        <label class="form-label fw-bold">
+                            Investigation Conclusion
+                        </label>
+                        <select class="form-select w-100 fw-bold" id="invvalue" name="validation" onchange="invorv(invvalue.value)">
+                            <option value="Invalid">INVALID</option>
+                            <option value="Valid">VALID</option>
+                        </select>
+                    </div>
+                    <div style="margin-left:30px" id="nrmadiv">
+                        <label class="fw-bold form-label">Need RMA?</label>
+                        <select class="form-select fw-bold" name="nrma">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div style ="margin-left:30px" id="emailupload">
+                        <label class="fw-bold form-label">Reply to Customer:</label>
+                        <input class="form-control" type="file" accept="image/*" id="emailimginput" name="emailimg">
+                    </div>
+                </div>
+                <div class="h-25">
+                    <label class="form-label fw-bold">
+                        Date Verified:
+                    </label>
+                    <input class="form-control fw-bold" type="date" name="dateval" required/>
+                </div>
+                <div class="h-25">
+                    <label class="form-label fw-bold">
+                        Attachment:
+                    </label>
+                    <input class="form-control fw-bold" type="file" name="valrep" accept=".pdf" required/>
+                </div>
+                <div class="h-25" id="reqchu">
+                    <label class="form-label fw-bold">Requirement:</label>
+                    <select class="form-select fw-bold" name="req" id="req">
+                        <option value=""> CAPA or 8D</option>
+                        <option>CAPA</option>
+                        <option>8D</option>
+                    </select>
+                </div>
+                <div class="h-25">
+                    <label class="form-label fw-bold">
+                        Remarks:
+                    </label>
+                    <textarea class="form-control" style="max-height:180px; min-height:50px; max-width:100%; min-width:100%; height:50px" name="valsumrep" placeholder="Remarks"></textarea>
+                </div>
+                <div class="d-flex justify-content-center mt-2">
+                    <input type="submit" class="btn btn-primary w-auto text-center"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal-content w-100 h-100" style="background-color:lightgray; z-index:2100" id="attachModal">
+    <button class="modal-close btn btn-danger" onclick="closeAttachModal()">Close</button>
+    <h4 class="modal-title text-center">Claim Attachment</h4>
+    <iframe src="@Url.Action("ShowPdf", "Issue", new { ID = Model.IssueID})" class="w-100 h-100"></iframe>
+</div>
+
+<script>
+    const Req = document.getElementById('reqchu');
+    Req.style.display = "none";
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var emailImgInput = document.getElementById('emailimginput');
+        emailImgInput.required = true;
+    });
+
+    function invorv(str) {
+        var emailImgDiv = document.getElementById('emailupload');
+        var Nrmadiv = document.getElementById('nrmadiv');
+        var emailImgInput = document.getElementById('emailimginput');
+        var Req = document.getElementById('reqchu');
+        var ReqChu = document.getElementById('req');
+
+        if (str === "Valid") {
+            ReqChu.required = true;
+            emailImgInput.required = false;
+            emailImgDiv.style.display = "none";
+            Nrmadiv.style.display = "none";
+            Req.style.display = "block";
+        } else {
+            ReqChu.required = false;
+            emailImgInput.required = true;
+            emailImgDiv.style.display = "block";
+            Nrmadiv.style.display = "block";
+            Req.style.display = "none";
+        }
+    }
+
+    function openValModal()
+    {
+        var valModal = document.getElementById('validateModal');
+        valModal.style.display = "block";
+    }
+
+    function closeValModal()
+    {
+        var valModal = document.getElementById('validateModal');
+        valModal.style.display = "none";
+    }
+
+    function openAttachModal()
+    {
+        var oam = document.getElementById('attachModal');
+        oam.style.display = "block";
+    }
+
+    function closeAttachModal()
+    {
+        var oam = document.getElementById('attachModal');
+        oam.style.display = "none";
+    }
+
+</script>

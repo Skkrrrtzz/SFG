@@ -1,0 +1,21 @@
+.skeleton-loader {
+  background-color: #f0f0f0; /* Background color for the skeleton loader */
+  border-radius: 4px; /* Rounded corners for the loader */
+  padding: 20px; /* Padding to create spacing */
+  margin: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional shadow for the loader */
+}
+
+.skeleton-header {
+  width: 50%; /* Adjust the width as needed */
+  height: 20px; /* Height of the header skeleton */
+  background-color: #e0e0e0; /* Background color for the header skeleton */
+  margin-bottom: 10px; /* Spacing between header and content */
+}
+
+.skeleton-content {
+  width: 100%; /* Adjust the width as needed */
+  height: 20px; /* Height of each content skeleton */
+  background-color: #e0e0e0; /* Background color for the content skeleton */
+  margin-bottom: 10px; /* Spacing between content items */
+}

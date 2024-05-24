@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMDirectory", "COMDirector
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATSSFG", "ATSSFG\ATSSFG.csproj", "{F2671629-F238-48C4-8B26-DE6719BE37BA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ATSPPIC", "ATSPPIC\ATSPPIC.csproj", "{C5AEA7DC-CBFC-4457-A549-20C73D0905BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATSPROD", "ATSPROD\ATSPROD.csproj", "{4A97BF80-5EFE-4524-9809-1B7502D0BC20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{F2671629-F238-48C4-8B26-DE6719BE37BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2671629-F238-48C4-8B26-DE6719BE37BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2671629-F238-48C4-8B26-DE6719BE37BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5AEA7DC-CBFC-4457-A549-20C73D0905BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5AEA7DC-CBFC-4457-A549-20C73D0905BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5AEA7DC-CBFC-4457-A549-20C73D0905BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5AEA7DC-CBFC-4457-A549-20C73D0905BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A97BF80-5EFE-4524-9809-1B7502D0BC20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A97BF80-5EFE-4524-9809-1B7502D0BC20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A97BF80-5EFE-4524-9809-1B7502D0BC20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A97BF80-5EFE-4524-9809-1B7502D0BC20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,64 +1,48 @@
-<div class="container" id="auditPlanTables">
-    <div class="col-lg-12">
+@* <div class="container-fluid" id="readAuditPlanTables"> *@
+    <div class="row">
         <nav>
             <div class="nav nav-pills" id="tableTab" role="tablist">
                 <button class="nav-link active" id="conformitiesTab" data-bs-toggle="tab" data-bs-target="#conformitiesTabPane" type="button" role="tab" aria-controls="conformitiesTabPane" aria-selected="true">
-                    Conformities
+                    @* Conformities *@ Conformities
                 </button>
                 <button class="nav-link" id="cparTab" data-bs-toggle="tab" data-bs-target="#cparTabPane" type="button" role="tab" aria-controls="carTabPane" aria-selected="true">
-                    Corrective Action Requests
+                    @* Corrective Action Requests *@ CPAR
                 </button>
                 <button class="nav-link" id="improvementsTab" data-bs-toggle="tab" data-bs-target="#improvementsTabPane" type="button" role="tab" aria-controls="improvementsTabPane" aria-selected="true">
-                    Opportunities for Improvement
+                    @* Opportunities for Improvement *@ OIM
                 </button>
             </div>
         </nav>
-    </div> 
-
-    <div class="tab-content mt-2" id="tableTabContent">
-        <div class="tab-pane show active" id="conformitiesTabPane" role="tabpanel" tabindex="0">
-            <div class="row">
-                <div class="col-10 my-auto">
-                    @* <label class="form-label fw-bold" for="viewerObservationsButton">Good Observations / Conformities</label> *@
-                </div>
-                <div class="col-2 mb-2">
-                    <button type="button" class="form-control" data-bs-toggle="modal" data-bs-target="#createConformity">
-                        <i class="fa-solid fa-plus"></i> 
-                    </button>
-                </div>
-                <partial name="Partials/_ConformitiesTable"></partial>
-            </div>
-        </div>
-        <div class="tab-pane" id="cparTabPane" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
-            <div class="row">
-                <div class="col-10 my-auto">
-                    @* <label class="form-label fw-bold" for="viewerCARButton">Corrective Action Requests</label> *@
-                </div>
-                <div class="col-2 my-2">
-                    @* <button class="form-control" id="viewerCARTable"> *@
-                    <button type="button" class="form-control" data-bs-toggle="modal" data-bs-target="#createCPAR">
-                        <i class="fa-solid fa-plus"></i> 
-                    </button>
-                </div>
-                <partial name="Partials/_CPARsTable"></partial>
-            </div>
-        </div>
-
-        <div class="tab-pane" id="improvementsTabPane" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
-            <div class="row">
-                <div class="col-10 my-auto">
-                    @* <label class="form-label fw-bold" for="viewerImprovementsButton">Opportunities For Improvement</label> *@
-                </div>
-                <div class="col-2 my-2">
-                    <button class="form-control" id="viewerImprovementsTable">
-                        <i class="fa-solid fa-plus"></i> 
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
-</div>
 
+    <div class="row">
+        <div class="tab-content mt-2" id="tableTabContent">
+            <div class="tab-pane show active" id="conformitiesTabPane" role="tabpanel" tabindex="0">
+                <partial name="Partials/_ConformitiesTable"></partial>
+                <button type="button" class="form-control" data-bs-toggle="modal" data-bs-target="#createConformity">
+                    <i class="fa-solid fa-plus"></i> 
+                </button>
+            </div>
+
+            <div class="tab-pane" id="cparTabPane" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+                <partial name="Partials/_CPARsTable"></partial>
+                <button type="button" class="form-control" data-bs-toggle="modal" data-bs-target="#createCPAR">
+                    <i class="fa-solid fa-plus"></i> 
+                </button>
+            </div>
+
+            <div class="tab-pane" id="improvementsTabPane" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+                <partial name="Partials/_CPARsTable"></partial>
+                <button class="form-control" id="viewerImprovementsTable">
+                    <i class="fa-solid fa-plus"></i> 
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+@* </div> *@
 
 <partial name="Partials/_CreateConformityModal"></partial>
 <partial name="Partials/_CreateCPARModal"></partial>
+<partial name="Partials/_ReadCPARModal"></partial>

@@ -7,6 +7,8 @@ public static class AddRepositoriesService
         services.AddScoped<IAuditPlanRepository, AuditPlanRepository>();
         services.AddScoped<IConformityRepository, ConformityRepository>();
         services.AddScoped<ICPARRepository, CPARRepository>();
+        services.AddScoped<ICorrectiveActionRepository, CorrectiveActionRepository>();
+        services.AddScoped<IPreventiveActionRepository, PreventiveActionRepository>();
         return services;
     }
 }

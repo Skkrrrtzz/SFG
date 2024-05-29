@@ -1,9 +1,7 @@
 var isManager = true;
 
 function viewAuditPlan(args) {
-    // console.log("GYATT")
-    // console.log("viewAuditPlan", args.plan.planId);
-    $('#auditPlanTables').hide();
+    $('#readAuditPlanTables').hide();
     $('#auditPlanManagerApproval').hide();
     $('#auditPlanManagerCloseAuditPlan').hide();
     $('#auditPlanManagerApproveAuditPlan').hide();
@@ -23,8 +21,9 @@ function viewAuditPlan(args) {
     $("#readAuditPlanAuditeeApproved").val(args.plan.auditeeApproved ? "Approved" : "Not Approved");
 
     if (args.plan.status == 2) { //Closed
-        $('#auditPlanTables').show();
+        $('#readAuditPlanTables').show();
         renderConformitiesTable();
+        renderCPARsTable();
     } else {
         if (isManager) {
             $('#auditPlanManagerApproval').show();
@@ -75,79 +74,76 @@ function viewAuditPlan(args) {
         })
         .catch(error => console.log(error));
     });
-    $('#readAuditPlanModal .btn-close').click(() => {
-        // $("#readAuditPlanModal").modal('hide');
-        $('#conformitiesTable tbody').empty();
-    });
+    // $('#readAuditPlanModal .btn-close').click(() => {
+    //     // $("#readAuditPlanModal").modal('hide');
+    //     $('#conformitiesTable tbody').empty();
+    // });
 }
 
-async function renderConformitiesTable() {
-    $('#conformitiesTableBody').empty();
+// async function renderConformitiesTable() {
+//     $('#conformitiesTableBody').empty();
 
-    let conformities = await getConformitiesByPlanId($('#readAuditPlanId').val());
+//     let conformities = await getConformitiesByPlanId($('#readAuditPlanId').val());
 
-    conformities.forEach(conformity => {
-        console.log(conformity.planId)
-        $('#conformitiesTable').append(
-            `<tr>` +
-                // '<td hidden>' + conformity.conformityId + '</td>' +
-                // '<td hidden>' + conformity.planId + '</td>' +
-                '<td>' + conformity.conformityDescription + '</td>' +
-                '<td>' + conformity.conformityAreaSection + '</td>' +
-                `<td data-conformityid=${conformity.conformityId}>` + 
-                    `<button type="button" class="btn btn-danger conformity-delete">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>` +
-                    `<button type="button" class="btn btn-secondary">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </button>` +
-                '</td>' +
-            '</tr>'
-        );
-    });
+//     conformities.forEach(conformity => {
+//         console.log(conformity.planId)
+//                 $('#conformitiesTable').append(
+//                     $('<tr>').append(
+//                         $('<td>').attr("hidden", true).text(conformity.conformityId),
+//                         $('<td>').attr("hidden", true).text(conformity.planId),
+//                         $('<td>').text(conformity.conformityDescription),
+//                         $('<td>').text(conformity.conformityAreaSection),
+//                         $('<td>').data('conformityid', conformity.conformityId)
+//                                  .append(
+//                                     $('<button>', {type: 'button', class: 'btn btn-danger conformity-delete'}).append($('<i class="fa-solid fa-trash"></i>')),
+//                                     $('<button>', {type: 'button', class: 'btn btn-secondary'}).append($('<i class="fa-solid fa-pen-to-square"></i>'))
+//                                 )
+//                     )
+//                 )
+//     });
     
-    if (conformities.length <= 0) {
-        $('#conformitiesTable').hide();
-        $('.emptyTable').show();
-    } else {
-        $('#conformitiesTable').show();
-        // $('#conformitiesTable').addClass('col-lg');
-        $('.emptyTable').hide();
-    }
+//     if (conformities.length <= 0) {
+//         $('#conformitiesTable').hide();
+//         $('.emptyTable').show();
+//     } else {
+//         $('#conformitiesTable').show();
+//         // $('#conformitiesTable').addClass('col-lg');
+//         $('.emptyTable').hide();
+//     }
 
-    //TODO: This is all still broken. No idea where I should put the data for the ConformityId. Make a new column maybe.
-    $('.conformity-delete').on('click', e => {
-        let conformityId = e.target.parentNode.dataset.conformityid/* .split('-')[1] */;
+//     //TODO: This is all still broken. No idea where I should put the data for the ConformityId. Make a new column maybe.
+//     $('.conformity-delete').on('click', e => {
+//         let conformityId = e.target.parentNode.dataset.conformityid/* .split('-')[1] */;
 
-        fetch('/api/conformities/' + conformityId, {
-            method: "DELETE",
-        })
-        .then(response => response.json())
-        .then(data => {
-            renderConformitiesTable();
-            console.log(data);
-        })
-        .catch(error => console.log(error));
+//         fetch('/api/conformities/' + conformityId, {
+//             method: "DELETE",
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             renderConformitiesTable();
+//             console.log(data);
+//         })
+//         .catch(error => console.log(error));
 
-    });
-}
+//     });
+// }
 
 
-function getConformitiesByPlanId(planId) {
-    return fetch("/api/auditplans/" + planId + "/conformities", {
-        method: "GET",
-        cache: "no-cache",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    .then(response => response.json())
-    .then(data => { 
-        // console.log(data);
-        return data;
-    })
-    .catch(error => console.log(error));
-}
+// function getConformitiesByPlanId(planId) {
+//     return fetch("/api/auditplans/" + planId + "/conformities", {
+//         method: "GET",
+//         cache: "no-cache",
+//         headers: {
+//             "Content-Type": "application/json"
+//         }
+//     })
+//     .then(response => response.json())
+//     .then(data => { 
+//         // console.log(data);
+//         return data;
+//     })
+//     .catch(error => console.log(error));
+// }
 
 // $('#createConformitySubmit').on('click', e => {
 //     // e.preventDefault();
@@ -232,7 +228,7 @@ $('#readAuditPlanDelete').on('click', e => {
 //     .catch(error => console.log(error));
 // });
 
-$('#conformitiesTab').on('click', e => {
-    renderConformitiesTable();
-});
+// $('#conformitiesTab').on('click', e => {
+//     renderConformitiesTable();
+// });
 

@@ -7,7 +7,6 @@ namespace QA_Audit_Fresh.Models.Dto
 {
     public class AuditPlanDto
     {
-        private DateTime _targetDate;
         public string Requestor { get; set; }
         public string Department { get; set; }
         public string AuditCategory { get; set; }

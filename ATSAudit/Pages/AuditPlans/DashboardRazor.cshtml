@@ -1,5 +1,7 @@
+
 @page "/Dashboard"
-@model QA_Audit_Fresh.Views.AuditPlans.DashboardRazor
+
+
 @{
     ViewData["Title"] = "Dashboard";
 }
@@ -9,15 +11,48 @@
 
 <div class="container-fluid" id="dashboard">
     @* <partial name="Partials/_ReadAuditPlanModal"></partial> *@
-    <partial name="Partials/_Visualization"></partial>
+    @* <partial name="Partials/_Visualization"></partial> *@
+    <div class="row">
+
+        <div class="col-lg-6">
+            <nav>
+                <div class="nav nav-tabs " id="dashboardTab" role="tablist">
+                    <button class="nav-link active" id="calendarTab" data-bs-toggle="tab" data-bs-target="#calendarTabPane" type="button" role="tab">
+                        Audit Plan Calendar
+                    </button> 
+                    <button class="nav-link" id="statsTab" data-bs-toggle="tab" data-bs-target="#statsTabPane" type="button" role="tab">
+                        Statistics
+                    </button>
+                </div>
+            </nav>
+
+            <div class="tab-content" id="dashboardTabContent">
+                <div class="tab-pane show active" id="calendarTabPane" role="tabpanel" tabindex="0">
+                    <partial name="Partials/_Calendar"></partial>
+                </div>  
+                <div class="tab-pane" id="statsTabPane" role="tabpanel" tabindex="0">
+                    <partial name="Partials/_Stats"></partial>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6" id="sidepane">
+            @* <div class="row"> *@
+                <partial name="Partials/_CreateAuditPlan"></partial>
+                <partial name="Partials/_ReadAuditPlan"></partial>
+            @* </div> *@
+        </div>
+
+    </div>
 </div>
 
 @section Scripts {
+    <script src="~/JS/ConformitiesTable.js"></script>
+    <script src="~/JS/CPARsTable.js"></script>
     <script src="~/JS/ReadAuditPlan.js"></script>
     <script src="~/JS/CreateAuditPlan.js"></script>
     <script src="~/JS/CreateConformity.js"></script>
     @* <script src="~/JS/CreateCPAR.js"></script> *@
-    <script src="~/JS/CPARsTable.js"></script>
     <script src="~/JS/Sidebar.js"></script>
     <script src="~/JS/Calendar.js"></script>
     @* <script src="/_framework/aspnetcore-browser-refresh.js"></script> *@

@@ -5,11 +5,13 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!-- <ItemGroup>
     <ProjectReference Include="..\APPCommon\APPCommon.csproj" />
-  </ItemGroup>
+  </ItemGroup> -->
 
   <ItemGroup>
     <!-- <Content Update="Pages\Menu.cshtml">
@@ -43,16 +45,23 @@
   </ItemGroup>
 
   <ItemGroup>
-      <PackageReference Include="Dapper" Version="2.1.35" />
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-      <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
-      <!-- <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        <PrivateAssets>all</PrivateAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" /> -->
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-    </ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
+    <PackageReference Include="NSwag.AspNetCore" Version="14.0.7" />
+    <!-- <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" /> -->
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="APPCommon">
+      <HintPath><!-- C:\Users\jrafols\Gits\PIMES-Web -->..\APPCommon\bin\Debug\net6.0-windows7.0\APPCommon.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
 </Project>

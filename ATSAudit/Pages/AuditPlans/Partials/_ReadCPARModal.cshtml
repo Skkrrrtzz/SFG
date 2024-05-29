@@ -1,0 +1,124 @@
+<div class="modal fade" id="readCPAR" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h6 class="modal-title text-light">Viewing Corrective & Preventive Action Report</h6>    
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" id="readCPARInitial">
+                    <div class="row">
+                        <div class="col-4">
+                            <div >
+                                <div class="form-text">Issued To</div>
+                                <input class="form-control" type="text" id="readCPARInitialIssuedTo" readonly />
+                            </div>
+                            <div>
+                                <div class="form-text">Issued By</div>
+                                <input class="form-control" type="text" id="readCPARInitialIssuedBy" readonly />
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div >
+                                <div class="form-text">Issue Date</div>
+                                <input class="form-control" type="text" id="readCPARInitialIssueDate" readonly />
+                            </div>
+                            <div >
+                                <div class="form-text">Audit Date</div>
+                                <input class="form-control" type="text" id="readCPARInitialAuditDate" readonly />
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div >
+                                <div class="form-text">Response Date</div>
+                                <input class="form-control" type="text" id="readCPARInitialResponseDate" readonly />
+                            </div>
+                            <div >
+                                <div class="form-text">CAR Control No.</div>
+                                <input class="form-control" type="text" id="readCPARInitialCARControlNo" readonly />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-text text-center">Requirement: ISO 9001:2015 CLAUSE</div>
+                            <input type="text" class="form-control" id="readCPARInitialISOClause" readonly />
+                        </div>
+                        <div class="col-12">
+                            <div class="form-text text-center">Problem Statement</div>
+                            <input type="text" class="form-control" id="readCPARInitialProblemStatement" readonly />
+                        </div>
+                    </div>
+                </div>
+
+            <hr class="border border-2">
+
+            <div id="readCPARForms">
+                <div class="row" id="readCPARFormsCorrection">
+                    <partial name="Partials/_CorrectionsTable"></partial>
+                </div>
+
+                <hr class="border border-2">
+
+                <fieldset>
+                    @* <legend class="text-center form-text">Root Cause Analysis</legend> *@
+                    <h6 class="form-text text-center">Root Cause Analysis</h6>
+                    <div class="row" id="readCPARRootCause">
+                        <div class="form-group">
+                            <div class="form-text">Method</div>
+                            <input class="form-control" type="text" id="readCPARRootCauseMethod" readonly />
+                            <div class="form-text">Machine</div>
+                            <input class="form-control" type="text" id="readCPARRootCauseMachine" readonly />
+                            <div class="form-text">Material</div>
+                            <input class="form-control" type="text" id="readCPARRootCauseMaterial" readonly />
+                            <div class="form-text">Man</div>
+                            <input class="form-control" type="text" id="readCPARRootCauseMan" readonly />
+                            <div class="form-text">Environment</div>
+                            <input class="form-control" type="text" id="readCPARRootCauseEnvironment" readonly />
+                        </div>
+                    </div>
+                </fieldset>
+
+                <hr class="border border-2">
+
+                <div class="row" id="readCPARFormsCorrectiveActions">
+                    <partial name="Partials/_CorrectiveActionsTable"></partial>
+                </div>
+
+                <hr class="border border-2">
+
+                <div class="row" id="readCPARFormsCorrection">
+                    <partial name="Partials/_PreventiveActionsTable"></partial>
+                </div>
+            </div>
+
+            <hr class="border border-2">
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-text">Prepared By</div>
+                        <input class="form-control" type="text" id="readCPARFooterPreparedBy" readonly />
+                    </div>
+                    <div class="col-4">
+                        <div class="form-text">Checked By</div>
+                        <input class="form-control" type="text" id="readCPARFooterCheckedBy" readonly />
+                    </div>
+                    <div class="col-4">
+                        <div class="form-text">Approved By</div>
+                        <input class="form-control" type="text" id="readCPARFooterApprovedBy" readonly />
+                    </div>
+                </div>
+            </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" id="createConformitySubmit" data-bs-dismiss="modal">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+

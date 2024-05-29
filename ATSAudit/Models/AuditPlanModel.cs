@@ -10,16 +10,6 @@ namespace QA_Audit_Fresh.Models
 {
     public class AuditPlanModel
     {
-        // public AuditPlanModel(string requestor, string department, string auditCategory, DateTime targetDate, string timeEnd)
-        // {
-        //     Requestor = requestor;
-        //     Department = department;
-        //     AuditCategory = auditCategory;
-        //     TargetDate = targetDate;
-        //     TimeEnd = timeEnd;
-        //     Status = StatusEnum.Open.ToString();
-        // }
-
         public AuditPlanModel(AuditPlanDto response)
         {
             Requestor = response.Requestor;
@@ -32,8 +22,10 @@ namespace QA_Audit_Fresh.Models
             Status = (int) AuditPlanStatus.ForApproval;
         }
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public AuditPlanModel() {}
-        
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+
         [Key]
         public int PlanId { get; set; }
         [Required]

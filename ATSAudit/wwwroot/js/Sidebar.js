@@ -27,5 +27,5 @@ function displayCreateAuditPlan() {
 }
 
 function keepClicked(cell) {
-    $(cell).addClass('clicked');
+    cell.addClass('clicked');
 }

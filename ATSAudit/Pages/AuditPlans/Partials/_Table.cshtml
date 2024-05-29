@@ -1,0 +1,40 @@
+@using QA_Audit_Fresh.Models
+@model IEnumerable<MyViewModel>
+
+<div class="col-12 table-responsive">
+    <table class="table table-striped" id="conformitiesTable">
+        <thead class="table-primary">
+            <tr>
+                @* <th scope="col" hidden>ConformityId</th>
+                <th scope="col" hidden>PlanId</th>
+                <th class="header" scope="col">Description</td>
+                <th class="header" scope="col">Area/Section</td>
+                <th class="header" scope="col">Actions</td> *@
+                @foreach (var column in Model)
+                {
+                    <th scope="col" @(column.isHidden ? "hidden" : "")>
+                        @column.colName
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody id="conformitiesTableBody">
+        </tbody>
+    </table>
+</div>
+<partial name="Partials/_EmptyTable"></partial>
+
+@{
+    /* using QA_Audit_Fresh.Models
+    <partial name="Partials/_Table" model=@(
+        new List<MyViewModel>
+        {
+            new MyViewModel(true, "GYATT"),
+            new MyViewModel(true, "GYATT"),
+            new MyViewModel(false, "GYATT"),
+            new MyViewModel(false, "NYATT"),
+            new MyViewModel(false, "BYATT")
+        }
+
+    )></partial> */
+}

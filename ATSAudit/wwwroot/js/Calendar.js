@@ -49,118 +49,6 @@ async function getAuditPlansByMonth(month) {
     .catch(error => console.log("Error: ", error)); 
 }
 
-async function renderCalendar(year, month, firstDay, totalDays) {
-    // Clear cell 
-    $('#calendar tbody > tr > td').text('')
-                                  .click(() => {})
-                                  .removeClass()
-                                  .removeAttr('style');
-
-    let plans = await getAuditPlansByMonth(month);
-    let currentDayCount = 1;
-    let monthSetter = new Date(year, month);
-    let displayMonth = monthSetter.toLocaleString('default', { month: 'long'});
-    let displayYear = monthSetter.getFullYear();
-    monthSpecifier.innerHTML = displayMonth + " " + displayYear;
-
-    $('#calendar tbody > tr').each((i, row) => {
-        // console.log('row');
-        const week = i;
-        $(row).find('td').each((j, cell) => {
-            const day = j;
-
-            const cellDate = new Date(year, month, currentDayCount);
-            const plansByDate = plans.filter(plan => new Date(plan.targetDate).setHours(0,0,0) == cellDate.setHours(0,0,0));
-            const currentDateFlag = cellDate.setHours(0,0,0,0) == todaysDate.setHours(0,0,0,0);
-            let invalidDate = false;
-
-            //Current Day
-            cell.classList.add('calendar-cell');                
-            
-            if (currentDateFlag) {
-                invalidDate = true;
-                cell.classList.add('previousDay');
-                cell.classList.add('today');
-            }
-
-            // All other invalid dates 
-            if (plansByDate.length <= 0) {
-                //Days outside of calendar days
-                if ((week === 0 && day < firstDay) || (currentDayCount > totalDays)) {
-                    cell.style.backgroundColor = '#9a9a9a'; 
-                    invalidDate = true;
-                    cell.classList.add('invalid');
-                    return;
-                } 
-
-                //Grey out previous dates
-                if (cellDate < todaysDate) {
-                    // cell.style.backgroundColor = '#cacaca'; 
-                    // cell.style.color = '#6d6d6d';
-                    invalidDate = true;
-                    // cell.classList.add('previousDay');
-                }
-
-                //Weekend
-                if ( cellDate.getDay() == 0 || cellDate.getDay() == 6) {
-                    // cell.classList.add('text-danger');
-                    cell.classList.add('fw-bolder');
-                    cell.style.backgroundColor = '#9a9a9a'; 
-                    cell.style.color = '#7c7c7c';
-                    invalidDate = true;
-                    cell.classList.add('invalid');
-                }
-
-                //Every other cell is valid and either has no audit plan or has audit plan
-            } 
-
-            //Has Audit plan
-            if (plansByDate.length > 0) {
-                const status = plansByDate[0].status;
-                switch (status) {
-                    case 0: // For Approval
-                        cell.style.backgroundColor = '#0D6EFD';
-                        break;
-                    case 1: // Open
-                        cell.style.backgroundColor = '#FFC107';
-                        break;
-                    case 2: // Closed
-                        cell.style.backgroundColor = '#00BA5A';
-                        break;
-                    default:
-                        break;
-                }
-
-                //TODO: Don't know if I should pass the responsibility to Sidebar.js by using .hasAuditPlan and .noAuditPlan
-                cell.classList.add('hasAuditPlan');
-                cell.onclick = () => {
-                    viewAuditPlan({ 
-                        plan: plansByDate[0],
-                    });
-                };
-            } else if (!invalidDate) {
-                cell.onclick = () => {
-                    createAuditPlan({ 
-                        date: cellDate.toLocaleDateString('en-US')
-                    });
-                }; 
-            }
-
-            //I don't know if cellClickHandler() should do the isEmpty check
-            //or renderCalendar() should- brain hurtie :(
-
-            //Base condition(?)
-            if (currentDayCount <= totalDays) {
-                cell.textContent = currentDayCount;
-                currentDayCount++;
-            }
-
-        });
-    });
-
-    useStateLol();
-}
-
 async function renderCalendar(date) {
     let year = date.getFullYear();
     let month = date.getMonth();
@@ -193,12 +81,6 @@ async function renderCalendar(date) {
 
             //Current Day
             cell.classList.add('calendar-cell');                
-            
-            if (currentDateFlag) {
-                // invalidDate = true;
-                cell.classList.add('previousDay');
-                cell.classList.add('today');
-            }
 
             // All other invalid dates 
             //Days outside of calendar days
@@ -223,15 +105,9 @@ async function renderCalendar(date) {
             if (cellDate < todaysDate && !invalidDate) {
                 cell.style.backgroundColor = '#cacaca'; 
                 cell.style.color = '#6d6d6d';
-                // invalidDate = true;
-                cell.classList.add('previousDay');
+                invalidDate = true;
+                cell.classList.add('invalid');
             }
-
-            //Add inline styles to previousDay divs
-            $('.previousDay').css({
-                'background-color': '#cacaca',
-                'color': '#6d6d6d'
-            })
 
             //Every other cell is valid and either has no audit plan or has audit plan
             if (plansByDate.length > 0) { //Has Audit Plan
@@ -260,12 +136,21 @@ async function renderCalendar(date) {
                         plan: plansByDate[0],
                     });
                 };
-            } else /* if (!invalidDate) */ {
+            } else if (!invalidDate) {
                 cell.onclick = () => {
                     createAuditPlan({ 
                         date: cellDate.toLocaleDateString('en-US')
                     });
                 }; 
+            }
+            
+            if (currentDateFlag) {
+                // invalidDate = true;
+                cell.classList.add('invalid');
+                // cell.classList.add('today');
+                cell.style.border = '3px solid #c41414';
+                cell.style.color = '#c41414';
+                cell.style.fontWeight = 'bold';
             }
 
             // Has Audit Plan
@@ -285,5 +170,4 @@ async function renderCalendar(date) {
     useStateLol();
 }
 
-// renderCalendar(thisYear, thisMonth, thisFirstDay, thisTotalDays);
 renderCalendar(currentDate);

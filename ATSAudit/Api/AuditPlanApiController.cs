@@ -11,7 +11,9 @@ using QA_Audit_Fresh.Repositories;
 namespace QA_Audit_Fresh.Controllers.Api
 {
     [ApiController]
-    [Route("api/auditplans")]
+    // [Route("api/auditplans")]
+    [Route("api/[controller]")]
+
     public class AuditPlansController : ControllerBase
     {
         // private readonly AppDbContext _context;
@@ -23,27 +25,31 @@ namespace QA_Audit_Fresh.Controllers.Api
             _repository = repository;
         }
 
-       [HttpGet("{month}")] 
-       public async Task<IEnumerable<AuditPlanModel>> GetAuditPlansByMonth(int month) 
-       {
-           var auditPlans = _repository.GetAuditPlansByMonth(month);
-           return await auditPlans; 
-       }
+        /// <summary>
+        /// Get all AuditPlans by month.
+        /// </summary>
+        /// <param name="month"></param>
+        /// <returns></returns>
+        [HttpGet("{month}")] 
+        public async Task<IEnumerable<AuditPlanModel>> GetAuditPlansByMonth(int month) 
+        {
+            var auditPlans = _repository.GetAuditPlansByMonth(month);
+            return await auditPlans; 
+        }
 
-       [HttpGet] 
-       public async Task<IEnumerable<AuditPlanModel>> GetAuditPlans() 
-       {
-            var auditPlans = _repository.GetAuditPlans();
-            return await auditPlans;
-       }
+        [HttpGet] 
+        public async Task<IEnumerable<AuditPlanModel>> GetAuditPlans() 
+        {
+                var auditPlans = _repository.GetAuditPlans();
+                return await auditPlans;
+        }
 
-       [HttpGet]
-       [Route("~/api/departments")]
-       public async Task<List<string>> GetDepartments()
-       {
-            var departments = new List<string> {"Quality Engineering", "Quality Assurance"};
-            return await Task.Run(() => departments);
-       }
+        [HttpGet("~/api/departments")]
+        public async Task<List<string>> GetDepartments()
+        {
+                var departments = new List<string> {"Quality Engineering", "Quality Assurance"};
+                return await Task.Run(() => departments);
+        }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -53,14 +59,12 @@ namespace QA_Audit_Fresh.Controllers.Api
             Console.WriteLine(response.GetProperties());
 
             return await _repository.PostAuditPlan(new AuditPlanModel(response));
-           
+        
         }
 
         [HttpPost("{planId:int}")]
         public async Task<IActionResult> UpdateStatus(int planId, [FromBody] string status)
         {
-            // Console.WriteLine($"{planId} {status}") 
-
             if (string.IsNullOrEmpty(status))
             {
                 return BadRequest("Status cannot be null or empty.");
@@ -82,12 +86,9 @@ namespace QA_Audit_Fresh.Controllers.Api
                 if (query == 1) return Ok(query);
                 else return BadRequest(query);
             } catch (Exception ex)
-
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting resource.\n" + ex);
             }
-
         }
-
     }
 }

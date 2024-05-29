@@ -7,9 +7,9 @@ using QA_Audit_Fresh.Models.Dto;
 
 namespace QA_Audit_Fresh.Models
 {
-    public class CPARModel
+    public class CPARsModel
     {
-        public CPARModel(CPARDto response) {
+        public CPARsModel(CPARDto response) {
             PlanId = response.PlanId;
             Respondent = response.Respondent;
             Requestor = response.Requestor;
@@ -18,22 +18,29 @@ namespace QA_Audit_Fresh.Models
             PreparedBy = response.PreparedBy;
         }
 
-        public CPARModel() {}
+        public CPARsModel() {}
 
         [Key]
         public int CPARId { get; set; }
-        public int PlanId { get; set; }
+        [Required]
+        public int? PlanId { get; set; }
 
-        public string Respondent { get; set; }
-        public string Requestor { get; set; }
+        [Required]
+        public string? Respondent { get; set; }
+        [Required]
+        public string? Requestor { get; set; }
         public DateTime? IssueDate { get; set; }
         public DateTime? ApprovalDate { get; set; }
         public DateTime? ResponseDueDate { get; set; }       
-        public string ProblemStatement { get; set; }
-        public string PreparedBy { get; set; }
-        public string CheckedBy { get; set; }
+        // [Required]
+        public string? ISOClause { get; set; }
+        [Required]
+        public string? ProblemStatement { get; set; }
+        [Required]
+        public string? PreparedBy { get; set; }
+        public string? CheckedBy { get; set; }
         // public string CompanyDepartment { get; set; }
-        public string ApprovedBy { get; set; }
+        public string? ApprovedBy { get; set; }
 
         // public string ModelPartNumber { get; set; }
         // public string LotBatchPONumber { get; set; }

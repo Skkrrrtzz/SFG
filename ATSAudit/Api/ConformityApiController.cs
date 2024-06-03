@@ -28,8 +28,8 @@ namespace QA_Audit_Fresh.Controllers.Api
         [HttpGet] 
         public async Task<IEnumerable<ConformityModel>> GetConformities() 
         {
-                var conformities = _repository.GetConformities();
-                return await conformities;
+            var conformities = _repository.GetConformities();
+            return await conformities;
         }
 
         [HttpGet("~/api/auditplans/{planId:int}/conformities")] 

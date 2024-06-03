@@ -10,24 +10,6 @@ async function renderCPARsTable() {
 
     cpars.forEach(cpar => {
         $('#cparsTableBody').append(
-            // '<tr>' +
-            //     '<td>' + cpar.cparId + '</td>' +
-            //     '<td hidden>' + cpar.planId + '</td>' +
-            //     '<td>' + cpar.respondent + '</td>' +
-            //     '<td>' + cpar.requestor + '</td>' +
-            //     '<td>' + cpar.responseDueDate + '</td>' +
-            //     // '<td>' + cpar.problemStatement + '</td>' +
-            //     // '<td>' + cpar.preparedBy + '</td>' +
-            //     `<td  data-cparid=${cpar.cparId}>` + 
-            //         `<button type="button" class="btn btn-primary cparActionView"
-            //         data-bs-toggle="modal" data-bs-target="#readCPAR">
-            //             <i class="fa-solid fa-pen-to-square"></i>
-            //         </button>` +
-            //         `<button type="button" class="btn btn-danger cpar-delete">
-            //             <i class="fa-solid fa-trash"></i>
-            //         </button>` +
-            //     '</td>' +
-            // '</tr>'
             $('<tr>').append(
                 $('<td>').attr('hidden', true).text(cpar.cparId),
                 $('<td>').attr('hidden', true).text(cpar.planId),
@@ -38,7 +20,7 @@ async function renderCPARsTable() {
                 // $('<td>').text(cpar.preparedBy),
                 $('<td>').attr('data-cparid', cpar.cparId)
                             .append(
-                                    $('<button>', {type: 'button', class: 'btn btn-primary', 'data-bs-modal': 'modal', 'data-bs-target': '#readCPAR'}).append($('<i class="fa-solid fa-pen-to-square"></i>')),
+                                    $('<button>', {type: 'button', class: 'btn btn-primary cpar-view', 'data-bs-toggle': 'modal', 'data-bs-target': '#readCPAR'}).append($('<i class="fa-solid fa-pen-to-square"></i>')),
                                     $('<button>', {type: 'button', class: 'btn btn-danger cpar-delete'}).append($('<i class="fa-solid fa-trash"></i>'))
                                 )
             )
@@ -69,8 +51,8 @@ async function renderCPARsTable() {
 
     });
 
-    $('.cparActionView').off('click');
-    $('.cparActionView').on('click', async e => {
+    $('.cpar-view').off('click');
+    $('.cpar-view').on('click', async e => {
         $('#readCPARInitial > input').val('');
 
         let id = e.target.parentNode.dataset.cparid;
@@ -96,6 +78,10 @@ async function renderCPARsTable() {
 
     // $('.cparActionView > *').click(e => e.stopPropagation());
 }
+
+$('#createCPAREdit').on('click', e => {
+    $('#readCPAR [readonly]').prop('readonly', false);
+});
 
 $('#createCPARSubmit').on('click', e => {
     let formData = {
@@ -146,5 +132,5 @@ function getCPARsByPlanId(planId) {
     .catch(error => console.log(error));
 }
 
-$('#cparTab').on('click', e => renderCPARsTable());
+$('#cparTab').on('click', e => renderCPARsTable());``
 

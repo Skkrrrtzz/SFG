@@ -8,22 +8,22 @@ using Microsoft.Extensions.Logging;
 
 namespace QA_Audit_Fresh.Views.AuditPlans
 {
-    public class DashboardRazor : PageModel
+    public class SkibidiGyatt : PageModel
     {
-        private readonly ILogger<DashboardRazor> _logger;
-
-        public DashboardRazor(ILogger<DashboardRazor> logger)
-        {
-            _logger = logger;
-        }
+        public string Text { get; set; } = "SkibidiGyatt";
 
         public void OnGet()
         {
         }
 
-        public string OnPostSkibidi()
+        public void OnGetSkibidi()
         {
-            return "Skibidi Gyatt";
+            Text = "What the Sigma?";
+        }
+
+        public void OnTaeSkibidi()
+        {
+            Text = "Tae";
         }
     }
 }

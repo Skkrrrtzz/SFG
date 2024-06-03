@@ -43,7 +43,6 @@ async function getAuditPlansByMonth(month) {
         headers: {
             "Content-Type": "application/json"
         },
-        // body: JSON.stringify({ month: month }) 
     })
     .then(response => response.json())
     .catch(error => console.log("Error: ", error)); 

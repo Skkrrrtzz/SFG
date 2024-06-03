@@ -28,6 +28,7 @@ namespace QA_Audit_Fresh.Models
 
         [Key]
         public int PlanId { get; set; }
+        // public int Id { get; set; }
         [Required]
         public string Requestor { get; set; }
         [Required]

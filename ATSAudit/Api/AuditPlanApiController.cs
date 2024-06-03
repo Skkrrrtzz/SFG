@@ -16,8 +16,6 @@ namespace QA_Audit_Fresh.Controllers.Api
 
     public class AuditPlansController : ControllerBase
     {
-        // private readonly AppDbContext _context;
-        // private readonly DbSet<AuditPlanModel> _contextAuditPlans;
         private readonly IAuditPlanRepository _repository;
 
         public AuditPlansController(IAuditPlanRepository repository)
@@ -40,24 +38,21 @@ namespace QA_Audit_Fresh.Controllers.Api
         [HttpGet] 
         public async Task<IEnumerable<AuditPlanModel>> GetAuditPlans() 
         {
-                var auditPlans = _repository.GetAuditPlans();
-                return await auditPlans;
+            var auditPlans = _repository.GetAuditPlans();
+            return await auditPlans;
         }
 
         [HttpGet("~/api/departments")]
         public async Task<List<string>> GetDepartments()
         {
-                var departments = new List<string> {"Quality Engineering", "Quality Assurance"};
-                return await Task.Run(() => departments);
+            var departments = new List<string> {"Quality Engineering", "Quality Assurance"};
+            return await Task.Run(() => departments);
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IEnumerable<AuditPlanModel>> PostAuditPlan([FromBody] AuditPlanDto response)
         {
-            //Logging
-            Console.WriteLine(response.GetProperties());
-
             return await _repository.PostAuditPlan(new AuditPlanModel(response));
         
         }
@@ -79,9 +74,6 @@ namespace QA_Audit_Fresh.Controllers.Api
         {
             try 
             {
-                // var conformity = await _repository.GetAuditPlan(conformityId);
-                // if (conformity == null) return NotFound($"Conformity with ID = {conformityId} not found.");
-
                 var query = await _repository.DeleteAuditPlan(planId);
                 if (query == 1) return Ok(query);
                 else return BadRequest(query);
@@ -90,5 +82,6 @@ namespace QA_Audit_Fresh.Controllers.Api
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting resource.\n" + ex);
             }
         }
+
     }
 }

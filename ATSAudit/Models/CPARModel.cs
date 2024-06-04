@@ -14,8 +14,8 @@ namespace QA_Audit_Fresh.Models
             Respondent = response.Respondent;
             Requestor = response.Requestor;
             ResponseDueDate = response.ResponseDueDate;
+            ISOClause = response.ISOClause;
             ProblemStatement = response.ProblemStatement;
-            PreparedBy = response.PreparedBy;
         }
 
         public CPARsModel() {}

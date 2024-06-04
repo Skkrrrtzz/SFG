@@ -6,24 +6,25 @@ async function renderCPARsTable() {
     $('.emptyTable').show();
 
     let cpars = await getCPARsByPlanId($('#readAuditPlanId').val());
-    console.log(`cpars: ${cpars}`);
 
     cpars.forEach(cpar => {
         $('#cparsTableBody').append(
-            $('<tr>').append(
-                $('<td>').attr('hidden', true).text(cpar.cparId),
-                $('<td>').attr('hidden', true).text(cpar.planId),
-                $('<td>').text(cpar.respondent),
-                $('<td>').text(cpar.requestor),
-                $('<td>').text(cpar.responseDueDate),
-                // $('<td>').text(cpar.problemStatement),
-                // $('<td>').text(cpar.preparedBy),
-                $('<td>').attr('data-cparid', cpar.cparId)
-                            .append(
-                                    $('<button>', {type: 'button', class: 'btn btn-primary cpar-view', 'data-bs-toggle': 'modal', 'data-bs-target': '#readCPAR'}).append($('<i class="fa-solid fa-pen-to-square"></i>')),
-                                    $('<button>', {type: 'button', class: 'btn btn-danger cpar-delete'}).append($('<i class="fa-solid fa-trash"></i>'))
-                                )
-            )
+            $('<tr>')
+                .attr('data-cparid', cpar.cparId)
+                .append(
+                    $('<td>').attr('hidden', true).text(cpar.cparId),
+                    $('<td>').attr('hidden', true).text(cpar.planId),
+                    $('<td>').text(cpar.respondent),
+                    $('<td>').text(cpar.requestor),
+                    $('<td>').text(cpar.responseDueDate),
+                    // $('<td>').text(cpar.problemStatement),
+                    // $('<td>').text(cpar.preparedBy),
+                    $('<td>').attr('data-cparid', cpar.cparId)
+                                .append(
+                                        $('<button>', {type: 'button', id: '#' ,class: 'btn btn-primary cpar-view', 'data-bs-toggle': 'modal', 'data-bs-target': '#readCPAR'}).append($('<i class="fa-solid fa-pen-to-square"></i>')),
+                                        // $('<button>', {type: 'button', class: 'btn btn-danger cpar-delete'}).append($('<i class="fa-solid fa-trash"></i>'))
+                                    )
+                    )
         );
     });
     
@@ -53,17 +54,15 @@ async function renderCPARsTable() {
 
     $('.cpar-view').off('click');
     $('.cpar-view').on('click', async e => {
+        $('#readCPAR .modal-footer').attr('hidden', true);
         $('#readCPARInitial > input').val('');
 
-        let id = e.target.parentNode.dataset.cparid;
-        console.log(id);
+        let id = e.currentTarget.parentNode.dataset.cparid;
 
         let cpar = await fetch(`/api/CPARs/${id}`, { method: "GET" })
             .then(response => response.json())
             .then(data => data[0])
             .catch(error => console.log(error));
-
-        console.log(cpar);
 
         $('#readCPARInitialIssuedTo').val(cpar.respondent);
         $('#readCPARInitialIssuedBy').val(cpar.requestor);
@@ -75,8 +74,6 @@ async function renderCPARsTable() {
         $('#readCPARInitialProblemStatement').val(cpar.problemStatement);
         $('#readCPARFooterPreparedBy').val(cpar.preparedBy);
     });
-
-    // $('.cparActionView > *').click(e => e.stopPropagation());
 }
 
 $('#createCPAREdit').on('click', e => {
@@ -89,11 +86,10 @@ $('#createCPARSubmit').on('click', e => {
         Respondent: $('#createCPARRespondent').val(),
         Requestor: $('#createCPARRequestor').val(),
         ResponseDueDate: $('#createCPARResponseDueDate').val(),
+        ISOClause: $('#createCPARISOClause').val(),
         ProblemStatement: $('#createCPARProblemStatement').val(),
         PreparedBy: $('#createCPARPreparedBy').val()
     };
-
-    console.log(formData);
 
     fetch("/api/cpars/", {
         method: "POST",
@@ -132,5 +128,5 @@ function getCPARsByPlanId(planId) {
     .catch(error => console.log(error));
 }
 
-$('#cparTab').on('click', e => renderCPARsTable());``
+$('#cparTab').on('click', e => renderCPARsTable());
 

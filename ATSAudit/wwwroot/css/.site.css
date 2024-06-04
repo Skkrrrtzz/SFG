@@ -1,0 +1,158 @@
+/* html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+} */
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+} */
+
+/* || Colors */
+:root {
+  --colorMain1: #010038;
+  --colorMain2: #0f1c57;
+  --colorMain3: #293A80;
+  --colorMain4: #3A5BA0;
+  --colorMain5: #537EC5;
+  --colorMain5: #658bcb;
+  --colorDimGray: #696969;
+  --colorHighLight: #F39422;
+  --colorHighLightSemi: #FFD580;
+  --colorHighLightText: White;
+  --colorText: White;
+  --colorHighLight1: #4DF39422;
+  --colorWindow: DimGray;
+  --colorDialog: #515151;
+}
+/* || Colors */
+
+html {
+  font-size: 14px;
+  font-family: Mulish;
+}
+
+@media (min-width: 768px) {
+  html {
+      font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  background-color: #2e2e2e;
+  background-image: url("https://www.transparenttextures.com/patterns/dark-tire.png");
+  margin-bottom: 0px;
+}
+
+/* Positioning */
+
+.divcenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1px;
+  margin: auto;
+}
+
+.poscenter {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.posleft {
+  display: inline-flex;
+  justify-content: left;
+  align-items: center;
+  height: 100%;
+}
+
+.posright {
+  display: inline-flex;
+  justify-content: right;
+  align-items: center;
+  height: 100%;
+}
+/* Positioning */
+
+.success-header {
+  background-color: #5cb85c;
+}
+
+.success-body {
+  background-color: #eca9a7;
+}
+
+.error-header {
+  background-color: #d9534f;
+}
+
+.error-body {
+  background-color: #aedcae;
+}
+
+/* Scrollbar */
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+  }
+
+/* Scrollbar */
+
+/*.ui-dialog-titlebar {
+  background-color: #c2c2c2;
+}
+*/
+.ui-dialog .ui-dialog-titlebar-close {
+  background-image: url("../img/svg/x.svg");
+  z-index: 999999;
+}
+
+/* Footer */
+footer .footer {
+  /* position: absolute; */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color:var(--colorMain1);
+  /* height: 60px;
+  line-height: 60px; */
+  /* background-color: var(--colorMain1); */
+  /* color: var(--colorText);
+  text-align: center; */
+}

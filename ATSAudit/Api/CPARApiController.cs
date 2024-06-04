@@ -42,9 +42,9 @@ namespace QA_Audit_Fresh.Controllers.Api
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IEnumerable<CPARsModel>> PostCPAR([FromBody] CPARDto response)
+        public async Task<IEnumerable<CPARsModel>> PostInitialCPAR([FromBody] CPARDto response)
         {
-            return await _repository.PostCPAR(new CPARsModel(response));
+            return await _repository.PostInitialCPAR(new CPARsModel(response));
         }
         
     }

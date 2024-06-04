@@ -129,3 +129,8 @@ textarea {
 .conformity-delete > * {
     pointer-events: none;
 }
+
+#readCPAR .modal-footer {
+    position: sticky;
+    bottom: 0;
+}

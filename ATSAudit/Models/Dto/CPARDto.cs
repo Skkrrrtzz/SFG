@@ -11,7 +11,7 @@ namespace QA_Audit_Fresh.Models.Dto
         public string Respondent { get; set; }
         public string Requestor { get; set; }
         public DateTime ResponseDueDate { get; set; }
+        public string ISOClause { get; set; }
         public string ProblemStatement { get; set; }
-        public string PreparedBy { get; set; }
     }
 }

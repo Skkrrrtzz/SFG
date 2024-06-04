@@ -1,9 +1,16 @@
 <div class="modal fade" id="readCPAR" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-primary">
                 <h6 class="modal-title text-light">Viewing Corrective & Preventive Action Report</h6>    
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="ml-auto">
+                    <button type="button" class="btn" id="readCPAREdit">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button type="button" class="btn" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
             </div>
             <div class="modal-body">
                 <div class="form-group" id="readCPARInitial">
@@ -45,11 +52,11 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-text text-center">Requirement: ISO 9001:2015 CLAUSE</div>
-                            <input type="text" class="form-control" id="readCPARInitialISOClause" readonly />
+                            <textarea type="text" class="form-control" id="readCPARInitialISOClause" readonly></textarea>
                         </div>
                         <div class="col-12">
                             <div class="form-text text-center">Problem Statement</div>
-                            <input type="text" class="form-control" id="readCPARInitialProblemStatement" readonly />
+                            <textarea type="text" class="form-control" id="readCPARInitialProblemStatement" readonly></textarea
                         </div>
                     </div>
                 </div>
@@ -63,21 +70,21 @@
 
                 <hr class="border border-2">
 
-                <fieldset>
+                <fieldset id="readCPARFormsRC">
                     @* <legend class="text-center form-text">Root Cause Analysis</legend> *@
                     <h6 class="form-text text-center">Root Cause Analysis</h6>
                     <div class="row" id="readCPARRootCause">
                         <div class="form-group">
                             <div class="form-text">Method</div>
-                            <input class="form-control" type="text" id="readCPARRootCauseMethod" readonly />
+                            <input class="form-control" type="text" id="readCPARRCMethod" readonly />
                             <div class="form-text">Machine</div>
-                            <input class="form-control" type="text" id="readCPARRootCauseMachine" readonly />
+                            <input class="form-control" type="text" id="readCPARRCMachine" readonly />
                             <div class="form-text">Material</div>
-                            <input class="form-control" type="text" id="readCPARRootCauseMaterial" readonly />
+                            <input class="form-control" type="text" id="readCPARRCMaterial" readonly />
                             <div class="form-text">Man</div>
-                            <input class="form-control" type="text" id="readCPARRootCauseMan" readonly />
+                            <input class="form-control" type="text" id="readCPARRCMan" readonly />
                             <div class="form-text">Environment</div>
-                            <input class="form-control" type="text" id="readCPARRootCauseEnvironment" readonly />
+                            <input class="form-control" type="text" id="readCPARRCEnvironment" readonly />
                         </div>
                     </div>
                 </fieldset>
@@ -115,9 +122,8 @@
             </div>
 
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" hidden>
                 <button class="btn btn-primary" type="button" id="createConformitySubmit" data-bs-dismiss="modal">Submit</button>
-                <button class="btn btn-secondary" type="button" id="createConformitySubmit" data-bs-dismiss="modal">Submit</button>
             </div>
         </div>
     </div>

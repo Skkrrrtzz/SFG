@@ -21,9 +21,9 @@ namespace QA_Audit_Fresh.Views.AuditPlans
             Text = "What the Sigma?";
         }
 
-        public void OnTaeSkibidi()
-        {
-            Text = "Tae";
-        }
+        // public void OnTaeSkibidi()
+        // {
+        //     Text = "Tae";
+        // }
     }
 }

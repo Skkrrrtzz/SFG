@@ -7,47 +7,33 @@
             </div>
             <div class="modal-body">
                 <form id="CPARForm" class="grid row-gap-3" autocomplete="off">
-                    @* <input type="text" id="viewerPlanId" name="viewerPlanId" hidden required />
-
-                    <input type="text" id="viewerPlanId" name="viewerPlanId" hidden required /> *@
                     <div class="my-1">
-                        <p class="form-label">Respondent:</p>
-                        <input class="form-control" name="description" id="createCPARRespondent" />
+                        <label for="createCPARRespondent" class="form-text">Respondent:</label>
+                        <input class="form-control" name="respondent" id="createCPARRespondent" />
                     </div>
                     <div class="my-1">
-                        <p class="form-label">Requestor:</p>
-                        <input class="form-control" name="areaSection" id="createCPARRequestor" />
+                        <label for="createCPARRequestor" class="form-text">Requestor:</label>
+                        <input class="form-control" name="requestor" id="createCPARRequestor" />
                     </div>
 
+                    <div class="my-1">
+                        <label for="createCPARResponseDueDate" class="form-text">Response Due Date:</label>
+                        <input type="date" min="1993-12-1" class="form-control" name="responseDueDate" id="createCPARResponseDueDate"></input>
+                    </div>
+
+                    <div class="my-1">
+                        <label for="createCPARISOClause" class="form-text">ISO Clause:</label>
+                        <textarea class="form-control" name="isoClause" id="createCPARISOClause"></textarea>
+                    </div>
+                    <div class="my-1">
+                        <label for="createCPARProblemStatement" class="form-text">Problem Statement:</label>
+                        <textarea class="form-control" name="areaSection" id="createCPARProblemStatement"></textarea>
+                    </div>
                     @* <div class="my-1">
-                        <p class="form-label">Issue Date:</p>
-                        <input class="form-control" name="description" id="createCPARDescription" />
-                    </div> *@
-                    @* <div class="my-1">
-                        <p class="form-label">Approval Date:</p>
-                        <input class="form-control" name="areaSection" id="createCPARAreaSection" />
-                    </div> *@
-                    <div class="my-1">
-                        <p class="form-label">Response Due Date:</p>
-                        <input type="date" min="1993-12-1"class="form-control" name="description" id="createCPARResponseDueDate" />
-                    </div>
-
-                    <div class="my-1">
-                        <p class="form-label">Problem Statement:</p>
-                        <input class="form-control" name="areaSection" id="createCPARProblemStatement" />
-                    </div>
-                    <div class="my-1">
-                        <p class="form-label">Prepared By:</p>
+                        <label for="createCPARPreparedBy" class="form-text">Prepared By:</label>
                         <input class="form-control" name="description" id="createCPARPreparedBy" />
-                    </div>
-                    @* <div class="my-1">
-                        <p class="form-label">Checked By:</p>
-                        <input class="form-control" name="areaSection" id="createCPARAreaSection" />
-                    </div>
-                    <div class="my-1">
-                        <p class="form-label">Approved By:</p>
-                        <input class="form-control" name="description" id="createCPARDescription" />
                     </div> *@
+
                 </form>           
             </div>
             <div class="modal-footer">

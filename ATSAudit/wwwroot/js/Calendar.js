@@ -55,7 +55,7 @@ async function renderCalendar(date) {
     let totalDays = getLastDayOfMonth(year, month);
 
     // Clear cell 
-    $('#calendar tbody > tr > td').text('')
+    $('#calendar table tbody > tr > td').text('')
                                   .click(() => {})
                                   .removeClass()
                                   .removeAttr('style');
@@ -67,7 +67,7 @@ async function renderCalendar(date) {
     let displayYear = monthSetter.getFullYear();
     monthSpecifier.innerHTML = displayMonth + " " + displayYear;
 
-    $('#calendar tbody > tr').each((i, row) => {
+    $('#calendar table tbody > tr').each((i, row) => {
         // console.log('row');
         const week = i;
         $(row).find('td').each((j, cell) => {

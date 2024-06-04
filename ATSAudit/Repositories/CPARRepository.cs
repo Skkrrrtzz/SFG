@@ -46,16 +46,16 @@ namespace QA_Audit_Fresh.Repositories
 
         }
 
-        public async Task<IEnumerable<CPARsModel>> PostCPAR(CPARsModel cpar)
+        public async Task<IEnumerable<CPARsModel>> PostInitialCPAR(CPARsModel cpar)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 // string query = "select * from [dbo].[CPARs] where cparId = @ConformityId";
                 string query = @"insert into dbo.CPARs
-                                (PlanId, Respondent, Requestor, ResponseDueDate, ProblemStatement, PreparedBy)
+                                (PlanId, Respondent, Requestor, ResponseDueDate, ISOClause, ProblemStatement)
                                 output inserted.*
                                 values
-                                (@PlanId, @Respondent, @Requestor, @ResponseDueDate, @ProblemStatement, @PreparedBy)";
+                                (@PlanId, @Respondent, @Requestor, @ResponseDueDate, @ISOClause, @ProblemStatement)";
 
                 object parameters = new {
                     PlanId = cpar.PlanId,
@@ -64,8 +64,9 @@ namespace QA_Audit_Fresh.Repositories
                     // IssueDate = cpar.IssueDate,
                     // ApprovalDate = cpar.ApprovalDate,
                     ResponseDueDate = cpar.ResponseDueDate,
+                    ISOClause = cpar.ISOClause,
                     ProblemStatement = cpar.ProblemStatement,
-                    PreparedBy = cpar.PreparedBy
+                    // PreparedBy = cpar.PreparedBy
                     // CheckedBy = cpar.CheckedBy
                     // ApprovedBy = cpar.ApprovedBy
                 };

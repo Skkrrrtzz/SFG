@@ -58,16 +58,40 @@ namespace QA_Audit_Fresh.Controllers.Api
         }
 
         [HttpPost("{planId:int}")]
-        public async Task<IActionResult> UpdateStatus(int planId, [FromBody] string status)
+        public async Task<IActionResult> UpdateStatus(int planId, [FromBody] UpdateStatusDto request)
         {
-            if (string.IsNullOrEmpty(status))
+            if (string.IsNullOrEmpty(request.Status))
             {
                 return BadRequest("Status cannot be null or empty.");
             }
 
-            int query = await _repository.UpdateStatus(planId, status);
-            return Ok(new {Response = "GYATT"});
+            if (request.Status == "Closed" && request.ActualAuditDate == null)
+            {
+                return BadRequest("ActualAuditDate cannot be null or empty when closing an audit plan.");
+            }
+
+            int query;
+            if (request.Status == "Closed")
+            {
+                query = await _repository.UpdateStatus(planId, request.Status, request.ActualAuditDate.Value);
+                return Ok(new {request = "GYATT"});
+            } else {
+                query = await _repository.UpdateStatus(planId, request.Status);
+                return Ok(new {request = "GYATT"});
+            }
         }
+        
+        // [HttpPost("{planId:int}")]
+        // public async Task<IActionResult> UpdateStatus(int planId, [FromBody] string status)
+        // {
+        //     if (string.IsNullOrEmpty(status))
+        //     {
+        //         return BadRequest("Status cannot be null or empty.");
+        //     }
+
+        //     int query = await _repository.UpdateStatus(planId, status);
+        //     return Ok(new {Response = "GYATT"});
+        // }
 
         [HttpDelete("{planId:int}")]
         public async Task<IActionResult> DeleteAuditPlan (int planId) 

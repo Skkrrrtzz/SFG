@@ -1,14 +1,14 @@
-<div class="modal fade" id="readCPAR" tabindex="-1">
+<div class="modal" data-bs-backdrop='static' id="readCPAR" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-primary">
                 <h6 class="modal-title text-light">Viewing Corrective & Preventive Action Report</h6>    
                 <div class="ml-auto">
-                    <button type="button" class="btn" id="readCPAREdit">
-                        <i class="fa-solid fa-pen-to-square"></i>
+                    <button type="button" class="btn btn-primary fa-solid fa-pen-to-square" id="readCPAREdit">
+                        @* <i class="fa-solid fa-pen-to-square"></i> *@
                     </button>
-                    <button type="button" class="btn" data-bs-dismiss="modal">
-                        <i class="fa-solid fa-xmark"></i>
+                    <button type="button" class="btn btn-primary fa-solid fa-x" id="readCPARClose" data-bs-dismiss="modal">
+                        @* <i class="fa-solid fa-xmark"></i> *@
                     </button>
                 </div>
             </div>
@@ -39,7 +39,7 @@
 
                         <div class="col-4">
                             <div >
-                                <div class="form-text">Response Date</div>
+                                <div class="form-text">Response Due Date</div>
                                 <input class="form-control" type="text" id="readCPARInitialResponseDate" readonly />
                             </div>
                             <div >
@@ -63,18 +63,18 @@
 
             <hr class="border border-2">
 
-            <div id="readCPARForms">
-                <div class="row" id="readCPARFormsCorrection">
+            <div id="readCPARRespondent">
+                <div class="row" id="readCPARRespondentCorrection">
                     <partial name="Partials/_CorrectionsTable"></partial>
                 </div>
 
                 <hr class="border border-2">
 
-                <fieldset id="readCPARFormsRC">
+                <fieldset id="readCPARRC">
                     @* <legend class="text-center form-text">Root Cause Analysis</legend> *@
                     <h6 class="form-text text-center">Root Cause Analysis</h6>
                     <div class="row" id="readCPARRootCause">
-                        <div class="form-group">
+                        <div class="form-group respondent">
                             <div class="form-text">Method</div>
                             <input class="form-control" type="text" id="readCPARRCMethod" readonly />
                             <div class="form-text">Machine</div>
@@ -91,33 +91,31 @@
 
                 <hr class="border border-2">
 
-                <div class="row" id="readCPARFormsCorrectiveActions">
+                <div class="row" id="readCPARCorrectiveActions">
                     <partial name="Partials/_CorrectiveActionsTable"></partial>
                 </div>
 
                 <hr class="border border-2">
 
-                <div class="row" id="readCPARFormsCorrection">
+                <div class="row" id="readCPARCorrection">
                     <partial name="Partials/_PreventiveActionsTable"></partial>
                 </div>
             </div>
 
             <hr class="border border-2">
 
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-text">Prepared By</div>
-                        <input class="form-control" type="text" id="readCPARFooterPreparedBy" readonly />
-                    </div>
-                    <div class="col-4">
-                        <div class="form-text">Checked By</div>
-                        <input class="form-control" type="text" id="readCPARFooterCheckedBy" readonly />
-                    </div>
-                    <div class="col-4">
-                        <div class="form-text">Approved By</div>
-                        <input class="form-control" type="text" id="readCPARFooterApprovedBy" readonly />
-                    </div>
+            <div class="form-group row respondent">
+                <div class="col-4">
+                    <div class="form-text">Prepared By</div>
+                    <input class="form-control" type="text" id="readCPARFooterPreparedBy" readonly />
+                </div>
+                <div class="col-4">
+                    <div class="form-text">Checked By</div>
+                    <input class="form-control" type="text" id="readCPARFooterCheckedBy" readonly />
+                </div>
+                <div class="col-4">
+                    <div class="form-text">Approved By</div>
+                    <input class="form-control" type="text" id="readCPARFooterApprovedBy" readonly />
                 </div>
             </div>
 

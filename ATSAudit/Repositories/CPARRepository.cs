@@ -22,8 +22,18 @@ namespace QA_Audit_Fresh.Repositories
         {
             using (var connection = new SqlConnection(_connectionString))
             {
+                // string query = "select * from [dbo].[CPARs]";
                 string query = "select * from [dbo].[CPARs]";
                 return await connection.QueryAsync<CPARsModel>(query);
+            }
+        }
+        public async Task<IEnumerable<CPARsModel>> GetCPARByAuditPlanWithActualAuditDate(int cparId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                // string query = "select * from [dbo].[CPARs]";
+                string query = "select * from CPARsActualAuditDate where CPARId = @CPARId";
+                return await connection.QueryAsync<CPARsModel>(query, new { CPARId = cparId });
             }
         }
 

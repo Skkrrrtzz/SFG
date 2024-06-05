@@ -1,4 +1,26 @@
 // let cpars = [];
+function getCPARsByPlanId(planId) {
+    return fetch("/api/auditplans/" + planId + "/cpars", {
+        method: "GET",
+        cache: "no-cache",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    .then(response => response.json())
+    .then(cpars => { 
+        // if (cpars.length > 0) {
+        //     $('#cparsTable').show();
+        //     $('.emptyTable').hide();
+        // } else {
+        //     $('#cparsTable').hide();
+        //     $('.emptyTable').show();
+        // }
+
+        return cpars;
+    })
+    .catch(error => console.log(error));
+}
 
 async function renderCPARsTable() {
     $('#cparsTableBody').empty();
@@ -53,26 +75,27 @@ async function renderCPARsTable() {
     });
 
     $('.cpar-view').off('click');
-    $('.cpar-view').on('click', async e => {
-        $('#readCPAR .modal-footer').attr('hidden', true);
-        $('#readCPARInitial > input').val('');
+    $('.cpar-view').on('click',  e => {
+        readCPAR(e);
+        // $('#readCPAR .modal-footer').attr('hidden', true);
+        // $('#readCPARInitial > input').val('');
 
-        let id = e.currentTarget.parentNode.dataset.cparid;
+        // let id = e.currentTarget.parentNode.dataset.cparid;
 
-        let cpar = await fetch(`/api/CPARs/${id}`, { method: "GET" })
-            .then(response => response.json())
-            .then(data => data[0])
-            .catch(error => console.log(error));
+        // let cpar = await fetch(`/api/CPARs/${id}`, { method: "GET" })
+        //     .then(response => response.json())
+        //     .then(data => data[0])
+        //     .catch(error => console.log(error));
 
-        $('#readCPARInitialIssuedTo').val(cpar.respondent);
-        $('#readCPARInitialIssuedBy').val(cpar.requestor);
-        $('#readCPARInitialIssuedDate').val(cpar.issuedDate);
-        $('#readCPARInitialAuditDate').val("Default Value");
-        $('#readCPARInitialResponseDate').val(cpar.responseDueDate);
-        $('#readCPARInitialCPARControlNo').val(cpar.cparId);
-        $('#readCPARInitialISOClause').val("Default Value");
-        $('#readCPARInitialProblemStatement').val(cpar.problemStatement);
-        $('#readCPARFooterPreparedBy').val(cpar.preparedBy);
+        // $('#readCPARInitialIssuedTo').val(cpar.respondent);
+        // $('#readCPARInitialIssuedBy').val(cpar.requestor);
+        // $('#readCPARInitialIssuedDate').val(cpar.issuedDate);
+        // $('#readCPARInitialAuditDate').val("Default Value");
+        // $('#readCPARInitialResponseDate').val(cpar.responseDueDate);
+        // $('#readCPARInitialCPARControlNo').val(cpar.cparId);
+        // $('#readCPARInitialISOClause').val(cpar.isoClause);
+        // $('#readCPARInitialProblemStatement').val(cpar.problemStatement);
+        // $('#readCPARFooterPreparedBy').val(cpar.preparedBy);
     });
 }
 
@@ -105,28 +128,7 @@ $('#createCPARSubmit').on('click', e => {
     .catch(error => console.log(error));
 });
 
-function getCPARsByPlanId(planId) {
-    return fetch("/api/auditplans/" + planId + "/cpars", {
-        method: "GET",
-        cache: "no-cache",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    .then(response => response.json())
-    .then(cpars => { 
-        // if (cpars.length > 0) {
-        //     $('#cparsTable').show();
-        //     $('.emptyTable').hide();
-        // } else {
-        //     $('#cparsTable').hide();
-        //     $('.emptyTable').show();
-        // }
 
-        return cpars;
-    })
-    .catch(error => console.log(error));
-}
 
 $('#cparTab').on('click', e => renderCPARsTable());
 

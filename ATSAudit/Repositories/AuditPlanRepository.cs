@@ -95,13 +95,22 @@ namespace QA_Audit_Fresh.Repositories
             }
         }
 
+        public async Task<int> UpdateStatus(int planId, string status, DateTime? actualAuditDate)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                return await connection.ExecuteAsync(   "sp_UpdateStatus", 
+                                                        new { PlanId = planId, Status = status, ActualAuditDate = actualAuditDate },
+                                                        commandType: CommandType.StoredProcedure);
+            }
+        }
+
         public async Task<int> UpdateStatus(int planId, string status)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                // string query = "update [dbo].[AuditPlans]";
                 return await connection.ExecuteAsync(   "sp_UpdateStatus", 
-                                                        new {  PlanId = planId, Status = status },
+                                                        new {  PlanId = planId, Status = status, ActualAuditDate = (DateTime?)null },
                                                         commandType: CommandType.StoredProcedure);
             }
         }

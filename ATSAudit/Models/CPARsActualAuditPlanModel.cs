@@ -7,18 +7,9 @@ using QA_Audit_Fresh.Models.Dto;
 
 namespace QA_Audit_Fresh.Models
 {
-    public class CPARsModel
+    public class CPARsWithActualAuditDateModel
     {
-        public CPARsModel(CPARDto response) {
-            PlanId = response.PlanId;
-            Respondent = response.Respondent;
-            Requestor = response.Requestor;
-            ResponseDueDate = response.ResponseDueDate;
-            ISOClause = response.ISOClause;
-            ProblemStatement = response.ProblemStatement;
-        }
-
-        public CPARsModel() {}
+        public CPARsWithActualAuditDateModel() {}
 
         [Key]
         public int CPARId { get; set; }
@@ -41,8 +32,6 @@ namespace QA_Audit_Fresh.Models
         public string? CheckedBy { get; set; }
         // public string CompanyDepartment { get; set; }
         public string? ApprovedBy { get; set; }
-
-        //Part of the CPARsActualAuditDate View
         public DateTime? ActualAuditDate { get; set; }
 
         // public string ModelPartNumber { get; set; }

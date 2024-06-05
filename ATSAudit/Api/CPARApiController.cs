@@ -26,6 +26,13 @@ namespace QA_Audit_Fresh.Controllers.Api
             return await _repository.GetCPARs();
         }
 
+        // [HttpGet("~/api/CPARs-with-ActualAuditDate/{cparId:int}")] 
+        // public async Task<IEnumerable<CPARsModel>> GetCPARByAuditPlanWithActualAuditDate(int planId)
+        // {
+        //     var cpars = _repository.GetCPARsByAuditPlanWithActualAuditDate(planId);
+        //     return await cpars; 
+        // }
+
         [HttpGet("~/api/auditplans/{planId:int}/cpars")] 
         public async Task<IEnumerable<CPARsModel>> GetCPARsByAuditPlan(int planId) 
         {
@@ -36,7 +43,7 @@ namespace QA_Audit_Fresh.Controllers.Api
         [HttpGet("{cparId:int}")] 
         public async Task<IEnumerable<CPARsModel>> GetCPAR(int cparId) 
         {
-            var cpar = _repository.GetCPAR(cparId);
+            var cpar = _repository.GetCPARByAuditPlanWithActualAuditDate(cparId);
             return await cpar; 
         }
 

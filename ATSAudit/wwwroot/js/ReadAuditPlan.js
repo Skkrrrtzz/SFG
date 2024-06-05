@@ -39,7 +39,10 @@ function viewAuditPlan(args) {
     $('#auditPlanManagerCloseAuditPlan').click(e => {
         fetch(`/api/auditplans/${$('#readAuditPlanId').val()}`, {
             method: 'POST',
-            body: JSON.stringify("Closed"),
+            body: JSON.stringify({ 
+                status: "Closed",
+                actualAuditDate: new Date()
+             }),
             headers: {
                 "Content-Type": "application/json"
             }
@@ -59,7 +62,7 @@ function viewAuditPlan(args) {
     $('#auditPlanManagerApproveAuditPlan').click(e => {
         fetch(`/api/auditplans/${$('#readAuditPlanId').val()}`, {
             method: 'POST',
-            body: JSON.stringify("Open"),
+            body: JSON.stringify({ status: "Open" }),
             headers: {
                 "Content-Type": "application/json"
             }

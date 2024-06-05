@@ -10,8 +10,8 @@ namespace QA_Audit_Fresh.Repositories
     public interface ICorrectiveActionRepository
     {
         public Task<IEnumerable<CorrectiveActionModel>> GetCorrectiveActions();
-        public Task<IEnumerable<CorrectiveActionModel>> GetCorrectiveAction(int conformityNo);
-        public Task<IEnumerable<CorrectiveActionModel>> GetCorrectiveActionsByCPAR(int planId);
+        public Task<IEnumerable<CorrectiveActionModel>> GetCorrectiveAction(int correctiveActionId);
+        public Task<IEnumerable<CorrectiveActionModel>> GetCorrectiveActionsByCPAR(int cparId);
         public Task<int> PostCorrectiveAction(CorrectiveActionModel correction);
         public Task<int> DeleteCorrectiveAction(int correctionId);
      

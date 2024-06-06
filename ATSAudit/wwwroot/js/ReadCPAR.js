@@ -41,6 +41,11 @@ async function readCPAR(e) {
     $('#readCPARInitialProblemStatement').val(cpar.problemStatement);
     $('#readCPARFooterPreparedBy').val(cpar.preparedBy);
 
+    $('#correctionsTable').empty();
+    $('#readCPARCorrectionsTable').load(`/Corrections?cparId=${id}`);
+    $('#readCPARCorrectiveActionsTable').load(`/CorrectiveActions?cparId=${id}`);
+    $('#readCPARPreventiveActionsTable').load(`/PreventiveActions?cparId=${id}`);
+
     resizeCPARTextareas();
 }
 
@@ -53,5 +58,3 @@ function resizeCPARTextareas() {
     $('#readCPARInitialProblemStatement').css('height', 'auto').css('max-height', '100%') 
     $('#readCPARInitialProblemStatement').css('height', $('#readCPARInitialProblemStatement').prop('scrollHeight') + 'px' )
 }
-
-$('#readCPAR').resize(() => { resizeCPARTextareas() });

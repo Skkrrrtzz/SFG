@@ -74,10 +74,10 @@ namespace QA_Audit_Fresh.Controllers.Api
             if (request.Status == "Closed")
             {
                 query = await _repository.UpdateStatus(planId, request.Status, request.ActualAuditDate.Value);
-                return Ok(new {request = "GYATT"});
+                return Ok(new {request = $"Succesfully updated PlanId {planId} Status to 'Closed'."});
             } else {
                 query = await _repository.UpdateStatus(planId, request.Status);
-                return Ok(new {request = "GYATT"});
+                return Ok(new {request = $"Successfully updated PlanId {planId} Status to '{request.Status}'."});
             }
         }
         

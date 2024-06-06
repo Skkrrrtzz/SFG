@@ -55,10 +55,11 @@ async function renderCalendar(date) {
     let totalDays = getLastDayOfMonth(year, month);
 
     // Clear cell 
-    $('#calendar table tbody > tr > td').text('')
-                                  .click(() => {})
-                                  .removeClass()
-                                  .removeAttr('style');
+    $('#calendar table tbody > tr > td')
+                                    .text('')
+                                    .click(() => {})
+                                    .removeClass()
+                                    .removeAttr('style');
 
     let plans = await getAuditPlansByMonth(month);
     let currentDayCount = 1;

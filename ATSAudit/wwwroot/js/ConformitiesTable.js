@@ -5,36 +5,38 @@ async function renderConformitiesTable() {
     // $('#conformitiesTable').css('display', 'block');
     // $('.emptyTable').css('display', 'block');
 
-    let conformities = await getConformitiesByPlanId($('#readAuditPlanId').val());
+    // let conformities = await getConformitiesByPlanId($('#readAuditPlanId').val());
 
-    conformities.forEach(conformity => {
-        // console.log(conformity.planId)
-                $('#conformitiesTable').append(
-                    $('<tr>').append(
-                        $('<td>').attr('hidden', true).text(conformity.conformityId),
-                        $('<td>').attr('hidden', true).text(conformity.planId),
-                        $('<td>').text(conformity.conformityDescription),
-                        $('<td>').text(conformity.conformityAreaSection),
-                        $('<td>').attr('data-conformityid', conformity.conformityId)
-                                 .append(
-                                            $('<button>', {type: 'button', class: 'btn btn-danger conformity-delete'}).append($('<i class="fa-solid fa-trash"></i>')),
-                                            $('<button>', {type: 'button', class: 'btn btn-secondary'}).append($('<i class="fa-solid fa-pen-to-square"></i>'))
-                                        )
-                    )
-                )
-    });
+    // conformities.forEach(conformity => {
+    //     // console.log(conformity.planId)
+    //             $('#conformitiesTable').append(
+    //                 $('<tr>').append(
+    //                     $('<td>').attr('hidden', true).text(conformity.conformityId),
+    //                     $('<td>').attr('hidden', true).text(conformity.planId),
+    //                     $('<td>').text(conformity.conformityDescription),
+    //                     $('<td>').text(conformity.conformityAreaSection),
+    //                     $('<td>').attr('data-conformityid', conformity.conformityId)
+    //                              .append(
+    //                                         $('<button>', {type: 'button', class: 'btn btn-danger conformity-delete'}).append($('<i class="fa-solid fa-trash"></i>')),
+    //                                         $('<button>', {type: 'button', class: 'btn btn-secondary'}).append($('<i class="fa-solid fa-pen-to-square"></i>'))
+    //                                     )
+    //                 )
+    //             )
+    // });
     
-    if (conformities.length > 0) {
-        $('#conformitiesTable').show();
-        $('.emptyTable').hide();
-        // $('#conformitiesTable').css('display', 'block');
-        // $('.emptyTable').css('display', 'none');
-    } else {
-        $('#conformitiesTable').hide();
-        $('.emptyTable').show();
-        // $('#conformitiesTable').css('display', 'hidden');
-        // $('.emptyTable').css('display', 'none');
-    }
+    // if (conformities.length > 0) {
+    //     $('#conformitiesTable').show();
+    //     $('.emptyTable').hide();
+    //     // $('#conformitiesTable').css('display', 'block');
+    //     // $('.emptyTable').css('display', 'none');
+    // } else {
+    //     $('#conformitiesTable').hide();
+    //     $('.emptyTable').show();
+    //     // $('#conformitiesTable').css('display', 'hidden');
+    //     // $('.emptyTable').css('display', 'none');
+    // }
+    
+    $('#conformitiesTabPane').load(`/Conformities?planId=${$('#readAuditPlanId').val()}`)
 
     //TODO: This is all still broken. No idea where I should put the data for the ConformityId. Make a new column maybe.
     $('.conformity-delete').on('click', e => {

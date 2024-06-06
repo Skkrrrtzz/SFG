@@ -60,14 +60,14 @@ namespace QA_Audit_Fresh.Repositories
             using (var connection = new SqlConnection(_connectionString))
             {
                 string query = @"insert into [dbo].[CorrectiveActions] 
-                    (CPARId, CorrectiveActionDescription, EscapeCause, Action) 
-                    values (@CPARId, @CorrectiveActionDescription, @EscapeCause, @Action)";
+                    (CPARId, CorrectiveActionDescription, TargetDate, Responsible) 
+                    values (@CPARId, @CorrectiveActionDescription, @TargetDate, @Responsible)";
                 
                 object parameters = new {
                     CPARId = correctiveAction.CPARId,
                     CorrectiveActionDescription = correctiveAction.CorrectiveActionDescription,
-                    EscapeCause = correctiveAction.EscapeCause,
-                    Action = correctiveAction.Action
+                    TargetDate = correctiveAction.TargetDate,
+                    Responsible = correctiveAction.Responsible
                 };
                 
                 return await connection.ExecuteAsync(query, parameters);

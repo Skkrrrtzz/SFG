@@ -12,4 +12,21 @@
 
 -- DELETE FROM dbo.CPARs WHERE PlanId = 1029;,
 
-SELECT * FROM CPARsActualAuditDate;
+-- SELECT * FROM CPARsActualAuditDate;
+
+-- CREATE PROCEDURE dbo.sp_CreateCPAR
+--     @PlanId INT,
+--     @Respondent NVARCHAR(20),
+--     @Requestor NVARCHAR(20),
+--     @ResponseDueDate DATETIME2,
+--     @ISOClause NVARCHAR(max),
+--     @ProblemStatement NVARCHAR(max)
+-- AS
+-- BEGIN
+--     SET NOCOUNT ON;
+
+
+-- END
+
+INSERT INTO dbo.Corrections (CPARId, CorrectionDescription, EscapeCause, Action)
+VALUES (14, 'Correction 1', 'Cause 1', 'Action 1')

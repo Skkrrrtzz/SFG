@@ -1,53 +1,40 @@
+@using QA_Audit_Fresh.Models
+@model List<CorrectiveActionModel>
+
 <h6 class="form-text text-center">Corrective Actions</h6>
 <div class="tableWrapper col-12">
     <table class="table table-striped" id="CPARsTable">
+    @if (Model.Count > 0)
+    {
         <thead>
             <tr>
-                @* <th scope="col" hidden>ConformityId</th>
-                <th scope="col" hidden>PlanId</th> *@
+                <th scope="col" hidden>ConformityId</th>
+                <th scope="col" hidden>CPARId</th>
                 <th scope="col">Corrective Action</th>
                 <th scope="col">Target Date</th>
                 <th scope="col">Responsible Person</th>
             </tr>
         </thead>
-        <tbody id="conformitiesTableBody">
-            <tr>
-                <td>Words</td>
-                <td>Words</td>
-                <td>Words</td>
-            </tr>
-            <tr>
-                <td>Words</td>
-                <td>Words</td>
-                <td>Words</td>
-            </tr>
-            <tr>
-                <td>Words</td>
-                <td>Words</td>
-                <td>Words</td>
-            </tr>
-            <tr>
-                <td>Words</td>
-                <td>Words</td>
-                <td>Words</td>
-            </tr>
-            <tr>
-                <td>Words</td>
-                <td>Words</td>
-                <td>Words</td>
-            </tr>
-            <tr>
-                <td>Words</td>
-                <td>Words</td>
-                <td>Words</td>
-            </tr>
+        <tbody>
+                @foreach (var correctiveAction in Model)
+                {
+                    <tr>
+                        <td hidden>@correctiveAction.CorrectiveActionId</td>
+                        <td hidden>@correctiveAction.CPARId</td>
+                        <td>@correctiveAction.CorrectiveActionDescription</td>
+                        <td>@correctiveAction.TargetDate</td>
+                        <td>@correctiveAction.Responsible</td>
+                    </tr>
+                }
         </tbody>
+    } else 
+    {
+        <partial name="Partials/_EmptyTable"></partial>
+    }
     </table>
 </div>
 <div class="d-flex">
-    <button class="form-control" id="viewerImprovementsTable">
+    <button class="form-control" id="readCPARCorrectiveActionSubmit">
         <i class="fa-solid fa-plus"></i> 
     </button>
 </div>
-
-<partial name="Partials/_EmptyTable"></partial>

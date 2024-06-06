@@ -95,3 +95,7 @@ $('#readAuditPlanDelete').on('click', e => {
     .catch(error => console.log(error));
 
 });
+
+// $('#conformitiesTab').on('click', () => { 
+//     $('#conformitiesTabPane').load(`/Conformities?planId=${$('#readAuditPlanId').val()}`)
+// });

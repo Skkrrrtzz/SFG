@@ -8,6 +8,11 @@
             <div class="modal-body">
                 <form id="CPARForm" class="grid row-gap-3" autocomplete="off">
                     <div class="my-1">
+                        <label for="createCPARControlNumber" class="form-text">CPAR Control Number:</label>
+                        <input class="form-control" name="respondent" id="createCPARControlNumber" />
+                    </div>
+
+                    <div class="my-1">
                         <label for="createCPARRespondent" class="form-text">Respondent:</label>
                         <input class="form-control" name="respondent" id="createCPARRespondent" />
                     </div>
@@ -42,3 +47,33 @@
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+<script>
+    $('#createCPARSubmit').on('click', e => {
+        let formData = {
+            PlanId: $('#readAuditPlanId').val(),
+            Respondent: $('#createCPARRespondent').val(),
+            Requestor: $('#createCPARRequestor').val(),
+            ResponseDueDate: $('#createCPARResponseDueDate').val(),
+            ISOClause: $('#createCPARISOClause').val(),
+            ProblemStatement: $('#createCPARProblemStatement').val(),
+            PreparedBy: $('#createCPARPreparedBy').val()
+        };
+
+        fetch("/api/cpars/", {
+            method: "POST",
+            body: JSON.stringify(formData),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => {
+            console.log(response)
+            renderCPARsTable();
+        })
+        .catch(error => console.log(error));
+    });
+</script>
+}

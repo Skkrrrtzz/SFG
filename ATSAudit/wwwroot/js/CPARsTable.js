@@ -103,32 +103,31 @@ $('#createCPAREdit').on('click', e => {
     $('#readCPAR [readonly]').prop('readonly', false);
 });
 
-$('#createCPARSubmit').on('click', e => {
-    let formData = {
-        PlanId: $('#readAuditPlanId').val(),
-        Respondent: $('#createCPARRespondent').val(),
-        Requestor: $('#createCPARRequestor').val(),
-        ResponseDueDate: $('#createCPARResponseDueDate').val(),
-        ISOClause: $('#createCPARISOClause').val(),
-        ProblemStatement: $('#createCPARProblemStatement').val(),
-        PreparedBy: $('#createCPARPreparedBy').val()
-    };
+//Moved to Partial _CreateCPARModal.cshtml
+// $('#createCPARSubmit').on('click', e => {
+//     let formData = {
+//         PlanId: $('#readAuditPlanId').val(),
+//         Respondent: $('#createCPARRespondent').val(),
+//         Requestor: $('#createCPARRequestor').val(),
+//         ResponseDueDate: $('#createCPARResponseDueDate').val(),
+//         ISOClause: $('#createCPARISOClause').val(),
+//         ProblemStatement: $('#createCPARProblemStatement').val(),
+//         PreparedBy: $('#createCPARPreparedBy').val()
+//     };
 
-    fetch("/api/cpars/", {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    .then(response => {
-        console.log(response)
-        renderCPARsTable();
-    })
-    .catch(error => console.log(error));
-});
-
-
+//     fetch("/api/cpars/", {
+//         method: "POST",
+//         body: JSON.stringify(formData),
+//         headers: {
+//             "Content-Type": "application/json"
+//         }
+//     })
+//     .then(response => {
+//         console.log(response)
+//         renderCPARsTable();
+//     })
+//     .catch(error => console.log(error));
+// });
 
 $('#cparTab').on('click', e => renderCPARsTable());
 

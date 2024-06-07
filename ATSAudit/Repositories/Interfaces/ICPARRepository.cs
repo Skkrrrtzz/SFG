@@ -8,11 +8,11 @@ namespace QA_Audit_Fresh.Repositories
 {
     public interface ICPARRepository
     {
-        public Task<IEnumerable<CPARsModel>> GetCPARs();
-        public Task<IEnumerable<CPARsModel>> GetCPARByAuditPlanWithActualAuditDate(int cparId);
-        public Task<IEnumerable<CPARsModel>> GetCPARsByAuditPlan(int planId);
-        public Task<IEnumerable<CPARsModel>> GetCPAR(int cparId);
-        public Task<IEnumerable<CPARsModel>> PostInitialCPAR(CPARsModel conformity);
+        public Task<IEnumerable<CPARModel>> GetCPARs();
+        public Task<IEnumerable<CPARModel>> GetCPARByAuditPlanWithActualAuditDate(int cparId);
+        public Task<IEnumerable<CPARModel>> GetCPARsByAuditPlan(int planId);
+        public Task<IEnumerable<CPARModel>> GetCPAR(int cparId);
+        public Task<IEnumerable<CPARModel>> PostInitialCPAR(CPARModel conformity);
         public Task<int> DeleteCPAR(int conformityId);
     }
 }

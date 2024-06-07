@@ -14,6 +14,7 @@ namespace QA_Audit_Fresh.Views.AuditPlans
     {
         private readonly IAuditPlanRepository _auditPlans;
         private readonly IConformityRepository _conformities;
+        private readonly ICPARRepository _cpars;
         private readonly ICorrectionRepository _corrections;
         private readonly ICorrectiveActionRepository _correctiveActions;
         private readonly IPreventiveActionRepository _preventiveActions;
@@ -23,12 +24,14 @@ namespace QA_Audit_Fresh.Views.AuditPlans
 
         public DashboardRazor(  IAuditPlanRepository auditPlans, 
                                 IConformityRepository conformities, 
+                                ICPARRepository cpars, 
                                 ICorrectionRepository corrections, 
                                 ICorrectiveActionRepository correctiveActions,
                                 IPreventiveActionRepository preventiveActions) 
         {
             _auditPlans = auditPlans;
             _conformities = conformities;
+            _cpars = cpars;
             _corrections = corrections;
             _correctiveActions = correctiveActions;
             _preventiveActions = preventiveActions;
@@ -50,7 +53,11 @@ namespace QA_Audit_Fresh.Views.AuditPlans
 
         public async Task<PartialViewResult> OnGetConformities(int planId)
         {
-            return Partial("Partials/_ConformitiesTablewModel", (List<ConformityModel>) await _conformities.GetConformitiesByAuditPlan(planId));
+            return Partial("Partials/_ConformitiesTable", (List<ConformityModel>) await _conformities.GetConformitiesByAuditPlan(planId));
+        }
+        public async Task<PartialViewResult> OnGetCPARs(int planId)
+        {
+            return Partial("Partials/_CPARsTable", (List<CPARModel>) await _cpars.GetCPARsByAuditPlan(planId));
         }
 
         public async Task<PartialViewResult> OnGetCorrections(int cparId)

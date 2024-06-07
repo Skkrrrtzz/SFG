@@ -27,36 +27,7 @@ async function renderCPARsTable() {
     $('#conformitiesTable').show();
     $('.emptyTable').show();
 
-    let cpars = await getCPARsByPlanId($('#readAuditPlanId').val());
-
-    cpars.forEach(cpar => {
-        $('#cparsTableBody').append(
-            $('<tr>')
-                .attr('data-cparid', cpar.cparId)
-                .append(
-                    $('<td>').attr('hidden', true).text(cpar.cparId),
-                    $('<td>').attr('hidden', true).text(cpar.planId),
-                    $('<td>').text(cpar.respondent),
-                    $('<td>').text(cpar.requestor),
-                    $('<td>').text(cpar.responseDueDate),
-                    // $('<td>').text(cpar.problemStatement),
-                    // $('<td>').text(cpar.preparedBy),
-                    $('<td>').attr('data-cparid', cpar.cparId)
-                                .append(
-                                        $('<button>', {type: 'button', id: '#' ,class: 'btn btn-primary cpar-view', 'data-bs-toggle': 'modal', 'data-bs-target': '#readCPAR'}).append($('<i class="fa-solid fa-pen-to-square"></i>')),
-                                        // $('<button>', {type: 'button', class: 'btn btn-danger cpar-delete'}).append($('<i class="fa-solid fa-trash"></i>'))
-                                    )
-                    )
-        );
-    });
-    
-    if (cpars.length > 0) {
-        $('#cparsTable').show();
-        $('.emptyTable').hide();
-    } else {
-        $('#cparsTable').hide();
-        $('.emptyTable').show();
-    }
+    $('#cparTabPane').load(`/CPARs?planId=${$('#readAuditPlanId').val()}`)
 
     // TODO: This is all still broken. No idea where I should put the data for the cparId. Make a new column maybe.
     $('.cpar-delete').on('click', e => {

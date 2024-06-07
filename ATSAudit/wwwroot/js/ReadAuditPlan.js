@@ -96,6 +96,3 @@ $('#readAuditPlanDelete').on('click', e => {
 
 });
 
-// $('#conformitiesTab').on('click', () => { 
-//     $('#conformitiesTabPane').load(`/Conformities?planId=${$('#readAuditPlanId').val()}`)
-// });

@@ -7,9 +7,9 @@ using QA_Audit_Fresh.Models.Dto;
 
 namespace QA_Audit_Fresh.Models
 {
-    public class CPARsModel
+    public class CPARModel
     {
-        public CPARsModel(CPARDto response) {
+        public CPARModel(CPARDto response) {
             PlanId = response.PlanId;
             Respondent = response.Respondent;
             Requestor = response.Requestor;
@@ -18,7 +18,7 @@ namespace QA_Audit_Fresh.Models
             ProblemStatement = response.ProblemStatement;
         }
 
-        public CPARsModel() {}
+        public CPARModel() {}
 
         [Key]
         public int CPARId { get; set; }

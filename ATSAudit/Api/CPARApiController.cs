@@ -21,7 +21,7 @@ namespace QA_Audit_Fresh.Controllers.Api
         }
 
         [HttpGet]
-        public async Task<IEnumerable<CPARsModel>> GetCPARs()
+        public async Task<IEnumerable<CPARModel>> GetCPARs()
         {
             return await _repository.GetCPARs();
         }
@@ -34,14 +34,14 @@ namespace QA_Audit_Fresh.Controllers.Api
         // }
 
         [HttpGet("~/api/auditplans/{planId:int}/cpars")] 
-        public async Task<IEnumerable<CPARsModel>> GetCPARsByAuditPlan(int planId) 
+        public async Task<IEnumerable<CPARModel>> GetCPARsByAuditPlan(int planId) 
         {
             var cpars = _repository.GetCPARsByAuditPlan(planId);
             return await cpars; 
         }
 
         [HttpGet("{cparId:int}")] 
-        public async Task<IEnumerable<CPARsModel>> GetCPAR(int cparId) 
+        public async Task<IEnumerable<CPARModel>> GetCPAR(int cparId) 
         {
             var cpar = _repository.GetCPARByAuditPlanWithActualAuditDate(cparId);
             return await cpar; 
@@ -49,9 +49,9 @@ namespace QA_Audit_Fresh.Controllers.Api
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IEnumerable<CPARsModel>> PostInitialCPAR([FromBody] CPARDto response)
+        public async Task<IEnumerable<CPARModel>> PostInitialCPAR([FromBody] CPARDto response)
         {
-            return await _repository.PostInitialCPAR(new CPARsModel(response));
+            return await _repository.PostInitialCPAR(new CPARModel(response));
         }
         
     }

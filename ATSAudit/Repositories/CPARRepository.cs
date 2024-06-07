@@ -18,45 +18,45 @@ namespace QA_Audit_Fresh.Repositories
             _connectionString = PIMESSettings.atsAuditConnString;
         }
 
-        public async Task<IEnumerable<CPARsModel>> GetCPARs()
+        public async Task<IEnumerable<CPARModel>> GetCPARs()
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 // string query = "select * from [dbo].[CPARs]";
                 string query = "select * from [dbo].[CPARs]";
-                return await connection.QueryAsync<CPARsModel>(query);
+                return await connection.QueryAsync<CPARModel>(query);
             }
         }
-        public async Task<IEnumerable<CPARsModel>> GetCPARByAuditPlanWithActualAuditDate(int cparId)
+        public async Task<IEnumerable<CPARModel>> GetCPARByAuditPlanWithActualAuditDate(int cparId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 // string query = "select * from [dbo].[CPARs]";
                 string query = "select * from CPARsActualAuditDate where CPARId = @CPARId";
-                return await connection.QueryAsync<CPARsModel>(query, new { CPARId = cparId });
+                return await connection.QueryAsync<CPARModel>(query, new { CPARId = cparId });
             }
         }
 
-        public async Task<IEnumerable<CPARsModel>> GetCPARsByAuditPlan(int planId)
+        public async Task<IEnumerable<CPARModel>> GetCPARsByAuditPlan(int planId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[CPARs] where PlanId = @PlanId";
-                return await connection.QueryAsync<CPARsModel>(query, new { PlanId = planId });
+                return await connection.QueryAsync<CPARModel>(query, new { PlanId = planId });
             }
         }
 
-        public async Task<IEnumerable<CPARsModel>> GetCPAR(int cparId)
+        public async Task<IEnumerable<CPARModel>> GetCPAR(int cparId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[CPARs] where cparId = @ConformityId";
-                return await connection.QueryAsync<CPARsModel>(query, new { ConformityId = cparId });
+                return await connection.QueryAsync<CPARModel>(query, new { ConformityId = cparId });
             }
 
         }
 
-        public async Task<IEnumerable<CPARsModel>> PostInitialCPAR(CPARsModel cpar)
+        public async Task<IEnumerable<CPARModel>> PostInitialCPAR(CPARModel cpar)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -81,7 +81,7 @@ namespace QA_Audit_Fresh.Repositories
                     // ApprovedBy = cpar.ApprovedBy
                 };
                 
-                return await connection.QueryAsync<CPARsModel>(query, parameters);
+                return await connection.QueryAsync<CPARModel>(query, parameters);
             }
         }
 

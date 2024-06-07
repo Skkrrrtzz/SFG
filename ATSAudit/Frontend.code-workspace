@@ -1,0 +1,32 @@
+{
+	"folders": [
+		{
+			"name": "ATSAudit",
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			"**/Api": true,
+			"**/bin": true,
+			"**/Models": true,
+			"**/obj": true,
+			"**/Repositories": true,
+			"**/.vscode": true,
+			"**/Properties": true,
+			"**/*.code-workspace": true,
+			"**/*Repositories*.cs": true,
+			"**/*.json": true,
+			"**/*.csproj": true,
+			"**/*.sln": true,
+			// "**/*.*": true,
+			// "**/Frontend*": false
+		}
+	}
+}

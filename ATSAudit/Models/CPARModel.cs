@@ -1,42 +1,28 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using QA_Audit_Fresh.Models.Dto;
 
 namespace QA_Audit_Fresh.Models
 {
     public class CPARModel
     {
-        public CPARModel(CPARDto response) {
-            PlanId = response.PlanId;
-            Respondent = response.Respondent;
-            Requestor = response.Requestor;
-            ResponseDueDate = response.ResponseDueDate;
-            ISOClause = response.ISOClause;
-            ProblemStatement = response.ProblemStatement;
-        }
-
         public CPARModel() {}
 
         [Key]
         public int CPARId { get; set; }
         [Required]
         public int? PlanId { get; set; }
-
         [Required]
         public string? Respondent { get; set; }
         [Required]
         public string? Requestor { get; set; }
+        [Required]
         public DateTime? IssueDate { get; set; }
         public DateTime? ApprovalDate { get; set; }
+        [Required]
         public DateTime? ResponseDueDate { get; set; }       
-        // [Required]
+        [Required]
         public string? ISOClause { get; set; }
         [Required]
         public string? ProblemStatement { get; set; }
-        [Required]
         public string? PreparedBy { get; set; }
         public string? CheckedBy { get; set; }
         // public string CompanyDepartment { get; set; }

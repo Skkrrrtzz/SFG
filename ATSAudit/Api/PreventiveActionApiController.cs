@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using QA_Audit_Fresh.Models;
-using System.Text.Json;
-using QA_Audit_Fresh.Models.Dto;
 using QA_Audit_Fresh.Repositories;
-using System.Net.Http.Json;
 
 namespace QA_Audit_Fresh.Controllers.Api
 {
@@ -48,10 +41,10 @@ namespace QA_Audit_Fresh.Controllers.Api
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<int> PostPreventiveAction([FromBody] PreventiveActionDto response)
+        public async Task<int> PostPreventiveAction([FromBody] PreventiveActionModel request)
         {
             //TODO: Use CreatedAtRoute() to be RESTful
-            return await _repository.PostPreventiveAction(new PreventiveActionModel(response));
+            return await _repository.PostPreventiveAction(request);
         }
 
         [HttpDelete("{preventiveActionId:int}")]

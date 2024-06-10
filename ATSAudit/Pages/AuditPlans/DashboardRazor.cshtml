@@ -1,5 +1,4 @@
-@* @page "/Dashboard" *@
-@page "/{handler?}"
+@page
 @model QA_Audit_Fresh.Views.AuditPlans.DashboardRazor
 
 @{
@@ -46,15 +45,21 @@
     </div>
 </div>
 
+<partial name="Partials/_CreateCorrectionModal"></partial>
+<partial name="Partials/_CreateConformityModal"></partial>
+<partial name="Partials/_CreateCPARModal"></partial>
+<partial name="Partials/_ReadCPARModal"></partial>
+
 @section Scripts {
+    <script src="~/JS/CorrectionsTable.js"></script>
     <script src="~/JS/ConformitiesTable.js"></script>
     <script src="~/JS/CPARsTable.js"></script>
 
     <script src="~/JS/ReadAuditPlan.js"></script>
-    <script src="~/JS/ReadCPAR.js"></script>
+    @* <script src="~/JS/ReadCPAR.js"></script> *@
 
     <script src="~/JS/CreateAuditPlan.js"></script>
-    <script src="~/JS/CreateConformity.js"></script>
+    @* <script src="~/JS/CreateConformity.js"></script> *@
 
     <script src="~/JS/Sidebar.js"></script>
     <script src="~/JS/Calendar.js"></script>

@@ -1,17 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 // using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Extensions.Logging;
 using QA_Audit_Fresh.Models;
 using Dapper;
 using System.Data;
 // using Microsoft.AspNetCore.Http.HttpResults;
 // using Azure.Core;
-using QA_Audit_Fresh.Models.Dto;
 using Microsoft.Data.SqlClient;
 using APPCommon.Class;
 
@@ -95,7 +87,7 @@ namespace QA_Audit_Fresh.Repositories
             }
         }
 
-        public async Task<int> UpdateStatus(int planId, string status, DateTime? actualAuditDate)
+        public async Task<int> UpdateStatus(int planId, string status, DateTime actualAuditDate)
         {
             using (var connection = new SqlConnection(_connectionString))
             {

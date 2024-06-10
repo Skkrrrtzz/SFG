@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using QA_Audit_Fresh.Models;
 
 namespace QA_Audit_Fresh.Repositories

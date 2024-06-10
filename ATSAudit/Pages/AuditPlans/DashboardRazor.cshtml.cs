@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 using QA_Audit_Fresh.Models;
 using QA_Audit_Fresh.Repositories;
 
@@ -20,7 +15,6 @@ namespace QA_Audit_Fresh.Views.AuditPlans
         private readonly IPreventiveActionRepository _preventiveActions;
 
         public List<AuditPlanModel>? AuditPlans;
-
 
         public DashboardRazor(  IAuditPlanRepository auditPlans, 
                                 IConformityRepository conformities, 
@@ -51,25 +45,31 @@ namespace QA_Audit_Fresh.Views.AuditPlans
         //     return Partial("Partials/_CalendarTable");
         // }
 
+        //GET: https://localhost:<port>/Conformities?planId=<planId>
         public async Task<PartialViewResult> OnGetConformities(int planId)
         {
             return Partial("Partials/_ConformitiesTable", (List<ConformityModel>) await _conformities.GetConformitiesByAuditPlan(planId));
         }
+
+        //GET: https://localhost:<port>/CPARs?planId=<planId>
         public async Task<PartialViewResult> OnGetCPARs(int planId)
         {
             return Partial("Partials/_CPARsTable", (List<CPARModel>) await _cpars.GetCPARsByAuditPlan(planId));
         }
 
+        //GET: https://localhost:<port>/Corrections?cparId=<cparId>
         public async Task<PartialViewResult> OnGetCorrections(int cparId)
         {
             return Partial("Partials/_CorrectionsTable", (List<CorrectionModel>) await _corrections.GetCorrectionsByCPAR(cparId));
         }
 
+        //GET: https://localhost:<port>/CorrectiveActions?cparId=<cparId>
         public async Task<PartialViewResult> OnGetCorrectiveActions(int cparId)
         {
             return Partial("Partials/_CorrectiveActionsTable", (List<CorrectiveActionModel>) await _correctiveActions.GetCorrectiveActionsByCPAR(cparId));
         }
 
+        //GET: https://localhost:<port>/PreventiveActions?cparId=<cparId>
         public async Task<PartialViewResult> OnGetPreventiveActions(int cparId)
         {
             return Partial("Partials/_PreventiveActionsTable", (List<PreventiveActionModel>) await _preventiveActions.GetPreventiveActionsByCPAR(cparId));

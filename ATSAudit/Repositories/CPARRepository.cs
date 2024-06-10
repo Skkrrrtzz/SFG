@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using QA_Audit_Fresh.Models;
@@ -62,16 +58,16 @@ namespace QA_Audit_Fresh.Repositories
             {
                 // string query = "select * from [dbo].[CPARs] where cparId = @ConformityId";
                 string query = @"insert into dbo.CPARs
-                                (PlanId, Respondent, Requestor, ResponseDueDate, ISOClause, ProblemStatement)
+                                (PlanId, Respondent, Requestor, IssueDate, ResponseDueDate, ISOClause, ProblemStatement)
                                 output inserted.*
                                 values
-                                (@PlanId, @Respondent, @Requestor, @ResponseDueDate, @ISOClause, @ProblemStatement)";
+                                (@PlanId, @Respondent, @Requestor, @IssueDate, @ResponseDueDate, @ISOClause, @ProblemStatement)";
 
                 object parameters = new {
                     PlanId = cpar.PlanId,
                     Respondent = cpar.Respondent,
                     Requestor = cpar.Requestor,
-                    // IssueDate = cpar.IssueDate,
+                    IssueDate = cpar.IssueDate,
                     // ApprovalDate = cpar.ApprovalDate,
                     ResponseDueDate = cpar.ResponseDueDate,
                     ISOClause = cpar.ISOClause,

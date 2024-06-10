@@ -13,6 +13,7 @@
                 </div>
             </div>
             <div class="modal-body">
+                <input type="text" id="readCPARId" hidden readonly/>
                 <div class="form-group" id="readCPARInitial">
                     <div class="row">
                         <div class="col-4">
@@ -64,8 +65,11 @@
             <hr class="border border-2">
 
             <div id="readCPARRespondent">
-                <div class="row" id="readCPARCorrectionsTable">
-                    @* <partial name="Partials/_CorrectionsTable"></partial> *@
+                <div class="row">
+                    <div id="readCPARCorrectionsTable">
+                        @* <partial name="Partials/_CorrectionsTable"></partial> *@
+                    </div>
+                    <button id="createCorrectionButton" class="form-control fa-solid fa-plus" data-bs-target="#createCorrection" data-bs-toggle="modal" />
                 </div>
 
                 <hr class="border border-2">

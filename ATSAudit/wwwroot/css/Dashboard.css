@@ -24,7 +24,8 @@ textarea {
 
 .tableWrapper {
     overflow-y: scroll;
-    height: 50%;
+    /* height: 50%; */
+    height: 100%;
 }
 
 #createAuditPlan {

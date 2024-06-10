@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using QA_Audit_Fresh.Models;
-using QA_Audit_Fresh.Models.Dto;
 using QA_Audit_Fresh.Repositories;
 
 namespace QA_Audit_Fresh.Controllers.Api
@@ -49,9 +44,9 @@ namespace QA_Audit_Fresh.Controllers.Api
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IEnumerable<CPARModel>> PostInitialCPAR([FromBody] CPARDto response)
+        public async Task<IEnumerable<CPARModel>> PostInitialCPAR([FromBody] CPARModel request)
         {
-            return await _repository.PostInitialCPAR(new CPARModel(response));
+            return await _repository.PostInitialCPAR(request);
         }
         
     }

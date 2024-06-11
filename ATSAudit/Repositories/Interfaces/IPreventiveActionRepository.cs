@@ -2,7 +2,7 @@ using QA_Audit_Fresh.Models;
 
 namespace QA_Audit_Fresh.Repositories
 {
-    public interface IPreventiveActionRepository
+    public interface IPreventiveActionsRepository
     {
         public Task<IEnumerable<PreventiveActionModel>> GetPreventiveActions();
         public Task<IEnumerable<PreventiveActionModel>> GetPreventiveAction(int preventiveActionId);

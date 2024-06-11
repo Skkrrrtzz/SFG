@@ -4,9 +4,16 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRepositories();
 
 // Add services to the container.
+builder.Services.AddRepositories();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
+
 builder.Services.AddRazorPages(options => 
 {
     options.Conventions.AddPageRoute("/AuditPlans/DashboardRazor", "");
@@ -50,6 +57,7 @@ app.MapControllerRoute(
     pattern: "api/{controller=auditplans}/{id?}/{whatever?}"
 );
 app.MapRazorPages();
+app.UseSession();
 
 // Enable Swagger UI
 app.UseSwagger();

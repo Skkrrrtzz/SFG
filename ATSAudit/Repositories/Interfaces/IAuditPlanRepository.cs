@@ -2,7 +2,7 @@ using QA_Audit_Fresh.Models;
 
 namespace QA_Audit_Fresh.Repositories
 {
-    public interface IAuditPlanRepository
+    public interface IAuditPlansRepository
     {
         public Task<IEnumerable<AuditPlanModel>> GetAuditPlans();
         public Task<IEnumerable<AuditPlanModel>> GetAuditPlansByMonth(int month);

@@ -10,9 +10,9 @@ namespace QA_Audit_Fresh.Controllers.Api
 
     public class AuditPlansController : ControllerBase
     {
-        private readonly IAuditPlanRepository _repository;
+        private readonly IAuditPlansRepository _repository;
 
-        public AuditPlansController(IAuditPlanRepository repository)
+        public AuditPlansController(IAuditPlansRepository repository)
         {
             _repository = repository;
         }

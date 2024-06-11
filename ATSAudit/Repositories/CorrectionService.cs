@@ -8,10 +8,10 @@ using APPCommon.Class;
 
 namespace QA_Audit_Fresh.Repositories
 {
-    public class CorrectionRepository : ICorrectionRepository
+    public class CorrectionsService : ICorrectionsRepository
     {
         private readonly string _connectionString; 
-        public CorrectionRepository(IConfiguration configuration)
+        public CorrectionsService(IConfiguration configuration)
         {
             // _connectionString = configuration.GetConnectionString("DefaultConnection");
             _connectionString = PIMESSettings.atsAuditConnString;

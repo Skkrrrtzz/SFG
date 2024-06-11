@@ -17,5 +17,4 @@ namespace QA_Audit_Fresh.Models
         public string? ConformityAreaSection { get; set; }
 
     }
-
 }

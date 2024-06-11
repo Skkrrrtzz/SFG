@@ -1,0 +1,31 @@
+<div class="modal" id="createPreventiveAction" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <p class="modal-title fw-bold text-white">Create Preventive Action</p>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="correctionForm">
+                    <input class="form-control" name="description" id="createPreventiveActionCPARId" hidden readonly/>
+                    <div class="my-1">
+                        <p class="form-labee">Preventive Action (Immediate Action):</p>
+                        <input class="form-control" name="description" id="createPreventiveActionDescription" required />
+                    </div>
+                    <div class="my-1">
+                        <p class="form-label">Target Date:</p>
+                        <input type="date" class="form-control" name="escapeCause" id="createPreventiveActionTargetDate" required />
+                    </div>
+                    <div class="my-1">
+                        <p class="form-label">Responsible:</p>
+                        <input class="form-control" name="action" id="createPreventiveActionResponsible" required />
+                    </div>
+                </form>           
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" id="createPreventiveActionSubmit" data-bs-target="#readCPAR" data-bs-toggle="modal">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+

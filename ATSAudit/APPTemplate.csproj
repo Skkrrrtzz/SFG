@@ -63,7 +63,7 @@
       <HintPath><!-- C:\Users\jrafols\Gits\PIMES-Web -->..\APPCommon\bin\Debug\net6.0-windows7.0\APPCommon.dll</HintPath>
     </Reference>
   </ItemGroup>
-
+  
   <ItemGroup>
           <!-- extends watching group to include *.cshtml and *.razor files -->
           <Watch Include="**\*.cshtml;*.razor;*.js;*.css" Exclude="**\obj\**\*;bin\**\*" />

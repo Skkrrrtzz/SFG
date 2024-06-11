@@ -2,7 +2,7 @@ using QA_Audit_Fresh.Models;
 
 namespace QA_Audit_Fresh.Repositories
 {
-    public interface ICPARRepository
+    public interface ICPARsRepository
     {
         public Task<IEnumerable<CPARModel>> GetCPARs();
         public Task<IEnumerable<CPARModel>> GetCPARByAuditPlanWithActualAuditDate(int cparId);

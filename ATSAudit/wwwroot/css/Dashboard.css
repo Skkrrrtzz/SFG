@@ -23,9 +23,11 @@ textarea {
 } */
 
 .tableWrapper {
-    overflow-y: scroll;
+    overflow-y: auto;
     /* height: 50%; */
-    height: 100%;
+    /* height: 100%; */
+    height: 30vh;
+    margin-bottom: 1rem;
 }
 
 #createAuditPlan {
@@ -50,7 +52,7 @@ textarea {
 
 #readAuditPlan {
     display: none;
-    height: 87vh;
+    height: 100%;
 }
 
 /* #readAuditPlanTables, 

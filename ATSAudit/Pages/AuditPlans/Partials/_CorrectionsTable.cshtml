@@ -13,6 +13,7 @@
                     <th scope="col">Correction (Immediate Action)</th>
                     <th scope="col">Escape Cause</th>
                     <th scope="col">Action for Escape Cause</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,6 +25,10 @@
                         <td>@correction.CorrectionDescription</td>
                         <td>@correction.EscapeCause</td>
                         <td>@correction.Action</td>
+                        <td>
+                            <button type="button" class="btn btn-danger corrections-delete fa-solid fa-trash"></button>
+                            <button type="button" class="btn btn-secondary corrections-edit fa-solid fa-pen-to-square"></button>
+                        </td>
                     </tr>
                 }
             </tbody>

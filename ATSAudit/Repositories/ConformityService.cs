@@ -8,10 +8,10 @@ using APPCommon.Class;
 
 namespace QA_Audit_Fresh.Repositories
 {
-    public class ConformityRepository : IConformityRepository
+    public class ConformitiesService : IConformitiesRepository
     {
         private readonly string _connectionString; 
-        public ConformityRepository(IConfiguration configuration)
+        public ConformitiesService(IConfiguration configuration)
         {
             // _connectionString = configuration.GetConnectionString("DefaultConnection");
             _connectionString = PIMESSettings.atsAuditConnString;

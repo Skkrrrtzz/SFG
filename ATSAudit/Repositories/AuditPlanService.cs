@@ -9,10 +9,10 @@ using APPCommon.Class;
 
 namespace QA_Audit_Fresh.Repositories
 {
-    public class AuditPlanRepository : IAuditPlanRepository
+    public class AuditPlansService : IAuditPlansRepository
     {
         private readonly string _connectionString; 
-        public AuditPlanRepository(IConfiguration configuration)
+        public AuditPlansService(IConfiguration configuration)
         {
             // _connectionString = configuration.GetConnectionString("DefaultConnection");
             _connectionString = PIMESSettings.atsAuditConnString;

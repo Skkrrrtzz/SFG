@@ -1,23 +1,31 @@
 var readCPARToggle = true;
 
-$('#readCPAREdit').click(e => {
-    // $('#readCPAR .modal-footer').hide();
-    if (readCPARToggle) {
-        $('#readCPAR .modal-footer').attr('hidden', false);
-        $('#readCPAR .respondent input').attr('readonly', false);
-        readCPARToggle = false;
-    } else {
-        $('#readCPAR .modal-footer').attr('hidden', true);
-        $('#readCPAR .respondent input').attr('readonly', true);
-        readCPARToggle = true;
-    }
-});
+async function renderCPARsTable() {
+    $('#cparsTableBody').empty();
+    $('#conformitiesTable').show();
+    $('.emptyTable').show();
 
-$('#readCPARClose').click(e => { 
-    $('#readCPAR .modal-footer').attr('hidden', true);
-    $('#readCPAR .respondent input').attr('readonly', true);
-    readCPARToggle = true;
- })
+    $('#cparTabPane').load(`?handler=CPARs&planId=${$('#readAuditPlanId').val()}`, () => {
+        $('.cpar-view').on('click',  e => { readCPAR(e) });
+    })
+
+    // TODO: This is all still broken. No idea where I should put the data for the cparId. Make a new column maybe.
+    $('.cpar-delete').on('click', e => {
+        let cparId = e.currentTarget.parentNode.dataset.cparid/* .split('-')[1] */;
+
+        fetch('/api/cpars/' + cparId, {
+            method: "DELETE",
+        })
+        .then(response => response.json())
+        .then(data => {
+            rendercparsTable();
+            console.log(data);
+        })
+        .catch(error => console.log(error));
+
+    });
+
+}
 
 async function readCPAR(e) {
     $('#readCPAR .modal-footer').attr('hidden', true);
@@ -59,33 +67,27 @@ function resizeCPARTextareas() {
     $('#readCPARInitialProblemStatement').css('height', $('#readCPARInitialProblemStatement').prop('scrollHeight') + 'px' )
 }
 
+$('#readCPAREdit').click(e => {
+    // $('#readCPAR .modal-footer').hide();
+    if (readCPARToggle) {
+        $('#readCPAR .modal-footer').attr('hidden', false);
+        $('#readCPAR .respondent input').attr('readonly', false);
+        readCPARToggle = false;
+    } else {
+        $('#readCPAR .modal-footer').attr('hidden', true);
+        $('#readCPAR .respondent input').attr('readonly', true);
+        readCPARToggle = true;
+    }
+});
 
-async function renderCPARsTable() {
-    $('#cparsTableBody').empty();
-    $('#conformitiesTable').show();
-    $('.emptyTable').show();
+$('#readCPARClose').click(e => { 
+    $('#readCPAR .modal-footer').attr('hidden', true);
+    $('#readCPAR .respondent input').attr('readonly', true);
+    readCPARToggle = true;
+ })
 
-    $('#cparTabPane').load(`?handler=CPARs&planId=${$('#readAuditPlanId').val()}`, () => {
-        $('.cpar-view').on('click',  e => { readCPAR(e) });
-    })
 
-    // TODO: This is all still broken. No idea where I should put the data for the cparId. Make a new column maybe.
-    $('.cpar-delete').on('click', e => {
-        let cparId = e.currentTarget.parentNode.dataset.cparid/* .split('-')[1] */;
-
-        fetch('/api/cpars/' + cparId, {
-            method: "DELETE",
-        })
-        .then(response => response.json())
-        .then(data => {
-            rendercparsTable();
-            console.log(data);
-        })
-        .catch(error => console.log(error));
-
-    });
-
-}
+// Create CPAR
 
 $('#createCPAREdit').on('click', e => {
     $('#readCPAR [readonly]').prop('readonly', false);

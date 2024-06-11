@@ -11,10 +11,10 @@ namespace QA_Audit_Fresh.Controllers.Api
     {
         // private readonly AppDbContext _context;
         // private readonly DbSet<AuditPlanModel> _contextPreventiveAction;
-        private readonly IPreventiveActionRepository _repository;
+        private readonly IPreventiveActionsRepository _repository;
         // private readonly dynamic _session;
 
-        public PreventiveActionsController(IPreventiveActionRepository repository)
+        public PreventiveActionsController(IPreventiveActionsRepository repository)
         {
             _repository = repository;
         }

@@ -1,0 +1,31 @@
+<div class="modal" id="createCorrectiveAction" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <p class="modal-title fw-bold text-white">Create Corrective Action</p>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="correctiveActionForm">
+                    <input class="form-control" name="description" id="createCorrectiveActionCPARId" hidden readonly/>
+                    <div class="my-1">
+                        <p class="form-labee">Corrective Action (Immediate Action):</p>
+                        <input class="form-control" name="description" id="createCorrectiveActionDescription" required />
+                    </div>
+                    <div class="my-1">
+                        <p class="form-label">Target Date:</p>
+                        <input type="date" class="form-control" name="escapeCause" id="createCorrectiveActionTargetDate" required />
+                    </div>
+                    <div class="my-1">
+                        <p class="form-label">Responsible:</p>
+                        <input class="form-control" name="action" id="createCorrectiveActionResponsible" required />
+                    </div>
+                </form>           
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" id="createCorrectiveActionSubmit" data-bs-target="#readCPAR" data-bs-toggle="modal">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+

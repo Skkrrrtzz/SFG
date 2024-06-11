@@ -8,9 +8,9 @@ namespace QA_Audit_Fresh.Controllers.Api
     [Route("api/[controller]")]
     public class CPARsController : ControllerBase
     {
-        private readonly ICPARRepository _repository;
+        private readonly ICPARsRepository _repository;
 
-        public CPARsController(ICPARRepository repository)
+        public CPARsController(ICPARsRepository repository)
         {
             _repository = repository;
         }

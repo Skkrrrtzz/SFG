@@ -14,7 +14,10 @@ namespace QA_Audit_Fresh.Models
         public int CPARId { get; set; }
         [Required]
         public string? CorrectiveActionDescription { get; set; }
-        public DateTime? TargetDate { get; set; }
+        [Required]
+        public DateTime TargetDate { get; set; }
+        [Required]
         public string? Responsible  { get; set; }
+        public byte Status { get; set; } = 0;
     }
 }

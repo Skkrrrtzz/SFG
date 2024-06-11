@@ -2,7 +2,7 @@ using QA_Audit_Fresh.Models;
 
 namespace QA_Audit_Fresh.Repositories
 {
-    public interface ICorrectiveActionRepository
+    public interface ICorrectiveActionsRepository
     {
         public Task<IEnumerable<CorrectiveActionModel>> GetCorrectiveActions();
         public Task<IEnumerable<CorrectiveActionModel>> GetCorrectiveAction(int correctiveActionId);

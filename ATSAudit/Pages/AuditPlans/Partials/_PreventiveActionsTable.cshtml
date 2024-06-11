@@ -1,15 +1,19 @@
+@using QA_Audit_Fresh.Models
+@model List<PreventiveActionModel>
+
 <h6 class="form-text text-center">Preventive Actions</h6>
-<div class="tableWrapper col-12">
     <table class="table table-striped" id="CPARsTable">
     @if (Model.Count > 0)
     {
         <thead>
             <tr>
                 <th scope="col" hidden>PreventiveActionId</th>
-                <th scope="col" hidden>PlanId</th>
-                <th class="header" scope="col">Preventive Action</th>
-                <th class="header" scope="col">Target Date</th>
-                <th class="header" scope="col">Responsible Person</th>
+                <th scope="col" hidden>CPARId</th>
+                <th scope="col">Preventive Action</th>
+                <th scope="col">Target Date</th>
+                <th scope="col">Responsible Person</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -19,8 +23,22 @@
                         <td hidden>@preventiveAction.PreventiveActionId</td>
                         <td hidden>@preventiveAction.CPARId</td>
                         <td>@preventiveAction.PreventiveActionDescription</td>
-                        <td>@preventiveAction.TargetDate</td>
+                        <td>@preventiveAction.TargetDate.ToShortDateString()</td>
                         <td>@preventiveAction.Responsible</td>
+                        @{
+                            (string badgeClass, string badgeText) status = preventiveAction.Status switch 
+                            {
+                                0 => ( "bg-warning text-black", "Open" ),
+                                1 => ( "bg-success", "Closed" ),
+                                _ => ( "bg-danger", "Error" )
+                            };
+                        }
+                        <td><span class="badge @status.badgeClass">@status.badgeText</span></td>
+                        <td>
+                            <button type="button" class="btn btn-success correctiveAction-close fa-solid fa-square-check"></button>
+                            <button type="button" class="btn btn-secondary preventiveAction-edit fa-solid fa-pen-to-square"></button>
+                            <button type="button" class="btn btn-danger preventiveAction-delete fa-solid fa-trash"></button>
+                        </td>
                     </tr>
                 }
         </tbody>
@@ -29,9 +47,4 @@
         <partial name="Partials/_EmptyTable"></partial>
     }
     </table>
-</div>
-<div class="d-flex ">
-    <button class="form-control" id="readCPARPreventiveActionSubmit">
-        <i class="fa-solid fa-plus"></i> 
-    </button>
-</div>
+

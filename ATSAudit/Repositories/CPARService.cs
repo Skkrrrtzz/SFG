@@ -5,11 +5,11 @@ using APPCommon.Class;
 
 namespace QA_Audit_Fresh.Repositories
 {
-    public class CPARRepository : ICPARRepository
+    public class CPARsService : ICPARsRepository
     {
         private readonly string _connectionString;
 
-        public CPARRepository(IConfiguration configuration) {
+        public CPARsService(IConfiguration configuration) {
             // _connectionString = configuration.GetConnectionString("DefaultConnection");
             _connectionString = PIMESSettings.atsAuditConnString;
         }

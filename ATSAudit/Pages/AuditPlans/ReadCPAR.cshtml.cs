@@ -8,9 +8,9 @@ namespace QA_Audit_Fresh.Views.AuditPlans
     [BindProperties]
     public class ReadCPAR : PageModel
     {
-        private readonly ICPARRepository _cpars;
+        private readonly ICPARsRepository _cpars;
 
-        public ReadCPAR(ICPARRepository cpars) 
+        public ReadCPAR(ICPARsRepository cpars) 
         {
             _cpars = cpars;
         }

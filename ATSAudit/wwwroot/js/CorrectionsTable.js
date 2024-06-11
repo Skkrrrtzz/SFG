@@ -9,6 +9,10 @@ $('#createCorrectionButton').on('click', e => {
     $('#readCPAR').modal('toggle');
 });
 
+$('#createCorrection button.btn-close').on('click', e => {
+    $('#readCPAR').modal('toggle');
+});
+
 $('#createCorrectionSubmit').on('click', e => {
     $('#createCorrection').modal('toggle');
 

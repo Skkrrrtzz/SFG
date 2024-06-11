@@ -7,21 +7,24 @@ namespace QA_Audit_Fresh.Views.AuditPlans
 {
     public class DashboardRazor : PageModel
     {
-        private readonly IAuditPlanRepository _auditPlans;
-        private readonly IConformityRepository _conformities;
-        private readonly ICPARRepository _cpars;
-        private readonly ICorrectionRepository _corrections;
-        private readonly ICorrectiveActionRepository _correctiveActions;
-        private readonly IPreventiveActionRepository _preventiveActions;
+        private readonly IAuditPlansRepository _auditPlans;
+        private readonly IConformitiesRepository _conformities;
+        private readonly ICPARsRepository _cpars;
+        private readonly ICorrectionsRepository _corrections;
+        private readonly ICorrectiveActionsRepository _correctiveActions;
+        private readonly IPreventiveActionsRepository _preventiveActions;
+        private readonly IHttpContextAccessor _httpContext;
 
         public List<AuditPlanModel>? AuditPlans;
 
-        public DashboardRazor(  IAuditPlanRepository auditPlans, 
-                                IConformityRepository conformities, 
-                                ICPARRepository cpars, 
-                                ICorrectionRepository corrections, 
-                                ICorrectiveActionRepository correctiveActions,
-                                IPreventiveActionRepository preventiveActions) 
+
+        public DashboardRazor(  IAuditPlansRepository auditPlans, 
+                                IConformitiesRepository conformities, 
+                                ICPARsRepository cpars, 
+                                ICorrectionsRepository corrections, 
+                                ICorrectiveActionsRepository correctiveActions,
+                                IPreventiveActionsRepository preventiveActions,
+                                IHttpContextAccessor httpContext) 
         {
             _auditPlans = auditPlans;
             _conformities = conformities;
@@ -29,47 +32,59 @@ namespace QA_Audit_Fresh.Views.AuditPlans
             _corrections = corrections;
             _correctiveActions = correctiveActions;
             _preventiveActions = preventiveActions;
+            _httpContext = httpContext;
         }
 
-        public void OnGet(int month)
+        public void OnGet(string z, string y, string x, string w)
         {
-            var result = _auditPlans.GetAuditPlansByMonth(month);
-            result.Wait();
+            _httpContext.HttpContext.Session.SetString("userName", z);
+            // _httpContext.HttpContext.Session.SetString("MyMode", y);
+            // _httpContext.HttpContext.Session.SetString("MyBUCode", x);
+            // _httpContext.HttpContext.Session.SetString("MyRole", w);
 
-            AuditPlans = new List<AuditPlanModel>(result.Result);
-            // auditPlans.ForEach(Console.WriteLine);
+            string userName = z;
+            //Check if user exists in Database
+
         }
+        // public void OnGet(int month)
+        // {
+        //     var result = _auditPlans.GetAuditPlansByMonth(month);
+        //     result.Wait();
+
+        //     AuditPlans = new List<AuditPlanModel>(result.Result);
+        //     // auditPlans.ForEach(Console.WriteLine);
+        // }
 
         // public PartialViewResult OnGetCalendar() 
         // {
         //     return Partial("Partials/_CalendarTable");
         // }
 
-        //GET: https://localhost:<port>/Conformities?planId=<planId>
+        //GET: https://localhost:<port>?handler=Conformities&planId=<planId>
         public async Task<PartialViewResult> OnGetConformities(int planId)
         {
             return Partial("Partials/_ConformitiesTable", (List<ConformityModel>) await _conformities.GetConformitiesByAuditPlan(planId));
         }
 
-        //GET: https://localhost:<port>/CPARs?planId=<planId>
+        //GET: https://localhost:<port>?handler=CPARs&planId=<planId>
         public async Task<PartialViewResult> OnGetCPARs(int planId)
         {
             return Partial("Partials/_CPARsTable", (List<CPARModel>) await _cpars.GetCPARsByAuditPlan(planId));
         }
 
-        //GET: https://localhost:<port>/Corrections?cparId=<cparId>
+        //GET: https://localhost:<port>?handler=Corrections&cparId=<cparId>
         public async Task<PartialViewResult> OnGetCorrections(int cparId)
         {
             return Partial("Partials/_CorrectionsTable", (List<CorrectionModel>) await _corrections.GetCorrectionsByCPAR(cparId));
         }
 
-        //GET: https://localhost:<port>/CorrectiveActions?cparId=<cparId>
+        //GET: https://localhost:<port>?handler=CorrectiveActions&cparId=<cparId>
         public async Task<PartialViewResult> OnGetCorrectiveActions(int cparId)
         {
             return Partial("Partials/_CorrectiveActionsTable", (List<CorrectiveActionModel>) await _correctiveActions.GetCorrectiveActionsByCPAR(cparId));
         }
 
-        //GET: https://localhost:<port>/PreventiveActions?cparId=<cparId>
+        //GET: https://localhost:<port>?handler=PreventiveActions&cparId=<cparId>
         public async Task<PartialViewResult> OnGetPreventiveActions(int cparId)
         {
             return Partial("Partials/_PreventiveActionsTable", (List<PreventiveActionModel>) await _preventiveActions.GetPreventiveActionsByCPAR(cparId));

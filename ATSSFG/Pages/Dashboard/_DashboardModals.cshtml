@@ -1,0 +1,273 @@
+﻿<!-- Encoder Modal -->
+    <div class="modal fade" id="encoder" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="encoderLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <h1 class="modal-title fs-5" id="encoderLabel">Sourcing Form | <span class="badge text-bg-dark">Encoder</span> </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-cols-2 g-2">
+                        <div class="col">
+                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadLastPurchase">
+                                <div class="card-body text-white">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-file-arrow-up fa-2x"></i>
+                                        </div>
+                                        <div class="col">
+                                            <h5 class="fs-6">Upload ATS Last Purchase Info</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadQuotation">
+                                <div class="card-body text-white">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-file-arrow-up fa-2x"></i>
+                                        </div>
+                                        <div class="col">
+                                            <h5 class="fs-6">Upload quotation Database</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadMRPBom">
+                                <div class="card-body text-white">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-file-arrow-up fa-2x"></i>
+                                        </div>
+                                        <div class="col">
+                                            <h5 class="fs-6">Upload MRP BOM</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#sourcingForm" onclick="sourcingForm()">
+                                <div class="card-body text-white">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-file-lines fa-2x"></i>
+                                        </div>
+                                        <div class="col">
+                                            <h5 class="fs-6">Sourcing Form</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Processor Modal -->
+    <div class="modal fade" id="processor" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="processorLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <h1 class="modal-title fs-5" id="processorLabel">Sourcing Form | <span class="badge text-bg-dark">Processor</span> </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-cols-2 g-2">
+                        <div class="col">
+                            <a class="card text-bg-primary border-3 border-primary-subtle text-decoration-none" asp-page="/Dashboard/Library">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-book h1"></i>
+                                        </div>
+                                        <div class="col me-2">
+                                            <div class="text-end">
+                                                <h4 class="fs-6">Library</h4>
+                                            </div>
+                                            <div class="text-end">
+                                                <h4 class="fs-1">0</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <div class="card text-bg-primary border-3 border-primary-subtle" type="button" data-bs-toggle="modal" data-bs-target="#incomingRFQ">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-circle-arrow-down h1"></i>
+                                        </div>
+                                        <div class="col me-2">
+                                            <div class="text-end">
+                                                <h4 class="fs-6">Incoming</h4>
+                                            </div>
+                                            <div class="text-end">
+                                                <h4 class="fs-1" id="incoming"></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-bg-primary border-3 border-primary-subtle" type="button" data-bs-toggle="modal" data-bs-target="#closed">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-circle-check h1"></i>
+                                        </div>
+                                        <div class="col me-2">
+                                            <div class="text-end">
+                                                <h4 class="fs-6">Closed</h4>
+                                            </div>
+                                            <div class="text-end">
+                                                <h4 class="fs-1">0</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card text-bg-primary border-3 border-primary-subtle">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-circle-question h1"></i>
+                                        </div>
+                                        <div class="col me-2">
+                                            <div class="text-end">
+                                                <h4 class="fs-6">Help</h4>
+                                            </div>
+                                            <div class="text-end">
+                                                <h4 class="fs-1">--</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Viewer Modal -->
+    <div class="modal fade" id="viewer" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="viewerLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <h1 class="modal-title fs-5" id="viewerLabel">Viewer <i class="fa-solid fa-circle-question" type="button"></i> </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2">
+                        <div class="col">
+                            <div class="card bg-primary border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#library">
+                                <div class="card-body" type="button">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto">
+                                            <i class="fa-solid fa-book fa-3x text-white"></i>
+                                        </div>
+                                        <div class="col me-2">
+                                            <div class="text-white text-end">
+                                                <h4 class="fs-1" id="rfqCount"></h4>
+                                            </div>
+                                            <div class="text-end text-white">
+                                                <h4 class="fs-5">Library</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Upload Last Purchase Info Modal -->
+<div class="modal fade" id="uploadLastPurchase" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadLastPurchaseLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-bg-primary">
+                <h1 class="modal-title fs-5" id="uploadLastPurchaseLabel"> <i class="fa-solid fa-file-arrow-up"></i> Last Purchase Info</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="uploadLastPurchaseloadingSpinner" class="d-none text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <p>Uploading file <span id="fileName"></span>...</p>
+                </div>
+                <div class="mb-2" id="uploadLastPurchaseInputContainer">
+                    <input type="file" id="lastPurchaseExcel" accept=".xlsx, .xls">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="uploadLastPurchaseButton">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Upload Quotation Data Modal -->
+<div class="modal fade" id="uploadQuotation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadQuotationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-bg-primary">
+                <h1 class="modal-title fs-5" id="uploadQuotationLabel"> <i class="fa-solid fa-file-arrow-up"></i> Quotations</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="uploadQuotationloadingSpinner" class="d-none text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <p>Uploading file <span id="quotationfileName"></span>...</p>
+                </div>
+                <div class="mb-2" id="uploadQuotationInputContainer">
+                    <input type="file" id="quotationExcel" accept=".xlsx, .xls">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="uploadQuotationButton">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Upload MRP BOM Data Modal -->
+<div class="modal fade" id="uploadMRPBom" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadMRPBomLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-bg-primary">
+                <h1 class="modal-title fs-5" id="uploadMRPBomLabel"> <i class="fa-solid fa-file-arrow-up"></i> MRP BOM</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="uploadMRPBomloadingSpinner" class="d-none text-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <p>Uploading file <span id="MRPBomfileName"></span>...</p>
+                </div>
+                <div class="mb-2" id="uploadMRPBomInputContainer">
+                    <input type="file" id="MRPBomExcel" accept=".xlsx, .xls">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="uploadMRPBomButton">Upload</button>
+            </div>
+        </div>
+    </div>
+</div>

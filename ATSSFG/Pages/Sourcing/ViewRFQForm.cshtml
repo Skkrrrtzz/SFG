@@ -1,7 +1,7 @@
 ﻿@page
 @model ATSSFG.Pages.Sourcing.ViewRFQFormModel
 @{
-    ViewData["Title"] = "View RFQ Form";
+    ViewData["Title"] = HttpContext.Session.GetString("MyTitle");
 }
 <div>
     <div class="border-3 border-bottom border-dark">

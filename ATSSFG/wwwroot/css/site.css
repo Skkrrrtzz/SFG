@@ -1,125 +1,141 @@
 /* || Colors */
 :root {
-    --colorMain1: #010038;
-    --colorMain2: #0f1c57;
-    --colorMain3: #293A80;
-    --colorMain4: #3A5BA0;
-    --colorMain5: #537EC5;
-    --colorMain5: #658bcb;
-    --colorDimGray: #696969;
-    --colorHighLight: #F39422;
-    --colorHighLightSemi: #FFD580;
-    --colorHighLightText: White;
-    --colorHighLight1: #4DF39422;
-    --colorWindow: DimGray;
-    --colorDialog: #515151;
+  --colorMain1: #010038;
+  --colorMain2: #0f1c57;
+  --colorMain3: #293a80;
+  --colorMain4: #3a5ba0;
+  --colorMain5: #537ec5;
+  --colorMain5: #658bcb;
+  --colorDimGray: #696969;
+  --colorHighLight: #f39422;
+  --colorHighLightSemi: #ffd580;
+  --colorHighLightText: White;
+  --colorHighLight1: #4df39422;
+  --colorWindow: DimGray;
+  --colorDialog: #515151;
 }
 
 html {
-    font-size: 14px;
-    font-family: Mulish;
+  font-size: 14px;
+  font-family: Mulish;
 }
 
 @media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
+  html {
+    font-size: 16px;
+  }
 }
 
 html {
-    position: relative;
-    min-height: 100%;
+  position: relative;
+  min-height: 100%;
 }
 
 body {
-    background-color: #2e2e2e;
-    background-image: url("https://www.transparenttextures.com/patterns/dark-tire.png");
-    margin-bottom: 0px;
-    min-height: 100vh;
+  background-color: #2e2e2e;
+  background-image: url("https://www.transparenttextures.com/patterns/dark-tire.png");
+
+  min-height: 100vh;
 }
-
-
-
+table {
+  font-size: 14px;
+}
+.table-hover tbody tr:hover td {
+  background-color: var(--colorHighLight) !important;
+  cursor: pointer;
+}
+.dataTables_wrapper {
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+}
+.best1stPriceColor {
+  background-color: var(--colorMain2);
+}
+.best2ndPriceColor {
+  background-color: var(--colorMain3);
+}
+.best3rdPriceColor {
+  background-color: var(--colorMain4);
+}
+.selectedPriceColor {
+  border-color: var(--colorHighLight) !important;
+}
+.bg-main3 {
+  background-color: var(--colorMain3) !important;
+}
 /* Positioning */
 
 .divcenter {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 1px;
-    margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1px;
+  margin: auto;
 }
 
 .poscenter {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .posleft {
-    display: inline-flex;
-    justify-content: left;
-    align-items: center;
-    height: 100%;
+  display: inline-flex;
+  justify-content: left;
+  align-items: center;
+  height: 100%;
 }
 
 .posright {
-    display: inline-flex;
-    justify-content: right;
-    align-items: center;
-    height: 100%;
+  display: inline-flex;
+  justify-content: right;
+  align-items: center;
+  height: 100%;
 }
 /* Positioning */
 
-
-
-
-
-
 .success-header {
-    background-color: #5cb85c;
+  background-color: #5cb85c;
 }
 
 .success-body {
-    background-color: #eca9a7;
+  background-color: #eca9a7;
 }
 
 .error-header {
-    background-color: #d9534f;
+  background-color: #d9534f;
 }
 
 .error-body {
-    background-color: #aedcae;
+  background-color: #aedcae;
 }
 
 /* Scrollbar */
 
 /* width */
 ::-webkit-scrollbar {
-    width: 10px;
+  width: 10px;
 }
 /* Track */
 ::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 5px;
+  background: #888;
+  border-radius: 5px;
 }
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 
 /* Scrollbar */
 
-
-
 .prevent-select {
-    -webkit-user-select: none; /* Safari */
-    -ms-user-select: none; /* IE 10 and IE 11 */
-    user-select: none; /* Standard syntax */
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }

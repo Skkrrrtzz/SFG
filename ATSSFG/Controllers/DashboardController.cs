@@ -36,14 +36,14 @@ namespace SFG.Controllers
         //}
 
 
-        public async Task<IActionResult> GetPNandDescription()
-        {
-            var bomData = await _dashboardRepository.GetBOM();
+        //public async Task<IActionResult> GetPNandDescription()
+        //{
+        //    var bomData = await _dashboardRepository.GetBOM();
 
-            var distinctPNAndDescriptions = bomData.GroupBy(bom => bom.PartNumber).Select(group => new { PartNumber = group.Key, Description = group.First().Description });
+        //    var distinctPNAndDescriptions = bomData.GroupBy(bom => bom.PartNumber).Select(group => new { PartNumber = group.Key, Description = group.First().Description });
 
-            return Json(new { data = distinctPNAndDescriptions });
-        }
+        //    return Json(new { data = distinctPNAndDescriptions });
+        //}
 
         [HttpGet]
         public async Task<IActionResult> GetAllRFQProjects()
@@ -79,7 +79,7 @@ namespace SFG.Controllers
                 var viewModel = new MyViewModel
                 {
                     RFQData = await _dashboardRepository.GetRFQByQuotationCode(quotationCode),
-                    RFQProjectData = await _dashboardRepository.GetRFQProjectsByQuotationCode(quotationCode)
+                    //RFQProjectData = await _dashboardRepository.GetRFQProjectsByQuotationCode(quotationCode)
                 };
                 return View(viewModel);
             }
@@ -99,19 +99,19 @@ namespace SFG.Controllers
         //    }
         //}
 
-        public async Task<IActionResult> IncomingRFQProjects()
-        {
-            try
-            {
-                var result = await _dashboardRepository.GetOpenRFQProjects();
+        //public async Task<IActionResult> IncomingRFQProjects()
+        //{
+        //    try
+        //    {
+        //        var result = await _dashboardRepository.GetOpenRFQProjects();
 
-                return Json(new { data = result });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
-            }
-        }
+        //        return Json(new { data = result });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
+        //    }
+        //}
 
         public async Task<IActionResult> GetExcelFile(string pNDesc)
         {
@@ -410,13 +410,13 @@ namespace SFG.Controllers
                                 case "LastPurchaseInfo":
                                     {
                                         var lastPurchaseInfo = await SaveLastPurchaseInfo(worksheet, i);
-                                        await _dashboardRepository.UploadLastPurchaseInfo(lastPurchaseInfo);
+                                        //await _dashboardRepository.UploadLastPurchaseInfo(lastPurchaseInfo);
                                         break;
                                     }
                                 case "Quotations":
                                     {
                                         var quotations = await SaveQuotations(worksheet, i);
-                                        await _dashboardRepository.UploadQuotations(quotations);
+                                        //await _dashboardRepository.UploadQuotations(quotations);
                                         break;
                                     }
                                 default:

@@ -1,6 +1,8 @@
-﻿using Dapper;
-using Microsoft.Data.SqlClient;
+﻿using APPCommon.Class;
 using ATSSFG.Models;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ATSSFG.Repository
 {
@@ -10,18 +12,23 @@ namespace ATSSFG.Repository
 
         public UserRepository(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _connectionString = PIMESSettings.atsSFGConnString;
         }
 
-        public async Task<IEnumerable<UsersModel>> GetUsers()
+        public async Task<IEnumerable<UsersInfoModel>> GetRole()
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
-                    string query = "SELECT * FROM Users";
-
-                    return await conn.QueryAsync<UsersModel>(query);
+                    var result = new List<UsersInfoModel>
+                                        (await conn.QueryAsync<UsersInfoModel>
+                                            ("laptop_role_sp",
+                                              null,
+                                              commandType: CommandType.StoredProcedure
+                                            )
+                                        );
+                    return result;
                 }
             }
             catch (Exception ex)
@@ -31,16 +38,62 @@ namespace ATSSFG.Repository
             }
         }
 
-        public async Task<bool> DeleteUser(int id)
+        public async Task<UsersInfoModel> CheckUser(string name, string dept)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
-                    string query = "DELETE FROM Users WHERE Id = @Id";
-                    var affectedRows = await conn.ExecuteAsync(query, new { Id = id });
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@Name", name);
+                    parameters.Add("@Department", dept);
 
-                    return affectedRows > 0;
+                    var result = await conn.QueryFirstOrDefaultAsync<UsersInfoModel>("CheckUser_SP", parameters, commandType: CommandType.StoredProcedure);
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching user data: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<UsersInfoModel>> GetUsersAsync()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    return await conn.QueryAsync<UsersInfoModel>("GetUsers_SP", commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching user data: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteUserAsync(int id)
+        {
+            try
+            {
+                await using (SqlConnection conn = new SqlConnection(_connectionString))
+                {
+                    await conn.OpenAsync();
+
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@Id", id);
+                    parameters.Add("@Message", dbType: DbType.String, size: 100, direction: ParameterDirection.Output);
+
+                    await conn.ExecuteAsync("DeleteUser_SP", parameters, commandType: CommandType.StoredProcedure);
+
+                    string message = parameters.Get<string>("@Message");
+                    Console.WriteLine(message);
+
+                    return message == "User deleted successfully.";
                 }
             }
             catch (Exception ex)
@@ -50,33 +103,32 @@ namespace ATSSFG.Repository
             }
         }
 
-        public async Task<bool> EditUserAsync(UsersModel edit)
+        public async Task<bool> EditUserAsync(UsersInfoModel edit)
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(_connectionString))
+                await using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
-                    string selectQuery = "SELECT 1 FROM Users WHERE Id = @Id";
-                    var userExists = await conn.ExecuteScalarAsync<int?>(selectQuery, new { Id = edit.Id });
+                    await conn.OpenAsync();
 
-                    if (userExists.HasValue)
-                    {
-                        string updateQuery = @"UPDATE Users SET Name = @Name, Email = @Email, Role = @Role WHERE Id = @Id";
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@Id", edit.Id);
+                    parameters.Add("@Name", edit.Name);
+                    parameters.Add("@Email", edit.Email);
+                    parameters.Add("@Encoder", edit.Encoder);
+                    parameters.Add("@Processor", edit.Processor);
+                    parameters.Add("@Viewer", edit.Viewer);
+                    parameters.Add("@Admin", edit.Admin);
+                    parameters.Add("@Department", edit.Department);
+                    parameters.Add("@IsActive", edit.IsActive);
+                    parameters.Add("@Message", dbType: DbType.String, size: 100, direction: ParameterDirection.Output);
 
-                        var affectedRows = await conn.ExecuteAsync(updateQuery, new
-                        {
-                            Id = edit.Id,
-                            Name = edit.Name,
-                            Email = edit.Email,
-                            Role = edit.Role
-                        });
+                    await conn.ExecuteAsync("EditUser_SP", parameters, commandType: CommandType.StoredProcedure);
 
-                        return affectedRows > 0;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    string message = parameters.Get<string>("@Message");
+                    Console.WriteLine(message);
+
+                    return message == "User updated successfully.";
                 }
             }
             catch (Exception ex)
@@ -86,41 +138,26 @@ namespace ATSSFG.Repository
             }
         }
 
-        public async Task<string> AddUserAsync(UsersModel add)
+        public async Task<string> AddUserAsync(UsersInfoModel add)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
-                    await conn.OpenAsync();
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@Name", add.Name);
+                    parameters.Add("@Email", add.Email);
+                    parameters.Add("@Encoder", add.Encoder);
+                    parameters.Add("@Processor", add.Processor);
+                    parameters.Add("@Viewer", add.Viewer);
+                    parameters.Add("@Admin", add.Admin);
+                    parameters.Add("@Department", add.Department);
+                    parameters.Add("@Message", dbType: DbType.String, size: 100, direction: ParameterDirection.Output);
 
-                    string checkQuery = "SELECT 1 FROM Users WHERE Email = @Email";
-                    var emailExists = await conn.ExecuteScalarAsync<int?>(checkQuery, new { Email = add.Email });
+                    await conn.ExecuteAsync("AddUser", parameters, commandType: CommandType.StoredProcedure);
 
-                    string message;
-
-                    if (emailExists.HasValue)
-                    {
-                        return message = "User with the same email already exists.";
-                    }
-
-                    string insertQuery = @"INSERT INTO Users (Name, Email, Role) VALUES (@Name, @Email, @Role)";
-
-                    var affectedRows = await conn.ExecuteAsync(insertQuery, new
-                    {
-                        add.Name,
-                        add.Email,
-                        add.Role
-                    });
-
-                    if (affectedRows > 0)
-                    {
-                        return message = "User added successfully";
-                    }
-                    else
-                    {
-                        return message = "Failed to add the user.";
-                    }
+                    string message = parameters.Get<string>("@Message");
+                    return message;
                 }
             }
             catch (Exception ex)

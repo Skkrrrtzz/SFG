@@ -1,4 +1,4 @@
-﻿fetch(GetAllRFQProjects)
+﻿fetch("/Dashboard/Dashboard?handler=AllRFQProjects")
   .then((response) => {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -14,7 +14,7 @@
     alert("Error: " + error.message);
   });
 
-fetch(ViewRFQProjects)
+fetch("/Dashboard/Dashboard?handler=IncomingRFQProjects")
   .then((response) => {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -23,270 +23,130 @@ fetch(ViewRFQProjects)
   })
   .then((data) => {
     let count = data.data.length;
+    // CHECKING OF ROLES FOR INCOMING RFQ
+    //COST ENGR - PROCESSOR IF HAVE PRICES SHOW
+    //SOURCING - PROCESSOR IF NO PRICES SHOW
     $("#incoming").text(count);
     viewRFQProjects("#incomingRFQTable", data.data);
   })
   .catch((error) => {
     alert("Error: " + error.message);
   });
-
-function lastPurchaseFileUpload() {
-  const fileInput = $("#excelFileInput")[0];
-
-  $("#uploadButton").prop("disabled", true); // Disable the button while the file is being uploaded
-  $("#fileInputContainer").show(); // Show the file input
+// Function to upload a file
+function uploadFile(modalId, url, inputId) {
+  const fileInput = document.getElementById(inputId);
+  // console.log(modalId, url, inputId);
+  const file = fileInput.files[0];
+  const formData = new FormData();
+  formData.append("file", file);
 
   if (!fileInput.files || !fileInput.files[0]) {
     // Check if a file was selected
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Please select a file to upload.",
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-    });
-    $("#uploadButton").prop("disabled", false); // Re-enable the button
+    showErrorAlert("Please select a file to upload.");
+    $("#" + modalId + "Button").prop("disabled", false); // Re-enable the button
     return;
   } else {
-    $("#loadingSpinner").removeClass("d-none"); // Show the loading spinner
-    const file = fileInput.files[0]; // Get the uploaded file
-
-    $("#fileName").text(file.name); // Show the file name
-    const formData = new FormData(); // Create a FormData object
-    formData.append("file", file); // Append the file to FormData
-    $("#fileInputContainer").hide(); // Hide the file input container
     $.ajax({
+      url: url,
       type: "POST",
-      url: UploadLastPurchaseInfo,
       data: formData,
-      contentType: false,
       processData: false,
-      success: function (response) {
-        $("#loadingSpinner").addClass("d-none"); // Hide the loading spinner
-
-        if (response.success) {
-          // Display a SweetAlert2 success message
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: response.message,
-            toast: true,
-            position: "top-end",
-            timer: 3000,
-            showConfirmButton: false,
-          });
-
-          // Reset the file input field
-          $("#excelFileInput").val(""); // Clear the file input value
-          $("#uploadLastPurchase").modal("hide"); // Close the modal
-          $("#fileInputContainer").show(); // Show the file input
+      contentType: false,
+      headers: {
+        RequestVerificationToken: $(
+          'input:hidden[name="__RequestVerificationToken"]'
+        ).val(),
+      },
+      beforeSend: function () {
+        $("#" + modalId + "loadingSpinner").removeClass("d-none"); // Show the loading spinner
+        $("[id^='" + modalId + "InputContainer']").hide(); // Hide the file input container
+        $("#" + modalId + "Button").prop("disabled", true); // Disable the button while the file is being uploaded
+      },
+      success: function (data) {
+        $("#" + modalId + "loadingSpinner").addClass("d-none"); // Hide the loading spinner
+        $("#" + modalId + "Button").prop("disabled", false); // Re-enable the button
+        $("[id^='" + modalId + "InputContainer']").show(); // Show the file input container
+        if (data.success) {
+          showSuccessAlert(data.message);
+          $("#" + inputId).val(""); // Clear the file input value
+          $("#" + modalId).modal("hide"); // Close the modal
         } else {
-          // Display a SweetAlert2 error message
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: response.message,
-            toast: true,
-            position: "top-end",
-            timer: 3000,
-            showConfirmButton: false,
-          });
-          // Reset the file input field
-          $("#excelFileInput").val(""); // Clear the file input value
-          $("#fileInputContainer").show(); // Show the file input
+          showErrorAlert(data.message);
+          $("#" + inputId).val("");
         }
-        $("#uploadButton").prop("disabled", false); // Re-enable the button
       },
       error: function (xhr, status, error) {
         console.error("Error uploading file:", error);
-        $("#loadingSpinner").addClass("d-none"); // Hide the loading spinner
+        $("#" + modalId + "loadingSpinner").addClass("d-none"); // Hide the loading spinner
+        $("#" + modalId + "Button").prop("disabled", false); // Re-enable the button
+        showErrorAlert("An error occurred while uploading the file.");
       },
     });
   }
 }
 
-function quotationFileUpload() {
-  const fileInput = $("#quotationExcel")[0]; // Access the native DOM element
+// Uploading Excel Files
+$("#uploadLastPurchaseButton").click(function () {
+  uploadFile(
+    "uploadLastPurchase",
+    "/Dashboard/Dashboard?handler=UploadLastPurchaseInfo",
+    "lastPurchaseExcel"
+  );
+});
 
-  $("#uploadQuotationButton").prop("disabled", true); // Disable the button while the file is being uploaded
-  $("#quotationInputContainer").show(); // Show the file input container
+$("#uploadQuotationButton").click(function () {
+  uploadFile(
+    "uploadQuotation",
+    "/Dashboard/Dashboard?handler=UploadQuotations",
+    "quotationExcel"
+  );
+});
 
-  if (!fileInput.files || !fileInput.files[0]) {
-    // Check if a file was selected
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Please select a file to upload.",
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-    });
-    $("#uploadQuotationButton").prop("disabled", false); // Re-enable the button
-    return;
-  } else {
-    $("#qloadingSpinner").removeClass("d-none"); // Show the loading spinner
-    const file = fileInput.files[0]; // Get the uploaded file
-
-    $("#quotationfileName").text(file.name); // Show the file name
-    const formData = new FormData(); // Create a FormData object
-    formData.append("file", file); // Append the file to FormData
-    $("#quotationInputContainer").hide(); // Hide the file input container
-    $.ajax({
-      type: "POST",
-      url: UploadQuotation,
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (response) {
-        $("#qloadingSpinner").addClass("d-none"); // Hide the loading spinner
-
-        if (response.success) {
-          // Display a SweetAlert2 success message
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: response.message,
-            toast: true,
-            position: "top-end",
-            timer: 3000,
-            showConfirmButton: false,
-          });
-
-          // Reset the file input field
-          $("#quotationExcel").val(""); // Clear the file input value
-          $("#uploadQuotation").modal("hide"); // Close the modal
-          $("#quotationInputContainer").show(); // Show the file input
-        } else {
-          // Display a SweetAlert2 error message
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: response.message,
-            toast: true,
-            position: "top-end",
-            timer: 3000,
-            showConfirmButton: false,
-          });
-          // Reset the file input field
-          $("#quotationExcel").val(""); // Clear the file input value
-          $("#quotationInputContainer").show(); // Show the file input
-        }
-        $("#uploadQuotationButton").prop("disabled", false); // Re-enable the button
-      },
-      error: function (xhr, status, error) {
-        console.error("Error uploading file:", error);
-        $("#qloadingSpinner").addClass("d-none"); // Hide the loading spinner
-      },
-    });
-  }
-}
-
-function MRPBomFileUpload() {
-  const fileInput = $("#MRPBomExcel")[0]; // Access the native DOM element
-
-  $("#uploadMRPBomButton").prop("disabled", true); // Disable the button while the file is being uploaded
-  $("#MRPBomInputContainer").show(); // Show the file input container
-
-  if (!fileInput.files || !fileInput.files[0]) {
-    // Check if a file was selected
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "Please select a file to upload.",
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-    });
-    $("#uploadMRPBomButton").prop("disabled", false); // Re-enable the button
-    return;
-  } else {
-    $("#mrploadingSpinner").removeClass("d-none"); // Show the loading spinner
-    const file = fileInput.files[0]; // Get the uploaded file
-
-    $("#MRPBomfileName").text(file.name); // Show the file name
-    const formData = new FormData(); // Create a FormData object
-    formData.append("file", file); // Append the file to FormData
-    $("#MRPBomInputContainer").hide(); // Hide the file input container
-    $.ajax({
-      type: "POST",
-      url: UploadMRPBom,
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (response) {
-        $("#mrploadingSpinner").addClass("d-none"); // Hide the loading spinner
-
-        if (response.success) {
-          // Display a SweetAlert2 success message
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: response.message,
-            toast: true,
-            position: "top-end",
-            timer: 3000,
-            showConfirmButton: false,
-          });
-
-          // Reset the file input field
-          $("#MRPBomExcel").val(""); // Clear the file input value
-          $("#uploadMRPBom").modal("hide"); // Close the modal
-          $("#MRPBomInputContainer").show(); // Show the file input
-        } else {
-          // Display a SweetAlert2 error message
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: response.message,
-            toast: true,
-            position: "top-end",
-            timer: 3000,
-            showConfirmButton: false,
-          });
-          // Reset the file input field
-          $("#MRPBomExcel").val(""); // Clear the file input value
-          $("#MRPBomInputContainer").show(); // Show the file input
-        }
-        $("#uploadMRPBomButton").prop("disabled", false); // Re-enable the button
-      },
-      error: function (xhr, status, error) {
-        console.error("Error uploading file:", error);
-        $("#mrploadingSpinner").addClass("d-none"); // Hide the loading spinner
-      },
-    });
-  }
-}
+$("#uploadMRPBomButton").click(function () {
+  uploadFile(
+    "uploadMRPBom",
+    "/Dashboard/Dashboard?handler=UploadMRPBOM",
+    "MRPBomExcel"
+  );
+});
 
 function sourcingForm() {
-  $.ajax({
-    type: "GET",
-    url: GetPNandDescription,
-    dataType: "JSON",
-    success: function (response) {
+  fetch("/Dashboard/Dashboard?handler=PNandDescription", {
+    method: "GET",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
       let selectElement = $("#sourcingFormSelect");
       selectElement.empty();
-      $("<option selected disabled>Select BOM</option>").appendTo(
-        selectElement
-      );
+      if (data.data.length === 0) {
+        $("<option selected disabled>No available MRP BOM</option>").appendTo(
+          selectElement
+        );
+      } else {
+        $("<option selected disabled>Select BOM</option>").appendTo(
+          selectElement
+        );
 
-      response.data.forEach((item) => {
-        let partNumber = item.partNumber;
-        let description = item.description;
-        let pndesc = partNumber + " - " + description;
-        let option = $("<option></option>").attr("value", pndesc).text(pndesc);
-        selectElement.append(option);
-      });
-    },
-    error: function (xhr, status, error) {
+        data.data.forEach((item) => {
+          let partNumber = item.partNumber;
+          let description = item.description;
+          let pndesc = partNumber + " - " + description;
+          let option = $("<option></option>")
+            .attr("value", pndesc)
+            .text(pndesc);
+          selectElement.append(option);
+        });
+      }
+    })
+    .catch((error) => {
       console.error("Error:", error);
-    },
-  });
+    });
 }
-
 function viewRFQProjects(table, data) {
   let Tbl = $(table).DataTable({
     responsive: true,
@@ -307,37 +167,45 @@ function viewRFQProjects(table, data) {
       },
       {
         data: "status",
-        render: function (data) {
+        render: function (data, type, row) {
+          let badgeClass;
           if (data === "OPEN") {
-            return (
-              '<span class="badge rounded-pill text-bg-success">' +
-              data +
-              "</span>"
-            );
+            badgeClass = "badge rounded-pill text-bg-success";
           } else if (data === "CLOSED") {
-            // Corrected case
-            return (
-              '<span class="badge rounded-pill text-bg-danger">' +
-              data +
-              "</span>"
-            );
+            badgeClass = "badge rounded-pill text-bg-danger";
           } else {
-            return data;
+            badgeClass = "";
           }
+          return (
+            '<span class="' +
+            badgeClass +
+            '" data-status="' +
+            data +
+            '">' +
+            data +
+            "</span>"
+          );
         },
       },
       {
         data: null,
         render: function (row) {
-          if (department == "Cost Engineering") {
+          // const isClosed = row.status === "CLOSED";
+          // const markBtnDisabled = isClosed ? "disabled" : "";
+          if (department === "Cost Engineering") {
             return (
-              '<a href="#" class="text-primary list-btn fs-4" data-id="' +
+              '<button type="button" class="btn btn-sm btn-primary border-3 border-primary-subtle list-btn me-2" data-id="' +
               row.quotationCode +
               '" data-name="' +
               row.projectName +
-              '"><i class="fa-solid fa-list"></i></a>'
+              '">View</button>' +
+              '<button type="button" class="btn btn-sm btn-danger border-3 border-danger-subtle marked-btn" data-id="' +
+              row.quotationCode +
+              '" data-name="' +
+              row.projectName +
+              '"> Mark as Closed</button>'
             );
-          } else {
+          } else if (department === "Sourcing") {
             return (
               '<a href="#" class="text-primary view-btn fs-4" data-id="' +
               row.quotationCode +
@@ -348,6 +216,8 @@ function viewRFQProjects(table, data) {
               row.projectName +
               '"><i class="fa-solid fa-download"></i></a>'
             );
+          } else {
+            return "Viewer kaba ?";
           }
         },
       },
@@ -357,20 +227,63 @@ function viewRFQProjects(table, data) {
 
 // Attach click event handler to a parent element using event delegation
 $("#incomingRFQTable").on("click", ".view-btn", function () {
-  let quotationCode = $(this).data("id");
-  let url = ViewRFQForm + "?quotationCode=" + quotationCode;
-  // console.log(url);
-  // Redirect to the generated URL
+  let projectName = $(this).data("name");
+  // console.log(projectName);
+  let url = "/Sourcing/SourcingRFQForm?partNumber=" + projectName;
+
   window.location.href = url;
 });
 
 $("#incomingRFQTable").on("click", ".download-btn", function () {
   let projectName = $(this).data("id");
   let url =
-    "/Dashboard/DownloadExcelFile?projectName=" +
+    "/Dashboard/Dashboard?handler=DownloadExcelFile&projectName=" +
     encodeURIComponent(projectName);
   // console.log(url);
   window.location.href = url;
+});
+
+$("#incomingRFQTable").on("click", ".marked-btn", function () {
+  let quotationCode = $(this).data("id");
+  let projectName = $(this).data("name");
+  // console.log(quotationCode, projectName);
+
+  const requestData = {
+    quotationCode: quotationCode,
+    projectName: projectName,
+  };
+
+  fetch("/Dashboard/Dashboard?handler=MarkedAsClosed", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      RequestVerificationToken: $(
+        'input:hidden[name="__RequestVerificationToken"]'
+      ).val(),
+    },
+    body: JSON.stringify(requestData),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      if (data.success) {
+        showSuccessAlert(data.message).then(() => {
+          location.reload();
+        });
+      } else {
+        showErrorAlert(data.message);
+      }
+    })
+    .catch((error) => {
+      // Handle errors
+      console.error("Error:", error);
+      showErrorAlert("An error occurred while marking the project as closed.");
+    });
 });
 
 $("#incomingRFQTable").on("click", ".list-btn", function () {
@@ -435,5 +348,93 @@ $("#viewPNDesc").click(function () {
 
   // Redirect to the ViewSourcingForm action with the modified pNDesc parameter
   window.location.href =
-    "/Dashboard/ViewSourcingForm?pndesc=" + encodeURIComponent(pndesc);
+    "/Sourcing/ViewSourcingForm?pndesc=" + encodeURIComponent(pndesc);
 });
+
+$("#customer").on("change", function () {
+  if ($("#customer").val() === "custom") {
+    $("#customInput").prop("required", true).removeClass("d-none");
+  } else {
+    $("#customInput").prop("required", false).addClass("d-none");
+  }
+});
+
+$("#RFQForm").on("submit", function (e) {
+  e.preventDefault();
+  InsertRFQ(); // Call InsertRFQ function
+});
+
+function InsertRFQ() {
+  const projectName = $("#projectName").val();
+  let customer;
+  if ($("#customer").val() === "custom") {
+    customer = $("#customInput").val();
+  } else {
+    customer = $("#customer").val();
+  }
+  const quotation = $("#quotation").val();
+  const noItems = $("#noItems").val();
+  const reqDate = $("#reqDate").val();
+  const reqCompDate = $("#reqCompDate").val();
+  const cusPartNo = $("#cusPartNo").val();
+  const rev = $("#rev").val();
+  const description = $("#description").val();
+  const mpn = $("#origMPNRawMatsFab").val();
+  const mfr = $("#origMFRRawMatsFab").val();
+  const qtyPerAssembly = $("#qtyPerAssembly").val();
+  const commodity = $("#commodity").val();
+  const uom = $("#bomUoM").val();
+  const status = $("#commonUniqParts").val();
+  const stdTAT = $("#stdTAT").val();
+
+  const requestData = {
+    ProjectName: projectName,
+    Customer: customer,
+    QuotationCode: quotation,
+    NoItems: noItems,
+    RequestDate: reqDate,
+    RequiredDate: reqCompDate,
+    CustomerPartNumber: cusPartNo,
+    Rev: rev,
+    Description: description,
+    OrigMPN: mpn,
+    OrigMFR: mfr,
+    Eqpa: qtyPerAssembly,
+    Commodity: commodity,
+    UoM: uom,
+    Status: status,
+    StdTAT: stdTAT,
+  };
+
+  fetch("/Dashboard/Dashboard?handler=InsertRFQ", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      RequestVerificationToken: $(
+        'input:hidden[name="__RequestVerificationToken"]'
+      ).val(),
+    },
+    body: JSON.stringify(requestData),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      if (data.success) {
+        showSuccessAlert(data.message).then(() => {
+          location.reload();
+        });
+      } else {
+        showErrorAlert(data.message);
+      }
+    })
+    .catch((error) => {
+      // Handle errors
+      console.error("Error:", error);
+      showErrorAlert("An error occurred while marking the project as closed.");
+    });
+}

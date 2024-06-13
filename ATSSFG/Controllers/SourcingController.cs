@@ -198,57 +198,57 @@ namespace SFG.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetRFQPartNumbers(string projectName, string quotationCode)
-        {
-            try
-            {
-                var result = await _sourcingRepository.GetRFQPartNumbers(projectName, quotationCode);
-                int count = result.Count();
-                if (result.Any())
-                {
-                    return Json(new { success = true, message = $"{count} RFQ part numbers found.", data = result });
-                }
-                else
-                {
-                    return Json(new { success = false, message = "No RFQ part numbers found for the Project." });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"Error: {ex.Message}" });
-            }
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetRFQPartNumbers(string projectName, string quotationCode)
+        //{
+        //    try
+        //    {
+        //        var result = await _sourcingRepository.GetRFQPartNumbers(projectName, quotationCode);
+        //        int count = result.Count();
+        //        if (result.Any())
+        //        {
+        //            return Json(new { success = true, message = $"{count} RFQ part numbers found.", data = result });
+        //        }
+        //        else
+        //        {
+        //            return Json(new { success = false, message = "No RFQ part numbers found for the Project." });
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(new { success = false, message = $"Error: {ex.Message}" });
+        //    }
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> GetPrices([FromBody] PartData data)
-        {
-            try
-            {
-                var fileName = _uploadService.GetFilePathFromPNDesc(data.ProjectName);
+        //[HttpPost]
+        //public async Task<IActionResult> GetPrices([FromBody] PartData data)
+        //{
+        //    try
+        //    {
+        //        var fileName = _uploadService.GetFilePathFromPNDesc(data.ProjectName);
 
-                if (fileName == null)
-                {
-                    return NotFound(new { message = "File not found for the provided project name." });
-                }
+        //        if (fileName == null)
+        //        {
+        //            return NotFound(new { message = "File not found for the provided project name." });
+        //        }
 
-                var result = await _sourcingRepository.FindPartNumber(fileName, data.PartNumber);
+        //        //var result = await _sourcingRepository.FindPartNumber(fileName, data.PartNumber);
 
-                if (result != null)
-                {
-                    return Json(new { success = true, data = result });
-                }
-                else
-                {
-                    return NotFound(new { message = "Part number not found." });
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception if necessary
-                return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
-            }
-        }
+        //        //if (result != null)
+        //        //{
+        //        //    return Json(new { success = true, data = result });
+        //        //}
+        //        //else
+        //        //{
+        //        //    return NotFound(new { message = "Part number not found." });
+        //        //}
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log the exception if necessary
+        //        return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
+        //    }
+        //}
 
         public async Task<IActionResult> SourcingRFQForm(string partNumber)
         {
@@ -257,7 +257,7 @@ namespace SFG.Controllers
                 var viewModel = new MyViewModel
                 {
                     RFQData = await RFQData(partNumber),
-                    RFQProjectData = await RFQProjectData(partNumber)
+                    //RFQProjectData = await RFQProjectData(partNumber)
                 };
 
                 return View(viewModel);

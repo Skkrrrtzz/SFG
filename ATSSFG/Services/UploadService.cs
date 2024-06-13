@@ -8,6 +8,7 @@ namespace ATSSFG.Services
     {
         private readonly string _networkDirectory = @"\\Dashboardpc\bc sfg\SFG Files";
         private readonly string _excelDirectory = "\\Uploads\\Excel";
+        private readonly string _excelRFQDirectory = "\\Uploads\\Excel\\RFQ";
         private readonly string _pdfDirectory = "\\Uploads\\PDF";
         private readonly string _exportedExcelDirectory = "\\ExportedExcel";
         private readonly string _excelTemplate = "\\Template\\Sourcing Form.xlsx";
@@ -86,6 +87,16 @@ namespace ATSSFG.Services
             string uploadsDirectory = _networkDirectory + _excelDirectory;
 
             string filePath = Path.Combine(uploadsDirectory, pNDesc + ".xlsx");
+
+            return filePath;
+        }
+
+        public string GetRFQFilePNDesc(string pNDesc)
+        {
+            // Construct the file path based on the parsed information and the upload directory
+            string uploadsDirectory = _networkDirectory + _excelRFQDirectory;
+
+            string filePath = Path.Combine(uploadsDirectory, "RFQ - " + pNDesc + ".xlsx");
 
             return filePath;
         }
@@ -179,7 +190,6 @@ namespace ATSSFG.Services
             }
         }
 
-        //public async Task<string> WriteToExcel(IEnumerable<RFQModel> rfqData, RFQProjectModel rfqProject, string? projectName, int rfqDataStartColumn)
         public async Task<bool> WriteToExcel(IEnumerable<RFQModel> rfqData, RFQProjectModel rfqProject, string? projectName)
         {
             try

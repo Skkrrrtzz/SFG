@@ -1,154 +1,164 @@
-﻿@page
+﻿@page "/Sourcing/ViewSourcingForm"
 @model ATSSFG.Pages.Sourcing.ViewSourcingFormModel
 @{
-    ViewData["Title"] = "View Sourcing Form";
+    ViewData["Title"] = HttpContext.Session.GetString("AppName");
+    string encoder = HttpContext.Session.GetString("Encoder");
 }
-<div class="">
-    <div class="border-2 border-bottom border-dark">
-        <h4 class="fw-bold">MRP BOM</h4>
-    </div>
-    <div class="row mt-1">
-        <div class="col-md-6 col-lg-6 d-flex align-items-center">
-            <div class="me-3">
-                <h4 class="d-inline-block mr-2">Project Name: </h4>
-                <h5 class="d-inline-block" id="pNDesc"></h5>
-            </div>
+@if(encoder == "True")
+{
+    @Html.AntiForgeryToken()
+    <div class="card p-2 bg-light">
+        <div class="border-2 border-bottom border-dark">
+            <h4 class=" fw-bold">MRP BOM</h4>
         </div>
-        <div class="col-sm-2 col-md-6 col-lg-6 d-flex align-items-center justify-content-end gap-2">
-            <button class="btn btn-danger border-3 border-danger-subtle" type="button" onclick="downloadPdf()"> Download PDF <i class="fa-solid fa-download"></i></button>
-            <button class="btn btn-primary border-3 border-primary-subtle fw-bold shadow" id="btnSourcing" data-bs-toggle="modal" data-bs-target="#createSourcingForm"><i class="fa-solid fa-circle-plus"></i> Create Sourcing Form </button>
-        </div>
-    </div>
-    <div class="row">
-        <div class="table-responsive mb-2">
-            <table class="table table-bordered table-hover table-striped table-sm compact" id="sourcingTbl" style="width: 100%">
-                <thead class="table-primary">
-                    <tr>
-                        <th>NO</th>
-                        <th>PART NUMBER</th>
-                        <th>DESCRIPTION</th>
-                        <th>REV</th>
-                        <th>COMMODITY</th>
-                        <th>1ST MPN</th>
-                        <th>1ST MFR</th>
-                        <th>SUM OF EQPA</th>
-                        <th>UOM</th>
-                        <th>STATUS</th>
-                        <th>INVENTORY QTY</th>
-                        <th>LAST PURCHASE DATE</th>
-                        <th>REMARKS</th>
-                        <th>ACTION</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-@* Edit Modal *@
-<div class="modal fade" id="editStatusRemarks" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editStatusRemarksLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header text-bg-primary">
-                <h1 class="modal-title fs-5" id="editStatusRemarksLabel">Edit Status and Remarks</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row g-3 align-items-center">
-                    <input type="hidden" class="form-control" id="no" />
-                    <div class="col-auto">
-                        <label for="partNumber" class="form-label fw-bold">Part Number</label>
-                    </div>
-                    <div class="col-auto">
-                        <input type="text" class="form-control" id="partNumber" readonly />
-                    </div>
-                    <div class="col-6">
-                        <label for="editStatus" class="form-label fw-bold">Status</label>
-                        <input type="text" class="form-control" id="editStatus" />
-                    </div>
-                    <div class="col-6">
-                        <label for="editRemarks" class="form-label fw-bold">Remarks</label>
-                        <input type="text" class="form-control" id="editRemarks" />
-                    </div>
+        <div class="row mt-1">
+            <div class="col-md-6 col-lg-6 d-flex align-items-center">
+                <div class="me-3">
+                    <h4 class="d-inline-block mr-2">Project Name: </h4>
+                    <h5 class="d-inline-block" id="pNDesc"></h5>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="btnUpdate">Update</button>
+            <div class="col-sm-2 col-md-6 col-lg-6 d-flex align-items-center justify-content-end gap-2">
+                <button class="btn btn-primary border-3 border-primary-subtle" type="button" onclick="downloadPdf()"> Download PDF <i class="fa-solid fa-download"></i></button>
+                <button class="btn btn-primary border-3 border-primary-subtle fw-bold" id="btnSourcing" data-bs-toggle="modal" data-bs-target="#createSourcingForm"><i class="fa-solid fa-circle-plus"></i> Create Sourcing Form </button>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="table-responsive mb-2">
+                <table class="table table-hover table-striped display table-sm" id="sourcingTbl" style="width: 100%">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th>NO</th>
+                            <th>PART NUMBER</th>
+                            <th>DESCRIPTION</th>
+                            <th>REV</th>
+                            <th>COMMODITY</th>
+                            <th>1ST MPN</th>
+                            <th>1ST MFR</th>
+                            <th>SUM OF EQPA</th>
+                            <th>UOM</th>
+                            <th>STATUS</th>
+                            <th>INVENTORY QTY</th>
+                            <th>LAST PURCHASE DATE</th>
+                            <th>REMARKS</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </div>
-</div>
 
-@* Sourcing RFQ Form Modal *@
-<div class="modal fade" id="createSourcingForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createSourcingFormLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header text-bg-primary">
-                <h1 class="modal-title fs-5" id="createSourcingFormLabel">Sourcing RFQ Form</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="rfqForm">
-                <div class="modal-body text-bg-light">
-                    <div class="row mb-2">
-                        <label for="projectName" class="col-sm-4 col-form-label fw-bold">Project Name</label>
-                        <div class="col-8">
-                            <input type="text" id="projectName" class="form-control" aria-describedby="projectName" autocomplete="off" readonly>
+    @* Edit Modal *@
+    <div class="modal fade" id="editStatusRemarks" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editStatusRemarksLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <h1 class="modal-title fs-5" id="editStatusRemarksLabel">Edit Status and Remarks</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3 align-items-center">
+                        <input type="hidden" class="form-control" id="no" />
+                        <div class="col-auto">
+                            <label for="partNumber" class="form-label fw-bold">Part Number</label>
                         </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="customer" class="col-sm-4 col-form-label fw-bold">Customer</label>
-                        <div class="col-8">
-                            <select class="form-select" aria-label="Select Customer" id="customer" name="customer">
-                                <option selected disabled>Select Customer</option>
-                                <option value="CohuMY">Cohu MY</option>
-                                <option value="CohuDE">Cohu DE</option>
-                                <option value="DeltaUS">Delta US</option>
-                                <option value="DeltaPH">Delta PH</option>
-                                <option value="custom">Add Customer</option>
+                        <div class="col-auto">
+                            <input type="text" class="form-control" id="partNumber" readonly />
+                        </div>
+                        <div class="col-6">
+                            <label for="editStatus" class="form-label fw-bold">Status</label>
+                            <select class="form-select" aria-label="Select editStatus" id="editStatus">
+                                <option selected disabled value="">Select Status</option>
+                                <option value="COMMON">COMMON</option>
+                                <option value="UNIQUE">UNIQUE</option>
                             </select>
-                            <input type="text" id="customInput" class="form-control form-control-sm mt-2 d-none" name="customer" placeholder="Enter Custom Customer">
                         </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="quotation" class="col-sm-4 col-form-label fw-bold">Quotation Code</label>
-                        <div class="col-8">
-                            <input type="text" id="quotation" class="form-control" aria-describedby="quotation" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="noItems" class="col-sm-4 col-form-label fw-bold">Number of Items</label>
-                        <div class="col-8">
-                            <input type="number" id="noItems" class="form-control" aria-describedby="noItems" readonly>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="reqDate" class="col-sm-4 col-form-label fw-bold">Request Date</label>
-                        <div class="col-8">
-                            <input type="date" id="reqDate" class="form-control" aria-describedby="reqDate" required>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="reqCompDate" class="col-sm-4 col-form-label fw-bold">Required Completion Date</label>
-                        <div class="col-8 d-flex align-items-center">
-                            <input type="date" id="reqCompDate" class="form-control" aria-describedby="reqCompDate" required>
+                        <div class="col-6">
+                            <label for="editRemarks" class="form-label fw-bold">Remarks</label>
+                            <input type="text" class="form-control" id="editRemarks" />
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer d-flex justify-content-center text-bg-secondary">
-                    <button type="submit" class="btn btn-light border-3 border-secondary-subtle shadow" id="btnSubmit"><i class="fa-solid fa-circle-chevron-right"></i> Next </button>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="btnUpdate">Update</button>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
 
-@section Scripts {
-    <script>
-        const checkDataUrl = '@Url.Action("ProcessData", "Sourcing")';
-        const checkQuotationsUrl = '@Url.Action("CheckQuotations", "Sourcing")';
-        const downloadPdfUrl = '@Url.Action("GetExcelFile", "Dashboard")';
-        const uploadRFQUrl = '@Url.Action("RFQUpload", "Sourcing")';
-    </script>
+    @* Sourcing RFQ Form Modal *@
+    <div class="modal fade" id="createSourcingForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="createSourcingFormLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <h1 class="modal-title fs-5" id="createSourcingFormLabel">Sourcing RFQ Form</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="rfqForm">
+                    <div class="modal-body text-bg-light">
+                        <div class="row mb-2">
+                            <label for="projectName" class="col-sm-4 col-form-label fw-bold">Project Name</label>
+                            <div class="col-8">
+                                <input type="text" id="projectName" class="form-control" aria-describedby="projectName" autocomplete="off" readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label for="customer" class="col-sm-4 col-form-label fw-bold">Customer</label>
+                            <div class="col-8">
+                                <select class="form-select" aria-label="Select Customer" id="customer" name="customer" required>
+                                    <option selected disabled value="">Select Customer</option>
+                                    <option value="CohuMY">Cohu MY</option>
+                                    <option value="CohuDE">Cohu DE</option>
+                                    <option value="DeltaUS">Delta US</option>
+                                    <option value="DeltaPH">Delta PH</option>
+                                    <option value="custom">Add Customer</option>
+                                </select>
+                                <input type="text" id="customInput" class="form-control form-control-sm mt-2 d-none" name="customer" placeholder="Enter Custom Customer">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label for="quotation" class="col-sm-4 col-form-label fw-bold">Quotation Code</label>
+                            <div class="col-8">
+                                <input type="text" id="quotation" class="form-control" aria-describedby="quotation" autocomplete="off" required>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label for="noItems" class="col-sm-4 col-form-label fw-bold">Number of Items</label>
+                            <div class="col-8">
+                                <input type="number" id="noItems" class="form-control" aria-describedby="noItems" readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label for="reqDate" class="col-sm-4 col-form-label fw-bold">Request Date</label>
+                            <div class="col-8">
+                                <input type="date" id="reqDate" class="form-control" aria-describedby="reqDate" required>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label for="reqCompDate" class="col-sm-4 col-form-label fw-bold">Required Completion Date</label>
+                            <div class="col-8 d-flex align-items-center">
+                                <input type="date" id="reqCompDate" class="form-control" aria-describedby="reqCompDate" required>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <label for="stdTAT" class="col-sm-4 col-form-label fw-bold">STD TAT</label>
+                            <div class="col-8">
+                                <input type="number" id="stdTAT" class="form-control" aria-describedby="stdTAT" autocomplete="off" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center text-bg-secondary">
+                        <button type="submit" class="btn btn-light border-3 border-secondary-subtle shadow" id="btnSubmit"><i class="fa-solid fa-circle-chevron-right"></i> Next </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
     <script src="~/JavaScript/SourcingProcess.js"></script>
+    }
 }
+

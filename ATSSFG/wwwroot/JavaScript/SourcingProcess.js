@@ -6,32 +6,31 @@ function getQueryStringParameter(name) {
   let urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(name);
 }
+
 // Get the value of the pNDesc parameter from the query string
 let pNDesc = getQueryStringParameter("pndesc");
 let uploadSRFQForm =
   "/Sourcing/SourcingRFQForm?partNumber=" + encodeURIComponent(pNDesc);
-// console.log(pNDesc);
+
 // Set the value to an element with ID "pNDesc"
 $("#pNDesc").text(pNDesc);
+
 // Split the pNDesc into PartNumber and Description
 let parts = pNDesc.split(" - ");
 let partNumber = parts[0].trim();
 
 if (partNumber != null) {
-  Swal.fire({
-    title: "Loading...",
-    html: '<div class="m-2" id="loading-spinner"><div class="loader3"><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div></div></div>',
-    showCancelButton: false,
-    showConfirmButton: false,
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-  });
-  // Send the PartNumber to the server using AJAX
+  showLoading();
+
   $.ajax({
     type: "POST",
-    url: checkDataUrl,
-    data: { PartNumber: partNumber },
-    dataType: "JSON",
+    url: "/Sourcing/ViewSourcingForm?handler=ProcessData",
+    data: { partNumber: partNumber },
+    headers: {
+      RequestVerificationToken: $(
+        'input:hidden[name="__RequestVerificationToken"]'
+      ).val(),
+    },
     success: function (response) {
       data = response.data;
       // Call the getMRPData function with the response data
@@ -40,12 +39,14 @@ if (partNumber != null) {
     },
     error: function (xhr, status, error) {
       console.error("Error:", error);
+      Swal.close();
     },
   });
 } else {
   Swal.close();
   console.error("PartNumber is null");
 }
+
 function getMRPData(data) {
   let table = $("#sourcingTbl").DataTable({
     responsive: true,
@@ -134,17 +135,18 @@ function getMRPData(data) {
   });
 }
 function downloadPdf() {
-  // Get the value of the pNDesc parameter from the query string
-  //   let pNDesc = getQueryStringParameter("pndesc");
-
   // Check if pNDesc is valid
   if (!pNDesc) {
     console.error("pNDesc parameter is missing.");
     return;
   }
-  // Send a GET request to download the PDF file
+
+  // Construct the URL for the GET request with the handler
   let downloadUrl =
-    "/Dashboard/GetExcelFile?pNDesc=" + encodeURIComponent(pNDesc);
+    "/Sourcing/ViewSourcingForm?handler=ExcelFile&pNDesc=" +
+    encodeURIComponent(pNDesc);
+
+  // Redirect the browser to the download URL
   window.location.href = downloadUrl;
 }
 
@@ -152,16 +154,17 @@ $("#btnSourcing").on("click", function (e) {
   e.preventDefault();
 
   $("#projectName").val(pNDesc);
-  $("#noItems").val(getSourcingRowsAndSumEqpa().totalEqpaForSourcing);
+  $("#noItems").val(getSourcingRows().totalRowsForSourcing);
 });
 
-function getSourcingRowsAndSumEqpa() {
+function getSourcingRows() {
   let sourcingRows = []; // Array to store rows with "FOR SOURCING" remarks
-  let totalEqpaForSourcing = 0; // letiable to store the total sum of "eqpa" values
+  let totalRowsForSourcing = 0; // Variable to store the total rows with "FOR SOURCING" remarks
 
   // Get all rows data from the DataTables instance
   let sourcingTbl = $("#sourcingTbl").DataTable();
   let allRowsData = sourcingTbl.rows().data();
+
   // Iterate over each row data
   allRowsData.each(function (rowData) {
     let pN = rowData["partNumber"].trim(); // Assuming the first column contains part numbers
@@ -176,6 +179,7 @@ function getSourcingRowsAndSumEqpa() {
     let qty = rowData["gwrlQty"];
     let lastPurchaseDate = rowData["lastPurchaseDate"].trim();
     let remarks = rowData["remarks"].trim();
+
     // Check if the remarks indicate "FOR SOURCING"
     if (remarks === "FOR SOURCING") {
       // Store the row data in the sourcingRows array
@@ -194,26 +198,34 @@ function getSourcingRowsAndSumEqpa() {
         remarks: remarks,
       };
       sourcingRows.push(row);
-      // Add eqpa to the total sum of "eqpa" values
-      totalEqpaForSourcing += eqpa;
+
+      // Increment the total count of rows with "FOR SOURCING" remarks
+      totalRowsForSourcing += 1;
     }
   });
 
-  // Return both the array of sourcing rows and the total sum of "eqpa" values
+  // Return both the array of sourcing rows and the total count of "FOR SOURCING" rows
   return {
     sourcingRows: sourcingRows,
-    totalEqpaForSourcing: totalEqpaForSourcing,
+    totalRowsForSourcing: totalRowsForSourcing,
   };
 }
 
-// Handle form submission
+$("#customer").on("change", function () {
+  if ($("#customer").val() === "custom") {
+    $("#customInput").prop("required", true).removeClass("d-none");
+  } else {
+    $("#customInput").prop("required", false).addClass("d-none");
+  }
+});
+// Submit the form rfqForm
 $("#rfqForm").on("submit", function (e) {
   e.preventDefault();
   RFQ(); // Call RFQ function
 });
 function RFQ() {
   // Get the sourcing rows data
-  let sourcingRows = getSourcingRowsAndSumEqpa().sourcingRows;
+  let sourcingRows = getSourcingRows().sourcingRows;
 
   // Initialize an array to store the sourcing row data
   let sourcingData = [];
@@ -243,7 +255,7 @@ function RFQ() {
   let noItems = $("#noItems").val();
   let reqDate = $("#reqDate").val();
   let reqCompletionDate = $("#reqCompDate").val();
-
+  let stdTAT = $("#stdTAT").val();
   let customer;
   if ($("#customer").val() === "custom") {
     customer = $("#customInput").val();
@@ -258,61 +270,49 @@ function RFQ() {
     noItems: noItems,
     requestDate: reqDate,
     requiredDate: reqCompletionDate,
+    stdTAT: stdTAT,
     sourcingData: sourcingData, // Pass the sourcing row data array
   };
   let reqData = JSON.stringify(requestData);
-
-  Swal.fire({
-    title: "Loading...",
-    html: '<div class="m-2" id="loading-spinner"><div class="loader3"><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div></div></div>',
-    showCancelButton: false,
-    showConfirmButton: false,
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-  });
+  showLoading();
   // Make the AJAX request
   $.ajax({
     type: "POST",
-    url: uploadRFQUrl,
+    url: "/Sourcing/ViewSourcingForm?handler=RFQUpload",
     data: reqData,
     contentType: "application/json",
-    dataType: "JSON",
+    dataType: "json",
+    headers: {
+      RequestVerificationToken: $(
+        'input:hidden[name="__RequestVerificationToken"]'
+      ).val(),
+    },
     success: function (response) {
       // console.log(response);
-      // Display a SweetAlert2 success message
       Swal.fire({
         icon: "success",
         title: "Success",
         text: response.message,
+        toast: true,
+        position: "top-end",
         timer: 3000,
         showConfirmButton: false,
       }).then(function () {
         Swal.close();
-        window.location.href = uploadSRFQForm;
+        window.location.href =
+          "/Sourcing/SourcingRFQForm?partNumber=" + encodeURIComponent(pNDesc);
       });
 
       $("#createSourcingForm").modal("hide"); // Close the modal
     },
     error: function (xhr, status, error) {
-      // Display a SweetAlert2 success message
-      Swal.fire({
-        icon: "error",
-        title: "Failed",
-        text: response.message,
-        timer: 3000,
-        showConfirmButton: false,
-      });
+      // Handle error
+      let responseMessage = xhr.responseJSON ? xhr.responseJSON.message : error;
+      showErrorAlert(
+        "An error occurred while submitting the form: " + responseMessage
+      );
       console.error("Error:", error);
       Swal.close();
     },
   });
 }
-$("#customer").change(function () {
-  let selectedOption = $(this).val();
-  if (selectedOption === "custom") {
-    $("#customInput").removeClass("d-none");
-  } else {
-    $("#customInput").addClass("d-none");
-    $("#customInput").val("");
-  }
-});

@@ -1,7 +1,7 @@
 ﻿@page
 @model ATSSFG.Pages.Dashboard.IncomingModel
 @{
-    ViewBag.Title = "Incoming";
+    ViewData["Title"] = HttpContext.Session.GetString("MyTitle");
 }
 
 <div class="row">

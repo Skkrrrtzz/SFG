@@ -22,9 +22,11 @@ namespace ATSSFG.Repository
 
         public Task<IEnumerable<dynamic>> RFQQuery(string partNumber, string tableName);
 
-        public Task<IEnumerable<RFQModel>> GetRFQPartNumbers(string projectName, string quotationCode);
+        public Task<IEnumerable<RFQModel>> GetRFQPartNumbers(ProjectAndQuotation RFQ);
 
-        public Task<PartData> FindPartNumber(string fileName, string partNumber);
+        public Task<bool> SaveSupplierAndComments(PartData data);
+
+        public Task<bool> HasPrices(string projectName);
 
         public Task<bool> TableExists(string tableName);
     }

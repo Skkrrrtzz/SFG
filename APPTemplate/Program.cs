@@ -12,7 +12,6 @@ builder.Services.AddSession(options =>
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-
 builder.Services.AddTransient<ILaptopPassRepository, LaptopPassRepository>();
 
 var app = builder.Build();

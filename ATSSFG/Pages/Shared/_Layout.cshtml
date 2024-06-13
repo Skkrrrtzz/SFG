@@ -1,44 +1,73 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    string AppName = HttpContextAccessor?.HttpContext?.Session.GetString("AppName") ?? "";
+    string Username = HttpContextAccessor?.HttpContext?.Session.GetString("UserName") ?? "";
+    string Admin = HttpContextAccessor?.HttpContext?.Session.GetString("Admin") ?? "";
+ 
+    bool isAdmin = Admin.Equals("True", StringComparison.OrdinalIgnoreCase);
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PIMES CORP. - @ViewData["Title"]</title>
+    <title>PIMES CORP. - @AppName </title>
 
-    <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
     <link href="~/lib/jqueryui/jquery-ui.min.css" rel="stylesheet" />
-    <link href="~/lib/datatables.net-bs5/css/datatables.bootstrap5.min.css" rel="stylesheet" />
+    <link href="~/datatables/datatables.min.css" rel="stylesheet" />
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="icon" type="image/icon" href="~/img/icon/pimescorp.ico" sizes="32x32">
 </head>
 <body>
-
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-0" style="background-color:var(--colorMain1)!important">
-            <div class="container">
+    <header class="sticky-top">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-0" data-bs-theme="dark" style="background-color:var(--colorMain1)!important">
+            <div class="container-fluid">
                 <div class="hstack">
                     <a asp-page="/Index">
                         <img src="~/img/svg/pimeslogo.svg" height="40px";>
                     </a>
                     &nbsp;
                     <div class="fs-4 text-white" style="letter-spacing:3px">
-                        @ViewData["Title"]
+                        @AppName
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="dropdown">
+                        <div class="d-flex align-items-end dropdown-toggl hidden arrow text-white" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" type="button">
+                            <a href="#" class="">
+                                <img src="~/images/user.png" alt="Profile" width="42" height="42" class="rounded-circle">
+                            </a>
+                            <h6 class="my-auto ms-2 d-none d-sm-block">@Username</h6>
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end" id="profileDropdown">
+                            <li class="dropdown-item text-bg-primary fw-bold d-sm-block d-md-none d-lg-none d-xl-none"></li>
+                            <li><a class="dropdown-item" asp-controller="Home" asp-action="Profile"><i class="bi bi-person-circle"></i>  Profile</a></li>
+                            @if (isAdmin)
+                            {
+                                <li><a class="dropdown-item" asp-page="/Users/Users"><i class="bi bi-people-fill"></i> Users</a></li>
+                            }
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" asp-controller="Home" asp-action="Logout"><i class="bi bi-box-arrow-right"></i> Log out</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container container-layout">
-        <main role="main" class="main-layout">
+    <div class="container-fluid my-2 px-4">
+        <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-white" style="background-color:var(--colorMain1)">
-        <div class="container">
-            &copy; 2024 - PIMES CORP.&nbsp;&nbsp;|&nbsp;&nbsp;@ViewData["Title"]&nbsp;&nbsp;|&nbsp;&nbsp;@ViewData["Version"]
+    <footer class="border-top fixed-bottom text-white" style="background-color:var(--colorMain1)">
+        <div class="container-fluid">
+            &copy; 2024 - PIMES CORP.&nbsp;&nbsp;|&nbsp;&nbsp;@AppName&nbsp;&nbsp;|&nbsp;&nbsp;@ViewData["Version"]
         </div>
     </footer>
 
@@ -56,17 +85,14 @@
         </div>
     </div>
 
-    <script src="~/lib/jquery/jquery.js"></script>
-    <script src="~/lib/jquery/jquery.min.js"></script>
-    <script src="~/lib/datatables.net/js/datatables.js"></script>
-    <script src="~/lib/datatables.net/js/datatables.min.js"></script>
-    <script src="~/lib/datatables.net-bs5/js/datatables.bootstrap5.js"></script>
-    <script src="~/lib/datatables.net-bs5/js/datatables.bootstrap5.min.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.bundle.js"></script>
-    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/jqueryui/jquery-ui.js"></script>
+    <script src="~/js/jquery-3.7.1.min.js"></script>
+    <script src="~/datatables/datatables.min.js"></script>
+    <script src="~/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
-
+    <script src="~/js/sweetalert2.all.min.js"> </script>
+    <script src="~/JavaScript/SweetAlert2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)

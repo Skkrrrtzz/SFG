@@ -1,8 +1,7 @@
 ﻿@page
 @model ATSSFG.Pages.Sourcing.SourcingRFQPricesModel
 @{
-    ViewData["Title"] = HttpContext.Session.GetString("MyTitle");
-    string department = HttpContext.Session.GetString("MyRole");
+    string department = HttpContext?.Session.GetString("Dept") ?? "";
 }
 @Html.AntiForgeryToken()
 <div class="card p-2 bg-light mb-2">
@@ -101,6 +100,7 @@
 @section Scripts {
     <script>
         let department = "@department";
+        
 
         if (department == "Cost Engineering") {
             $("#Comments").prop("readonly", false);

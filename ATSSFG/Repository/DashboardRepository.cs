@@ -2,6 +2,7 @@
 using ATSSFG.Models;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using System;
 using System.Data;
 
 namespace ATSSFG.Repository
@@ -100,12 +101,27 @@ namespace ATSSFG.Repository
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = @"INSERT INTO MRPBOM (Product, PartNumber, Item, [Level], PartNumberTable, SAPPartNumber,
-                DescriptionTable, Rev, QPA, EQPA, UOM, Commodity, MPN, Manufacturer)
-                VALUES (@Product, @PartNumber, @Item, @Level, @PartNumberTable, @SAPPartNumber, @DescriptionTable,
-                @Rev, @QPA, @EQPA, @UOM, @Commodity, @MPN, @Manufacturer)";
+                string storedProcedure = "MRPBOMInsert_SP";
 
-                return await conn.ExecuteAsync(query, model);
+                var parameters = new
+                {
+                    Product = model.Product,
+                    PartNumber = model.PartNumber,
+                    Item = model.Item,
+                    Level = model.Level,
+                    PartNumberTable = model.PartNumberTable,
+                    SAPPartNumber = model.SAPPartNumber,
+                    DescriptionTable = model.DescriptionTable,
+                    Rev = model.Rev,
+                    QPA = model.QPA,
+                    EQPA = model.EQPA,
+                    UOM = model.UOM,
+                    Commodity = model.Commodity,
+                    MPN = model.MPN,
+                    Manufacturer = model.Manufacturer
+                };
+
+                return await conn.ExecuteAsync(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
             }
         }
 
@@ -113,10 +129,20 @@ namespace ATSSFG.Repository
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = @"INSERT INTO MRPBOMProducts (Product, PartNumber, Revision, Description, DateModified, PreparedBy, ReviewedBy)
-                VALUES (@Product, @PartNumber, @Revision, @Description, @DateModified, @PreparedBy, @ReviewedBy)";
+                string storedProcedure = "MRPBOMProductsInsert_SP";
 
-                return await conn.ExecuteAsync(query, model);
+                var parameters = new
+                {
+                    Product = model.Product,
+                    PartNumber = model.PartNumber,
+                    Revision = model.Revision,
+                    Description = model.Description,
+                    DateModified = model.DateModified,
+                    PreparedBy = model.PreparedBy,
+                    ReviewedBy = model.ReviewedBy
+                };
+
+                return await conn.ExecuteAsync(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
             }
         }
 

@@ -350,3 +350,91 @@ $("#viewPNDesc").click(function () {
   window.location.href =
     "/Sourcing/ViewSourcingForm?pndesc=" + encodeURIComponent(pndesc);
 });
+
+$("#customer").on("change", function () {
+  if ($("#customer").val() === "custom") {
+    $("#customInput").prop("required", true).removeClass("d-none");
+  } else {
+    $("#customInput").prop("required", false).addClass("d-none");
+  }
+});
+
+$("#RFQForm").on("submit", function (e) {
+  e.preventDefault();
+  InsertRFQ(); // Call InsertRFQ function
+});
+
+function InsertRFQ() {
+  const projectName = $("#projectName").val();
+  let customer;
+  if ($("#customer").val() === "custom") {
+    customer = $("#customInput").val();
+  } else {
+    customer = $("#customer").val();
+  }
+  const quotation = $("#quotation").val();
+  const noItems = $("#noItems").val();
+  const reqDate = $("#reqDate").val();
+  const reqCompDate = $("#reqCompDate").val();
+  const cusPartNo = $("#cusPartNo").val();
+  const rev = $("#rev").val();
+  const description = $("#description").val();
+  const mpn = $("#origMPNRawMatsFab").val();
+  const mfr = $("#origMFRRawMatsFab").val();
+  const qtyPerAssembly = $("#qtyPerAssembly").val();
+  const commodity = $("#commodity").val();
+  const uom = $("#bomUoM").val();
+  const status = $("#commonUniqParts").val();
+  const stdTAT = $("#stdTAT").val();
+
+  const requestData = {
+    ProjectName: projectName,
+    Customer: customer,
+    QuotationCode: quotation,
+    NoItems: noItems,
+    RequestDate: reqDate,
+    RequiredDate: reqCompDate,
+    CustomerPartNumber: cusPartNo,
+    Rev: rev,
+    Description: description,
+    OrigMPN: mpn,
+    OrigMFR: mfr,
+    Eqpa: qtyPerAssembly,
+    Commodity: commodity,
+    UoM: uom,
+    Status: status,
+    StdTAT: stdTAT,
+  };
+
+  fetch("/Dashboard/Dashboard?handler=InsertRFQ", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      RequestVerificationToken: $(
+        'input:hidden[name="__RequestVerificationToken"]'
+      ).val(),
+    },
+    body: JSON.stringify(requestData),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      if (data.success) {
+        showSuccessAlert(data.message).then(() => {
+          location.reload();
+        });
+      } else {
+        showErrorAlert(data.message);
+      }
+    })
+    .catch((error) => {
+      // Handle errors
+      console.error("Error:", error);
+      showErrorAlert("An error occurred while marking the project as closed.");
+    });
+}

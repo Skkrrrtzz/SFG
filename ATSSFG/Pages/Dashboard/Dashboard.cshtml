@@ -73,7 +73,7 @@
                 <h5 class="card-title text-white">Summary of RFQ per month (Unique/Common)</h5>
             </div>
             <div class="card-body">
-                <div class="col-3">
+                <div class="col-sm-4 col-lg-4">
                     <div class="input-group">
                         <label class="input-group-text bg-main3 text-white" for="monthFilter1"><i class="fa-regular fa-calendar"></i></label>
                         <input type="month" name="month1" id="monthFilter1" class="form-control">
@@ -90,7 +90,7 @@
             </div>
             <div class="card-body">
                 <div class="row align-items-center justify-content-between">
-                    <div class="col-auto">
+                    <div class="col-sm-4 col-lg-4">
                         <div class="input-group">
                             <label class="input-group-text bg-main3 text-white" for="monthFilter2"><i class="fa-regular fa-calendar"></i></label>
                             <input type="month" name="month2" id="monthFilter2" class="form-control">
@@ -146,6 +146,7 @@
     </div>
     @Html.AntiForgeryToken()
     @await Html.PartialAsync("_DashboardModals")
+    
 </div>
 <!-- Open Sourcing Form Modal -->
 <div class="modal fade" id="sourcingForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sourcingFormLabel" aria-hidden="true">
@@ -170,15 +171,15 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <a asp-page="/Sourcing/SourcingForm" class="btn btn-primary border-3 border-primary-subtle">
-                    <i class="fa-solid fa-circle-plus"></i> Create Sourcing Form without BOM
-                </a>
+                <button type="button" class="btn btn-primary border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#sourcingFormModal">
+                    <i class="fa-solid fa-circle-plus"></i> Create Sourcing Form without BOM 
+                </button>
                 <button type="button" class="btn btn-primary border-3 border-primary-subtle d-none" id="viewPNDesc"><i class="fa-solid fa-eye"></i> View</button>
             </div>
         </div>
     </div>
 </div>
-
+@await Html.PartialAsync("_DashboardRFQForm")
 <!-- Show Sourcing Form Modal-->
 <div class="modal fade" id="library" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="libraryLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">

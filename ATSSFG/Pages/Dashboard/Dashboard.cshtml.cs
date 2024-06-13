@@ -3,6 +3,7 @@ using ATSSFG.Repository;
 using ATSSFG.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using OfficeOpenXml;
 
 namespace ATSSFG.Pages.Dashboard
@@ -13,16 +14,18 @@ namespace ATSSFG.Pages.Dashboard
 
         private readonly UploadService _uploadService;
         private readonly IDashboardRepository _dashboardRepository;
+        private readonly ISourcingRepository _sourcingRepository;
 
         #endregion Declaration
         #region Property
         #endregion Property
         #region Constructor
 
-        public DashboardModel(UploadService uploadService, IDashboardRepository dashboardRepository)
+        public DashboardModel(UploadService uploadService, IDashboardRepository dashboardRepository, ISourcingRepository sourcingRepository)
         {
             _uploadService = uploadService;
             _dashboardRepository = dashboardRepository;
+            _sourcingRepository = sourcingRepository;
         }
 
         #endregion Constructor
@@ -371,7 +374,41 @@ namespace ATSSFG.Pages.Dashboard
                 return new JsonResult(new { success = false, message = ex.Message });
             }
         }
+        public async Task<IActionResult> OnPostInsertRFQAsync([FromBody] Dictionary<string, object> formData)
+        {
+            try
+            { 
+                if (formData != null)
+                {
+                    var sourcingDataJson = formData["sourcingData"].ToString();
+                    var rfqData = JsonConvert.DeserializeObject<List<RFQModel>>(sourcingDataJson);
 
+                    var rfqProjects = new RFQProjectModel
+                    {
+                        ProjectName = formData["projectName"].ToString(),
+                        Customer = formData["customer"].ToString(),
+                        QuotationCode = formData["quotationCode"].ToString(),
+                        NoItems = Convert.ToInt32(formData["noItems"].ToString()),
+                        RequestDate = DateTime.Parse(formData["requestDate"].ToString()),
+                        RequiredDate = DateTime.Parse(formData["requiredDate"].ToString()),
+                        StdTAT = Convert.ToInt32(formData["stdTAT"].ToString()),
+                        Status = "OPEN",
+                        HasPrices = false
+                    };
+
+                    var result = await _sourcingRepository.InsertRFQ(rfqProjects, rfqData);
+                    return new JsonResult(new { success = true, message = "RFQ inserted successfully" });
+                }
+                else
+                {
+                    return new JsonResult(new { success = false, message = "Failed to insert RFQ." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(new { success = false, message = ex.Message });
+            }
+        }
         public async Task<IActionResult> OnPostMarkedAsClosedAsync([FromBody] ProjectAndQuotation markedAsClosed)
         {
             try

@@ -43,11 +43,10 @@ namespace QA_Audit_Fresh.Views.AuditPlans
             // _httpContext.HttpContext.Session.SetString("MyBUCode", x);
             // _httpContext.HttpContext.Session.SetString("MyRole", w);
 
-            // string userName = _httpContext.HttpContext.Session.GetString("userName");
             //Check if user exists in Database
-            Console.WriteLine(string.IsNullOrEmpty(HttpContext.User.FindFirstValue("FullName")));
-            Console.WriteLine(HttpContext.User.Claims.Count());
-            Console.WriteLine(HttpContext.User.Identity.IsAuthenticated);
+            Console.WriteLine(User.FindFirstValue("FullName")));
+            Console.WriteLine(User.Claims.Count());
+            Console.WriteLine(User.Identity.IsAuthenticated);
         }
 
         //GET: https://localhost:<port>?handler=Conformities&planId=<planId>

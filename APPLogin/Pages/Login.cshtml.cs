@@ -109,12 +109,12 @@ namespace APPLogin.Pages
                         claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                     await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme, 
+                        "Identity.Application", 
                         new ClaimsPrincipal(claimsIdentity));
 
-                    httpContext.Session.SetString("MyPassword", user.password);
-                    httpContext.Session.SetString("MyUser", user.username);
-                    httpContext.Session.SetString("MyEmpNo", user.employeeno);
+                    // httpContext.Session.SetString("MyPassword", user.password);
+                    // httpContext.Session.SetString("MyUser", user.username);
+                    // httpContext.Session.SetString("MyEmpNo", user.employeeno);
                 }
 
                 return new JsonResult(new { Success = true });

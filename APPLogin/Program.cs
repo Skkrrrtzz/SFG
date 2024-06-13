@@ -27,7 +27,13 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddRazorPages();
 
+builder.Services.AddTransient<ILoginRepository, LoginRepository>();
+
 // Authentication Cookies
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(@"C:\Users\jrafols\Gits\PIMES-Web\.cookies"))
+    .SetApplicationName("SharedCookieApp");
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -41,26 +47,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.Domain = "localhost"; // <-- REMOVE REMOOOOVEEEE 
 
     });
-
-builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(@"C:\Users\jrafols\Gits\PIMES-Web\.cookies"))
-    .SetApplicationName("SharedCookieApp");
-
-
-// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//     .AddCookie();
-
-// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//     .AddCookie(options =>
-//     {
-//         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-//         options.SlidingExpiration = true;
-//         // options.AccessDeniedPath = "/Forbidden/";
-//     });
-
-
-builder.Services.AddTransient<ILoginRepository, LoginRepository>();
-
 
 var app = builder.Build();
 

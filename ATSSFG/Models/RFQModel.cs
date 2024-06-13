@@ -22,6 +22,8 @@ namespace ATSSFG.Models
         public string Status { get; set; } = string.Empty;
         public string? LastPurchaseDate { get; set; }
         public string? Remarks { get; set; } = string.Empty;
+        public int? SuggestedSupplier { get; set; }
+        public string? Comments { get; set; }
     }
 
     public class RFQProjectModel
@@ -36,13 +38,15 @@ namespace ATSSFG.Models
         public DateTime RequestDate { get; set; }
         public DateTime RequiredDate { get; set; }
         public DateTime? ActualCompletionDate { get; set; }
+        public int StdTAT { get; set; }
         public string Status { get; set; } = string.Empty;
+        public bool? HasPrices { get; set; }
     }
 
     public class MyViewModel
     {
         public List<RFQModel> RFQData { get; set; }
-        public List<RFQProjectModel> RFQProjectData { get; set; }
+        public RFQProjectModel RFQProjectData { get; set; }
     }
 
     public class SupplierCostDetail
@@ -75,5 +79,11 @@ namespace ATSSFG.Models
     {
         public List<int> Ids { get; set; }
         public List<int> AnnualForecasts { get; set; }
+    }
+
+    public class ProjectAndQuotation
+    {
+        public string QuotationCode { get; set; }
+        public string ProjectName { get; set; }
     }
 }

@@ -48,35 +48,63 @@ namespace APPLogin.Pages
             //pagetitle = _httpContext.HttpContext.Session.GetString("MyTitle");
         }
 
+        //public async Task<IActionResult> OnGetUserLoginAsync(string parapass)
+        //{
+        //    try
+        //    {
+        //        userLogin = await _loginRepository.GetLogin(parapass);
+
+        //        var result = string.Empty;
+
+        //        if (!userLogin.Any())
+        //        {
+        //            result = JsonSerializer.Serialize(new { Success = false });
+        //        }
+        //        else
+        //        {
+        //            _httpContext.HttpContext.Session.SetString("MyPassword", userLogin.Select(x => x.password).FirstOrDefault());
+        //            _httpContext.HttpContext.Session.SetString("MyUser", userLogin.Select(x => x.username).FirstOrDefault());
+        //            _httpContext.HttpContext.Session.SetString("MyEmpNo", userLogin.Select(x => x.employeeno).FirstOrDefault());
+
+        //            result = JsonSerializer.Serialize(new { Success = true });
+        //        }
+
+        //        return new JsonResult(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new { errorMessage = ex.Message });
+        //    }
+        //}
         public async Task<IActionResult> OnGetUserLoginAsync(string parapass)
         {
             try
             {
                 userLogin = await _loginRepository.GetLogin(parapass);
 
-                var result = string.Empty;
-
                 if (!userLogin.Any())
                 {
-                    result = JsonSerializer.Serialize(new { Success = false });
+                    return new JsonResult(new { Success = false });
                 }
-                else
+
+                var user = userLogin.FirstOrDefault();
+
+                if (user != null)
                 {
-                    _httpContext.HttpContext.Session.SetString("MyPassword", userLogin.Select(x => x.password).FirstOrDefault());
-                    _httpContext.HttpContext.Session.SetString("MyUser", userLogin.Select(x => x.username).FirstOrDefault());
-                    _httpContext.HttpContext.Session.SetString("MyEmpNo", userLogin.Select(x => x.employeeno).FirstOrDefault());
+                    var httpContext = _httpContext.HttpContext;
 
-                    result = JsonSerializer.Serialize(new { Success = true });
+                    httpContext.Session.SetString("MyPassword", user.password);
+                    httpContext.Session.SetString("MyUser", user.username);
+                    httpContext.Session.SetString("MyEmpNo", user.employeeno);
                 }
 
-                return new JsonResult(result);
+                return new JsonResult(new { Success = true });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new { errorMessage = ex.Message });
             }
         }
-
         #endregion Get
     }
 }

@@ -1,234 +1,156 @@
 ﻿@page
 @model ATSSFG.Pages.Sourcing.SourcingRFQFormModel
 @{
-    ViewData["Title"] = "Sourcing RFQ Form";
+    string department = HttpContext?.Session.GetString("Dept") ?? "";
+    string encoder = HttpContext?.Session.GetString("Encoder") ?? "";
+    string processor = HttpContext?.Session.GetString("Processor") ?? "";
+    string status = @Model.ViewModel.RFQProjectData?.Status;
 }
-<style>
-    /* @@media (max-width: 767.98px) {
-            .w-sm-auto {
-                width: 100% !important;
-            }
-            .col-sm {
-                width: 25% !important;
-            }
-        } */
-</style>
-<div>
-    <div class="border-2 border-bottom border-dark">
-        <h4 class="fw-bold">SOURCING RFQ FORM</h4>
-    </div>
-    <div class="">
-        <div class="p-2 col-sm-6 col-lg-6" id="capture">
-            <div class="table-responsive">
-                <table class="table w-sm-auto table-bordered" id="ProjectTbl">
-                   @*  <tbody>
-                        <tr>
-                            <th class="col-sm col-lg-2 text-primary">Project Name</th>
-                            <td class="col-sm col-lg-4">
-                                <input type="text" id="projectName" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[0]?.ProjectName" readonly>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="col-sm col-lg-2 text-primary">Customer</th>
-                            <td>
-                                <input type="text" id="customer" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[1]?.Customer" readonly>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="col-sm col-lg-2 text-primary">Quotation Code/Purchase Request Code</th>
-                            <td>
-                                <input type="text" id="quotationCode" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[2]?.QuotationCode" readonly>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="col-sm col-lg-2 text-primary">Number of Items</th>
-                            <td>
-                                <input type="text" id="customerPartNumber" class="form-control form-control-sm text-bg-secondary" value="@Model.RFQProjectData[1]?.NoItems" readonly>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="col-sm col-lg-2 text-primary">Request Date</th>
-                            <td>
-                                <input type="text" id="requestDate" class="form-control form-control-sm text-bg-secondary" value="@(Model.RFQProjectData.Count > 1 ? Model.RFQProjectData[1]?.RequestDate.ToShortDateString() : string.Empty)" readonly>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="col-sm col-lg-2 text-primary">Required Completion Date</th>
-                            <td>
-                                <input type="text" id="requiredDate" class="form-control form-control-sm text-bg-secondary" value="@(Model.RFQProjectData.Count > 1 ? Model.RFQProjectData[1]?.RequiredDate.ToShortDateString() : string.Empty)" readonly>
-                            </td>
-                        </tr>
-                    </tbody> *@
-                </table>
-            </div>
+@if(department == "Cost Engineering" || department == "Sourcing")
+{
+    @Html.AntiForgeryToken()
+    <div class="card p-2 bg-light">
+        <div class="border-2 border-bottom border-dark">
+            <h4 class="fw-bold">SOURCING RFQ FORM</h4>
         </div>
-        <div class="p-2 mb-1">
-            <div class="table-responsive">
-                <table class="table table-sm compact table-bordered table-striped table-hover text-wrap" id="SRFQTbl" style="width: 100%">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>Item No</th>
-                            <th>Customer Part Number</th>
-                            <th>Rev</th>
-                            <th>Description</th>
-                            <th>Original MPN/Raw Material for Fab Parts</th>
-                            <th>Original Manufacturer/Finishing for Fab Parts</th>
-                            <th>Commodity</th>
-                            <th>Quantity per Assembly</th>
-                            <th>Annual Forecast Quantity</th>
-                            <th>BOM UOM</th>
-                            <th>Common or Unique Parts</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                      @*   @foreach (var item in Model.RFQData)
-                        {
+        <div class="row p-2">
+            <div class="col-sm-6 col-lg-6" id="capture">
+                <div class="table-responsive">
+                    <table class="table w-sm-auto table-bordered" id="ProjectTbl">
+                        <tbody>
                             <tr>
-                                <td>@item.Id</td>
-                                <td>@item.CustomerPartNumber</td>
-                                <td>@item.Rev</td>
-                                <td>@item.Description</td>
-                                <td>@item.OrigMPN</td>
-                                <td>@item.OrigMFR</td>
-                                <td>@item.Commodity</td>
-                                <td>@item.Eqpa</td>
-                                <td id="annualForecast"></td>
-                                <td>@item.UoM</td>
-                                <td>
-                                    @if (item.Status == "COMMON")
-                                    {
-                                        <span class="badge rounded-pill text-bg-secondary">@item.Status</span>
-                                    }
-                                    else if (item.Status == "UNIQUE")
-                                    {
-                                        <span class="badge rounded-pill text-bg-primary">@item.Status</span>
-                                    }
-                                    else
-                                    {
-                                        @item.Status
-                                    }
-                                </td>
-
-                                <td>
-                                    <i class="fa-solid fa-pen-to-square text-primary fs-4 btnEdit" data-id="@item.Id" data-bs-toggle="modal" data-bs-target="#editModal" type="button" id="btnEdit"></i>
+                                <th class="col-sm col-lg-2 text-primary">Project Name</th>
+                                <td class="col-sm col-lg-4">
+                                    <input type="text" id="projectName" class="form-control form-control-sm text-bg-secondary" value="@Model.ViewModel.RFQProjectData?.ProjectName" readonly>
                                 </td>
                             </tr>
-                        } *@
-                    </tbody>
-                </table>
+                            <tr>
+                                <th class="col-sm col-lg-2 text-primary">Customer</th>
+                                <td>
+                                    <input type="text" id="customer" class="form-control form-control-sm text-bg-secondary" value="@Model.ViewModel.RFQProjectData?.Customer" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm col-lg-2 text-primary">Quotation Code/Purchase Request Code</th>
+                                <td>
+                                    <input type="text" id="quotationCode" class="form-control form-control-sm text-bg-secondary" value="@Model.ViewModel.RFQProjectData?.QuotationCode" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm col-lg-2 text-primary">Number of Items</th>
+                                <td>
+                                    <input type="text" id="customerPartNumber" class="form-control form-control-sm text-bg-secondary" value="@Model.ViewModel.RFQProjectData?.NoItems" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm col-lg-2 text-primary">Request Date</th>
+                                <td>
+                                    <input type="text" id="requestDate" class="form-control form-control-sm text-bg-secondary" value="@Model.ViewModel.RFQProjectData?.RequestDate.ToShortDateString()" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="col-sm col-lg-2 text-primary">Required Completion Date</th>
+                                <td>
+                                    <input type="text" id="requiredDate" class="form-control form-control-sm text-bg-secondary" value="@Model.ViewModel.RFQProjectData?.RequiredDate.ToShortDateString()" readonly>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-        <div class="d-flex justify-content-end gap-2 m-2">
-            <button type="button" class="btn btn-primary border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#addAnnualForecastModal">
-                <i class="fa-solid fa-circle-plus"></i> Add Annual Forecast
-            </button>
-            <button type="button" class="btn btn-primary border-3 border-primary-subtle" id="btnSubmit"><i class="fa-solid fa-paper-plane"></i> Submit</button>
-        </div>
-    </div>
-</div>
 
-<!-- Edit Modal -->
-<div>
-    <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header text-bg-primary">
-                    <h1 class="modal-title fs-5" id="editModalLabel">Edit Sourcing RFQ Form</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-2">
-                        <label for="editCustomerPartnumber" class="col-sm-4 col-form-label fw-bold">Customer Part Number</label>
-                        <div class="col-4">
-                            <input type="text" id="editCustomerPartnumber" class="form-control" aria-describedby="editCustomerPartnumber" autocomplete="off" required>
-                        </div>
+            @if (department == "Sourcing" && status == "OPEN")
+            {
+                <div class="col-sm-6 col-lg-4">
+                    <div class="mx-2 mt-2">
+                        <i class="">Upload the excel file</i>
                     </div>
-                    <div class="row mb-2">
-                        <label for="editRev" class="col-sm-4 col-form-label fw-bold">Rev</label>
-                        <div class="col-4">
-                            <input type="text" id="editRev" class="form-control" aria-describedby="editRev" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="editDescription" class="col-sm-4 col-form-label fw-bold">Description</label>
-                        <div class="col-4">
-                            <input type="text" id="editDescription" class="form-control" aria-describedby="editDescription" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="editOrigMPN" class="col-sm-4 col-form-label fw-bold">Original MPN/Raw Material for Fab Parts</label>
-                        <div class="col-4">
-                            <input type="text" id="editOrigMPN" class="form-control" aria-describedby="editOrigMPN" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="editOrigMFR" class="col-sm-4 col-form-label fw-bold">Original Manufacturer/Finishing for Fab Parts</label>
-                        <div class="col-4">
-                            <input type="text" id="editOrigMFR" class="form-control" aria-describedby="editOrigMFR" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="editCommodity" class="col-sm-4 col-form-label fw-bold">Commodity</label>
-                        <div class="col-4">
-                            <input type="text" id="editCommodity" class="form-control" aria-describedby="editCommodity" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="editEqpa" class="col-sm-4 col-form-label fw-bold">Quantity per Assembly</label>
-                        <div class="col-4">
-                            <input type="number" id="editEqpa" class="form-control" aria-describedby="editEqpa" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="editUoM" class="col-sm-4 col-form-label fw-bold">BOM UOM</label>
-                        <div class="col-4">
-                            <input type="text" id="editUoM" class="form-control" aria-describedby="editUoM" autocomplete="off" required>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <label for="editStatus" class="col-sm-4 col-form-label fw-bold">Common or Unique Parts</label>
-                        <div class="col-4">
-                            <input type="text" id="editStatus" class="form-control" aria-describedby="editStatus" autocomplete="off" required>
-                        </div>
+                    <div class="input-group p-2">
+                        <input type="file" class="form-control" accept=".xlsx, .xls" id="excelFileInput">
+                        <button class="btn btn-success" type="button" onclick="checkExcel()"><i class="fa-solid fa-upload"></i> Upload</button>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnSave">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!--Add Annual Forecast-->
-<div>
-    <div class="modal fade" id="addAnnualForecastModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addAnnualForecastLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header text-bg-primary">
-                    <h1 class="modal-title fs-5" id="addAnnualForecastLabel">Annual Forecast</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row m-2">
-                        <label for="addAnnualForecast" class="col-sm-8 col-form-label fw-bold">Input Quantity</label>
-                        <input type="number" id="addAnnualForecast" class="form-control" />
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnAddAnnualForecast">Save changes</button>
+            }
+            <div class=" mb-1">
+                <div class="table-responsive">
+                    <table class="table table-sm display table-striped table-hover text-wrap" id="SRFQTbl" style="width: 100%">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>Item No</th>
+                                <th>Customer Part Number</th>
+                                <th>Rev</th>
+                                <th>Description</th>
+                                <th>Original MPN/Raw Material for Fab Parts</th>
+                                <th>Original Manufacturer/Finishing for Fab Parts</th>
+                                <th>Commodity</th>
+                                <th>Quantity per Assembly</th>
+                                <th>Annual Forecast Quantity</th>
+                                <th>BOM UOM</th>
+                                <th>Common or Unique Parts</th>
+                                @if (department == "Cost Engineering")
+                                {
+                                    <th>Action</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in @Model.ViewModel.RFQData)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@item.CustomerPartNumber</td>
+                                    <td>@item.Rev</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.OrigMPN</td>
+                                    <td>@item.OrigMFR</td>
+                                    <td>@item.Commodity</td>
+                                    <td>@item.Eqpa</td>
+                                    <td id="annualForecast">@item.AnnualForecast</td>
+                                    <td>@item.UoM</td>
+                                    <td>
+                                        @if (item.Status == "COMMON")
+                                        {
+                                            <span class="badge rounded-pill text-bg-secondary">@item.Status</span>
+                                        }
+                                        else if (item.Status == "UNIQUE")
+                                        {
+                                            <span class="badge rounded-pill text-bg-primary">@item.Status</span>
+                                        }
+                                        else
+                                        {
+                                            @item.Status
+                                        }
+                                    </td>
+                                    @if (department == "Cost Engineering")
+                                    {
+                                        <td>
+                                            <i class="fa-solid fa-pen-to-square text-primary fs-4 btnEdit" data-id="@item.Id" data-bs-toggle="modal" data-bs-target="#editModal" type="button"></i>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
+            @if (department == "Cost Engineering")
+            {
+                <div class="d-flex justify-content-end gap-2 m-2">
+                    <button type="button" class="btn btn-primary border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#addAnnualForecastModal">
+                        <i class="fa-solid fa-circle-plus"></i> Add Annual Forecast
+                    </button>
+                    <button type="button" class="btn btn-primary border-3 border-primary-subtle" id="btnSubmit"><i class="fa-solid fa-paper-plane"></i> Submit</button>
+                </div>
+            }
         </div>
     </div>
-</div>
-@section Scripts {
-    <script>
-        const FindIdUrl = '@Url.Action("FindId", "Sourcing")';
-        const UpdateUrl = '@Url.Action("UpdateId", "Sourcing")';
-        const AddAFUrl = '@Url.Action("AddAnnualForecast", "Sourcing")';
-        const ProjectUrl = '@Url.Action("Project", "Sourcing")';
-    </script>
-    <script src="~/javascript/sfqform.js"></script>
+
+    @if (department == "Cost Engineering")
+    {
+        @await Html.PartialAsync("_RFQForm")
+    }
+
+    @section Scripts {
+    <script src="~/JavaScript/SRFQForm.js"></script>
+    }
 }
-

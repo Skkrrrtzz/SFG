@@ -1,0 +1,98 @@
+﻿<!-- Edit Modal -->
+<div>
+    <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <h1 class="modal-title fs-5" id="editModalLabel">Edit Sourcing RFQ Form</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-2">
+                        <label for="editCustomerPartnumber" class="col-sm-4 col-form-label fw-bold">Customer Part Number</label>
+                        <div class="col-4">
+                            <input type="text" id="editCustomerPartnumber" class="form-control" aria-describedby="editCustomerPartnumber" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editRev" class="col-sm-4 col-form-label fw-bold">Rev</label>
+                        <div class="col-4">
+                            <input type="text" id="editRev" class="form-control" aria-describedby="editRev" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editDescription" class="col-sm-4 col-form-label fw-bold">Description</label>
+                        <div class="col-4">
+                            <input type="text" id="editDescription" class="form-control" aria-describedby="editDescription" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editOrigMPN" class="col-sm-4 col-form-label fw-bold">Original MPN/Raw Material for Fab Parts</label>
+                        <div class="col-4">
+                            <input type="text" id="editOrigMPN" class="form-control" aria-describedby="editOrigMPN" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editOrigMFR" class="col-sm-4 col-form-label fw-bold">Original Manufacturer/Finishing for Fab Parts</label>
+                        <div class="col-4">
+                            <input type="text" id="editOrigMFR" class="form-control" aria-describedby="editOrigMFR" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editCommodity" class="col-sm-4 col-form-label fw-bold">Commodity</label>
+                        <div class="col-4">
+                            <input type="text" id="editCommodity" class="form-control" aria-describedby="editCommodity" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editEqpa" class="col-sm-4 col-form-label fw-bold">Quantity per Assembly</label>
+                        <div class="col-4">
+                            <input type="number" id="editEqpa" class="form-control" aria-describedby="editEqpa" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editUoM" class="col-sm-4 col-form-label fw-bold">BOM UOM</label>
+                        <div class="col-4">
+                            <input type="text" id="editUoM" class="form-control" aria-describedby="editUoM" autocomplete="off" required>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <label for="editStatus" class="col-sm-4 col-form-label fw-bold">Common or Unique Parts</label>
+                        <div class="col-4">
+                            <select class="form-select" aria-label="Select Status" id="editStatus" name="editStatus" required>
+                                <option selected disabled value="">Select Status</option>
+                                <option value="COMMON">COMMON</option>
+                                <option value="UNIQUE">UNIQUE</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnSave">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Add Annual Forecast-->
+<div>
+    <div class="modal fade" id="addAnnualForecastModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addAnnualForecastLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header text-bg-primary">
+                    <h1 class="modal-title fs-5" id="addAnnualForecastLabel">Annual Forecast</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row m-2">
+                        <label for="addAnnualForecast" class="col-sm-8 col-form-label fw-bold">Input Quantity</label>
+                        <input type="number" id="addAnnualForecast" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnAddAnnualForecast">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

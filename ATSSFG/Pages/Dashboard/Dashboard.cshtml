@@ -1,13 +1,15 @@
 ﻿@page "/Dashboard/Dashboard"
 @model ATSSFG.Pages.Dashboard.DashboardModel
 @{
-    ViewData["Title"] = "Dashboard";
+    string department = HttpContext?.Session.GetString("Dept") ?? "";
+    string encoder = HttpContext?.Session.GetString("Encoder") ?? "";
+    string processor = HttpContext?.Session.GetString("Processor") ?? "";
+    string viewer = HttpContext?.Session.GetString("Viewer") ?? "";
+    string Admin = HttpContext?.Session.GetString("Admin") ?? "";
 
-    // string department = ViewBag.Department;
-    // string department = "Sourcing";
-    string department = "Cost Engineering";
+    bool isAdmin = Admin.Equals("True", StringComparison.OrdinalIgnoreCase);
 }
-<div class="row">
+<div class="row mt-2">
     <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
         <div class="card shadow bg-warning border-3 border-warning-subtle">
             <div class="card-body" type="button" data-mdb-toggle="modal" data-mdb-target="#pendingModal">
@@ -64,9 +66,48 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-12 col-xl-6 my-2">
+        <div class="card">
+            <div class="card-header bg-main3">
+                <h5 class="card-title text-white">Summary of RFQ per month (Unique/Common)</h5>
+            </div>
+            <div class="card-body">
+                <div class="col-3">
+                    <div class="input-group">
+                        <label class="input-group-text bg-main3 text-white" for="monthFilter1"><i class="fa-regular fa-calendar"></i></label>
+                        <input type="month" name="month1" id="monthFilter1" class="form-control">
+                    </div>
+                </div>
+                <canvas id="myChart1"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-xl-6 my-2">
+        <div class="card">
+            <div class="card-header bg-main3">
+                <h5 class="card-title text-white">Sourcing TAT</h5>
+            </div>
+            <div class="card-body">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-auto">
+                        <div class="input-group">
+                            <label class="input-group-text bg-main3 text-white" for="monthFilter2"><i class="fa-regular fa-calendar"></i></label>
+                            <input type="month" name="month2" id="monthFilter2" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="bg-main3 text-white p-2 rounded">
+                            <h6 class="mb-0">Average TAT: 2.5</h6>
+                        </div>
+                    </div>
+                </div>
+                <canvas id="myChart2"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
 <div>
-    @* <p>@Context.Session.GetString("uniqueKey")</p> *@
-
     <!--Menu Modal -->
     <div class="modal fade" id="menuSFG" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="menuSFGLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-dialog-centered">
@@ -77,293 +118,34 @@
                 </div>
                 <div class="modal-body">
                     <div class="row g-2">
-                        <button type="button" class="btn btn-primary encoder border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#encoder">
-                            ENCODER
-                        </button>
-                        <button type="button" class="btn btn-primary processor border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#processor">
-                            PROCESSOR
-                        </button>
-                        <button type="button" class="btn btn-primary viewer border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#viewer" id="viewRFQProjectsBtn">
-                            VIEWER
-                        </button>
+                        @if (department == "Cost Engineering" && encoder == "True" || isAdmin)
+                        {
+                            <button type="button" class="btn btn-primary encoder border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#encoder">
+                                ENCODER
+                            </button>
+
+                        }
+
+                        @if (department == "Cost Engineering" && processor == "True" || department == "Sourcing" && processor == "True" || isAdmin)
+                        {
+                            <button type="button" class="btn btn-primary processor border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#processor">
+                                PROCESSOR
+                            </button>
+                        }
+
+                        @if (viewer == "True" || isAdmin)
+                        {
+                            <button type="button" class="btn btn-primary viewer border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#viewer" id="viewRFQProjectsBtn">
+                                VIEWER
+                            </button>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Encoder Modal -->
-    <div class="modal fade" id="encoder" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="encoderLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header text-bg-primary">
-                    <h1 class="modal-title fs-5" id="encoderLabel">Sourcing Form | <span class="badge text-bg-dark">Encoder</span> </h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row row-cols-2 g-2">
-                        <div class="col">
-                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadLastPurchase">
-                                <div class="card-body text-white">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <i class="fa-solid fa-file-arrow-up fa-2x"></i>
-                                        </div>
-                                        <div class="col">
-                                            <h5 class="fs-6">Upload ATS Last Purchase Info</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadQuotation">
-                                <div class="card-body text-white">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <i class="fa-solid fa-file-arrow-up fa-2x"></i>
-                                        </div>
-                                        <div class="col">
-                                            <h5 class="fs-6">Upload quotation Database</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadMRPBom">
-                                <div class="card-body text-white">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <i class="fa-solid fa-file-arrow-up fa-2x"></i>
-                                        </div>
-                                        <div class="col">
-                                            <h5 class="fs-6">Upload MRP BOM</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#sourcingForm" onclick="sourcingForm()">
-                                <div class="card-body text-white">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <i class="fa-solid fa-file-lines fa-2x"></i>
-                                        </div>
-                                        <div class="col">
-                                            <h5 class="fs-6">Sourcing Form</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Processor Modal -->
-    <div class="modal fade" id="processor" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="processorLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header text-bg-primary">
-                    <h1 class="modal-title fs-5" id="processorLabel">Sourcing Form | <span class="badge text-bg-dark">Processor</span> </h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row row-cols-2 g-2">
-                        <div class="col">
-                            <a asp-page="/Dasboard/Library">
-                                <div class="card text-bg-primary border-3 border-primary-subtle" type="button">
-                                    <div class="card-body">
-                                        <div class="row align-items-center">
-                                            <div class="col-auto">
-                                                <i class="fa-solid fa-book h1"></i>
-                                            </div>
-                                            <div class="col me-2">
-                                                <div class="text-end">
-                                                    <h4 class="fs-6">Library</h4>
-                                                </div>
-                                                <div class="text-end">
-                                                    <h4 class="fs-1">0</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col">
-                            <div class="card text-bg-primary border-3 border-primary-subtle" type="button" data-bs-toggle="modal" data-bs-target="#incomingRFQ">
-                                <div class="card-body">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <i class="fa-solid fa-circle-arrow-down h1"></i>
-                                        </div>
-                                        <div class="col me-2">
-                                            <div class="text-end">
-                                                <h4 class="fs-6">Incoming</h4>
-                                            </div>
-                                            <div class="text-end">
-                                                <h4 class="fs-1" id="incoming"></h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card text-bg-primary border-3 border-primary-subtle" type="button" data-bs-toggle="modal" data-bs-target="#closed">
-                                <div class="card-body">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <i class="fa-solid fa-circle-check h1"></i>
-                                        </div>
-                                        <div class="col me-2">
-                                            <div class="text-end">
-                                                <h4 class="fs-6">Closed</h4>
-                                            </div>
-                                            <div class="text-end">
-                                                <h4 class="fs-1">0</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card text-bg-primary border-3 border-primary-subtle">
-                                <div class="card-body">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <i class="fa-solid fa-circle-question h1"></i>
-                                        </div>
-                                        <div class="col me-2">
-                                            <div class="text-end">
-                                                <h4 class="fs-6">Help</h4>
-                                            </div>
-                                            <div class="text-end">
-                                                <h4 class="fs-1">--</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Viewer Modal -->
-    <div class="modal fade" id="viewer" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="viewerLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header text-bg-primary">
-                    <h1 class="modal-title fs-5" id="viewerLabel">Viewer <i class="fa-solid fa-circle-question" type="button"></i> </h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row g-2">
-                        <div class="col">
-                            <div class="card bg-primary border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#library">
-                                <div class="card-body" type="button">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto">
-                                            <i class="fa-solid fa-book fa-3x text-white"></i>
-                                        </div>
-                                        <div class="col me-2">
-                                            <div class="text-white text-end">
-                                                <h4 class="fs-1" id="rfqCount"></h4>
-                                            </div>
-                                            <div class="text-end text-white">
-                                                <h4 class="fs-5">Library</h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Upload Last Purchase Info Modal -->
-<div class="modal fade" id="uploadLastPurchase" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadLastPurchaseLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header text-bg-primary">
-                <h1 class="modal-title fs-5" id="uploadLastPurchaseLabel"> <i class="fa-solid fa-file-arrow-up"></i> Last Purchase Info</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="loadingSpinner" class="d-none text-center">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                    <p>Uploading file <span id="fileName"></span>...</p>
-                </div>
-                <div class="mb-2" id="fileInputContainer">
-                    <input type="file" id="excelFileInput" accept=".xlsx, .xls">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="uploadButton" onclick="lastPurchaseFileUpload()">Upload</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Upload Quotation Data Modal -->
-<div class="modal fade" id="uploadQuotation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadQuotationLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header text-bg-primary">
-                <h1 class="modal-title fs-5" id="uploadQuotationLabel"> <i class="fa-solid fa-file-arrow-up"></i> Quotations</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="qloadingSpinner" class="d-none text-center">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                    <p>Uploading file <span id="quotationfileName"></span>...</p>
-                </div>
-                <div class="mb-2" id="quotationInputContainer">
-                    <input type="file" id="quotationExcel" accept=".xlsx, .xls">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="uploadQuotationButton" onclick="quotationFileUpload()">Upload</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Upload MRP BOM Data Modal -->
-<div class="modal fade" id="uploadMRPBom" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadMRPBomLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header text-bg-primary">
-                <h1 class="modal-title fs-5" id="uploadMRPBomLabel"> <i class="fa-solid fa-file-arrow-up"></i> MRP BOM</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="mrploadingSpinner" class="d-none text-center">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                    <p>Uploading file <span id="MRPBomfileName"></span>...</p>
-                </div>
-                <div class="mb-2" id="MRPBomInputContainer">
-                    <input type="file" id="MRPBomExcel" accept=".xlsx, .xls">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="uploadMRPBomButton" onclick="MRPBomFileUpload()">Upload</button>
-            </div>
-        </div>
-    </div>
+    @Html.AntiForgeryToken()
+    @await Html.PartialAsync("_DashboardModals")
 </div>
 <!-- Open Sourcing Form Modal -->
 <div class="modal fade" id="sourcingForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sourcingFormLabel" aria-hidden="true">
@@ -388,10 +170,10 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <a asp-action="/Sourcing/SourcingForm" class="btn btn-primary border-3 border-primary-subtle">
+                <a asp-page="/Sourcing/SourcingForm" class="btn btn-primary border-3 border-primary-subtle">
                     <i class="fa-solid fa-circle-plus"></i> Create Sourcing Form without BOM
                 </a>
-                <button type="button" class="btn btn-primary border-3 border-primary-subtle d-none" onload="viewSourcingForm()" id="viewPNDesc"><i class="fa-solid fa-eye"></i> View</button>
+                <button type="button" class="btn btn-primary border-3 border-primary-subtle d-none" id="viewPNDesc"><i class="fa-solid fa-eye"></i> View</button>
             </div>
         </div>
     </div>
@@ -427,7 +209,7 @@
 </div>
 <!-- Show Sourcing Form Modal-->
 <div class="modal fade" id="incomingRFQ" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="incomingRFQLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header text-bg-primary">
                 <h1 class="modal-title fs-5" id="incomingRFQLabel"> <i class="fa-solid fa-file-arrow-up"></i> Sourcing Form | <span class="badge text-bg-dark">Processor</span></h1>
@@ -435,8 +217,8 @@
             </div>
             <div class="modal-body">
                 <div class="table-responsive mb-2">
-                    <table class="table table-striped" id="incomingRFQTable" style="width: 100%;">
-                        <thead class="table-primary">
+                    <table class="table table-striped table-hover" id="incomingRFQTable" style="width: 100%;">
+                        <thead>
                             <tr>
                                 <th>Quotation Number</th>
                                 <th>Request Date</th>
@@ -445,7 +227,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="text-nowrap">
                         </tbody>
                     </table>
                 </div>
@@ -455,30 +237,8 @@
 </div>
 @section Scripts {
     <script>
-        let department = "@department";
-
-        // Hide all buttons initially
-        $(".encoder, .processor, .viewer").hide();
-
-        // Show buttons based on department
-        if (department === "Cost Engineering") {
-            $(".encoder, .processor, .viewer").show();
-        } else if (department === "Sourcing") {
-            $(".processor, .viewer").show();
-        } else if (department === "Purchasing" || department === "Business Control") {
-            $(".viewer").show();
-        } else {
-            $(".encoder, .processor, .viewer").show();
-        }
-
-        const GetPNandDescription = '@Url.Action("GetPNandDescription", "Dashboard")';
-        const UploadQuotation = '@Url.Action("UploadQuotation", "Dashboard")';
-        const UploadLastPurchaseInfo = '@Url.Action("UploadLastPurchaseInfo", "Dashboard")';
-        const UploadMRPBom = '@Url.Action("UploadMRPBom", "Dashboard")';
-        const ViewRFQForm = '@Url.Action("ViewRFQForm", "Dashboard")';
-        const downloadPdfUrl = '@Url.Action("DownloadExcelFile", "Dashboard")';
-        const ViewRFQProjects = '@Url.Action("IncomingRFQProjects", "Dashboard")';
-        const GetAllRFQProjects = '@Url.Action("GetAllRFQProjects", "Dashboard")';
+         let department = "@department";
     </script>
     <script src="~/JavaScript/Dashboard.js"></script>
+    <script src="~/JavaScript/DashboardCharts.js"></script>
 }

@@ -88,8 +88,10 @@ $(function () {
             url: "Login?handler=UserLogin",
             method: "GET",
             data: { parapass: $("#txtPassword").val() },
+            dataType: 'json',
             success: function (data) {
-                if (JSON.parse(data)["Success"] === true) {
+                //console.log(data);
+                if (data.success) {
                     window.location.href = "/Menu";
                 }
                 else {

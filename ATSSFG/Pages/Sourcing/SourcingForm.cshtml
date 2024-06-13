@@ -1,7 +1,7 @@
 ﻿@page
 @model ATSSFG.Pages.Sourcing.SourcingFormModel
 @{
-    ViewData["Title"] = "Sourcing Form";
+    ViewData["Title"] = HttpContext.Session.GetString("MyTitle");
 }
 <style>
     .col-form-label {

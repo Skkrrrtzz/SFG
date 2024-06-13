@@ -3,62 +3,61 @@ var table = $("#userTbl").DataTable({
   scrollX: true,
   scrollY: "50vh",
   responsive: true,
-  ajax: function (data, callback, settings) {
-    fetch(GetUsers, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        callback({
-          data: data.data,
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+  ajax: {
+    url: "/Users/Users?handler=DisplayUsers",
+    contentType: "application/json",
+    type: "GET",
+    dataSrc: "data",
+    error: function (xhr, error, thrown) {
+      console.error("Error fetching data:", error);
+      console.log("Response text:", xhr.responseText);
+    },
   },
   columns: [
     { data: "id" },
     { data: "name" },
     { data: "email" },
     { data: "department" },
+    { data: "encoder" },
+    { data: "processor" },
+    { data: "viewer" },
+    { data: "admin" },
     {
-      data: "role",
+      data: "isActive",
       render: function (data, type, row) {
-        if (data == "Encoder") {
-          return (
-            '<span class="badge rounded-pill text-bg-success">' +
-            data +
-            "</span>"
-          );
-        } else if (data == "Processor") {
-          return (
-            '<span class="badge rounded-pill text-bg-dark">' + data + "</span>"
-          );
-        } else if (data == "Viewer") {
-          return (
-            '<span class="badge rounded-pill text-bg-dark">' + data + "</span>"
-          );
-        } else {
-          return (
-            '<span class="badge rounded-pill text-bg-primary">' +
-            data +
-            "</span>"
-          );
-        }
-        return data;
+        let status = row.isActive ? "Active" : "Inactive";
+        return (
+          '<span class="badge bg-success-subtle border border-success-subtle text-success rounded-pill">' +
+          status +
+          "</span>"
+        );
       },
     },
+    // {
+    //   data: "role",
+    //   render: function (data, type, row) {
+    //     var badgeClass = "badge rounded-pill ";
+    //     switch (data) {
+    //       case "Encoder":
+    //         badgeClass += "text-bg-success";
+    //         break;
+    //       case "Processor":
+    //       case "Viewer":
+    //         badgeClass += "text-bg-dark";
+    //         break;
+    //       default:
+    //         badgeClass += "text-bg-primary";
+    //     }
+    //     return '<span class="' + badgeClass + '">' + data + "</span>";
+    //   },
+    // },
     {
       data: null,
       render: function (data, type, row) {
         return (
           '<a href="#" class="text-primary edit-btn fs-4" data-id="' +
           row.AccountID +
-          '" data-bs-toggle="modal" data-bs-target="#editUserModal" ><i class="bi bi-pencil-square"></i></a>' +
+          '" data-bs-toggle="modal" data-bs-target="#editUserModal"><i class="bi bi-pencil-square"></i></a>' +
           ' <a href="#" class="text-danger delete-btn fs-4" data-id="' +
           row.AccountID +
           '"><i class="bi bi-trash3-fill"></i></a>'
@@ -125,34 +124,31 @@ $("#addBtn").on("click", function (e) {
       if (response.success) {
         // Check the 'success' property in the response
         // Show success message using SweetAlert2
-        Swal.fire({
-          icon: "success",
-          title: "Added Successful",
-          text: "The data has been added successfully!",
-          showConfirmButton: false,
-          timer: 1000,
-        }).then(function () {
-          // Reset the modal inputs
-          $("#addUserField").val("");
-          $("#addEmailField").val("");
-          $("#addEmpField").val("");
-          $("#addPassField").val("");
-          $("#addDeptField").val("");
-          $("#addRoleField").val("");
-          $("#addPosField").val("");
-          // Close the modal
-          $("#addUserModal").modal("hide");
-          $(".modal-backdrop").remove();
-          table.ajax.reload(); // Reload the DataTable
-        });
+        showSuccessAlert("The data has been added successfully!").then(
+          function () {
+            // Reset the modal inputs
+            $("#addUserField").val("");
+            $("#addEmailField").val("");
+            $("#addEmpField").val("");
+            $("#addPassField").val("");
+            $("#addDeptField").val("");
+            $("#addRoleField").val("");
+            $("#addPosField").val("");
+            // Close the modal
+            $("#addUserModal").modal("hide");
+            $(".modal-backdrop").remove();
+            table.ajax.reload(); // Reload the DataTable
+          }
+        );
       } else {
         // Handle the case when the update failed
-        Swal.fire({
-          icon: "error",
-          title: "Failed",
-          text: response.message,
-          showConfirmButton: true,
-        });
+        showErrorAlert("Failed to add data");
+        // Swal.fire({
+        //   icon: "error",
+        //   title: "Failed",
+        //   text: response.message,
+        //   showConfirmButton: true,
+        // });
       }
     },
     error: function () {

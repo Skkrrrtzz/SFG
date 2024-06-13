@@ -55,6 +55,9 @@ a {
     margin-top: .5rem;
     margin-right: .5rem;
 }
+.table-hover tbody tr:hover td {
+    background-color: var(--colorHighLight) !important;
+    cursor: pointer;
 }
 .dot-spinner {
     --uib-size: 2.8rem;

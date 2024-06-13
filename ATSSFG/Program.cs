@@ -15,8 +15,7 @@ builder.Services.AddSession(options =>
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddTransient<IDirectoryRepository, DirectoryRepository>();
-builder.Services.AddTransient<IDirectoryRepository, DirectoryRepository>();
+builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ISourcingRepository, SourcingRepository>();
 builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();

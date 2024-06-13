@@ -8,20 +8,13 @@ $("#SRFQTbl").DataTable({
   responsive: true,
 });
 function uploadExcel(file, projectName) {
-  Swal.fire({
-    title: "Please wait...",
-    html: '<div class="m-2" id="loading-spinner"><div class="loader3"><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div><div class="circle1"></div></div></div>',
-    showCancelButton: false,
-    showConfirmButton: false,
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-  });
+  showLoading();
 
   const formData = new FormData();
   formData.append("file", file);
   formData.append("fileName", projectName);
 
-  fetch(UploadRFQ, {
+  fetch("/Sourcing/ViewRFQFrom?handler=UploadRFQExcelFile", {
     method: "POST",
     body: formData,
   })

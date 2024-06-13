@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using QA_Audit_Fresh.Models;
@@ -35,30 +36,19 @@ namespace QA_Audit_Fresh.Views.AuditPlans
             _httpContext = httpContext;
         }
 
-        public void OnGet(string z, string y, string x, string w)
+        public void OnGet()
         {
-            _httpContext.HttpContext.Session.SetString("userName", z);
+            // _httpContext.HttpContext.Session.SetString("userName", z);
             // _httpContext.HttpContext.Session.SetString("MyMode", y);
             // _httpContext.HttpContext.Session.SetString("MyBUCode", x);
             // _httpContext.HttpContext.Session.SetString("MyRole", w);
 
-            string userName = z;
+            // string userName = _httpContext.HttpContext.Session.GetString("userName");
             //Check if user exists in Database
-
+            Console.WriteLine(string.IsNullOrEmpty(HttpContext.User.FindFirstValue("FullName")));
+            Console.WriteLine(HttpContext.User.Claims.Count());
+            Console.WriteLine(HttpContext.User.Identity.IsAuthenticated);
         }
-        // public void OnGet(int month)
-        // {
-        //     var result = _auditPlans.GetAuditPlansByMonth(month);
-        //     result.Wait();
-
-        //     AuditPlans = new List<AuditPlanModel>(result.Result);
-        //     // auditPlans.ForEach(Console.WriteLine);
-        // }
-
-        // public PartialViewResult OnGetCalendar() 
-        // {
-        //     return Partial("Partials/_CalendarTable");
-        // }
 
         //GET: https://localhost:<port>?handler=Conformities&planId=<planId>
         public async Task<PartialViewResult> OnGetConformities(int planId)

@@ -1,4 +1,5 @@
-﻿// using QA_Audit_Fresh.Controllers.Repositories;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 using System.Reflection;
 
@@ -36,6 +37,40 @@ builder.Services.AddSwaggerGen(options =>
 }
 );
 
+// builder.Services.AddDataProtection()
+//     .PersistKeysToFileSystem(new DirectoryInfo(@"C:\Users\jrafols\Gits\PIMES-Web\.cookies"))
+//     .SetApplicationName("SharedCookieApp");
+
+// builder.Services.AddAuthentication("Identity.Application")
+//     .AddCookie("Identity.Application", options =>
+//     {
+//         options.Cookie.Name = ".AspNet.SharedCookie";
+//         options.Cookie.Path = "/";
+//         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+//         // options.Cookie.Domain = "localhost"; // <-- REMOVE REMOOOOVEEEE
+
+//     });
+
+// Authentication Cookies
+builder.Services.AddAuthentication("Identity.Application")
+    .AddCookie("Identity.Application", options =>
+    {
+        // options.SlidingExpiration = true;
+        options.Cookie.Name = ".AspNet.SharedCookie";
+        options.Cookie.Path = "/";
+        options.Cookie.SameSite = SameSiteMode.None;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.HttpOnly = true;
+        // options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.Cookie.Domain = "localhost"; // <-- REMOVE REMOOOOVEEEE
+
+    });
+
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(@"C:\Users\jrafols\Gits\PIMES-Web\.cookies"))
+    .SetApplicationName("SharedCookieApp");
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,6 +85,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

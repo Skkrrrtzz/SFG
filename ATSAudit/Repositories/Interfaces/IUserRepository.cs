@@ -2,7 +2,7 @@ using QA_Audit_Fresh.Models;
 
 namespace QA_Audit_Fresh.Repositories
 {
-    public interface IUsersRepository
+    public interface IUserRepository
     {
         public Task<IEnumerable<UserModel>> CheckUserExists();
         // public Task<IEnumerable<PreventiveActionModel>> GetPreventiveAction(int preventiveActionId);

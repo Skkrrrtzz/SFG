@@ -1,8 +1,11 @@
 using APPCommon.Class;
 using APPLogin.Models;
 using APPLogin.Repository;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace APPLogin.Pages
@@ -62,9 +65,23 @@ namespace APPLogin.Pages
                 }
                 else
                 {
-                    _httpContext.HttpContext.Session.SetString("MyPassword", userLogin.Select(x => x.password).FirstOrDefault());
-                    _httpContext.HttpContext.Session.SetString("MyUser", userLogin.Select(x => x.username).FirstOrDefault());
-                    _httpContext.HttpContext.Session.SetString("MyEmpNo", userLogin.Select(x => x.employeeno).FirstOrDefault());
+                    // _httpContext.HttpContext.Session.SetString("MyPassword", userLogin.Select(x => x.password).FirstOrDefault());
+                    // _httpContext.HttpContext.Session.SetString("MyUser", userLogin.Select(x => x.username).FirstOrDefault());
+                    // _httpContext.HttpContext.Session.SetString("MyEmpNo", userLogin.Select(x => x.employeeno).FirstOrDefault());
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim("FullName", userLogin.Select(x => x.username).FirstOrDefault()),
+                        new Claim("Password", parapass),
+                        new Claim("EmpNo", userLogin.Select(x => x.employeeno).FirstOrDefault()),
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(
+                        claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme, 
+                        new ClaimsPrincipal(claimsIdentity));
 
                     result = JsonSerializer.Serialize(new { Success = true });
                 }

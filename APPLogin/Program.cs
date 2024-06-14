@@ -13,39 +13,64 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30);
 });
 
-//CORS
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-        });
-});
+// //CORS
+// builder.Services.AddCors(options =>
+// {
+//     options.AddPolicy("AllowAll",
+//         builder =>
+//         {
+//             builder.AllowAnyOrigin()
+//                     .AllowAnyMethod()
+//                     .AllowAnyHeader();
+//         });
+// });
 
 builder.Services.AddRazorPages();
 
 builder.Services.AddTransient<ILoginRepository, LoginRepository>();
+
+//Allow CORs
+builder.Services.AddCors(options => 
+    {
+        options.AddPolicy(name: "_allowedOrigins",
+            policy => 
+            {
+                policy.WithOrigins("https://localhost:5150", "https://localhost:7103");
+            });
+    });
 
 // Authentication Cookies
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(@"C:\Users\jrafols\Gits\PIMES-Web\.cookies"))
     .SetApplicationName("SharedCookieApp");
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+builder.Services.AddAuthentication("Identity.Application")
+    .AddCookie("Identity.Application", options =>
     {
-        // options.SlidingExpiration = true;
         options.Cookie.Name = ".AspNet.SharedCookie";
         options.Cookie.Path = "/";
-        options.Cookie.SameSite = SameSiteMode.None;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.HttpOnly = true;
-        // options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-        options.Cookie.Domain = "localhost"; // <-- REMOVE REMOOOOVEEEE 
-
+        options.SlidingExpiration = true;
+        // options.Cookie.SameSite = SameSiteMode.None;
+        // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        // options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromSeconds(10);
+        // options.Cookie.Domain = "localhost"; // <-- REMOVE REMOOOOVEEEE
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = context =>
+            {
+                if (context.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    context.Response.Headers["Rafols"] = "Gyatt";
+                    context.Response.StatusCode = 401;
+                }
+                else
+                {
+                    context.Response.Redirect("https://localhost:7103/Login");
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 var app = builder.Build();
@@ -64,6 +89,7 @@ app.UseSession();
 
 app.UseRouting();
 
+// app.UseCors("_allowedOrigins");
 //app.UseCors("AllowAll");
 
 app.UseAuthentication();

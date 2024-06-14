@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Authentication.Cookies;
-
 using System.Reflection;
+using ATSAudit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,22 +37,51 @@ builder.Services.AddSwaggerGen(options =>
 }
 );
 
+
+//Allow CORs
+// builder.Services.AddCors(options => 
+//     {
+//         options.AddPolicy(name: "_allowedOrigins",
+//             policy => 
+//             {
+//                 policy.WithOrigins("https://localhost:5150", "https://localhost:7103");
+//             });
+//     });
+
+
+// Authentication Cookies
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(@"C:\Users\jrafols\Gits\PIMES-Web\.cookies"))
     .SetApplicationName("SharedCookieApp");
 
-// Authentication Cookies
 builder.Services.AddAuthentication("Identity.Application")
     .AddCookie("Identity.Application", options =>
     {
-        // options.SlidingExpiration = true;
         options.Cookie.Name = ".AspNet.SharedCookie";
         options.Cookie.Path = "/";
-        options.Cookie.SameSite = SameSiteMode.None;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        options.Cookie.HttpOnly = true;
-        // options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-        options.Cookie.Domain = "localhost"; // <-- REMOVE REMOOOOVEEEE
+        options.SlidingExpiration = true;
+        // options.Cookie.SameSite = SameSiteMode.None;
+        // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        // options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromSeconds(10);
+        // options.Cookie.Domain = "localhost"; // <-- REMOVE REMOOOOVEEEE
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = context =>
+            {
+                if (context.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    context.Response.Headers["The-Rizzler"] = "Mewing";
+                    context.Response.StatusCode = 401;
+                }
+                else
+                {
+                    context.Response.Redirect("https://localhost:7103/Login");
+                }
+                return Task.CompletedTask;
+            }
+
+        };
 
     });
 
@@ -70,7 +99,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// app.UseAuthentication();
+// app.UseCors("_allowedOrigins");
+// app.UseMiddleware<UnauthorizedRedirectMiddleware>();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

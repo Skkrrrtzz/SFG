@@ -1,28 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 // using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Extensions.Logging;
-using QA_Audit_Fresh.Models;
+using ATSAudit.Models;
 using Dapper;
-using System.Data;
-using QA_Audit_Fresh.Models.Dto;
-using System.ComponentModel;
-using QA_Audit_Fresh.Repositories;
 // using MySqlConnector;'
 using Microsoft.Data.SqlClient;
 
 using APPCommon.Class;
 
-namespace QA_Audit_Fresh.Repositories
+namespace ATSAudit.Repositories
 {
-    public class CorrectionRepository : ICorrectionRepository
+    public class CorrectionsService : ICorrectionsRepository
     {
         private readonly string _connectionString; 
-        public CorrectionRepository(IConfiguration configuration)
+        public CorrectionsService(IConfiguration configuration)
         {
             // _connectionString = configuration.GetConnectionString("DefaultConnection");
             _connectionString = PIMESSettings.atsAuditConnString;

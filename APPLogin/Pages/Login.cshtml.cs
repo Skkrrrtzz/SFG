@@ -79,6 +79,7 @@ namespace APPLogin.Pages
         //        return StatusCode(500, new { errorMessage = ex.Message });
         //    }
         //}
+
         public async Task<IActionResult> OnGetUserLoginAsync(string parapass)
         {
             try
@@ -94,10 +95,6 @@ namespace APPLogin.Pages
 
                 if (user != null)
                 {
-                    // _httpContext.HttpContext.Session.SetString("MyPassword", userLogin.Select(x => x.password).FirstOrDefault());
-                    // _httpContext.HttpContext.Session.SetString("MyUser", userLogin.Select(x => x.username).FirstOrDefault());
-                    // _httpContext.HttpContext.Session.SetString("MyEmpNo", userLogin.Select(x => x.employeeno).FirstOrDefault());
-
                     var claims = new List<Claim>
                     {
                         new Claim("FullName", userLogin.Select(x => x.username).FirstOrDefault()),
@@ -111,10 +108,6 @@ namespace APPLogin.Pages
                     await HttpContext.SignInAsync(
                         "Identity.Application", 
                         new ClaimsPrincipal(claimsIdentity));
-
-                    // httpContext.Session.SetString("MyPassword", user.password);
-                    // httpContext.Session.SetString("MyUser", user.username);
-                    // httpContext.Session.SetString("MyEmpNo", user.employeeno);
                 }
 
                 return new JsonResult(new { Success = true });

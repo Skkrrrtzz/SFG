@@ -7,19 +7,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 // using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
-using QA_Audit_Fresh.Models;
+using ATSAudit.Models;
 using Dapper;
 using System.Data;
-using QA_Audit_Fresh.Models.Dto;
 using System.ComponentModel;
-using QA_Audit_Fresh.Repositories;
+using ATSAudit.Repositories;
 // using MySqlConnector;'
 using Microsoft.Data.SqlClient;
 
 
-namespace QA_Audit_Fresh.Repositories
+namespace ATSAudit.Repositories
 {
-    public class MySQLPreventiveActionRepository : IPreventiveActionRepository
+    public class MySQLPreventiveActionRepository : IPreventiveActionsRepository
     {
         private readonly string _connectionString; 
         public MySQLPreventiveActionRepository(IConfiguration configuration)

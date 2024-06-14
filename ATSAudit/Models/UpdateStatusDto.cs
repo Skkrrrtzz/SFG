@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace QA_Audit_Fresh.Models
+namespace ATSAudit.Models
 {
     public class UpdateStatusDto
     {

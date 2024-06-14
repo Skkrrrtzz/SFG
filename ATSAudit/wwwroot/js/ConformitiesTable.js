@@ -3,9 +3,10 @@ $('#conformitiesTab').on('click', () => {
 });
 
 async function renderConformitiesTable() {
+    // fetch('/').catch(() => { window.location.href = '/' });
     $('#conformitiesTabPane').empty();
     $('#conformitiesTabPane').load(`?handler=Conformities&planId=${$('#readAuditPlanId').val()}`, () => { 
-        $('.conformity-delete').on('click', e => {
+            $('.conformity-delete').on('click', e => {
             let conformityId = e.currentTarget.parentNode.dataset.conformityid/* .split('-')[1] */;
 
             fetch('/api/conformities/' + conformityId, {
@@ -16,6 +17,7 @@ async function renderConformitiesTable() {
             .catch(error => console.log(error));
         });
     });
+
 }
 
 $('#createConformitySubmit').on('click', e => {

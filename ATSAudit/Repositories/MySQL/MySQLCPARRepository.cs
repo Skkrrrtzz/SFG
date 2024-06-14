@@ -5,11 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using QA_Audit_Fresh.Models;
+using ATSAudit.Models;
 
-namespace QA_Audit_Fresh.Repositories
+namespace ATSAudit.Repositories
 {
-    public class MySQLCPARRepository : ICPARRepository
+    public class MySQLCPARRepository : ICPARsRepository
     {
         private readonly string _connectionString;
 

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using QA_Audit_Fresh.Models;
-using QA_Audit_Fresh.Repositories;
+using ATSAudit.Models;
+using ATSAudit.Repositories;
 
-namespace QA_Audit_Fresh.Controllers.Api
+namespace ATSAudit.Controllers.Api
 {
     [ApiController]
     // [Route("api/conformities")]

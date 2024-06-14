@@ -1,11 +1,13 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using QA_Audit_Fresh.Models;
-using QA_Audit_Fresh.Repositories;
+using ATSAudit.Models;
+using ATSAudit.Repositories;
 
-namespace QA_Audit_Fresh.Views.AuditPlans
+namespace ATSAudit.Views.AuditPlans
 {
+    [Authorize]
     public class DashboardRazor : PageModel
     {
         private readonly IAuditPlansRepository _auditPlans;
@@ -38,15 +40,18 @@ namespace QA_Audit_Fresh.Views.AuditPlans
 
         public void OnGet()
         {
-            // _httpContext.HttpContext.Session.SetString("userName", z);
-            // _httpContext.HttpContext.Session.SetString("MyMode", y);
-            // _httpContext.HttpContext.Session.SetString("MyBUCode", x);
-            // _httpContext.HttpContext.Session.SetString("MyRole", w);
+            if (!User.Identity.IsAuthenticated)
+            {
+                Redirect("https://localhost:7103/Login");
+            }
+
+            Console.WriteLine(User.Identity.IsAuthenticated ? "Authenticated!" : "Not Authenticated. :(");
+            Console.WriteLine(User.FindFirstValue("FullName"));
+            Console.WriteLine(User.FindFirstValue("Password"));
+            Console.WriteLine(User.FindFirstValue("EmpNo"));
 
             //Check if user exists in Database
-            Console.WriteLine(User.FindFirstValue("FullName")));
-            Console.WriteLine(User.Claims.Count());
-            Console.WriteLine(User.Identity.IsAuthenticated);
+
         }
 
         //GET: https://localhost:<port>?handler=Conformities&planId=<planId>

@@ -1,4 +1,4 @@
-namespace QA_Audit_Fresh.Models
+namespace ATSAudit.Models
 {
     public class MyViewModel
     {

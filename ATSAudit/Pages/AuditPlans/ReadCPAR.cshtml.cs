@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using QA_Audit_Fresh.Models;
-using QA_Audit_Fresh.Repositories;
+using ATSAudit.Models;
+using ATSAudit.Repositories;
 
-namespace QA_Audit_Fresh.Views.AuditPlans
+namespace ATSAudit.Views.AuditPlans
 {
     [BindProperties]
     public class ReadCPAR : PageModel

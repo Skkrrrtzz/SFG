@@ -1,4 +1,4 @@
-using QA_Audit_Fresh.Repositories;
+using ATSAudit.Repositories;
 
 public static class AddRepositoriesService
 {

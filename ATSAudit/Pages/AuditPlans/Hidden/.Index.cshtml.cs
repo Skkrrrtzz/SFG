@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace QA_Audit_Fresh.Views.AuditPlan
+namespace ATSAudit.Views.AuditPlan
 {
     public class Index : PageModel
     {

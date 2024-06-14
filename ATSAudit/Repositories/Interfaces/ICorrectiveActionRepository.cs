@@ -1,6 +1,6 @@
-using QA_Audit_Fresh.Models;
+using ATSAudit.Models;
 
-namespace QA_Audit_Fresh.Repositories
+namespace ATSAudit.Repositories
 {
     public interface ICorrectiveActionsRepository
     {

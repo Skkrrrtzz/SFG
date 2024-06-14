@@ -53,7 +53,7 @@ builder.Services.AddAuthentication("Identity.Application")
         // options.Cookie.SameSite = SameSiteMode.None;
         // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         // options.Cookie.HttpOnly = true;
-        options.ExpireTimeSpan = TimeSpan.FromSeconds(10);
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
         // options.Cookie.Domain = "localhost"; // <-- REMOVE REMOOOOVEEEE
         options.Events = new CookieAuthenticationEvents
         {
@@ -72,6 +72,17 @@ builder.Services.AddAuthentication("Identity.Application")
             }
         };
     });
+
+//TODO: Maybe implement shared session cookies so that sessions can end immediately after closing the app
+// builder.Services.AddSession(options =>
+// {
+//     options.Cookie.Name = ".AspNet.SharedSession";
+//     options.IdleTimeout = TimeSpan.FromMinutes(30);
+//     options.Cookie.HttpOnly = true;
+//     options.Cookie.IsEssential = true;
+//     options.Cookie.SameSite = SameSiteMode.None;
+//     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+// });
 
 var app = builder.Build();
 

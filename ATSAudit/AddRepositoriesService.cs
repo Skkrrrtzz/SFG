@@ -10,7 +10,7 @@ public static class AddRepositoriesService
         services.AddScoped<ICorrectionsRepository, CorrectionsService>();
         services.AddScoped<ICorrectiveActionsRepository, CorrectiveActionsService>();
         services.AddScoped<IPreventiveActionsRepository, PreventiveActionsService>();
-        services.AddScoped<IUserRepository, UserService>();
+        services.AddScoped<IUsersRepository, UserService>();
         return services;
     }
 }

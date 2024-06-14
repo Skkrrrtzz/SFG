@@ -4,8 +4,12 @@ $('#conformitiesTab').on('click', () => {
 
 async function renderConformitiesTable() {
     // fetch('/').catch(() => { window.location.href = '/' });
-    $('#conformitiesTabPane').empty();
+    // $('#conformitiesTabPane').empty();
+    $('#conformitiesTabPane .loading').show();
+
     $('#conformitiesTabPane').load(`?handler=Conformities&planId=${$('#readAuditPlanId').val()}`, () => { 
+            $('#readCPARCorrectionsTable > .loading').hide();
+
             $('.conformity-delete').on('click', e => {
             let conformityId = e.currentTarget.parentNode.dataset.conformityid/* .split('-')[1] */;
 
@@ -17,7 +21,6 @@ async function renderConformitiesTable() {
             .catch(error => console.log(error));
         });
     });
-
 }
 
 $('#createConformitySubmit').on('click', e => {

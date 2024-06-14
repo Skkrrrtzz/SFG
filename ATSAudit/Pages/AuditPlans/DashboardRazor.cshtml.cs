@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ATSAudit.Models;
 using ATSAudit.Repositories;
+using APPCommon.Class;
 
 namespace ATSAudit.Views.AuditPlans
 {
@@ -16,7 +17,9 @@ namespace ATSAudit.Views.AuditPlans
         private readonly ICorrectionsRepository _corrections;
         private readonly ICorrectiveActionsRepository _correctiveActions;
         private readonly IPreventiveActionsRepository _preventiveActions;
-        private readonly IHttpContextAccessor _httpContext;
+        private readonly IUsersRepository _users;
+
+        public string loader { get; } = PIMESProcedures.randomLoader();
 
         public List<AuditPlanModel>? AuditPlans;
 
@@ -27,7 +30,7 @@ namespace ATSAudit.Views.AuditPlans
                                 ICorrectionsRepository corrections, 
                                 ICorrectiveActionsRepository correctiveActions,
                                 IPreventiveActionsRepository preventiveActions,
-                                IHttpContextAccessor httpContext) 
+                                IUsersRepository usersRepository) 
         {
             _auditPlans = auditPlans;
             _conformities = conformities;
@@ -35,15 +38,12 @@ namespace ATSAudit.Views.AuditPlans
             _corrections = corrections;
             _correctiveActions = correctiveActions;
             _preventiveActions = preventiveActions;
-            _httpContext = httpContext;
+            _users = usersRepository;
         }
 
-        public void OnGet()
+        public async void OnGet()
         {
-            if (!User.Identity.IsAuthenticated)
-            {
-                Redirect("https://localhost:7103/Login");
-            }
+            // string userName = User.FindFirstValue("FullName");
 
             Console.WriteLine(User.Identity.IsAuthenticated ? "Authenticated!" : "Not Authenticated. :(");
             Console.WriteLine(User.FindFirstValue("FullName"));
@@ -51,6 +51,20 @@ namespace ATSAudit.Views.AuditPlans
             Console.WriteLine(User.FindFirstValue("EmpNo"));
 
             //Check if user exists in Database
+            string userName = User.FindFirstValue("FullName");
+            UserModel? user = await _users.GetUser(userName);
+
+            Console.WriteLine(user.Approver);
+            Console.WriteLine(user.Requestor);
+            Console.WriteLine(user.Respondent);
+            Console.WriteLine(user.Viewer);
+            // if (user != null)
+            // {
+                
+            // } else 
+            // {
+            //     Console.WriteLine("YOU NOT FROM ATS, FOO! GET OUTTA HERE!!")
+            // }
 
         }
 

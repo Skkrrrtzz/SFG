@@ -103,7 +103,10 @@ namespace APPLogin.Pages
                     };
 
                     var claimsIdentity = new ClaimsIdentity(
-                        claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        claims,
+                         "Identity.Application"
+                        // CookieAuthenticationDefaults.AuthenticationScheme
+                        );
 
                     await HttpContext.SignInAsync(
                         "Identity.Application", 

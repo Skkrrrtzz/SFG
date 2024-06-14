@@ -6,7 +6,7 @@ using APPCommon.Class;
 
 namespace ATSAudit.Repositories
 {
-    public class UserService : IUserRepository
+    public class UserService : IUsersRepository
     {
         private readonly string _connectionString; 
         public UserService(IConfiguration configuration)
@@ -15,12 +15,12 @@ namespace ATSAudit.Repositories
             _connectionString = PIMESSettings.atsAuditConnString;
         }
 
-        public async Task<IEnumerable<UserModel>> CheckUserExists()
+        public async Task<UserModel> GetUser(string user)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[QA_Audit_Users]";
-                return await connection.QueryAsync<UserModel>(query);
+                return await connection.QueryFirstOrDefaultAsync<UserModel>(query);
             }
         }
 

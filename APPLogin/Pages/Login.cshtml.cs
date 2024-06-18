@@ -99,7 +99,7 @@ namespace APPLogin.Pages
                     {
                         new Claim("FullName", userLogin.Select(x => x.username).FirstOrDefault()),
                         new Claim("Password", parapass),
-                        new Claim("EmpNo", userLogin.Select(x => x.employeeno).FirstOrDefault()),
+                        new Claim("EmpNo", userLogin.Select(x => x.employeeno).FirstOrDefault())
                     };
 
                     var claimsIdentity = new ClaimsIdentity(

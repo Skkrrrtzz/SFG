@@ -10,7 +10,8 @@ namespace ATSAudit.Models
     {
         [Required]
         public string? Status { get; set; }
-        [Required]
+        [Required(ErrorMessage = "ActualAuditDate cannot be null or empty when closing an audit plan.")]
         public DateTime? ActualAuditDate { get; set; }
     }
+    
 }

@@ -15,11 +15,20 @@ namespace ATSAudit.Repositories
             _connectionString = PIMESSettings.atsAuditConnString;
         }
 
-        public async Task<UserModel> GetUser(string user)
+        public UserModel GetUser(string user)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                string query = "select * from [dbo].[QA_Audit_Users]";
+                string query = "select * from [dbo].[Users]";
+                return connection.QueryFirstOrDefault<UserModel>(query);
+            }
+        }
+
+        public async Task<UserModel> GetUserAsync(string user)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                string query = "select * from [dbo].[Users]";
                 return await connection.QueryFirstOrDefaultAsync<UserModel>(query);
             }
         }

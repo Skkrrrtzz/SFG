@@ -20,8 +20,8 @@ namespace ATSAudit.Views.AuditPlans
         private readonly IUsersRepository _users;
 
         public string loader { get; } = PIMESProcedures.randomLoader();
-
-        public List<AuditPlanModel>? AuditPlans;
+        public AuditPlanModel CurrentAuditPlan { get; set; }
+        public UserModel? CurrentUser { get; set; }
 
 
         public DashboardRazor(  IAuditPlansRepository auditPlans, 
@@ -41,7 +41,7 @@ namespace ATSAudit.Views.AuditPlans
             _users = usersRepository;
         }
 
-        public async void OnGet()
+        public void OnGet()
         {
             // string userName = User.FindFirstValue("FullName");
 
@@ -52,19 +52,19 @@ namespace ATSAudit.Views.AuditPlans
 
             //Check if user exists in Database
             string userName = User.FindFirstValue("FullName");
-            UserModel? user = await _users.GetUser(userName);
+            CurrentUser = _users.GetUser(userName);
 
-            Console.WriteLine(user.Approver);
-            Console.WriteLine(user.Requestor);
-            Console.WriteLine(user.Respondent);
-            Console.WriteLine(user.Viewer);
-            // if (user != null)
-            // {
-                
-            // } else 
-            // {
-            //     Console.WriteLine("YOU NOT FROM ATS, FOO! GET OUTTA HERE!!")
-            // }
+            if (CurrentUser == null)
+            {
+                Console.WriteLine("Uh oh! An error occurred!");
+            } 
+            else
+            {
+                Console.WriteLine(CurrentUser.Approver);
+                Console.WriteLine(CurrentUser.Requestor);
+                Console.WriteLine(CurrentUser.Respondent);
+                Console.WriteLine(CurrentUser.Viewer);
+            }
 
         }
 

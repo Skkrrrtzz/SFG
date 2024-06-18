@@ -73,6 +73,11 @@ namespace ATSAudit.Repositories
             }
         }
 
+        public Task<int> CloseCorrectiveAction(int cparId, DateTime closeDate)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<int> DeleteCorrectiveAction(int correctiveActionId)
         {
             using (var connection = new MySqlConnection(_connectionString)) 
@@ -84,5 +89,6 @@ namespace ATSAudit.Repositories
                 return await connection.ExecuteAsync(query, new { CorrectiveActionId = correctiveActionId });
             }
         }
+
     }
 }

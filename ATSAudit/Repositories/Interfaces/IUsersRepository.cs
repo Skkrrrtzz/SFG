@@ -4,6 +4,7 @@ namespace ATSAudit.Repositories
 {
     public interface IUsersRepository
     {
-        public Task<UserModel> GetUser(string user);
+        public UserModel GetUser(string user);
+        public Task<UserModel> GetUserAsync(string user);
     }
 }

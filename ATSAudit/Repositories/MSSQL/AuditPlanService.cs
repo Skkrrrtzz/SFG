@@ -37,12 +37,12 @@ namespace ATSAudit.Repositories
             }
         }
 
-        public async Task<IEnumerable<AuditPlanModel>> GetAuditPlan(int planId)
+        public async Task<AuditPlanModel> GetAuditPlan(int planId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[AuditPlans] where PlanId = @PlanId";
-                return await connection.QueryAsync<AuditPlanModel>(query, new { PlanId = planId });
+                return await connection.QueryFirstOrDefaultAsync<AuditPlanModel>(query, new { PlanId = planId });
             }
         }
 

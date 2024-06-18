@@ -5,6 +5,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 
 using APPCommon.Class;
+using System.Data;
 
 namespace ATSAudit.Repositories
 {
@@ -60,6 +61,16 @@ namespace ATSAudit.Repositories
                 };
                 
                 return await connection.ExecuteAsync(query, parameters);
+            }
+        }
+
+        public async Task<int> CloseCorrectiveAction(int cparId, DateTime actualCloseDate)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                return await connection.ExecuteAsync(   "sp_CloseCorrectiveAction", 
+                                                        new { CPARId = cparId, ActualCloseDate = actualCloseDate },
+                                                        commandType: CommandType.StoredProcedure);
             }
         }
 

@@ -47,6 +47,13 @@ namespace ATSAudit.Controllers.Api
             return await _repository.PostCorrectiveAction(request);
         }
 
+        [HttpPatch]
+        public async Task<IActionResult> CloseCorrectiveAction(int cparId, [FromBody] DateTime closeDate)
+        {
+            await _repository.CloseCorrectiveAction(cparId, closeDate);
+            return Ok(new {response = $"Succesfully closed CorrectiveAction {cparId}."});
+        }
+
         [HttpDelete("{correctiveActionId:int}")]
         public async Task<IActionResult> DeleteCorrectiveAction (int correctiveActionId) 
         {

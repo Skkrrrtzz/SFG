@@ -9,6 +9,6 @@ namespace ATSAudit.Repositories
         public Task<IEnumerable<CorrectiveActionModel>> GetCorrectiveActionsByCPAR(int cparId);
         public Task<int> PostCorrectiveAction(CorrectiveActionModel correction);
         public Task<int> DeleteCorrectiveAction(int correctionId);
-     
+        public Task<int> CloseCorrectiveAction(int cparId, DateTime closeDate);
     }
 }

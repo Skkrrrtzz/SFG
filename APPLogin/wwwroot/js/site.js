@@ -31,6 +31,7 @@ function DialogError(xhr) {
         //}
     });
 }
+
 function ShowMessage(paramode) {
     var toaster = document.getElementById("toastMessage");
     var toasterHeader = document.getElementById("toastHeader");

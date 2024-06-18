@@ -1,6 +1,3 @@
-$('#conformitiesTab').on('click', () => { 
-    renderConformitiesTable();
-});
 
 async function renderConformitiesTable() {
     // fetch('/').catch(() => { window.location.href = '/' });
@@ -22,6 +19,10 @@ async function renderConformitiesTable() {
         });
     });
 }
+
+$('#conformitiesTab').on('click', () => { 
+    renderConformitiesTable();
+});
 
 $('#createConformitySubmit').on('click', e => {
     let formData = {

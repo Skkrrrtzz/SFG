@@ -1,0 +1,31 @@
+﻿@page
+@model ATSSFG.Pages.Dashboard.CheckingPartNumberModel
+@{
+}
+<div class="card p-2 bg-light">
+    <div class="border-3 border-bottom border-dark">
+        <h4 class="fw-bold">Checking Part Number</h4>
+    </div>
+    <div class="table-responsive p-2">
+        <table class="table table-striped table-hover display" style="width:100%" id="checkingPartNumberTbl">
+            <thead class="table-secondary">
+                <tr>
+                    <th>No</th>
+                    <th>Last Purchase PartNumber</th>
+                    <th>Quotation PartNumber</th>
+                    <th>ItemDescription</th>
+                    <th>GWRLQty</th>
+                    <th>Unit</th>
+                    <th>Last Purchased Date</th>
+                    <th>Last Purchased USD Price</th>
+                    <th>Vendor Name</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/JavaScript/CheckingPartNumber.js"></script>
+}

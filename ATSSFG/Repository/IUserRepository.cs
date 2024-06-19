@@ -6,7 +6,7 @@ namespace ATSSFG.Repository
     {
         public Task<IEnumerable<UsersInfoModel>> GetRole();
 
-        public Task<UsersInfoModel> CheckUser(string name, string dept);
+        public Task<UsersInfoModel> CheckUser(string name);
 
         public Task<IEnumerable<UsersInfoModel>> GetUsersAsync();
 

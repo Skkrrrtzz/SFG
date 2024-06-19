@@ -62,6 +62,7 @@ table {
 }
 .bg-main3 {
   background-color: var(--colorMain3) !important;
+  color: white;
 }
 /* Positioning */
 

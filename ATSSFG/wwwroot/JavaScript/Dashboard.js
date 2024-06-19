@@ -423,10 +423,12 @@ function InsertRFQ() {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       if (data.success) {
         showSuccessAlert(data.message).then(() => {
-          location.reload();
+          window.location.href =
+            "/Sourcing/SourcingRFQForm?partNumber=" +
+            encodeURIComponent(projectName);
         });
       } else {
         showErrorAlert(data.message);

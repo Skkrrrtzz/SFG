@@ -16,6 +16,8 @@ namespace ATSSFG.Repository
 
         public Task<List<dynamic>> GetOpenProjectsSummary();
 
+        public Task<List<dynamic>> CheckingPartNumber();
+
         public Task<List<MRPBOMProductModel>> GetMRPBOMProducts();
 
         public Task<int> UploadMRPBOM(MRPBOMModel model);

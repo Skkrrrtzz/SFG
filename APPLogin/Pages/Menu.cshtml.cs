@@ -67,7 +67,7 @@ namespace APPLogin.Pages
                     userMenu = await _loginRepository.GetMenu(User.FindFirstValue("Password"));
                     userPending = await _loginRepository.GetPending(User.FindFirstValue("FullName"));
 
-                    imgstring = "data:image/png;base64," + Convert.ToBase64String(await _loginRepository.GetEmployeeImage(PIMESProcedures.ToInt16OrDefault(User.FindFirstValue("EmpNo"))));
+                    //imgstring = "data:image/png;base64," + Convert.ToBase64String(await _loginRepository.GetEmployeeImage(PIMESProcedures.ToInt16OrDefault(User.FindFirstValue("EmpNo"))));
                     user = User.FindFirstValue("FullName").ToUpper();
                     greetings = PIMESProcedures.getGreeting();
 

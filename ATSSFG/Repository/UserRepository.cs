@@ -38,7 +38,7 @@ namespace ATSSFG.Repository
             }
         }
 
-        public async Task<UsersInfoModel> CheckUser(string name, string dept)
+        public async Task<UsersInfoModel> CheckUser(string name)
         {
             try
             {
@@ -46,7 +46,6 @@ namespace ATSSFG.Repository
                 {
                     var parameters = new DynamicParameters();
                     parameters.Add("@Name", name);
-                    parameters.Add("@Department", dept);
 
                     var result = await conn.QueryFirstOrDefaultAsync<UsersInfoModel>("CheckUser_SP", parameters, commandType: CommandType.StoredProcedure);
 

@@ -2,14 +2,28 @@
     <div class="modal fade" id="encoder" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="encoderLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header text-bg-primary">
+            <div class="modal-header bg-main3">
                     <h1 class="modal-title fs-5" id="encoderLabel">Sourcing Form | <span class="badge text-bg-dark">Encoder</span> </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                <div class="col mb-2">
+                    <a class="card bg-secondary-subtle border-2 border-primary-subtle h-100 text-decoration-none" type="button" asp-page="/Dashboard/CheckingPartNumber">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <i class="fa-solid fa-magnifying-glass fa-2x"></i>
+                                </div>
+                                <div class="col">
+                                    <h5 class="fs-6">Search or Check PartNumber</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
                     <div class="row row-cols-2 g-2">
                         <div class="col">
-                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadLastPurchase">
+                        <div class="card bg-main3 border-2 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadLastPurchase">
                                 <div class="card-body text-white">
                                     <div class="row align-items-center">
                                         <div class="col-auto">
@@ -23,7 +37,7 @@
                             </div>
                         </div>
                         <div class="col">
-                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadQuotation">
+                        <div class="card bg-main3 border-2 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadQuotation">
                                 <div class="card-body text-white">
                                     <div class="row align-items-center">
                                         <div class="col-auto">
@@ -37,7 +51,7 @@
                             </div>
                         </div>
                         <div class="col">
-                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadMRPBom">
+                        <div class="card bg-main3 border-2 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#uploadMRPBom">
                                 <div class="card-body text-white">
                                     <div class="row align-items-center">
                                         <div class="col-auto">
@@ -51,7 +65,7 @@
                             </div>
                         </div>
                         <div class="col">
-                            <div class="card bg-primary border-3 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#sourcingForm" onclick="sourcingForm()">
+                        <div class="card bg-main3 border-2 border-primary-subtle h-100" type="button" data-bs-toggle="modal" data-bs-target="#sourcingForm" onclick="sourcingForm()">
                                 <div class="card-body text-white">
                                     <div class="row align-items-center">
                                         <div class="col-auto">
@@ -73,14 +87,14 @@
     <div class="modal fade" id="processor" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="processorLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header text-bg-primary">
+            <div class="modal-header bg-main3">
                     <h1 class="modal-title fs-5" id="processorLabel">Sourcing Form | <span class="badge text-bg-dark">Processor</span> </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row row-cols-2 g-2">
                         <div class="col">
-                            <a class="card text-bg-primary border-3 border-primary-subtle text-decoration-none" asp-page="/Dashboard/Library">
+                            <a class="card text-bg-primary border-2 border-primary-subtle text-decoration-none" asp-page="/Dashboard/Library">
                                 <div class="card-body">
                                     <div class="row align-items-center">
                                         <div class="col-auto">
@@ -200,7 +214,7 @@
 <div class="modal fade" id="uploadLastPurchase" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadLastPurchaseLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header text-bg-primary">
+            <div class="modal-header bg-main3">
                 <h1 class="modal-title fs-5" id="uploadLastPurchaseLabel"> <i class="fa-solid fa-file-arrow-up"></i> Last Purchase Info</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -225,7 +239,7 @@
 <div class="modal fade" id="uploadQuotation" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadQuotationLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header text-bg-primary">
+            <div class="modal-header bg-main3">
                 <h1 class="modal-title fs-5" id="uploadQuotationLabel"> <i class="fa-solid fa-file-arrow-up"></i> Quotations</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -250,7 +264,7 @@
 <div class="modal fade" id="uploadMRPBom" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="uploadMRPBomLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header text-bg-primary">
+            <div class="modal-header bg-main3">
                 <h1 class="modal-title fs-5" id="uploadMRPBomLabel"> <i class="fa-solid fa-file-arrow-up"></i> MRP BOM</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

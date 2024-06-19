@@ -15,9 +15,9 @@ namespace ATSSFG.Pages
             _userRepository = userRepository;
         }
 
-        public async Task<UsersInfoModel> CheckUser(string name, string dept)
+        public async Task<UsersInfoModel> CheckUser(string name)
         {
-            return await _userRepository.CheckUser(name, dept);
+            return await _userRepository.CheckUser(name);
         }
 
     }

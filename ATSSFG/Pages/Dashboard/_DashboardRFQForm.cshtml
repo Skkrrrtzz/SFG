@@ -2,8 +2,8 @@
 <div class="modal fade" id="sourcingFormModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sourcingFormModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header text-bg-primary">
-                <h1 class="modal-title fs-5" id="sourcingFormModalLabel">Sourcing RFQ Form</h1>
+            <div class="modal-header bg-main3">
+                <h1 class="modal-title fs-5" id="sourcingFormModalLabel">Sourcing RFQ Form (without BOM)</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-light">
@@ -65,9 +65,9 @@
                                 </div>
                             </div>
                             <div class="col-lg-6">
-                                <label for="origManufacturerFinishingFabParts" class="col-form-label fw-bold">Original Manufacturing / Finishing for FAB Parts</label>
+                                <label for="origMFRRawMatsFab" class="col-form-label fw-bold">Original Manufacturing / Finishing for FAB Parts</label>
                                 <div class="col">
-                                    <input type="text" id="origManufacturerFinishingFabParts" class="form-control" aria-describedby="origManufacturerFinishingFabParts" autocomplete="off" required>
+                                    <input type="text" id="origMFRRawMatsFab" class="form-control" aria-describedby="origMFRRawMatsFab" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="col-lg-2">
@@ -84,10 +84,14 @@
                             </div>
                             <div class="col-lg-4">
                                 <label for="commonUniqParts" class="col-form-label fw-bold">Common or Unique Parts</label>
-                                <input type="text" id="commonUniqParts" class="form-control" aria-describedby="commonUniqParts" autocomplete="off" required>
+                                <select class="form-select" aria-label="Select Status" id="commonUniqParts" name="commonUniqParts" required>
+                                    <option selected disabled value="">Select Status</option>
+                                    <option value="COMMON">COMMON</option>
+                                    <option value="UNIQUE">UNIQUE</option>
+                                </select>
                             </div>
-                            <div class="col-lg-4">
-                                <label for="stdTAT" class="col-sm-4 col-form-label fw-bold">STD TAT</label>
+                            <div class="col-lg-2">
+                                <label for="stdTAT" class="col-form-label fw-bold">STD TAT</label>
                                 <input type="number" id="stdTAT" class="form-control" aria-describedby="stdTAT" autocomplete="off" required>
                             </div>
                         </div>

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ATSSFG.Pages.Dashboard
 {
-    public class OpenProjectsModel : PageModel
+    public class CheckingPartNumberModel : PageModel
     {
         #region Declarations
 
@@ -14,22 +14,20 @@ namespace ATSSFG.Pages.Dashboard
 
         #region Constructor
 
-        public OpenProjectsModel(IDashboardRepository dashboardRepository)
+        public CheckingPartNumberModel(IDashboardRepository dashboardRepository)
         {
             _dashboardRepository = dashboardRepository;
         }
 
         #endregion Constructor
 
-
-
         #region Get
 
-        public async Task<IActionResult> OnGetOpenProjectsSummary()
+        public async Task<IActionResult> OnGetCheckingPartNumber()
         {
             try
             {
-                var result = await _dashboardRepository.GetOpenProjectsSummary();
+                var result = await _dashboardRepository.CheckingPartNumber();
                 return new JsonResult(new { data = result });
             }
             catch (Exception ex)

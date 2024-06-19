@@ -17,8 +17,9 @@ namespace ATSSFG.Pages.Dashboard
         private readonly ISourcingRepository _sourcingRepository;
 
         #endregion Declaration
-        #region Property
-        #endregion Property
+
+
+
         #region Constructor
 
         public DashboardModel(UploadService uploadService, IDashboardRepository dashboardRepository, ISourcingRepository sourcingRepository)
@@ -374,30 +375,49 @@ namespace ATSSFG.Pages.Dashboard
                 return new JsonResult(new { success = false, message = ex.Message });
             }
         }
+
         public async Task<IActionResult> OnPostInsertRFQAsync([FromBody] Dictionary<string, object> formData)
         {
             try
-            { 
+            {
                 if (formData != null)
                 {
-                    var sourcingDataJson = formData["sourcingData"].ToString();
-                    var rfqData = JsonConvert.DeserializeObject<List<RFQModel>>(sourcingDataJson);
-
                     var rfqProjects = new RFQProjectModel
                     {
-                        ProjectName = formData["projectName"].ToString(),
-                        Customer = formData["customer"].ToString(),
-                        QuotationCode = formData["quotationCode"].ToString(),
-                        NoItems = Convert.ToInt32(formData["noItems"].ToString()),
-                        RequestDate = DateTime.Parse(formData["requestDate"].ToString()),
-                        RequiredDate = DateTime.Parse(formData["requiredDate"].ToString()),
-                        StdTAT = Convert.ToInt32(formData["stdTAT"].ToString()),
+                        ProjectName = formData["ProjectName"].ToString(),
+                        Customer = formData["Customer"].ToString(),
+                        QuotationCode = formData["QuotationCode"].ToString(),
+                        NoItems = Convert.ToInt32(formData["NoItems"].ToString()),
+                        RequestDate = DateTime.Parse(formData["RequestDate"].ToString()),
+                        RequiredDate = DateTime.Parse(formData["RequiredDate"].ToString()),
+                        StdTAT = Convert.ToInt32(formData["StdTAT"].ToString()),
                         Status = "OPEN",
                         HasPrices = false
                     };
 
+                    var rfqData = new List<RFQModel>
+                    {
+                        new RFQModel
+                        {
+                            ProjectName = formData["ProjectName"]?.ToString(),
+                            Customer = formData["Customer"]?.ToString(),
+                            QuotationCode = formData["QuotationCode"]?.ToString(),
+                            CustomerPartNumber = formData["CustomerPartNumber"]?.ToString(),
+                            Rev = formData["Rev"]?.ToString(),
+                            Description = formData["Description"]?.ToString(),
+                            OrigMPN = formData["OrigMPN"]?.ToString(),
+                            OrigMFR = formData["OrigMFR"]?.ToString(),
+                            Eqpa = Convert.ToInt32(formData["Eqpa"].ToString()),
+                            Commodity = formData["Commodity"]?.ToString(),
+                            UoM = formData["UoM"]?.ToString(),
+                            Status = formData["Status"]?.ToString(),
+                            Remarks = "FOR SOURCING"
+                        }
+                    };
+
                     var result = await _sourcingRepository.InsertRFQ(rfqProjects, rfqData);
-                    return new JsonResult(new { success = true, message = "RFQ inserted successfully" });
+
+                    return new JsonResult(new { success = result, message = result ? "RFQ inserted successfully" : "Failed to insert RFQ." });
                 }
                 else
                 {
@@ -409,6 +429,7 @@ namespace ATSSFG.Pages.Dashboard
                 return new JsonResult(new { success = false, message = ex.Message });
             }
         }
+
         public async Task<IActionResult> OnPostMarkedAsClosedAsync([FromBody] ProjectAndQuotation markedAsClosed)
         {
             try

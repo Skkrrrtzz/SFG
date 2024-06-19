@@ -85,6 +85,18 @@ namespace ATSSFG.Repository
             }
         }
 
+        public async Task<List<dynamic>> CheckingPartNumber()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                string storedProcedure = "CheckingPartNumber_SP";
+
+                var result = await conn.QueryAsync<dynamic>(storedProcedure, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
         public async Task<List<dynamic>> GetOpenProjectsSummary()
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))

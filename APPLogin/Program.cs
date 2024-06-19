@@ -35,13 +35,13 @@ builder.Services.AddCors(options =>
         options.AddPolicy(name: "_allowedOrigins",
             policy => 
             {
-                policy.WithOrigins("https://localhost:5150", "https://localhost:7103");
+                policy.WithOrigins("https://localhost:44373", "https://localhost:7103");
             });
     });
 
 // Authentication Cookies
 builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(@"C:\Users\jrafols\Gits\PIMES-Web\.cookies"))
+    .PersistKeysToFileSystem(new DirectoryInfo(@"C:\Users\kgajete\source\repos\PIMES-Web\.cookies"))
     .SetApplicationName("SharedCookieApp");
 
 builder.Services.AddAuthentication("Identity.Application")

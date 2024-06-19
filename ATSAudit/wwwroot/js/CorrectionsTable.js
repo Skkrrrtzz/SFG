@@ -1,7 +1,11 @@
+$('#readCPARCorrectionsTable > loading').hide();
+
 async function renderCorrectionsTable() {
     $('#readCPARCorrectionsTable').empty();
-    $('#readCPARCorrectionsTable').load(`?handler=Corrections&cparId=${$('#readCPARId').val()}`, () => { 
-    });
+
+    $('#readCPARCorrectionsTable').load(`?handler=Corrections&cparId=${$('#readCPARId').val()}`, () => { });
+    // fetch(`?handler=Corrections&cparId=${$('#readCPARId').val()}`)
+    // .then(response => $('#readCPARCorrectionsTable').load(response));
 }
 
 $('#createCorrectionButton').on('click', e => {

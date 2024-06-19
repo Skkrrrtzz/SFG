@@ -1,22 +1,27 @@
+using MySqlConnector;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using QA_Audit_Fresh.Models;
-using APPCommon.Class;
+using ATSAudit.Models;
 
-namespace QA_Audit_Fresh.Repositories
+namespace ATSAudit.Repositories
 {
-    public class CPARsService : ICPARsRepository
+    public class MySQLCPARRepository : ICPARsRepository
     {
         private readonly string _connectionString;
 
-        public CPARsService(IConfiguration configuration) {
+        public MySQLCPARRepository(IConfiguration configuration) {
             // _connectionString = configuration.GetConnectionString("DefaultConnection");
-            _connectionString = PIMESSettings.atsAuditConnString;
+            // _connectionString = PIMESSettings.atsAuditConnString;
+            _connectionString = configuration.GetConnectionString("MySQLConnection");
         }
 
         public async Task<IEnumerable<CPARModel>> GetCPARs()
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 // string query = "select * from [dbo].[CPARs]";
                 string query = "select * from [dbo].[CPARs]";
@@ -25,7 +30,7 @@ namespace QA_Audit_Fresh.Repositories
         }
         public async Task<IEnumerable<CPARModel>> GetCPARByAuditPlanWithActualAuditDate(int cparId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 // string query = "select * from [dbo].[CPARs]";
                 string query = "select * from CPARsActualAuditDate where CPARId = @CPARId";
@@ -35,7 +40,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<CPARModel>> GetCPARsByAuditPlan(int planId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[CPARs] where PlanId = @PlanId";
                 return await connection.QueryAsync<CPARModel>(query, new { PlanId = planId });
@@ -44,7 +49,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<CPARModel>> GetCPAR(int cparId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[CPARs] where cparId = @ConformityId";
                 return await connection.QueryAsync<CPARModel>(query, new { ConformityId = cparId });
@@ -54,20 +59,20 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<CPARModel>> PostInitialCPAR(CPARModel cpar)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 // string query = "select * from [dbo].[CPARs] where cparId = @ConformityId";
                 string query = @"insert into dbo.CPARs
-                                (PlanId, Respondent, Requestor, IssueDate, ResponseDueDate, ISOClause, ProblemStatement)
+                                (PlanId, Respondent, Requestor, ResponseDueDate, ISOClause, ProblemStatement)
                                 output inserted.*
                                 values
-                                (@PlanId, @Respondent, @Requestor, @IssueDate, @ResponseDueDate, @ISOClause, @ProblemStatement)";
+                                (@PlanId, @Respondent, @Requestor, @ResponseDueDate, @ISOClause, @ProblemStatement)";
 
                 object parameters = new {
                     PlanId = cpar.PlanId,
                     Respondent = cpar.Respondent,
                     Requestor = cpar.Requestor,
-                    IssueDate = cpar.IssueDate,
+                    // IssueDate = cpar.IssueDate,
                     // ApprovalDate = cpar.ApprovalDate,
                     ResponseDueDate = cpar.ResponseDueDate,
                     ISOClause = cpar.ISOClause,
@@ -83,7 +88,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<int> DeleteCPAR(int cparId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 string query = "delete from [dbo].[CPARs] where CPARId = @CPARId";
                 return await connection.ExecuteAsync(query, new { CPARId = cparId });

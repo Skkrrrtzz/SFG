@@ -1,6 +1,6 @@
-using QA_Audit_Fresh.Models;
+using ATSAudit.Models;
 
-namespace QA_Audit_Fresh.Repositories
+namespace ATSAudit.Repositories
 {
     public interface ICorrectiveActionsRepository
     {
@@ -9,6 +9,6 @@ namespace QA_Audit_Fresh.Repositories
         public Task<IEnumerable<CorrectiveActionModel>> GetCorrectiveActionsByCPAR(int cparId);
         public Task<int> PostCorrectiveAction(CorrectiveActionModel correction);
         public Task<int> DeleteCorrectiveAction(int correctionId);
-     
+        public Task<int> CloseCorrectiveAction(int cparId, DateTime closeDate);
     }
 }

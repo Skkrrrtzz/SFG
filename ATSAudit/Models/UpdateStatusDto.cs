@@ -4,13 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace QA_Audit_Fresh.Models
+namespace ATSAudit.Models
 {
     public class UpdateStatusDto
     {
         [Required]
         public string? Status { get; set; }
-        [Required]
+        [Required(ErrorMessage = "ActualAuditDate cannot be null or empty when closing an audit plan.")]
         public DateTime? ActualAuditDate { get; set; }
     }
+    
 }

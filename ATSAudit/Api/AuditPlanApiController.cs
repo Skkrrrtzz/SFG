@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using QA_Audit_Fresh.Models;
-using QA_Audit_Fresh.Repositories;
+using ATSAudit.Models;
+using ATSAudit.Repositories;
 
-namespace QA_Audit_Fresh.Controllers.Api
+namespace ATSAudit.Controllers.Api
 {
     [ApiController]
     // [Route("api/auditplans")]
@@ -51,26 +51,15 @@ namespace QA_Audit_Fresh.Controllers.Api
         
         }
 
-        [HttpPost("{planId:int}")]
+        [HttpPatch("{planId:int}")]
         public async Task<IActionResult> UpdateStatus(int planId, [FromBody] UpdateStatusDto request)
         {
-            if (string.IsNullOrEmpty(request.Status))
-            {
-                return BadRequest("Status cannot be null or empty.");
-            }
-
-            if (request.Status == "Closed" && request.ActualAuditDate == null)
-            {
-                return BadRequest("ActualAuditDate cannot be null or empty when closing an audit plan.");
-            }
-
-            int query;
             if (request.Status == "Closed")
             {
-                query = await _repository.UpdateStatus(planId, request.Status, request.ActualAuditDate.Value);
+                await _repository.UpdateStatus(planId, request.Status, request.ActualAuditDate.Value);
                 return Ok(new {request = $"Succesfully updated PlanId {planId} Status to 'Closed'."});
             } else {
-                query = await _repository.UpdateStatus(planId, request.Status);
+                await _repository.UpdateStatus(planId, request.Status);
                 return Ok(new {request = $"Successfully updated PlanId {planId} Status to '{request.Status}'."});
             }
         }

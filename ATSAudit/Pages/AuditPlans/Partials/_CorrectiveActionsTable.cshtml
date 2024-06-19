@@ -1,4 +1,4 @@
-@using QA_Audit_Fresh.Models
+@using ATSAudit.Models
 @model List<CorrectiveActionModel>
 
 <h6 class="form-text text-center">Corrective Actions</h6>
@@ -13,6 +13,7 @@
                 <th scope="col">Target Date</th>
                 <th scope="col">Responsible Person</th>
                 <th scope="col">Status</th>
+                <th scope="col">Evidence</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -34,6 +35,7 @@
                             };
                         }
                         <td><span class="badge @status.badgeClass">@status.badgeText</span></td>
+                        <td></td>
                         <td data-correctiveactionid="@correctiveAction.CorrectiveActionId">
                             <button type="button" class="btn btn-success correctiveAction-close fa-solid fa-square-check"></button>
                             <button type="button" class="btn btn-secondary correctiveAction-edit fa-solid fa-pen-to-square"></button>

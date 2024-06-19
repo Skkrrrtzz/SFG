@@ -40,8 +40,8 @@ function viewAuditPlan(args) {
         fetch(`/api/auditplans/${$('#readAuditPlanId').val()}`, {
             method: 'POST',
             body: JSON.stringify({ 
-                status: "Closed",
-                actualAuditDate: new Date()
+                Status: "Closed",
+                ActualAuditDate: new Date()
              }),
             headers: {
                 "Content-Type": "application/json"
@@ -61,8 +61,11 @@ function viewAuditPlan(args) {
     $('#auditPlanManagerApproveAuditPlan').off('click');
     $('#auditPlanManagerApproveAuditPlan').click(e => {
         fetch(`/api/auditplans/${$('#readAuditPlanId').val()}`, {
-            method: 'POST',
-            body: JSON.stringify({ status: "Open" }),
+            method: 'PATCH',
+            body: JSON.stringify({ 
+                Status: "Open",
+                ActualAuditDate: new Date()
+             }),
             headers: {
                 "Content-Type": "application/json"
             }
@@ -76,6 +79,54 @@ function viewAuditPlan(args) {
         .catch(error => console.log(error));
     });
 }
+
+// function viewAuditPlanRazorImplementation(args) {
+//     $('#sidepane').load(`?handler=AuditPlan&planId=${args.plan.planId}`, () => { 
+//         // $('#readCPARCorrectionsTable > .loading').hide();
+
+//         $('#auditPlanManagerCloseAuditPlan').click(e => {
+//             fetch(`/api/auditplans/${$('#readAuditPlanId').val()}`, {
+//                 method: 'POST',
+//                 body: JSON.stringify({ 
+//                     Status: "Closed",
+//                     ActualAuditDate: new Date()
+//                 }),
+//                 headers: {
+//                     "Content-Type": "application/json"
+//                 }
+//             })
+//             .then(response => response.json())
+//             // .then(data => { })
+//             .then(() => {
+//                 // renderCalendar(thisYear, thisMonth, getFirstDay(thisYear, thisMonth), getLastDayOfMonth(thisYear, thisMonth))
+//                 displayViewAuditPlan();
+//                 renderCalendar(currentDate);
+//                 viewAuditPlan(args)
+//             })
+//             .catch(error => console.log(error));
+//         });
+
+//         $('#auditPlanManagerApproveAuditPlan').click(e => {
+//             fetch(`/api/auditplans/${$('#readAuditPlanId').val()}`, {
+//                 method: 'PATCH',
+//                 body: JSON.stringify({ 
+//                     Status: "Open",
+//                     ActualAuditDate: new Date()
+//                 }),
+//                 headers: {
+//                     "Content-Type": "application/json"
+//                 }
+//             })
+//             .then(response => response.json())
+//             // .then(data => console.log(data))
+//             .then(() => {
+//                 renderCalendar(currentDate);
+//                 viewAuditPlan(args)
+//             })
+//             .catch(error => console.log(error));
+//         });
+//     });
+// }
 
 $('#readAuditPlanDelete').on('click', e => {
     console.log($('#readAuditPlanId').val());

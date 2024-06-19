@@ -1,25 +1,35 @@
+using MySqlConnector;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 // using Microsoft.CodeAnalysis.CSharp.Syntax;
-using QA_Audit_Fresh.Models;
+using Microsoft.Extensions.Logging;
+using ATSAudit.Models;
 using Dapper;
+using System.Data;
+using System.ComponentModel;
+using ATSAudit.Repositories;
 // using MySqlConnector;'
 using Microsoft.Data.SqlClient;
 
-using APPCommon.Class;
-
-namespace QA_Audit_Fresh.Repositories
+namespace ATSAudit.Repositories
 {
-    public class CorrectiveActionsService : ICorrectiveActionsRepository
+    public class MySQLCorrectiveActionRepository : ICorrectiveActionsRepository
     {
         private readonly string _connectionString; 
-        public CorrectiveActionsService(IConfiguration configuration)
+        public MySQLCorrectiveActionRepository(IConfiguration configuration)
         {
             // _connectionString = configuration.GetConnectionString("DefaultConnection");
-            _connectionString = PIMESSettings.atsAuditConnString;
+            // _connectionString = PIMESSettings.atsAuditConnString;
+            _connectionString = configuration.GetConnectionString("MySQLConnection");
         }
 
         public async Task<IEnumerable<CorrectiveActionModel>> GetCorrectiveActions()
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[CorrectiveActions]";
                 return await connection.QueryAsync<CorrectiveActionModel>(query);
@@ -28,7 +38,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<CorrectiveActionModel>> GetCorrectiveActionsByCPAR(int cparId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[CorrectiveActions] where CPARId = @CPARId";
                 return await connection.QueryAsync<CorrectiveActionModel>(query, new { CPARId = cparId });
@@ -37,7 +47,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<CorrectiveActionModel>> GetCorrectiveAction(int correctiveActionId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[CorrectiveActions] where CorrectiveActionId = @CorrectiveActionId";
                 return await connection.QueryAsync<CorrectiveActionModel>(query, new { CorrectiveActionId = correctiveActionId });
@@ -46,7 +56,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<int> PostCorrectiveAction(CorrectiveActionModel correctiveAction) 
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 string query = @"insert into [dbo].[CorrectiveActions] 
                     (CPARId, CorrectiveActionDescription, TargetDate, Responsible) 
@@ -63,9 +73,14 @@ namespace QA_Audit_Fresh.Repositories
             }
         }
 
+        public Task<int> CloseCorrectiveAction(int cparId, DateTime closeDate)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<int> DeleteCorrectiveAction(int correctiveActionId)
         {
-            using (var connection = new SqlConnection(_connectionString)) 
+            using (var connection = new MySqlConnection(_connectionString)) 
             {
                 // Console.WriteLine("CorrectiveActionId" + conformityId);
 
@@ -74,5 +89,6 @@ namespace QA_Audit_Fresh.Repositories
                 return await connection.ExecuteAsync(query, new { CorrectiveActionId = correctiveActionId });
             }
         }
+
     }
 }

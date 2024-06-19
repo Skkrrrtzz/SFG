@@ -1,11 +1,13 @@
 var readCPARToggle = true;
 
 async function renderCPARsTable() {
-    $('#cparsTableBody').empty();
-    $('#conformitiesTable').show();
-    $('.emptyTable').show();
+    // $('#cparsTableBody').empty();
+    // $('#conformitiesTable').show();
+    // $('.emptyTable').show();
+    $('#cparTabPane .loading').show();
 
     $('#cparTabPane').load(`?handler=CPARs&planId=${$('#readAuditPlanId').val()}`, () => {
+        $('#cparTabPane .loading').hide();
         $('.cpar-view').on('click',  e => { readCPAR(e) });
     })
 

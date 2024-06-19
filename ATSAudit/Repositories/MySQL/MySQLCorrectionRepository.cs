@@ -1,25 +1,35 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 // using Microsoft.CodeAnalysis.CSharp.Syntax;
-using QA_Audit_Fresh.Models;
+using Microsoft.Extensions.Logging;
+using ATSAudit.Models;
 using Dapper;
+using System.Data;
+using System.ComponentModel;
+using ATSAudit.Repositories;
 // using MySqlConnector;'
 using Microsoft.Data.SqlClient;
+using MySqlConnector;
 
-using APPCommon.Class;
-
-namespace QA_Audit_Fresh.Repositories
+namespace ATSAudit.Repositories
 {
-    public class CorrectionsService : ICorrectionsRepository
+    public class MySQLCorrectionRepository : ICorrectionsRepository
     {
         private readonly string _connectionString; 
-        public CorrectionsService(IConfiguration configuration)
+        public MySQLCorrectionRepository(IConfiguration configuration)
         {
             // _connectionString = configuration.GetConnectionString("DefaultConnection");
-            _connectionString = PIMESSettings.atsAuditConnString;
+            // _connectionString = PIMESSettings.atsAuditConnString;
+            _connectionString = configuration.GetConnectionString("MySQLConnection");
         }
 
         public async Task<IEnumerable<CorrectionModel>> GetCorrections()
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[Corrections]";
                 return await connection.QueryAsync<CorrectionModel>(query);
@@ -28,7 +38,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<CorrectionModel>> GetCorrectionsByCPAR(int cparId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[Corrections] where CPARId = @CPARId";
                 return await connection.QueryAsync<CorrectionModel>(query, new { CPARId = cparId });
@@ -37,7 +47,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<IEnumerable<CorrectionModel>> GetCorrection(int correctionId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[Corrections] where CorrectionId = @CorrectionId";
                 return await connection.QueryAsync<CorrectionModel>(query, new { CorrectionId = correctionId });
@@ -46,7 +56,7 @@ namespace QA_Audit_Fresh.Repositories
 
         public async Task<int> PostCorrection(CorrectionModel correction) 
         {
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = new MySqlConnection(_connectionString))
             {
                 string query = @"insert into [dbo].[Corrections] 
                     (CPARId, CorrectionDescription, EscapeCause, Action) 
@@ -63,9 +73,10 @@ namespace QA_Audit_Fresh.Repositories
             }
         }
 
+
         public async Task<int> DeleteCorrection(int correctionId)
         {
-            using (var connection = new SqlConnection(_connectionString)) 
+            using (var connection = new MySqlConnection(_connectionString)) 
             {
                 // Console.WriteLine("CorrectionId" + conformityId);
 

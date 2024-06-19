@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 
-namespace QA_Audit_Fresh.Models
+namespace ATSAudit.Models
 {
     public class ConformityModel
     {

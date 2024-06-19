@@ -1,12 +1,12 @@
-using QA_Audit_Fresh.Models;
+using ATSAudit.Models;
 
-namespace QA_Audit_Fresh.Repositories
+namespace ATSAudit.Repositories
 {
     public interface IAuditPlansRepository
     {
         public Task<IEnumerable<AuditPlanModel>> GetAuditPlans();
         public Task<IEnumerable<AuditPlanModel>> GetAuditPlansByMonth(int month);
-        public Task<IEnumerable<AuditPlanModel>> GetAuditPlan(int planId);
+        public Task<AuditPlanModel> GetAuditPlan(int planId);
         public Task<IEnumerable<AuditPlanModel>> PostAuditPlan(AuditPlanModel auditPlan);
         public Task<int> UpdateStatus(int planId, string status, DateTime actualAuditDate);
         public Task<int> UpdateStatus(int planId, string status);

@@ -1,8 +1,11 @@
 using APPCommon.Class;
 using APPLogin.Models;
 using APPLogin.Repository;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Security.Claims;
 using System.Text.Json;
 
 namespace APPLogin.Pages
@@ -76,6 +79,7 @@ namespace APPLogin.Pages
         //        return StatusCode(500, new { errorMessage = ex.Message });
         //    }
         //}
+
         public async Task<IActionResult> OnGetUserLoginAsync(string parapass)
         {
             try
@@ -91,11 +95,22 @@ namespace APPLogin.Pages
 
                 if (user != null)
                 {
-                    var httpContext = _httpContext.HttpContext;
+                    var claims = new List<Claim>
+                    {
+                        new Claim("FullName", userLogin.Select(x => x.username).FirstOrDefault()),
+                        new Claim("Password", parapass),
+                        new Claim("EmpNo", userLogin.Select(x => x.employeeno).FirstOrDefault())
+                    };
 
-                    httpContext.Session.SetString("MyPassword", user.password);
-                    httpContext.Session.SetString("MyUser", user.username);
-                    httpContext.Session.SetString("MyEmpNo", user.employeeno);
+                    var claimsIdentity = new ClaimsIdentity(
+                        claims,
+                         "Identity.Application"
+                        // CookieAuthenticationDefaults.AuthenticationScheme
+                        );
+
+                    await HttpContext.SignInAsync(
+                        "Identity.Application", 
+                        new ClaimsPrincipal(claimsIdentity));
                 }
 
                 return new JsonResult(new { Success = true });

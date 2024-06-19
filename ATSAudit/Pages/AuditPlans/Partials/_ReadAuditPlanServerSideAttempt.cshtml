@@ -1,6 +1,9 @@
+@model ATSAudit.Views.AuditPlans.DashboardRazor
+
 <div class="card" id="readAuditPlan">
     <div class="card-header bg-primary text-light d-flex justify-content-between">
         <h6 class="align-middle">Viewing Audit Plan</h6>    
+
         <div>
             <button class="btn btn-secondary">
                 <i class="fa-solid fa-pen-to-square"></i> 
@@ -22,39 +25,72 @@
                     <input type="text" id="readAuditPlanId" hidden readonly>
                     <div class="col-md-12 col-lg-6">
                         <label class="w-100 form-text ">Target Date:</label>
-                        <input class="form-control text-center" id="readAuditPlanTargetDate" readonly />
+                        <input  class="form-control text-center" 
+                                id="readAuditPlanTargetDate" 
+                                value="@Model.CurrentAuditPlan.TargetDate"
+                                readonly />
                     </div>
                     <div class="col-md-122 col-lg-6">
                         <label class="w-100 form-text ">Time:</label>
-                        <input class="form-control text-center" id="readAuditPlanTimeStart" readonly />
+                        <input  class="form-control text-center" 
+                                id="readAuditPlanTimeStart" 
+                                value="@Model.CurrentAuditPlan.TargetDate.ToString("HH:mm tt")"
+                                readonly />
                     </div>
                     <div class="col-12">
                         <label class="w-100 form-text  ">Status:</label>
-                        <input class="form-control text-center" id="readAuditPlanStatus" readonly/>
+                        <input  class="form-control text-center" 
+                                id="readAuditPlanStatus" 
+                                value="@(Model.CurrentAuditPlan.Status switch
+                                    {
+                                        0 => "For Approval",
+                                        1 => "Open",
+                                        2 => "Closed",
+                                        _ =>  "Error"
+                                    })"
+                                readonly/>
                     </div>
                     <div class="col-md-122 col-lg-6">
                         <label class="w-100 form-text ">Audit Category:</label>
-                        <input class="form-control text-center" id="readAuditPlanAuditCategory" readonly />
+                        <input  class="form-control text-center" 
+                                id="readAuditPlanAuditCategory" 
+                                value="@Model.CurrentAuditPlan.AuditCategory"
+                                readonly />
                     </div>
                     <div class="col-md-12 col-lg-6">
                         <label class="w-100 form-text ">Department:</label>
-                        <input class="form-control text-center" id="readAuditPlanDepartment" readonly />
+                        <input  class="form-control text-center" 
+                                id="readAuditPlanDepartment" 
+                                value="@Model.CurrentAuditPlan.Department"
+                                readonly />
                     </div>
                     <div class="col-md-12 col-lg-6">
                         <label class="w-100 form-text ">QA Manager Approval:</label>
-                        <input class="form-control text-center" id="readAuditPlanAuditorApproved" readonly />
+                        <input  class="form-control text-center" 
+                                id="readAuditPlanAuditorApproved" 
+                                value="@(Model.CurrentAuditPlan.AuditorApproved ? "Approved" : "Not Approved")"
+                                readonly />
                     </div>
                     <div class="col-md-12 col-lg-6">
                         <label class="w-100 form-text ">Auditee Manager Approval:</label>
-                        <input class="form-control text-center" id="readAuditPlanAuditeeApproved" readonly />
+                        <input  class="form-control text-center" 
+                                id="readAuditPlanAuditeeApproved" 
+                                value="@(Model.CurrentAuditPlan.AuditeeApproved ? "Approved" : "Not Approved")"
+                                readonly />
                     </div>
                 </div>
             </div>
 
             <div class="col-sm-9 col-lg-12">
 
-                <div id="auditPlanManagerPanel" 
+                @* QA MANAGER  *@
+                @if (@Model.CurrentUser.Approver)
+                {
+                <div id="auditPlanManagerPanel"> 
                     <div class="d-flex flex-row-reverse">
+
+                        @if (@Model.CurrentAuditPlan.Status == 0)
+                        {
                         <div id="auditPlanManagerApproval">
                             <button id="auditPlanManagerApproveAuditPlan" class="btn btn-warning">
                                 Approve Audit
@@ -63,11 +99,24 @@
                                 Reject Audit
                             </button>
                         </div>
+                        }
+
+                        @if (@Model.CurrentAuditPlan.Status == 1)
+                        {
                         <button id="auditPlanManagerCloseAuditPlan" class="btn btn-success">
                             Close Audit
                         </button>
+                        }
+
                     </div>
                 </div>
+                } 
+                
+                @* QA REQUESTOR *@
+                @if (@Model.CurrentUser.Requestor)
+                {
+
+                }
 
                 <partial name="Partials/_Tables"></partial>
             </div>

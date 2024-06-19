@@ -1,6 +1,7 @@
-﻿// using QA_Audit_Fresh.Controllers.Repositories;
-
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Reflection;
+using ATSAudit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,63 @@ builder.Services.AddSwaggerGen(options =>
 }
 );
 
+//Allow CORs
+// builder.Services.AddCors(options => 
+//     {
+//         options.AddPolicy(name: "_allowedOrigins",
+//             policy => 
+//             {
+//                 policy.WithOrigins("https://localhost:5150", "https://localhost:7103");
+//             });
+//     });
+
+
+// Authentication Cookies
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(@"C:\Users\jrafols\Gits\PIMES-Web\.cookies"))
+    .SetApplicationName("SharedCookieApp");
+
+builder.Services.AddAuthentication("Identity.Application")
+    .AddCookie("Identity.Application", options =>
+    {
+        options.Cookie.Name = ".AspNet.SharedCookie";
+        options.Cookie.Path = "/";
+        options.SlidingExpiration = true;
+        // options.Cookie.SameSite = SameSiteMode.None;
+        // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        // options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+        // options.Cookie.Domain = "localhost"; // <-- REMOVE REMOOOOVEEEE
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = context =>
+            {
+                if (context.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    context.Response.Headers["The-Rizzler"] = "Mewing";
+                    context.Response.StatusCode = 401;
+                }
+                else
+                {
+                    context.Response.Redirect("https://localhost:7103/Login");
+                }
+                return Task.CompletedTask;
+            }
+
+        };
+    });
+
+// TODO: Maybe implement shared session cookies so that sessions can end immediately after closing the app
+// builder.Services.AddSession(options =>
+// {
+//     options.Cookie.Name = ".AspNet.SharedSession";
+//     options.IdleTimeout = TimeSpan.FromMinutes(30);
+//     options.Cookie.HttpOnly = true;
+//     options.Cookie.IsEssential = true;
+//     options.Cookie.SameSite = SameSiteMode.None;
+//     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+// });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,14 +108,20 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// app.UseCors("_allowedOrigins");
+// app.UseMiddleware<UnauthorizedRedirectMiddleware>();
+
+app.UseAuthentication();
 app.UseAuthorization();
+
+// app.UseSession();
 
 app.MapControllerRoute(
     name: "api",
     pattern: "api/{controller=auditplans}/{id?}/{whatever?}"
 );
+
 app.MapRazorPages();
-app.UseSession();
 
 // Enable Swagger UI
 app.UseSwagger();

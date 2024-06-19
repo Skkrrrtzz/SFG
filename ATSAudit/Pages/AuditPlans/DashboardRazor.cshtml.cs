@@ -1,10 +1,14 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using QA_Audit_Fresh.Models;
-using QA_Audit_Fresh.Repositories;
+using ATSAudit.Models;
+using ATSAudit.Repositories;
+using APPCommon.Class;
 
-namespace QA_Audit_Fresh.Views.AuditPlans
+namespace ATSAudit.Views.AuditPlans
 {
+    [Authorize]
     public class DashboardRazor : PageModel
     {
         private readonly IAuditPlansRepository _auditPlans;
@@ -13,9 +17,11 @@ namespace QA_Audit_Fresh.Views.AuditPlans
         private readonly ICorrectionsRepository _corrections;
         private readonly ICorrectiveActionsRepository _correctiveActions;
         private readonly IPreventiveActionsRepository _preventiveActions;
-        private readonly IHttpContextAccessor _httpContext;
+        private readonly IUsersRepository _users;
 
-        public List<AuditPlanModel>? AuditPlans;
+        public string loader { get; } = PIMESProcedures.randomLoader();
+        public AuditPlanModel CurrentAuditPlan { get; set; }
+        public UserModel? CurrentUser { get; set; }
 
 
         public DashboardRazor(  IAuditPlansRepository auditPlans, 
@@ -24,7 +30,7 @@ namespace QA_Audit_Fresh.Views.AuditPlans
                                 ICorrectionsRepository corrections, 
                                 ICorrectiveActionsRepository correctiveActions,
                                 IPreventiveActionsRepository preventiveActions,
-                                IHttpContextAccessor httpContext) 
+                                IUsersRepository usersRepository) 
         {
             _auditPlans = auditPlans;
             _conformities = conformities;
@@ -32,33 +38,35 @@ namespace QA_Audit_Fresh.Views.AuditPlans
             _corrections = corrections;
             _correctiveActions = correctiveActions;
             _preventiveActions = preventiveActions;
-            _httpContext = httpContext;
+            _users = usersRepository;
         }
 
-        public void OnGet(string z, string y, string x, string w)
+        public void OnGet()
         {
-            _httpContext.HttpContext.Session.SetString("userName", z);
-            // _httpContext.HttpContext.Session.SetString("MyMode", y);
-            // _httpContext.HttpContext.Session.SetString("MyBUCode", x);
-            // _httpContext.HttpContext.Session.SetString("MyRole", w);
+            // string userName = User.FindFirstValue("FullName");
 
-            string userName = z;
+            Console.WriteLine(User.Identity.IsAuthenticated ? "Authenticated!" : "Not Authenticated. :(");
+            Console.WriteLine(User.FindFirstValue("FullName"));
+            Console.WriteLine(User.FindFirstValue("Password"));
+            Console.WriteLine(User.FindFirstValue("EmpNo"));
+
             //Check if user exists in Database
+            string userName = User.FindFirstValue("FullName");
+            CurrentUser = _users.GetUser(userName);
+
+            if (CurrentUser == null)
+            {
+                Console.WriteLine("Uh oh! An error occurred!");
+            } 
+            else
+            {
+                Console.WriteLine(CurrentUser.Approver);
+                Console.WriteLine(CurrentUser.Requestor);
+                Console.WriteLine(CurrentUser.Respondent);
+                Console.WriteLine(CurrentUser.Viewer);
+            }
 
         }
-        // public void OnGet(int month)
-        // {
-        //     var result = _auditPlans.GetAuditPlansByMonth(month);
-        //     result.Wait();
-
-        //     AuditPlans = new List<AuditPlanModel>(result.Result);
-        //     // auditPlans.ForEach(Console.WriteLine);
-        // }
-
-        // public PartialViewResult OnGetCalendar() 
-        // {
-        //     return Partial("Partials/_CalendarTable");
-        // }
 
         //GET: https://localhost:<port>?handler=Conformities&planId=<planId>
         public async Task<PartialViewResult> OnGetConformities(int planId)

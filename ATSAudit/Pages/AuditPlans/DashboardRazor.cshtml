@@ -1,16 +1,11 @@
 @page
-@model QA_Audit_Fresh.Views.AuditPlans.DashboardRazor
+@model ATSAudit.Views.AuditPlans.DashboardRazor
 
 @{
     ViewData["Title"] = "Dashboard";
 }
 
-@* <link href="~/css/homepage.css" rel="stylesheet" />
-<link href="~/css/dashboard.css" rel="stylesheet" /> *@
-
 <div class="container-fluid" id="dashboard">
-    @* <partial name="Partials/_ReadAuditPlanModal"></partial> *@
-    @* <partial name="Partials/_Visualization"></partial> *@
     <div class="row">
 
         <div class="col-xl-7">
@@ -36,10 +31,8 @@
         </div>
 
         <div class="col-xl-5" id="sidepane">
-            @* <div class="row"> *@
-                <partial name="Partials/_CreateAuditPlan"></partial>
-                <partial name="Partials/_ReadAuditPlan"></partial>
-            @* </div> *@
+            <partial name="Partials/_CreateAuditPlan"></partial>
+            <partial name="Partials/_ReadAuditPlan"></partial>
         </div>
 
     </div>
@@ -53,7 +46,9 @@
 
 <partial name="Partials/_ReadCPARModal"></partial>
 
+
 @section Scripts {
+    <script src="~/JS/Common.js"></script>
     <script src="~/JS/ConformitiesTable.js"></script>
     <script src="~/JS/CPARsTable.js"></script>
     <script src="~/JS/CorrectionsTable.js"></script>
@@ -66,6 +61,6 @@
     <script src="~/JS/CreateAuditPlan.js"></script>
     @* <script src="~/JS/CreateConformity.js"></script> *@
 
-    <script src="~/JS/Sidebar.js"></script>
+    <script src="~/JS/Sidepane.js"></script>
     <script src="~/JS/Calendar.js"></script>
 }

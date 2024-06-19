@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace QA_Audit_Fresh.Models
+namespace ATSAudit.Models
 {
     public class UserModel
     {
@@ -9,15 +9,23 @@ namespace QA_Audit_Fresh.Models
 
         [Key]
         public int UserId { get; set; }
-        Name nvarchar(max) NOT NULL,
-        Email nvarchar(max) NOT NULL,
-        Password nvarchar(max) NULL,
-        Encoder bit NULL,
-        Processor bit NULL,
-        Viewer bit NULL,
-        Admin bit NULL,
-        Department 
-        IsActive 
-        
+        [Required]
+        public string? Name { get; set; }
+        [Required]
+        public string? Email { get; set;}
+        [Required]
+        public string? Password { get; set; }
+        [Required]
+        public string? Department { get; set; }
+        [Required]
+        public bool isActive { get; set; }
+        [Required]
+        public bool Approver { get; set; }
+        [Required]
+        public bool Requestor { get; set; }
+        [Required]
+        public bool Respondent { get; set; }
+        [Required]
+        public bool Viewer { get; set; }
     }
 }

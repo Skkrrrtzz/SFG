@@ -1,12 +1,12 @@
 // using Microsoft.CodeAnalysis.CSharp.Syntax;
-using QA_Audit_Fresh.Models;
+using ATSAudit.Models;
 using Dapper;
 // using MySqlConnector;'
 using Microsoft.Data.SqlClient;
 
 using APPCommon.Class;
 
-namespace QA_Audit_Fresh.Repositories
+namespace ATSAudit.Repositories
 {
     public class ConformitiesService : IConformitiesRepository
     {

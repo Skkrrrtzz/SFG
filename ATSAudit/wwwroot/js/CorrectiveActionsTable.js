@@ -2,6 +2,29 @@ async function renderCorrectiveActionsTable() {
     $('#readCPARCorrectiveActionsTable').empty();
     $('#readCPARCorrectiveActionsTable').load(`?handler=CorrectiveActions&cparId=${$('#readCPARId').val()}`, () => { 
     });
+
+    $('.correctiveAction-delete').on('click', e => {
+        let correctiveActionId = e.currentTarget.parentNode.dataset.correctiveactionid/* .split('-')[1] */;
+
+        fetch('/api/correctiveactions/' + correctiveActionId, {
+            method: "DELETE",
+        })
+        .then(response => response.json())
+        .then(data => { renderCorrectiveActionsTable() })
+        .catch(error => console.log(error));
+    });
+
+
+    $('.correctiveAction-close').on('click', e => {
+        let correctiveActionId = e.currentTarget.parentNode.dataset.correctiveactionid/* .split('-')[1] */;
+
+        fetch('/api/correctiveactions/' + correctiveActionId, {
+            method: "PATCH",
+        })
+        .then(response => response.json())
+        .then(data => { renderCorrectiveActionsTable() })
+        .catch(error => console.log(error));
+    });
 }
 
 $('#createCorrectiveActionButton').on('click', e => {
@@ -13,16 +36,6 @@ $('#createCorrectiveAction button.btn-close').on('click', e => {
     $('#readCPAR').modal('toggle');
 });
 
-$('.correctiveAction-delete').on('click', e => {
-    let correctiveActionId = e.currentTarget.parentNode.dataset.correctiveactionid/* .split('-')[1] */;
-
-    fetch('/api/correctiveactions/' + correctiveActionId, {
-        method: "DELETE",
-    })
-    .then(response => response.json())
-    .then(data => { renderConformitiesTable() })
-    .catch(error => console.log(error));
-});
 
 $('#createCorrectiveActionSubmit').on('click', e => {
     $('#createCorrectiveAction').modal('toggle');

@@ -78,6 +78,11 @@ textarea {
     margin-bottom: 1rem;
 }
 
+.loading {
+    display: none;
+    justify-self: center;
+}
+
 /* #conformitiesTable {
     height: 100%;
 }

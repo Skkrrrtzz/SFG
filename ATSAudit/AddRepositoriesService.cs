@@ -1,4 +1,4 @@
-using QA_Audit_Fresh.Repositories;
+using ATSAudit.Repositories;
 
 public static class AddRepositoriesService
 {
@@ -10,7 +10,7 @@ public static class AddRepositoriesService
         services.AddScoped<ICorrectionsRepository, CorrectionsService>();
         services.AddScoped<ICorrectiveActionsRepository, CorrectiveActionsService>();
         services.AddScoped<IPreventiveActionsRepository, PreventiveActionsService>();
-        services.AddScoped<IUsersRepository, UsersService>();
+        services.AddScoped<IUsersRepository, UserService>();
         return services;
     }
 }

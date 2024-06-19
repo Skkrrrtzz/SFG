@@ -23,7 +23,6 @@ namespace ATSAudit.Views.AuditPlans
         public AuditPlanModel CurrentAuditPlan { get; set; }
         public UserModel? CurrentUser { get; set; }
 
-
         public DashboardRazor(  IAuditPlansRepository auditPlans, 
                                 IConformitiesRepository conformities, 
                                 ICPARsRepository cpars, 
@@ -65,7 +64,6 @@ namespace ATSAudit.Views.AuditPlans
                 Console.WriteLine(CurrentUser.Respondent);
                 Console.WriteLine(CurrentUser.Viewer);
             }
-
         }
 
         //GET: https://localhost:<port>?handler=Conformities&planId=<planId>
@@ -83,19 +81,19 @@ namespace ATSAudit.Views.AuditPlans
         //GET: https://localhost:<port>?handler=Corrections&cparId=<cparId>
         public async Task<PartialViewResult> OnGetCorrections(int cparId)
         {
-            return Partial("Partials/_CorrectionsTable", (List<CorrectionModel>) await _corrections.GetCorrectionsByCPAR(cparId));
+            return Partial("Partials/_CPARCorrectionsTable", (List<CorrectionModel>) await _corrections.GetCorrectionsByCPAR(cparId));
         }
 
         //GET: https://localhost:<port>?handler=CorrectiveActions&cparId=<cparId>
         public async Task<PartialViewResult> OnGetCorrectiveActions(int cparId)
         {
-            return Partial("Partials/_CorrectiveActionsTable", (List<CorrectiveActionModel>) await _correctiveActions.GetCorrectiveActionsByCPAR(cparId));
+            return Partial("Partials/_CPARCorrectiveActionsTable", (List<CorrectiveActionModel>) await _correctiveActions.GetCorrectiveActionsByCPAR(cparId));
         }
 
         //GET: https://localhost:<port>?handler=PreventiveActions&cparId=<cparId>
         public async Task<PartialViewResult> OnGetPreventiveActions(int cparId)
         {
-            return Partial("Partials/_PreventiveActionsTable", (List<PreventiveActionModel>) await _preventiveActions.GetPreventiveActionsByCPAR(cparId));
+            return Partial("Partials/_CPARPreventiveActionsTable", (List<PreventiveActionModel>) await _preventiveActions.GetPreventiveActionsByCPAR(cparId));
         }
     }
 }

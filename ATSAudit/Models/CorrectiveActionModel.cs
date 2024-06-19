@@ -18,6 +18,7 @@ namespace ATSAudit.Models
         public DateTime TargetDate { get; set; }
         [Required]
         public string? Responsible  { get; set; }
-        public byte Status { get; set; } = 0;
+        public byte Status { get; set; }
+        public string? EvidenceFiles { get; set; }
     }
 }

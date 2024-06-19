@@ -16,5 +16,7 @@ namespace ATSAudit.Models
         public string? EscapeCause { get; set; }
         [Required]
         public string? Action { get; set; }
+        public byte Status { get; set; }
+        public string? EvidenceFiles { get; set; }
     }
 }

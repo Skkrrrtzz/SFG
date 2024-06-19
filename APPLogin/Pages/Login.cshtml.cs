@@ -45,8 +45,9 @@ namespace APPLogin.Pages
 
         #region Get
 
-        public void OnGet()
+        public void OnGet(bool isLoggedOut)
         {
+            Console.WriteLine(isLoggedOut);
             //_httpContext.HttpContext.Session.SetString("MyTitle", "LOGIN");
             //pagetitle = _httpContext.HttpContext.Session.GetString("MyTitle");
         }
@@ -119,6 +120,13 @@ namespace APPLogin.Pages
             {
                 return StatusCode(500, new { errorMessage = ex.Message });
             }
+        }
+
+        public IActionResult OnGetLoggedOut()
+        {
+            // return new RedirectResult("/", false);
+            // return StatusCode(302, new { errorMessage = "You were logged out for idling for 10 minutes." });
+            return RedirectToPage();
         }
         #endregion Get
     }

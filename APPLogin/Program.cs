@@ -41,7 +41,7 @@ builder.Services.AddCors(options =>
 
 // Authentication Cookies
 builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(@"C:\Users\jrafols\Gits\PIMES-Web\.cookies"))
+    .PersistKeysToFileSystem(new DirectoryInfo(@"\\DASHBOARDPC\\ATSPortals\.cookies"))
     .SetApplicationName("SharedCookieApp");
 
 builder.Services.AddAuthentication("Identity.Application")
@@ -63,10 +63,6 @@ builder.Services.AddAuthentication("Identity.Application")
                 {
                     context.Response.Headers["Rafols"] = "Gyatt";
                     context.Response.StatusCode = 401;
-                }
-                else
-                {
-                    context.Response.Redirect("https://localhost:7103/Login");
                 }
                 return Task.CompletedTask;
             }

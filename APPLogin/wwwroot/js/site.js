@@ -1,4 +1,10 @@
 ﻿// #region Function
+$(document).on("ajaxComplete", (event, jqxhr, settings, exception) => {
+    //Redirected to ?handler=LoggedOut
+    if (jqxhr.status == 302) {
+        alert("You were logged out for idling for 10 minutes.");
+    }
+})
 
 function DialogError(xhr) {
     $("#loading").fadeOut();
@@ -24,11 +30,7 @@ function DialogError(xhr) {
             duration: 300
         },
         width: 300,
-        //buttons: {
-        //    Close: function () {
-        //        $(this).dialog('close');
-        //    }
-        //}
+
     });
 }
 

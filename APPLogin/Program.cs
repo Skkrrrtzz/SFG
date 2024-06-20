@@ -41,7 +41,7 @@ builder.Services.AddCors(options =>
 
 // Authentication Cookies
 builder.Services.AddDataProtection()
-    .PersistKeysToFileSystem(new DirectoryInfo(@"C:\Users\kgajete\source\repos\PIMES-Web\.cookies"))
+    .PersistKeysToFileSystem(new DirectoryInfo(@"\\DASHBOARDPC\\ATSPortals\.cookies"))
     .SetApplicationName("SharedCookieApp");
 
 builder.Services.AddAuthentication("Identity.Application")

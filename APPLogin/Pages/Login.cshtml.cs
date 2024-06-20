@@ -81,7 +81,7 @@ namespace APPLogin.Pages
         //}
 
         public async Task<IActionResult> OnGetUserLoginAsync(string parapass)
-        {
+         {
             try
             {
                 userLogin = await _loginRepository.GetLogin(parapass);

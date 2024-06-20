@@ -50,26 +50,6 @@ namespace ATSAudit.Repositories
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                // string query = @"insert into [dbo].[AuditPlans](
-                //     Requestor,
-                //     Department,
-                //     AuditCategory,
-                //     TargetDate,
-                //     TimeEnd,
-                //     AuditorApproved,
-                //     AuditeeApproved,
-                //     Status) 
-
-                //     values (
-                //     @Requestor,
-                //     @Department,
-                //     @AuditCategory,
-                //     @TargetDate,
-                //     @TimeEnd,
-                //     @AuditorApproved,
-                //     @AuditeeApproved,
-                //     @Status)";
-
                 object parameters = new {
                     Requestor = auditPlan.Requestor,
                     Department = auditPlan.Department,

@@ -17,17 +17,18 @@ namespace ATSAudit
 
         public async Task InvokeAsync(HttpContext context)
         {
-            await _next(context);
-
             Console.WriteLine(context.Response.StatusCode);
 
-            if (context.Response.StatusCode == 401 && context.Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            if (context.User.Identity != null && !context.User.Identity.IsAuthenticated)
             {
                 Console.WriteLine("Response failed!");
                 // context.Response.Headers["Rafols"] = "Gyatt";
                 // context.Response.Headers["Location"] = "https://localhost:7103/Login";
-                // context.Response.Redirect("https://localhost:7103/Login");
+                context.Response.Redirect("https://localhost:7103/Login");
+                return;
             }
+
+            await _next(context);
         }
     }
 }

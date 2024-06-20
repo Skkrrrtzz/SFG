@@ -6,7 +6,7 @@ namespace ATSSFG.Services
 {
     public class UploadService
     {
-        private readonly string _networkDirectory = @"\\Dashboardpc\bc sfg\SFG Files";
+        private readonly string _networkDirectory = @"\\Dashboardpc\ATSPortals\ATSSFGFiles";
         private readonly string _excelDirectory = "\\Uploads\\Excel";
         private readonly string _excelRFQDirectory = "\\Uploads\\Excel\\RFQ";
         private readonly string _pdfDirectory = "\\Uploads\\PDF";

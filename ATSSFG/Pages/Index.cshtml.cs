@@ -2,8 +2,6 @@
 using ATSSFG.Models;
 using ATSSFG.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.VisualBasic.ApplicationServices;
 using System.Security.Claims;
 
 
@@ -47,8 +45,8 @@ namespace ATSSFG.Pages
             Console.WriteLine(User.FindFirstValue("EmpNo"));
 
             //Check if user exists in Database
-            string userName = User.FindFirstValue("FullName");
-            //string userName = "Michelle Adrales";
+            //string userName = User.FindFirstValue("FullName");
+            string userName = "Michelle Adrales";
             //Remove  this when publishing
             //z = "Michelle Adrales";
             //y = "MENU";

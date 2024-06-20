@@ -3,7 +3,6 @@ using ATSSFG.Repository;
 using ATSSFG.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Newtonsoft.Json;
 using OfficeOpenXml;
 
 namespace ATSSFG.Pages.Dashboard
@@ -279,21 +278,17 @@ namespace ATSSFG.Pages.Dashboard
 
         public async Task<IActionResult> OnGetDownloadExcelFileAsync(string projectName)
         {
-            // Construct the path to the Excel file based on the provided pNDesc
             string filePath = _uploadService.GetExportedExcel(projectName);
 
             if (!System.IO.File.Exists(filePath))
             {
-                return NotFound(); // Excel file not found
+                return NotFound();
             }
 
-            // Get the PDF file name
             string fileName = Path.GetFileName(filePath);
 
-            // Open the PDF file as a stream
             var fileStream = new FileStream(filePath, FileMode.Open);
 
-            // Return the PDF file as a FileStreamResult with the appropriate content type
             return File(fileStream, "application/xlsx", fileName);
         }
 

@@ -1,4 +1,4 @@
-﻿// Function to get query parameter by name from URL
+// Function to get query parameter by name from URL
 function getQueryParam(name) {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(name);
@@ -30,7 +30,7 @@ function fetchRFQPartNumbers(projectName, quotationCode) {
       return response.json();
     })
     .then((data) => {
-      // console.log(data);
+      console.log(data);
       if (data.success) {
         // Display a SweetAlert2 warning message
         Swal.fire({
@@ -57,7 +57,7 @@ function fetchRFQPartNumbers(projectName, quotationCode) {
 function findPartNumber(projectName, partNumber) {
   showLoading();
   // console.log(projectName, partNumber);
-  fetch("/Sourcing/SourcingRFQPrices?handler=GetPrices", {
+  fetch("/Sourcing/ViewSourcingRFQPrices?handler=FindPrices", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -69,9 +69,8 @@ function findPartNumber(projectName, partNumber) {
   })
     .then((response) => response.json())
     .then((data) => {
+      console.log(data);
       if (data.success) {
-        $("#SuggestedSupplier").text("");
-        $("#Comments").val("");
         appendSupplierCards(data.data);
         Swal.close();
       } else {
@@ -90,6 +89,7 @@ function getOrdinalNumber(n) {
   const v = n % 100;
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
+
 function createSupplierCard(
   supplierDetail,
   index,
@@ -111,6 +111,7 @@ function createSupplierCard(
       break;
   }
   const ordinalNumber = getOrdinalNumber(index + 1);
+  // console.log(ordinalNumber);
   // Create card element using jQuery
   const card = $(`
         <div class="col-12 mb-2">
@@ -173,26 +174,13 @@ function createSupplierCard(
   // Check the checkbox if it matches the suggestedSupplier
   if ((index + 1).toString() === suggestedSupplier) {
     checkbox.prop("checked", true);
+    checkbox.prop("readonly", true);
     cardNo.addClass("border border-5 selectedPriceColor");
     $("#SuggestedSupplier").text(index + 1);
     $("#Comments").val(comments);
+  } else {
+    checkbox.prop("hidden", true);
   }
-
-  checkbox.change(function () {
-    if ($(this).is(":checked")) {
-      // Uncheck other checkboxes
-      $(".supplier-checkbox").not(this).prop("checked", false);
-      cardNo.removeClass("border border-5 selectedPriceColor");
-      // Add border class to the selected card
-      cardNo.addClass("border border-5 selectedPriceColor");
-      // Update the SuggestedSupplier element
-      $("#SuggestedSupplier").text(index + 1);
-    } else {
-      // Clear the SuggestedSupplier element if no checkbox is selected
-      $("#SuggestedSupplier").text("");
-      cardNo.removeClass("border border-5 selectedPriceColor");
-    }
-  });
 
   return card;
 }
@@ -235,12 +223,7 @@ function appendSupplierCards(data) {
 
   const suggestedSupplier = data.suggestedSupplier;
   const comments = data.comments;
-  // if (comments) {
-  //   $("#Comments").val(comments);
-  // }
-  // if (suggestedSupplier) {
-  //   $("#SuggestedSupplier").text(suggestedSupplier);
-  // }
+
   // Create and append the supplier cards
   data.supplierDetails.forEach((supplierDetail, index) => {
     const card = createSupplierCard(
@@ -260,7 +243,6 @@ function populateSelect(data) {
       $("<option>", {
         value: index,
         text: item.customerPartNumber,
-        class: item.suggestedSupplier ? "highlight" : "",
       })
     );
   });
@@ -301,82 +283,3 @@ function populateSelect(data) {
 }
 // Call the function with the projectName and quotationCode
 fetchRFQPartNumbers(projectName, quotationCode);
-
-function saveSupplierAndComments() {
-  $("#saveButton").prop("disabled", true);
-  showLoading();
-  let partNumber = $("#PartNumber").val();
-  let suggestedSupplier = $("#SuggestedSupplier").text();
-  let comments = $("#Comments").val();
-  let projectName = $("#projectName").text();
-  // console.log(partNumber, suggestedSupplier, comments, projectName);
-  fetch("/Sourcing/SourcingRFQPrices?handler=SaveSupplierAndComments", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      RequestVerificationToken: $(
-        'input:hidden[name="__RequestVerificationToken"]'
-      ).val(),
-    },
-    body: JSON.stringify({
-      partNumber,
-      projectName,
-      suggestedSupplier,
-      comments,
-    }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((response) => {
-      if (response.success) {
-        showSuccessAlert(response.message);
-        $("#Comments").val("");
-        $("#SuggestedSupplier").text("");
-      } else {
-        showErrorAlert(response.message);
-      }
-    });
-  // .finally(() => {
-  //   // Re-enable the save button after the operation is complete
-  //   $("#saveButton").prop("disabled", false);
-  // });
-}
-updateSaveButtonState();
-function updateSaveButtonState() {
-  let partNumber = $("#PartNumber").val();
-  let suggestedSupplier = $("#SuggestedSupplier").text();
-
-  // Check if partNumber is empty or suggestedSupplier is empty
-  if (!partNumber || !suggestedSupplier) {
-    $("#saveButton").prop("disabled", true);
-  } else {
-    $("#saveButton").prop("disabled", false);
-  }
-}
-// Update save button state when the part number changes
-$("#PartNumber").change(function () {
-  updateSaveButtonState();
-});
-
-// Create a MutationObserver to observe changes to the suggested supplier element
-const observer = new MutationObserver(function () {
-  updateSaveButtonState();
-});
-
-// Start observing changes to the suggested supplier element
-const suggestedSupplierElement = document.getElementById("SuggestedSupplier");
-observer.observe(suggestedSupplierElement, {
-  subtree: true,
-  characterData: true,
-  childList: true,
-});
-
-$("#saveButton").click(function (e) {
-  e.preventDefault();
-
-  saveSupplierAndComments();
-});

@@ -8,7 +8,66 @@
   .then((data) => {
     let count = data.data.length;
     $("#rfqCount").text(count);
-    viewRFQProjects("#libraryTable", data.data);
+    let Tbl = $("#libraryTable").DataTable({
+      responsive: true,
+      data: data.data,
+      columns: [
+        { data: "quotationCode" },
+        {
+          data: "requestDate",
+          render: function (data) {
+            return formatDate(data);
+          },
+        },
+        {
+          data: "projectName",
+          render: function (data) {
+            return getPartNumber(data);
+          },
+        },
+        {
+          data: "status",
+          render: function (data, type, row) {
+            let badgeClass;
+            if (data === "OPEN") {
+              badgeClass = "badge rounded-pill text-bg-success";
+            } else if (data === "CLOSED") {
+              badgeClass = "badge rounded-pill text-bg-danger";
+            } else {
+              badgeClass = "";
+            }
+            return (
+              '<span class="' +
+              badgeClass +
+              '" data-status="' +
+              data +
+              '">' +
+              data +
+              "</span>"
+            );
+          },
+        },
+        {
+          data: null,
+          render: function (row) {
+            if (viewer) {
+              return (
+                '<button type="button" class="btn btn-sm bg-main3 view-btn me-2" data-id="' +
+                row.quotationCode +
+                '" data-name="' +
+                row.projectName +
+                '">View</button>' +
+                '<a href="#" class="text-dark download-btn fs-4" data-id="' +
+                row.projectName +
+                '"><i class="fa-solid fa-download"></i></a>'
+              );
+            } else {
+              return "Viewer kaba ?";
+            }
+          },
+        },
+      ],
+    });
   })
   .catch((error) => {
     alert("Error: " + error.message);
@@ -190,29 +249,31 @@ function viewRFQProjects(table, data) {
       {
         data: null,
         render: function (row) {
-          // const isClosed = row.status === "CLOSED";
-          // const markBtnDisabled = isClosed ? "disabled" : "";
           if (department === "Cost Engineering") {
+            let buttons =
+              '<button type="button" class="btn btn-sm bg-main3 list-btn me-2" data-id="' +
+              row.quotationCode +
+              '" data-name="' +
+              row.projectName +
+              '">View</button>';
+            if (viewer === "False") {
+              buttons +=
+                '<button type="button" class="btn btn-sm btn-danger border-3 border-danger-subtle marked-btn" data-id="' +
+                row.quotationCode +
+                '" data-name="' +
+                row.projectName +
+                '"> Mark as Closed</button>';
+            }
+
+            return buttons;
+          } else if (department === "Sourcing") {
             return (
-              '<button type="button" class="btn btn-sm btn-primary border-3 border-primary-subtle list-btn me-2" data-id="' +
+              '<button type="button" class="btn btn-sm bg-main3 view-btn me-2" data-id="' +
               row.quotationCode +
               '" data-name="' +
               row.projectName +
               '">View</button>' +
-              '<button type="button" class="btn btn-sm btn-danger border-3 border-danger-subtle marked-btn" data-id="' +
-              row.quotationCode +
-              '" data-name="' +
-              row.projectName +
-              '"> Mark as Closed</button>'
-            );
-          } else if (department === "Sourcing") {
-            return (
-              '<a href="#" class="text-primary view-btn fs-4" data-id="' +
-              row.quotationCode +
-              '" data-name="' +
-              row.projectName +
-              '"><i class="fa-solid fa-eye"></i></a> ' +
-              '<a href="#" class="text-success download-btn fs-4" data-id="' +
+              '<a href="#" class="text-dark download-btn fs-4" data-id="' +
               row.projectName +
               '"><i class="fa-solid fa-download"></i></a>'
             );
@@ -299,9 +360,24 @@ $("#incomingRFQTable").on("click", ".list-btn", function () {
 });
 
 $("#libraryTable").on("click", ".view-btn", function () {
-  let quotationCode = $(this).data("name");
+  let projectName = $(this).data("name");
+  let quotation = $(this).data("id");
+  let url =
+    "/Sourcing/ViewSourcingRFQPrices?projectName=" +
+    projectName +
+    "&quotationCode=" +
+    quotation;
 
-  // console.log(quotationCode);
+  window.location.href = url;
+});
+
+$("#libraryTable").on("click", ".download-btn", function () {
+  let projectName = $(this).data("id");
+  let url =
+    "/Dashboard/Dashboard?handler=DownloadExcelFile&projectName=" +
+    encodeURIComponent(projectName);
+  // console.log(url);
+  window.location.href = url;
 });
 // Function to format the date
 function formatDate(dateString) {

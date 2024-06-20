@@ -42,6 +42,7 @@ builder.Services.AddCors(options =>
 // Authentication Cookies
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(@"\\DASHBOARDPC\\ATSPortals\.cookies"))
+    .ProtectKeysWithDpapi(protectToLocalMachine: true)
     .SetApplicationName("SharedCookieApp");
 
 builder.Services.AddAuthentication("Identity.Application")

@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace ATSSFG.Pages.Sourcing
 {
-    public class SourcingRFQPricesModel : PageModel
+    public class ViewSourcingRFQPricesModel : PageModel
     {
         #region Declaration
 
@@ -19,7 +19,7 @@ namespace ATSSFG.Pages.Sourcing
 
         #region Constructor
 
-        public SourcingRFQPricesModel(ISourcingRepository sourcingRepository, UploadService uploadService)
+        public ViewSourcingRFQPricesModel(ISourcingRepository sourcingRepository, UploadService uploadService)
         {
             _uploadService = uploadService;
             _sourcingRepository = sourcingRepository;
@@ -27,7 +27,7 @@ namespace ATSSFG.Pages.Sourcing
 
         #endregion Constructor
 
-        #region Functions
+        #region Function
 
         private async Task<int?> FindPartNumber(string fileName, string partNumber)
         {
@@ -61,65 +61,6 @@ namespace ATSSFG.Pages.Sourcing
             {
                 Console.WriteLine($"Error processing query: {ex.Message}");
                 throw;
-            }
-        }
-
-        public async Task<bool> WriteSuggestedSupplierAndComments(string filePath, string partNumber, string suggestedSupplier, string comments)
-        {
-            try
-            {
-                int? partNumberRow = await FindPartNumber(filePath, partNumber);
-
-                if (partNumberRow.HasValue)
-                {
-                    using (var package = new ExcelPackage(new FileInfo(filePath)))
-                    {
-                        var worksheet = package.Workbook.Worksheets[0];
-                        int rowCount = worksheet.Dimension.Rows;
-                        int colCount = worksheet.Dimension.Columns;
-
-                        int suggestedSupplierColumn = -1;
-                        int commentsColumn = -1;
-
-                        // Find the columns for "Cost Engineer's Suggested Supplier" and "Comments"
-                        for (int col = 1; col <= colCount; col++)
-                        {
-                            if (worksheet.Cells[13, col].Text == "Cost Engineer's Suggested Supplier")
-                            {
-                                suggestedSupplierColumn = col;
-                            }
-                            else if (worksheet.Cells[13, col].Text == "Comments")
-                            {
-                                commentsColumn = col;
-                            }
-                        }
-
-                        // If either column is not found, return false
-                        if (suggestedSupplierColumn == -1 || commentsColumn == -1)
-                        {
-                            Console.WriteLine("One or both of the required columns not found.");
-                            return false;
-                        }
-
-                        // Write the values to the corresponding columns in the specified row
-                        worksheet.Cells[partNumberRow.Value, suggestedSupplierColumn].Value = suggestedSupplier;
-                        worksheet.Cells[partNumberRow.Value, commentsColumn].Value = comments;
-
-                        await package.SaveAsync();
-
-                        return true;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Part number not found.");
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error processing query: {ex.Message}");
-                return false;
             }
         }
 
@@ -279,13 +220,13 @@ namespace ATSSFG.Pages.Sourcing
                                         supplierDetail.ToolingSourcingRemarks = cellValue;
                                         break;
 
-                                    //case "Cost Engineer's Suggested Supplier":
-                                    //    partData.SuggestedSupplier = cellValue;
-                                    //    break;
+                                    case "Cost Engineer's Suggested Supplier":
+                                        partData.SuggestedSupplier = cellValue;
+                                        break;
 
-                                    //case "Comments":
-                                    //    partData.Comments = cellValue;
-                                    //    break;
+                                    case "Comments":
+                                        partData.Comments = cellValue;
+                                        break;
 
                                     default:
                                         Console.WriteLine($"Unrecognized header '{header}'");
@@ -314,37 +255,11 @@ namespace ATSSFG.Pages.Sourcing
             }
         }
 
-        #endregion Functions
-
-        #region Get
-
-        public async Task<IActionResult> OnGetRFQPartNumbersAsync(ProjectAndQuotation RFQ)
-        {
-            try
-            {
-                var result = await _sourcingRepository.GetRFQPartNumbers(RFQ);
-                int count = result.Count();
-                int ssCount = result.Count(r => r.SuggestedSupplier != null);
-                if (result.Any())
-                {
-                    return new JsonResult(new { success = true, message = $"{count} RFQ part numbers found.<br> {ssCount} with suggested suppliers.", data = result });
-                }
-                else
-                {
-                    return new JsonResult(new { success = false, message = "No RFQ part numbers found for the Project." });
-                }
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(new { success = false, message = $"Error: {ex.Message}" });
-            }
-        }
-
-        #endregion Get
+        #endregion Function
 
         #region Post
 
-        public async Task<IActionResult> OnPostGetPricesAsync([FromBody] PartData data)
+        public async Task<IActionResult> OnPostFindPricesAsync([FromBody] PartData data)
         {
             try
             {
@@ -372,45 +287,6 @@ namespace ATSSFG.Pages.Sourcing
                 return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
             }
         }
-
-        public async Task<IActionResult> OnPostSaveSupplierAndCommentsAsync([FromBody] PartData data)
-        {
-            try
-            {
-                var result = await _sourcingRepository.SaveSupplierAndComments(data);
-
-                if (result)
-                {
-                    //var fileName = _uploadService.GetRFQFilePNDesc(data.ProjectName);
-
-                    //if (fileName == null)
-                    //{
-                    //    return NotFound(new { message = "File not found for the provided project name." });
-                    //}
-
-                    //bool excelResult = await WriteSuggestedSupplierAndComments(fileName, data.PartNumber, data.SuggestedSupplier, data.Comments);
-
-                    //if (excelResult)
-                    //{
-                    //    return new JsonResult(new { success = true, message = "Supplier and comments saved successfully." });
-                    //}
-                    //else
-                    //{
-                    //    return new JsonResult(new { success = false, message = "Error saving supplier and comments." });
-                    //}
-                    return new JsonResult(new { success = true, message = "Supplier and comments saved successfully." });
-                }
-                else
-                {
-                    return new JsonResult(new { success = false, message = "Error saving supplier and comments." });
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
-            }
-        }
-
         #endregion Post
     }
 }

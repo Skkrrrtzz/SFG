@@ -64,6 +64,9 @@ table {
   background-color: var(--colorMain3) !important;
   color: white;
 }
+.highlight {
+    background-color: var(--colorHighLight) !important;
+}
 /* Positioning */
 
 .divcenter {

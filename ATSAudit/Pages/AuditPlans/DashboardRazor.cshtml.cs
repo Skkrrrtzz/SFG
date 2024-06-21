@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ATSAudit.Models;
 using ATSAudit.Repositories;
 using APPCommon.Class;
+using System.IO;
 
 namespace ATSAudit.Views.AuditPlans
 {
@@ -22,6 +23,8 @@ namespace ATSAudit.Views.AuditPlans
         public string loader { get; } = PIMESProcedures.randomLoader();
         public AuditPlanModel CurrentAuditPlan { get; set; }
         public UserModel? CurrentUser { get; set; }
+
+        public List<CorrectionModel> Corrections { get; set; }
 
         public DashboardRazor(  IAuditPlansRepository auditPlans, 
                                 IConformitiesRepository conformities, 
@@ -94,6 +97,34 @@ namespace ATSAudit.Views.AuditPlans
         public async Task<PartialViewResult> OnGetPreventiveActions(int cparId)
         {
             return Partial("Partials/_CPARPreventiveActionsTable", (List<PreventiveActionModel>) await _preventiveActions.GetPreventiveActionsByCPAR(cparId));
+        }
+
+        public async Task<IActionResult> OnPostCloseAction(IFormFile evidence)
+        {
+            if (evidence != null)
+            {
+                try
+                {
+                    string filePath = Path.Combine(@"\\DASHBOARDPC\ATSPortals\ATSAuditFiles", evidence.FileName);
+
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        return StatusCode(409, "File already exists");
+                    }
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await evidence.CopyToAsync(stream);
+                    }
+
+                    return  StatusCode(201, "File uploaded successfully!");
+                } 
+                catch (Exception ex)
+                {
+                    return StatusCode(500, $"File was not uploaded due to the following error: {ex.Message}");
+                }
+            }
+            return StatusCode(400, "No file was uploaded.");
         }
     }
 }

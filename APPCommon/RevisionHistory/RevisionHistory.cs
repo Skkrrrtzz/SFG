@@ -3,8 +3,27 @@ namespace APPCommon.RevisionHistory
 {
     public static class RevisionHistory
     {
-        public const double appVersion = 1.09;
+        public const double appVersion = 1.18;
 
+        //Implemented ASP.NET Shared Cookie Authentication with Identity
+        //--> Version : 1.18 Jun. 14, 2024
+        //Implemented Partial Rendering via AJAX in ATSAudit
+        //--> Version : 1.17 Jun. 7, 2024
+        //Created CRUD for CPAR action items: Corrections, Corrective Actions, and Preventive Actions in ATSAudit
+        //--> Version : 1.16 Jun. 6, 2024
+        //Created CRUD + UI for CPARs in ATSAudit
+        //--> Version : 1.15 May 29, 2024
+        //Initial migration of ATSPROD and ATSPPIC
+        //--> Version : 1.14 May 24, 2024
+        //Added CPARs to ATSAudit
+        //--> Version : 1.13 May 23, 2024
+        //Added ATSSFG
+        //--> Version : 1.12 May 23, 2024
+        //Added Audit portal (ATSAudit)
+        //--> Version : 1.11 May 22, 2024
+        //Added ATS database connection strings 
+        //--> Version : 1.10 May 22, 2024
+        //Add Directory system
         //--> Version : 1.09 May 14, 2024
         //Add Directory system
         //--> Version : 1.08 May 12, 2024

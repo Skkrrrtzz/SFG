@@ -49,8 +49,10 @@ builder.Services.AddSwaggerGen(options =>
 
 
 // Authentication Cookies
+    //TODO: Change Cookies to Persist in Users' AppData rather than the Server!!
 builder.Services.AddDataProtection()
     .PersistKeysToFileSystem(new DirectoryInfo(@"\\DASHBOARDPC\\ATSPortals\.cookies"))
+    .ProtectKeysWithDpapi(protectToLocalMachine: true)
     .SetApplicationName("SharedCookieApp");
 
 builder.Services.AddAuthentication("Identity.Application")

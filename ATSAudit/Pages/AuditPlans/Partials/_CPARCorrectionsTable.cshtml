@@ -27,6 +27,7 @@
                         <td>@correction.CorrectionDescription</td>
                         <td>@correction.EscapeCause</td>
                         <td>@correction.Action</td>
+
                         @{
                             (string badgeClass, string badgeText) status = correction.Status switch 
                             {
@@ -35,8 +36,11 @@
                                 _ => ( "bg-danger", "Error" )
                             };
                         }
+
                         <td><span class="badge @status.badgeClass">@status.badgeText</span></td>
-                        <td></td>
+                        <td>
+                            <button class="uploadEvidenceButton form-control fa-solid fa-file" data-bs-target="#uploadEvidence" data-bs-toggle="modal"></button>
+                        </td>
                         <td>
                             <button type="button" class="btn btn-danger corrections-delete fa-solid fa-trash"></button>
                             <button type="button" class="btn btn-secondary corrections-edit fa-solid fa-pen-to-square"></button>
@@ -50,4 +54,5 @@
 {
     <partial name="Partials/_EmptyTable"></partial>
 }
+
 @* <button class="form-control fa-solid fa-plus" data-bs-target="#createCorrection" data-bs-toggle="modal" /> *@

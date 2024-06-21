@@ -1,0 +1,40 @@
+<div class="modal fade" data-bs-backdrop='static' id="uploadEvidence" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h6 class="modal-title text-light">Closing Action Item</h6>    
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+
+                <form   class="grid row-gap-3" 
+                        method="post" 
+                        enctype="multipart/form-data"
+                        data-ajax="true"
+                        data-ajax-url="?handler=CloseAction"
+                        data-ajax-complete="uploadFile"
+                        data-ajax-method="post">
+
+                    <div class="row">
+                        <label for="evidence" class="form-text">
+                            Upload Image
+                            <i class="fa-solid fa-file"></i>
+                        </label>
+                        <input type="file" name="evidence" id="evidence"></input>
+                    </div>
+
+                    <div class="modal-footer row">
+                        <input  class="btn btn-primary"
+                                type="submit"
+                                id="uploadEvidenceSubmit" 
+                                data-bs-target="#readCPAR" 
+                                data-bs-toggle="modal">
+                                Submit
+                        </input>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

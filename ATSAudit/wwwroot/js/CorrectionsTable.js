@@ -1,9 +1,11 @@
 $('#readCPARCorrectionsTable > loading').hide();
 
 async function renderCorrectionsTable() {
-    $('#readCPARCorrectionsTable').empty();
-
-    $('#readCPARCorrectionsTable').load(`?handler=Corrections&cparId=${$('#readCPARId').val()}`, () => { });
+    $('#readCPARCorrectionsTable').load(`?handler=Corrections&cparId=${$('#readCPARId').val()}`, () => { 
+        $('.uploadEvidenceButton').on('click', e => {
+            $('#readCPAR').modal('toggle');
+        });
+    });
     // fetch(`?handler=Corrections&cparId=${$('#readCPARId').val()}`)
     // .then(response => $('#readCPARCorrectionsTable').load(response));
 }
@@ -40,3 +42,4 @@ $('#createCorrectionSubmit').on('click', e => {
     })
     .catch(error => console.log(error));
 });
+

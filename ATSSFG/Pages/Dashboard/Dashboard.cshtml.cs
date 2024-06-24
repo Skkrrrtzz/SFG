@@ -291,7 +291,7 @@ namespace ATSSFG.Pages.Dashboard
 
             return File(fileStream, "application/xlsx", fileName);
         }
-
+        
         #endregion Get
 
         #region Post
@@ -445,7 +445,18 @@ namespace ATSSFG.Pages.Dashboard
                 return new JsonResult(new { success = false, message = ex.Message });
             }
         }
-
+        public async Task<IActionResult> OnPostSummaryRFQperMonth([FromBody] string yearMonth)
+        {
+            try
+            {
+                var result = await _dashboardRepository.GetSummaryRFQperMonth(yearMonth);
+                return new JsonResult(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
+            }
+        }
         #endregion Post
     }
 }

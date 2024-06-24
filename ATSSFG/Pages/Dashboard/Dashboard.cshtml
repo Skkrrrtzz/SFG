@@ -9,6 +9,7 @@
 
     bool isAdmin = Admin.Equals("True", StringComparison.OrdinalIgnoreCase);
 }
+@Html.AntiForgeryToken()
 <div class="row mt-2">
     <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
         <div class="card shadow bg-warning border-3 border-warning-subtle">
@@ -50,8 +51,8 @@
     </div>
     <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
         <div class="row mx-0">
-            <a asp-page="/Dashboard/ProjectSummaryReport" class="btn btn-primary border-2 border-primary-subtle my-2">Project Summary Report</a>
-            <a asp-page="/Dashboard/OpenProjects" class="btn btn-primary border-2 border-primary-subtle my-2">OPEN Projects</a>
+            <a asp-page="/Dashboard/ProjectSummaryReport" class="btn bg-main3 border-2 border-primary-subtle my-2">Project Summary Report</a>
+            <a asp-page="/Dashboard/OpenProjects" class="btn bg-main3 border-2 border-primary-subtle my-2">OPEN Projects</a>
         </div>
     </div>
     <div class="col-sm-4 col-md-6 col-lg-3 mb-2">
@@ -98,7 +99,7 @@
                     </div>
                     <div class="col-auto">
                         <div class="bg-main3 p-2 rounded">
-                            <h6 class="mb-0">Average TAT: 2.5</h6>
+                            <h6 class="mb-0" id="averageTAT"></h6>
                         </div>
                     </div>
                 </div>
@@ -107,6 +108,7 @@
         </div>
     </div>
 </div>
+<canvas id="chart" height="120"></canvas>
 <div>
     <!--Menu Modal -->
     <div class="modal fade" id="menuSFG" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="menuSFGLabel" aria-hidden="true">
@@ -144,9 +146,7 @@
             </div>
         </div>
     </div>
-    @Html.AntiForgeryToken()
     @await Html.PartialAsync("_DashboardModals")
-    
 </div>
 <!-- Open Sourcing Form Modal -->
 <div class="modal fade" id="sourcingForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sourcingFormLabel" aria-hidden="true">

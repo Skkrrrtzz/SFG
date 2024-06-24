@@ -4,6 +4,7 @@ async function renderCorrectionsTable() {
     $('#readCPARCorrectionsTable').load(`?handler=Corrections&cparId=${$('#readCPARId').val()}`, () => { 
         $('.uploadEvidenceButton').on('click', e => {
             $('#readCPAR').modal('toggle');
+            $("#uploadEvidenceId").val(e.currentTarget.dataset.correctionId);
         });
     });
     // fetch(`?handler=Corrections&cparId=${$('#readCPARId').val()}`)

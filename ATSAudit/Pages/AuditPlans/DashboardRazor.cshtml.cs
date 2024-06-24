@@ -99,25 +99,40 @@ namespace ATSAudit.Views.AuditPlans
             return Partial("Partials/_CPARPreventiveActionsTable", (List<PreventiveActionModel>) await _preventiveActions.GetPreventiveActionsByCPAR(cparId));
         }
 
-        public async Task<IActionResult> OnPostCloseAction(IFormFile evidence)
+        public async Task<IActionResult> OnPostUploadEvidence(List<IFormFile> evidence, string form, string? subform, string id)
         {
-            if (evidence != null)
+            string directoryPath = @"\\DASHBOARDPC\ATSPortals\ATSAuditFiles";
+            string formPath =  $"{form}"; //e.g. CPAR/
+            string subformPath =  $"{subform}"; //e.g. CPAR/Corrections
+            string idPath = $"{id}"; //e.g. CPAR/Corrections/134
+
+            if (evidence != null && evidence.Count > 0)
             {
                 try
                 {
-                    string filePath = Path.Combine(@"\\DASHBOARDPC\ATSPortals\ATSAuditFiles", evidence.FileName);
-
-                    if (System.IO.File.Exists(filePath))
+                    foreach (var file in evidence)
                     {
-                        return StatusCode(409, "File already exists");
-                    }
+                        // string filePath = Path.Combine(directoryPath,  file.FileName);
+                        string fullPath = $@"{directoryPath}\{formPath}\{subformPath}\{idPath}";
+                        string filePath = Path.Combine(fullPath, file.FileName);
 
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await evidence.CopyToAsync(stream);
-                    }
+                        //Check if directory exists, otherwise create directory
+                        if (!Directory.Exists(fullPath))
+                        {
+                            Directory.CreateDirectory(fullPath);
+                        }
 
-                    return  StatusCode(201, "File uploaded successfully!");
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            return StatusCode(409, $"File `{file.FileName}` already exists");
+                        }
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+                    }
+                    return StatusCode(201, "File(s) uploaded successfully!");
                 } 
                 catch (Exception ex)
                 {

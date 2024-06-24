@@ -42,14 +42,22 @@ namespace ATSAudit.Repositories
             }
         }
 
-        public async Task<IEnumerable<CPARModel>> GetCPAR(int cparId)
+        public IEnumerable<CPARModel> GetCPAR(int cparId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                string query = "select * from [dbo].[CPARs] where cparId = @ConformityId";
+                return connection.Query<CPARModel>(query, new { ConformityId = cparId });
+            }
+        }
+
+        public async Task<IEnumerable<CPARModel>> GetCPARAsync(int cparId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 string query = "select * from [dbo].[CPARs] where cparId = @ConformityId";
                 return await connection.QueryAsync<CPARModel>(query, new { ConformityId = cparId });
             }
-
         }
 
         public async Task<IEnumerable<CPARModel>> PostInitialCPAR(CPARModel cpar)
@@ -89,5 +97,6 @@ namespace ATSAudit.Repositories
                 return await connection.ExecuteAsync(query, new { CPARId = cparId });
             }
         }
+
     }
 }

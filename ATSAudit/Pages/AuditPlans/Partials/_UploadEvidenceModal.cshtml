@@ -1,40 +1,53 @@
 <div class="modal fade" data-bs-backdrop='static' id="uploadEvidence" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
+
             <div class="modal-header bg-primary">
-                <h6 class="modal-title text-light">Closing Action Item</h6>    
+                <h6 class="modal-title text-light">Uploading Evidence</h6>    
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
+
             <div class="modal-body">
 
                 <form   class="grid row-gap-3" 
+                        id="uploadEvidenceForm"
                         method="post" 
                         enctype="multipart/form-data"
                         data-ajax="true"
-                        data-ajax-url="?handler=CloseAction"
-                        data-ajax-complete="uploadFile"
-                        data-ajax-method="post">
+                        data-ajax-url="?handler=UploadEvidence"
+                        data-ajax-complete="uploadEvidence"
+                        data-ajax-method="post"
+                        >
 
                     <div class="row">
                         <label for="evidence" class="form-text">
-                            Upload Image
-                            <i class="fa-solid fa-file"></i>
+                            <i class="fa-solid fa-file-arrow-up"></i>
+                            Upload attachments
                         </label>
-                        <input type="file" name="evidence" id="evidence"></input>
+
+                        @* <input type="hidden" name="__RequestVerificationToken" value="@Antiforgery.GetTokens(HttpContext).RequestToken" /> *@
+                        <input type="hidden" name="form" value="CPARs">
+                        <input type="hidden" name="subform" value="Corrections">
+                        <input id="uploadEvidenceId" type="hidden" name="id" value="test">
+                        <input type="file" name="evidence" id="uploadEvidenceInput" multiple>
+
+                        <div id="attachedFiles"></div>
                     </div>
 
                     <div class="modal-footer row">
-                        <input  class="btn btn-primary"
+                        <button class="btn btn-primary"
                                 type="submit"
                                 id="uploadEvidenceSubmit" 
                                 data-bs-target="#readCPAR" 
                                 data-bs-toggle="modal">
-                                Submit
-                        </input>
+                            Submit
+                        </button>
                     </div>
+
                 </form>
 
             </div>
+
         </div>
     </div>
 </div>

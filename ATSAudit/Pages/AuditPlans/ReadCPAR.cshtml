@@ -1,4 +1,4 @@
-@page "/cpars-test/{cparId}/lmao"
+@page "/cpars/{cparId}"
 @model ATSAudit.Views.AuditPlans.ReadCPAR
 @{
     ViewData["Title"] = "Dashboard";
@@ -107,15 +107,11 @@
 
             <hr class="border border-2">
 
-            <div class="tableWrapper">
                 <div class="row" id="readCPARCorrectiveActionsTable"></div>
-            </div>
 
             <hr class="border border-2">
             
-            <div class="tableWrapper">
                 <div class="row" id="readCPARPreventiveActionsTable"></div>
-            </div>
         </div>
 
     </div>

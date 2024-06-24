@@ -52,7 +52,8 @@ async function readCPAR(e) {
     $('#readCPARFooterPreparedBy').val(cpar.preparedBy);
 
     $('#correctionsTable').empty();
-    $('#readCPARCorrectionsTable').load(`?handler=Corrections&cparId=${id}`);
+    // $('#readCPARCorrectionsTable').load(`?handler=Corrections&cparId=${id}`);
+    renderCorrectionsTable();
     $('#readCPARCorrectiveActionsTable').load(`?handler=CorrectiveActions&cparId=${id}`);
     $('#readCPARPreventiveActionsTable').load(`?handler=PreventiveActions&cparId=${id}`);
 

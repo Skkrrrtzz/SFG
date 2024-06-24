@@ -27,7 +27,18 @@ textarea {
     /* height: 50%; */
     /* height: 100%; */
     height: 30vh;
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem; */
+}
+
+th {
+    position: sticky;
+    top: 0;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: #FFFFFF;
 }
 
 #createAuditPlan {
@@ -141,4 +152,14 @@ textarea {
 #readCPAR .modal-footer {
     position: sticky;
     bottom: 0;
+}
+
+#attachedFiles {
+    /* margin-inline: auto; */
+    margin-block: 1rem;
+    /* padding: 0.5rem; */
+    width: 90%;
+    
+    display: flex;
+    flex-direction: column;
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using ATSAudit.Models;
 using ATSAudit.Repositories;
 using APPCommon.Class;
+using System.IO;
 
 namespace ATSAudit.Views.AuditPlans
 {
@@ -22,6 +23,8 @@ namespace ATSAudit.Views.AuditPlans
         public string loader { get; } = PIMESProcedures.randomLoader();
         public AuditPlanModel CurrentAuditPlan { get; set; }
         public UserModel? CurrentUser { get; set; }
+
+        public List<CorrectionModel> Corrections { get; set; }
 
         public DashboardRazor(  IAuditPlansRepository auditPlans, 
                                 IConformitiesRepository conformities, 
@@ -94,6 +97,49 @@ namespace ATSAudit.Views.AuditPlans
         public async Task<PartialViewResult> OnGetPreventiveActions(int cparId)
         {
             return Partial("Partials/_CPARPreventiveActionsTable", (List<PreventiveActionModel>) await _preventiveActions.GetPreventiveActionsByCPAR(cparId));
+        }
+
+        public async Task<IActionResult> OnPostUploadEvidence(List<IFormFile> evidence, string form, string? subform, string id)
+        {
+            string directoryPath = @"\\DASHBOARDPC\ATSPortals\ATSAuditFiles";
+            string formPath =  $"{form}"; //e.g. CPAR/
+            string subformPath =  $"{subform}"; //e.g. CPAR/Corrections
+            string idPath = $"{id}"; //e.g. CPAR/Corrections/134
+
+            if (evidence != null && evidence.Count > 0)
+            {
+                try
+                {
+                    foreach (var file in evidence)
+                    {
+                        // string filePath = Path.Combine(directoryPath,  file.FileName);
+                        string fullPath = $@"{directoryPath}\{formPath}\{subformPath}\{idPath}";
+                        string filePath = Path.Combine(fullPath, file.FileName);
+
+                        //Check if directory exists, otherwise create directory
+                        if (!Directory.Exists(fullPath))
+                        {
+                            Directory.CreateDirectory(fullPath);
+                        }
+
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            return StatusCode(409, $"File `{file.FileName}` already exists");
+                        }
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+                    }
+                    return StatusCode(201, "File(s) uploaded successfully!");
+                } 
+                catch (Exception ex)
+                {
+                    return StatusCode(500, $"File was not uploaded due to the following error: {ex.Message}");
+                }
+            }
+            return StatusCode(400, "No file was uploaded.");
         }
     }
 }

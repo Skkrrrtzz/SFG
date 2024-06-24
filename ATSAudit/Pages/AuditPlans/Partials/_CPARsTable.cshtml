@@ -34,7 +34,12 @@
                         <td>@cpar.Requestor</td>
                         <td>@cpar.ResponseDueDate.Value.ToShortDateString()</td>
                         <td data-cparid="@cpar.CPARId">
-                            <button type="button" class="btn btn-primary cpar-view fa-solid fa-pen-to-square" data-bs-toggle="modal" data-bs-target="#readCPAR"></button>
+                            <a  href="/cpars/@cpar.CPARId" 
+                                class="btn btn-primary cpar-view fa-solid fa-pen-to-square"
+                                target="_blank"
+                                rel="noopener noreferrer">
+                            </a>
+
                         </td>
                     </tr>
                 }

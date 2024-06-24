@@ -47,7 +47,7 @@ namespace ATSAudit.Repositories
             }
         }
 
-        public async Task<IEnumerable<CPARModel>> GetCPAR(int cparId)
+        public async Task<IEnumerable<CPARModel>> GetCPARAsync(int cparId)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -93,6 +93,11 @@ namespace ATSAudit.Repositories
                 string query = "delete from [dbo].[CPARs] where CPARId = @CPARId";
                 return await connection.ExecuteAsync(query, new { CPARId = cparId });
             }
+        }
+
+        public IEnumerable<CPARModel> GetCPAR(int cparId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

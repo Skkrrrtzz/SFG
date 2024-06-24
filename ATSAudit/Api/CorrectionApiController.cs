@@ -47,22 +47,27 @@ namespace ATSAudit.Controllers.Api
             return await _repository.PostCorrection(request);
         }
 
-        [HttpDelete("{conformityId:int}")]
-        public async Task<IActionResult> DeleteCorrection (int conformityId) 
+        [HttpDelete("{correctionId:int}")]
+        public async Task<IActionResult> DeleteCorrection (int correctionId) 
         {
             try 
             {
-                var conformity = await _repository.GetCorrection(conformityId);
-                if (conformity == null) return NotFound($"Correction with ID = {conformityId} not found.");
+                var correction = await _repository.GetCorrection(correctionId);
+                if (correction == null) return NotFound($"Correction with ID = {correctionId} not found.");
 
-                var query = await _repository.DeleteCorrection(conformityId);
+                var query = await _repository.DeleteCorrection(correctionId);
                 if (query == 1) return Ok(query);
                 else return BadRequest(query);
             } catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting resource.");
             }
-
         }
+
+        // [HttpPost("upload-correction")]
+
+        // [HttpPost("close-action/{closeId:int}?correctionId={correctionId}")]
+        // public async Task<IActionResult> PostCloseAction (int closedId, )
+
     }
 }

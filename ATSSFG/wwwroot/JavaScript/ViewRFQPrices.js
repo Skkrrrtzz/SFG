@@ -30,7 +30,7 @@ function fetchRFQPartNumbers(projectName, quotationCode) {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       if (data.success) {
         // Display a SweetAlert2 warning message
         Swal.fire({
@@ -69,7 +69,7 @@ function findPartNumber(projectName, partNumber) {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       if (data.success) {
         appendSupplierCards(data.data);
         Swal.close();
@@ -90,12 +90,7 @@ function getOrdinalNumber(n) {
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
 
-function createSupplierCard(
-  supplierDetail,
-  index,
-  suggestedSupplier,
-  comments
-) {
+function createSupplierCard(supplierDetail, index) {
   // Define card color based on the index
   let cardColorClass;
 
@@ -111,8 +106,7 @@ function createSupplierCard(
       break;
   }
   const ordinalNumber = getOrdinalNumber(index + 1);
-  // console.log(ordinalNumber);
-  // Create card element using jQuery
+
   const card = $(`
         <div class="col-12 mb-2">
             <div class="card ${cardColorClass} text-white" id="card${
@@ -170,6 +164,8 @@ function createSupplierCard(
 
   const checkbox = card.find("#flexCheck" + (index + 1));
   const cardNo = card.find("#card" + (index + 1));
+  let suggestedSupplier = $("#SuggestedSupplier").text();
+  let comments = $("#Comments").val();
 
   // Check the checkbox if it matches the suggestedSupplier
   if ((index + 1).toString() === suggestedSupplier) {
@@ -221,17 +217,9 @@ function appendSupplierCards(data) {
   const container = $("#prices-container");
   container.empty(); // Clear any existing content
 
-  const suggestedSupplier = data.suggestedSupplier;
-  const comments = data.comments;
-
   // Create and append the supplier cards
   data.supplierDetails.forEach((supplierDetail, index) => {
-    const card = createSupplierCard(
-      supplierDetail,
-      index,
-      suggestedSupplier,
-      comments
-    );
+    const card = createSupplierCard(supplierDetail, index);
     container.append(card);
   });
 }
@@ -265,6 +253,8 @@ function populateSelect(data) {
         $("#Qty").val(selectedPart.eqpa);
         $("#UOM").val(selectedPart.uoM);
         $("#Parts").val(selectedPart.status);
+        $("#SuggestedSupplier").text(selectedPart.suggestedSupplier);
+        $("#Comments").val(selectedPart.comments);
         findPartNumber(projectName, selectedPart.customerPartNumber);
       } else {
         console.error("Selected part data is undefined.");

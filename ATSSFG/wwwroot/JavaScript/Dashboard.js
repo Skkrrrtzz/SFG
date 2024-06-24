@@ -49,18 +49,23 @@
         },
         {
           data: null,
-          render: function (row) {
+          render: function (data, type, row) {
             if (viewer) {
-              return (
+              let buttons =
                 '<button type="button" class="btn btn-sm bg-main3 view-btn me-2" data-id="' +
                 row.quotationCode +
                 '" data-name="' +
                 row.projectName +
-                '">View</button>' +
-                '<a href="#" class="text-dark download-btn fs-4" data-id="' +
-                row.projectName +
-                '"><i class="fa-solid fa-download"></i></a>'
-              );
+                '">View</button>';
+
+              if (data.status === "CLOSED") {
+                buttons +=
+                  '<button type="button" class="btn btn-sm bg-main3 download-btn me-2" data-id="' +
+                  row.projectName +
+                  '">Download</button>';
+              }
+
+              return buttons;
             } else {
               return "Viewer kaba ?";
             }

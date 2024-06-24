@@ -270,7 +270,7 @@ namespace ATSSFG.Repository
             {
                 using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
-                    string query = "SELECT CustomerPartNumber, Description, OrigMPN, OrigMFR, Commodity, Eqpa , UoM, Status , SuggestedSupplier FROM RFQ WHERE ProjectName = @ProjectName AND QuotationCode = @QuotationCode";
+                    string query = "SELECT CustomerPartNumber, Description, OrigMPN, OrigMFR, Commodity, Eqpa , UoM, Status , SuggestedSupplier, Comments FROM RFQ WHERE ProjectName = @ProjectName AND QuotationCode = @QuotationCode";
 
                     return await conn.QueryAsync<RFQModel>(query, new { ProjectName = RFQ.ProjectName, QuotationCode = RFQ.QuotationCode });
                 }

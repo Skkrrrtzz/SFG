@@ -70,8 +70,6 @@ function findPartNumber(projectName, partNumber) {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        $("#SuggestedSupplier").text("");
-        $("#Comments").val("");
         appendSupplierCards(data.data);
         Swal.close();
       } else {
@@ -90,12 +88,7 @@ function getOrdinalNumber(n) {
   const v = n % 100;
   return n + (s[(v - 20) % 10] || s[v] || s[0]);
 }
-function createSupplierCard(
-  supplierDetail,
-  index,
-  suggestedSupplier,
-  comments
-) {
+function createSupplierCard(supplierDetail, index) {
   // Define card color based on the index
   let cardColorClass;
 
@@ -111,7 +104,7 @@ function createSupplierCard(
       break;
   }
   const ordinalNumber = getOrdinalNumber(index + 1);
-  // Create card element using jQuery
+
   const card = $(`
         <div class="col-12 mb-2">
             <div class="card ${cardColorClass} text-white" id="card${
@@ -169,6 +162,8 @@ function createSupplierCard(
 
   const checkbox = card.find("#flexCheck" + (index + 1));
   const cardNo = card.find("#card" + (index + 1));
+  let suggestedSupplier = $("#SuggestedSupplier").text();
+  let comments = $("#Comments").val();
 
   // Check the checkbox if it matches the suggestedSupplier
   if ((index + 1).toString() === suggestedSupplier) {
@@ -181,11 +176,12 @@ function createSupplierCard(
   checkbox.change(function () {
     if ($(this).is(":checked")) {
       // Uncheck other checkboxes
-      $(".supplier-checkbox").not(this).prop("checked", false);
-      cardNo.removeClass("border border-5 selectedPriceColor");
-      // Add border class to the selected card
+      $(".supplier-checkbox").prop("checked", false);
+      $(".card").removeClass("border border-5 selectedPriceColor");
+
+      $(this).prop("checked", true);
+
       cardNo.addClass("border border-5 selectedPriceColor");
-      // Update the SuggestedSupplier element
       $("#SuggestedSupplier").text(index + 1);
     } else {
       // Clear the SuggestedSupplier element if no checkbox is selected
@@ -233,22 +229,9 @@ function appendSupplierCards(data) {
   const container = $("#prices-container");
   container.empty(); // Clear any existing content
 
-  const suggestedSupplier = data.suggestedSupplier;
-  const comments = data.comments;
-  // if (comments) {
-  //   $("#Comments").val(comments);
-  // }
-  // if (suggestedSupplier) {
-  //   $("#SuggestedSupplier").text(suggestedSupplier);
-  // }
   // Create and append the supplier cards
   data.supplierDetails.forEach((supplierDetail, index) => {
-    const card = createSupplierCard(
-      supplierDetail,
-      index,
-      suggestedSupplier,
-      comments
-    );
+    const card = createSupplierCard(supplierDetail, index);
     container.append(card);
   });
 }
@@ -283,6 +266,8 @@ function populateSelect(data) {
         $("#Qty").val(selectedPart.eqpa);
         $("#UOM").val(selectedPart.uoM);
         $("#Parts").val(selectedPart.status);
+        $("#SuggestedSupplier").text(selectedPart.suggestedSupplier);
+        $("#Comments").val(selectedPart.comments);
         findPartNumber(projectName, selectedPart.customerPartNumber);
       } else {
         console.error("Selected part data is undefined.");
@@ -333,17 +318,13 @@ function saveSupplierAndComments() {
     })
     .then((response) => {
       if (response.success) {
-        showSuccessAlert(response.message);
-        $("#Comments").val("");
-        $("#SuggestedSupplier").text("");
+        showSuccessAlert(response.message).then(() => {
+          fetchRFQPartNumbers(projectName, quotationCode);
+        });
       } else {
         showErrorAlert(response.message);
       }
     });
-  // .finally(() => {
-  //   // Re-enable the save button after the operation is complete
-  //   $("#saveButton").prop("disabled", false);
-  // });
 }
 updateSaveButtonState();
 function updateSaveButtonState() {

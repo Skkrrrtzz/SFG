@@ -220,13 +220,13 @@ namespace ATSSFG.Pages.Sourcing
                                         supplierDetail.ToolingSourcingRemarks = cellValue;
                                         break;
 
-                                    case "Cost Engineer's Suggested Supplier":
-                                        partData.SuggestedSupplier = cellValue;
-                                        break;
+                                    //case "Cost Engineer's Suggested Supplier":
+                                    //    partData.SuggestedSupplier = cellValue;
+                                    //    break;
 
-                                    case "Comments":
-                                        partData.Comments = cellValue;
-                                        break;
+                                    //case "Comments":
+                                    //    partData.Comments = cellValue;
+                                    //    break;
 
                                     default:
                                         Console.WriteLine($"Unrecognized header '{header}'");

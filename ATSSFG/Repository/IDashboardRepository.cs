@@ -10,6 +10,10 @@ namespace ATSSFG.Repository
 
         public Task<List<RFQProjectModel>> GetIncomingRFQProjects();
 
+        public Task<List<RFQProjectModel>> GetIncomingRFQProjects_1();
+
+        public Task<List<RFQProjectModel>> GetIncomingRFQProjects_2();
+
         public Task<List<dynamic>> GetSummaryRFQperMonth(string date);
         public Task<List<RFQProjectModel>> GetAllRFQProjects();
 

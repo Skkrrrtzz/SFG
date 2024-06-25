@@ -62,6 +62,32 @@ namespace ATSSFG.Repository
                 return result.ToList();
             }
         }
+
+        public async Task<List<RFQProjectModel>> GetIncomingRFQProjects_1()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                string query = "SELECT * FROM [GetIncomingRFQ_1]";
+
+                var result = await conn.QueryAsync<RFQProjectModel>(query);
+                return result.ToList();
+            }
+        }
+        public async Task<List<RFQProjectModel>> GetIncomingRFQProjects_2()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+
+                string query = "SELECT * FROM GetIncomingRFQ_2";
+
+                var result = await conn.QueryAsync<RFQProjectModel>(query);
+                return result.ToList();
+            }
+        }
+
         public async Task<List<dynamic>> GetSummaryRFQperMonth(string date)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))

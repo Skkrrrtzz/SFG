@@ -67,10 +67,10 @@ function calculateAverage(values) {
   return (sum / values.length).toFixed(2);
 }
 
-// Function to update the average TAT in the HTML
 function updateAverageTAT(averageTAT) {
   $("#averageTAT").text(`Average TAT: ${averageTAT}`);
 }
+
 // Function to update chart data
 function updateChart(data, chart, chartID) {
   if (chartID === "myChart1") {
@@ -83,31 +83,30 @@ function updateChart(data, chart, chartID) {
     chart.data.datasets[1].data = commonPartsData;
   } else if (chartID === "myChart2") {
     const labels = data.map((item) => item.QuotationCode);
-    const quotationsCodeData = data.map((item) => item.TAT);
-    const stdTATData = data.map((item) => item.StdTAT ?? 0);
+    const tatData = data.map((item) => item.TAT);
+    const stdTATData = data.map((item) => item.StdTAT);
 
     chart.data.labels = labels;
-    chart.data.datasets[0].data = quotationsCodeData;
-
-    chart.options.plugins.annotation.annotations = stdTATData.map(
-      (target, index) => ({
-        type: "line",
-        scaleID: "y",
-        value: target,
-        borderColor: "rgba(255, 0, 0, 1)",
-        borderWidth: 2,
-        label: {
-          display: true,
-          content: `Target: ${target}`,
-          position: "end",
-        },
-      })
-    );
+    chart.data.datasets[0].data = tatData;
+    chart.data.datasets[1].data = stdTATData;
   }
 
   chart.update();
 }
-
+// chart.options.plugins.annotation.annotations = stdTATData.map(
+//   (target, index) => ({
+//     type: "line",
+//     scaleID: "y",
+//     value: target,
+//     borderColor: "rgba(255, 0, 0, 1)",
+//     borderWidth: 2,
+//     label: {
+//       display: true,
+//       content: `Target: ${target}`,
+//       position: "end",
+//     },
+//   })
+// );
 // Initialize charts
 const myChart1 = new Chart(
   document.getElementById("myChart1").getContext("2d"),
@@ -120,12 +119,14 @@ const myChart1 = new Chart(
           label: "Unique Parts",
           data: [],
           backgroundColor: "rgba(58, 91, 160, 1)",
+          borderColor: "rgba(58, 91, 160, 1)",
           borderWidth: 1,
         },
         {
           label: "Common Parts",
           data: [],
           backgroundColor: "rgba(41, 58, 128, 1)",
+          borderColor: "rgba(58, 91, 160, 1)",
           borderWidth: 1,
         },
       ],
@@ -143,6 +144,32 @@ const myChart1 = new Chart(
     },
   }
 );
+const topLine = {
+  id: "topLine",
+  afterDatasetsDraw(chart, args, options) {
+    const { ctx, data } = chart;
+
+    // ctx.save();
+    chart.getDatasetMeta(1).data.forEach((datapoint, index) => {
+      ctx.beginPath();
+      const halfWidth = datapoint.width / 2;
+      ctx.moveTo(datapoint.x - halfWidth, datapoint.y);
+      ctx.lineTo(datapoint.x + halfWidth, datapoint.y);
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "rgba(255, 0, 0, 1)";
+      ctx.stroke();
+
+      // Draw text above the bar
+      ctx.font = "bold 12px sans-serif";
+      ctx.fillStyle = "rgba(255, 0, 0, 1)";
+      ctx.textAlign = "center";
+      const dataset = chart.data.datasets[1];
+      const text = dataset.data[index];
+      ctx.fillText(text, datapoint.x, datapoint.y - 15);
+    });
+    ctx.restore();
+  },
+};
 
 const myChart2 = new Chart(
   document.getElementById("myChart2").getContext("2d"),
@@ -155,84 +182,62 @@ const myChart2 = new Chart(
           label: "RFQ TAT",
           data: [],
           backgroundColor: "rgba(58, 91, 160, 1)",
-          borderWidth: 1,
+          borderColor: "rgba(58, 91, 160, 1)",
+          borderWidth: 2,
           order: 1,
+        },
+        {
+          label: "STD TAT",
+          data: [],
+          backgroundColor: "rgba(0, 0, 0, 0)",
+          borderColor: "rgba(255, 0, 0, 1)",
+          borderWidth: {
+            top: 3,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          },
+          order: 0,
         },
       ],
     },
     options: {
-      responsive: true,
       scales: {
+        x: {
+          stacked: true,
+        },
         y: {
           beginAtZero: true,
+          grace: "10%",
         },
       },
       plugins: {
-        annotation: {
-          annotations: {}, // Initialize as an empty object
+        // datalabels: {
+        //   display: false,
+        //   // anchor: "end",
+        //   // align: "end",
+        //   // color: "black",
+        //   // font: {
+        //   //   weight: "bold",
+        //   // },
+        // },
+        legend: {
+          color: "red",
         },
+        // tooltip: {
+        //   enabled: true,
+        //   callbacks: {
+        //     label: function (context) {
+        //       return context.dataset.label + ": " + context.parsed.y + "%";
+        //     },
+        //   },
+        // },
       },
     },
+    // plugins: [topLine],
+    // plugins: [ChartDataLabels],
   }
 );
 
 // Set up month filters for both charts
 setupMonthFilter("#monthFilter1", "#monthFilter2", myChart1, myChart2);
-const actualData = [100, 180, 120, 80, 140, 170, 160];
-const targetData = [110, 150, 140, 100, 120, 110, 170];
-
-new Chart("chart", {
-  type: "bar",
-  data: {
-    labels: ["KPI 1", "KPI 2", "KPI 3", "KPI 4", "KPI 5", "KPI 6", "KPI 7"],
-    datasets: [
-      {
-        label: "Actual",
-        backgroundColor: "rgba(0, 0, 255, 0.2)",
-        data: actualData,
-        xAxisID: "x-axis-actual",
-      },
-      {
-        label: "Target",
-        backgroundColor: "rgba(255, 0, 128, 1)",
-        data: targetData.map((v) => [v - 1, v + 1]),
-        xAxisID: "x-axis-target",
-      },
-    ],
-  },
-  options: {
-    tooltips: {
-      callbacks: {
-        label: (tooltipItem, data) => {
-          const v =
-            data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-          return Array.isArray(v) ? (v[1] + v[0]) / 2 : v;
-        },
-      },
-    },
-    scales: {
-      xAxes: [
-        {
-          id: "x-axis-target",
-          stacked: true,
-        },
-        {
-          display: false,
-          offset: true,
-          stacked: true,
-          id: "x-axis-actual",
-          gridLines: {
-            offsetGridLines: true,
-          },
-        },
-      ],
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
-        },
-      ],
-    },
-  },
-});

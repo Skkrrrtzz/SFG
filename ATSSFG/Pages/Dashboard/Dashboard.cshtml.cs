@@ -17,8 +17,6 @@ namespace ATSSFG.Pages.Dashboard
 
         #endregion Declaration
 
-
-
         #region Constructor
 
         public DashboardModel(UploadService uploadService, IDashboardRepository dashboardRepository, ISourcingRepository sourcingRepository)
@@ -240,11 +238,24 @@ namespace ATSSFG.Pages.Dashboard
 
         #region Get
 
-        public async Task<IActionResult> OnGetIncomingRFQProjectsAsync()
+        public async Task<IActionResult> OnGetIncomingRFQProjects_1Async()
         {
             try
             {
-                var result = await _dashboardRepository.GetIncomingRFQProjects();
+                var result = await _dashboardRepository.GetIncomingRFQProjects_1();
+                return new JsonResult(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
+            }
+        }
+
+        public async Task<IActionResult> OnGetIncomingRFQProjects_2Async()
+        {
+            try
+            {
+                var result = await _dashboardRepository.GetIncomingRFQProjects_2();
                 return new JsonResult(new { data = result });
             }
             catch (Exception ex)

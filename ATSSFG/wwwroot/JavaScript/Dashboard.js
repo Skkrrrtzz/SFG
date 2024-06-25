@@ -8,7 +8,7 @@
   .then((data) => {
     let count = data.data.length;
     $("#rfqCount").text(count);
-    let Tbl = $("#libraryTable").DataTable({
+    $("#libraryTable").DataTable({
       responsive: true,
       data: data.data,
       columns: [
@@ -48,6 +48,16 @@
           },
         },
         {
+          data: "isAccepted",
+          render: function (data, type, row) {
+            if (data === true) {
+              return '<span class="badge rounded-pill text-bg-success">Accepted</span>';
+            } else {
+              return null;
+            }
+          },
+        },
+        {
           data: null,
           render: function (data, type, row) {
             if (viewer) {
@@ -78,24 +88,33 @@
     alert("Error: " + error.message);
   });
 
-fetch("/Dashboard/Dashboard?handler=IncomingRFQProjects")
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return response.json();
-  })
-  .then((data) => {
-    let count = data.data.length;
-    // CHECKING OF ROLES FOR INCOMING RFQ
-    //COST ENGR - PROCESSOR IF HAVE PRICES SHOW
-    //SOURCING - PROCESSOR IF NO PRICES SHOW
-    $("#incoming").text(count);
-    viewRFQProjects("#incomingRFQTable", data.data);
-  })
-  .catch((error) => {
-    alert("Error: " + error.message);
-  });
+if (department === "Cost Engineering") {
+  const url = "/Dashboard/Dashboard?handler=IncomingRFQProjects_1";
+  showIncomingRFQ(url);
+} else {
+  const url = "/Dashboard/Dashboard?handler=IncomingRFQProjects_2";
+  showIncomingRFQ(url);
+}
+
+function showIncomingRFQ(url) {
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const count = data.data.length;
+      $("#incoming").text(count);
+      viewRFQProjects("#incomingRFQTable", data.data);
+    })
+    .catch((error) => {
+      alert(`Error: ${error.message}`);
+      console.error("Fetch error:", error);
+    });
+}
+
 // Function to upload a file
 function uploadFile(modalId, url, inputId) {
   const fileInput = document.getElementById(inputId);
@@ -212,7 +231,7 @@ function sourcingForm() {
     });
 }
 function viewRFQProjects(table, data) {
-  let Tbl = $(table).DataTable({
+  $(table).DataTable({
     responsive: true,
     data: data,
     columns: [
@@ -256,17 +275,21 @@ function viewRFQProjects(table, data) {
         render: function (row) {
           if (department === "Cost Engineering") {
             let buttons =
-              '<button type="button" class="btn btn-sm bg-main3 list-btn me-2" data-id="' +
+              '<a href="#" class="btn btn-sm bg-main3 list-btn me-2" data-id="' +
               row.quotationCode +
               '" data-name="' +
               row.projectName +
-              '">View</button>' +
-              '<button type="button" class="btn btn-sm btn-danger marked-btn" data-id="' +
+              '"><i class="fa-solid fa-eye"></i></a>' +
+              '<a href="#" class="btn btn-sm bg-main3 marked-btn me-2" data-id="' +
               row.quotationCode +
               '" data-name="' +
               row.projectName +
-              '"> Mark as Closed</button>';
-
+              '"><i class="fa-solid fa-circle-xmark"></i></a>' +
+              '<a href="#" class="btn btn-sm bg-main3 accept-btn" data-id="' +
+              row.quotationCode +
+              '" data-name="' +
+              row.projectName +
+              '"><i class="fa-solid fa-circle-check"></i></a>';
             return buttons;
           } else if (department === "Sourcing") {
             return (
@@ -275,9 +298,9 @@ function viewRFQProjects(table, data) {
               '" data-name="' +
               row.projectName +
               '">View</button>' +
-              '<a href="#" class="text-dark download-btn fs-4" data-id="' +
+              '<button type="button" class="btn btn-sm bg-main3 download-btn" data-id="' +
               row.projectName +
-              '"><i class="fa-solid fa-download"></i></a>'
+              '">Download</button>'
             );
           } else {
             return "Viewer kaba ?";

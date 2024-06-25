@@ -41,6 +41,7 @@ namespace ATSSFG.Models
         public int StdTAT { get; set; }
         public string Status { get; set; } = string.Empty;
         public bool? HasPrices { get; set; }
+        public bool? IsAccepted { get; set; }
     }
 
     public class MyViewModel

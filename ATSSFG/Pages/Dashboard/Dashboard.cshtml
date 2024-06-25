@@ -108,7 +108,6 @@
         </div>
     </div>
 </div>
-<canvas id="chart" height="120"></canvas>
 <div>
     <!--Menu Modal -->
     <div class="modal fade" id="menuSFG" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="menuSFGLabel" aria-hidden="true">
@@ -182,7 +181,7 @@
 @await Html.PartialAsync("_DashboardRFQForm")
 <!-- Show RFQ Library Model-->
 <div class="modal fade" id="library" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="libraryLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-main3">
                 <h1 class="modal-title fs-5" id="libraryLabel"> <i class="fa-solid fa-file-arrow-up"></i> Sourcing Form | <span class="badge text-bg-dark">Viewer</span></h1>
@@ -197,6 +196,7 @@
                                 <th>Request Date</th>
                                 <th>Part Number</th>
                                 <th>Status</th>
+                                <th>Accepted by Customer</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -210,7 +210,7 @@
 </div>
 <!-- Show Incoming RFQ Modal-->
 <div class="modal fade" id="incomingRFQ" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="incomingRFQLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-main3">
                 <h1 class="modal-title fs-5" id="incomingRFQLabel"> <i class="fa-solid fa-file-arrow-up"></i> Sourcing Form | <span class="badge text-bg-dark">Processor</span></h1>

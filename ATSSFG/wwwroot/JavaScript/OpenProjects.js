@@ -17,8 +17,7 @@ fetch("/Dashboard/OpenProjects?handler=OpenProjectsSummary")
     return response.json();
   })
   .then((data) => {
-    console.log(data);
-    let openProjects = $("#openProjectsTbl").DataTable({
+    $("#openProjectsTbl").DataTable({
       responsive: true,
       data: data.data,
       columns: [

@@ -62,6 +62,26 @@ namespace ATSSFG.Repository
                 return result.ToList();
             }
         }
+        public async Task<List<dynamic>> GetSummaryRFQperMonth(string date)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                await conn.OpenAsync();
+                string storedProcedure = "GetSummaryRFQperMonth";
+
+                var dateParts = date.Split('-');
+                if (dateParts.Length != 2 || !int.TryParse(dateParts[0], out int year) || !int.TryParse(dateParts[1], out int month))
+                {
+                    throw new ArgumentException("Date must be in the format 'yyyy-MM'.");
+                }
+                var parameters = new DynamicParameters();
+                parameters.Add("@month", month);
+                parameters.Add("@year", year);
+
+                var result = await conn.QueryAsync<dynamic>(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
 
         public async Task<List<RFQProjectModel>> GetAllRFQProjects()
         {

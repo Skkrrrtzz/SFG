@@ -260,15 +260,12 @@ function viewRFQProjects(table, data) {
               row.quotationCode +
               '" data-name="' +
               row.projectName +
-              '">View</button>';
-            if (viewer === "False") {
-              buttons +=
-                '<button type="button" class="btn btn-sm btn-danger border-3 border-danger-subtle marked-btn" data-id="' +
-                row.quotationCode +
-                '" data-name="' +
-                row.projectName +
-                '"> Mark as Closed</button>';
-            }
+              '">View</button>' +
+              '<button type="button" class="btn btn-sm btn-danger marked-btn" data-id="' +
+              row.quotationCode +
+              '" data-name="' +
+              row.projectName +
+              '"> Mark as Closed</button>';
 
             return buttons;
           } else if (department === "Sourcing") {

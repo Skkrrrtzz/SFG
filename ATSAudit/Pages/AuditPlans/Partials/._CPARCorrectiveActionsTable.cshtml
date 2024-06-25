@@ -35,7 +35,9 @@
                             };
                         }
                         <td><span class="badge @status.badgeClass">@status.badgeText</span></td>
-                        <td></td>
+                        <td>
+                            <button class="uploadEvidenceButton form-control fa-solid fa-file" data-corrective-action-id="@correctiveAction.CorrectiveActionId" data-bs-target="#uploadEvidence" data-bs-toggle="modal"></button>
+                        </td>
                         <td data-correctiveactionid="@correctiveAction.CorrectiveActionId">
                             <button type="button" class="btn btn-success correctiveAction-close fa-solid fa-square-check"></button>
                             <button type="button" class="btn btn-secondary correctiveAction-edit fa-solid fa-pen-to-square"></button>

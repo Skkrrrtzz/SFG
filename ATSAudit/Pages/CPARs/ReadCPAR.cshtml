@@ -1,14 +1,16 @@
 @page "/cpars/{cparId}"
 @model ATSAudit.Views.AuditPlans.ReadCPAR
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = $"Viewing CPAR - {Model.CPARId}";
 }
 
 <div class="container-fluid">
     <div class="form-group row" id="readCPARInitial">
 
-        <div class="col-5">
+        <div class="col-lg-12 col-xl-5">
             <div class="row">
+
+                <input id="cparId" type="hidden" name="cparId" value="@Model.CPARId">
 
                 <div class="col-4">
                     <div >
@@ -99,19 +101,36 @@
 
         </div>
 
-        <div class="col-7">
-            <h6 class="form-text text-center">Corrections</h6>
-            <div class="tableWrapper">
-                <div class="row" id="readCPARCorrectionsTable"></div>
+        <div class="col-lg-12 col-xl-7 my-3">
+            @* <hr class="d-block d-sm-block d-md-none border border-2"> *@
+
+            <div class="row">
+                <h6 class="form-text text-center">Corrections</h6>
+                <div class="tableWrapper">
+                    <div class="row" id="readCPARCorrectionsTable"></div>
+                </div>
+                <button id="createCorrectionButton" class="form-control fa-solid fa-plus" data-bs-target="#createCorrection" data-bs-toggle="modal" />
             </div>
 
             <hr class="border border-2">
 
-                <div class="row" id="readCPARCorrectiveActionsTable"></div>
+            <div class="row">
+                <h6 class="form-text text-center">Corrective Actions</h6>
+                <div class="tableWrapper">
+                    <div class="row" id="readCPARCorrectiveActionsTable"></div>
+                </div>
+                <button id="createCorrectiveActionButton" class="form-control fa-solid fa-plus" data-bs-target="#createCorrectiveAction" data-bs-toggle="modal" />
+            </div>
 
             <hr class="border border-2">
             
-                <div class="row" id="readCPARPreventiveActionsTable"></div>
+            <div class="row">
+                <h6 class="form-text text-center">Preventive Actions</h6>
+                <div class="tableWrapper">
+                    <div class="row" id="readCPARPreventiveActionsTable"></div>
+                </div>
+                <button id="createPreventiveActionButton" class="form-control col-3 fa-solid fa-plus" data-bs-target="#createPreventiveAction" data-bs-toggle="modal" />
+            </div>
         </div>
 
     </div>
@@ -125,10 +144,13 @@
 
 @section Scripts
 {
+
+    <script src="~/JS/Common.js"></script>
+    <script src="~/JS/UploadEvidence.js"></script>
+
     <script src="~/JS/CorrectionsTable.js"></script>
     <script src="~/JS/CorrectiveActionsTable.js"></script>
     <script src="~/JS/PreventiveActionsTable.js"></script>
     <script src="~/JS/ReadCPAR/ReadCPAR.js"></script>
 
-    <script src="~/JS/UploadEvidence.js"></script>
 }

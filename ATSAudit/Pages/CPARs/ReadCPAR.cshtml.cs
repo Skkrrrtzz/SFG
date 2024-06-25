@@ -6,7 +6,7 @@ using ATSAudit.Repositories;
 namespace ATSAudit.Views.AuditPlans
 {
     [BindProperties]
-    public class ReadCPAR : PageModel
+    public partial class ReadCPAR : PageModel
     {
         private readonly ICPARsRepository _cpars;
         private readonly ICorrectionsRepository _corrections;
@@ -47,6 +47,7 @@ namespace ATSAudit.Views.AuditPlans
             else 
             {
                 Console.WriteLine($"CPARId: {cpar.CPARId}");
+                CPARId = cpar.CPARId;
                 Respondent = cpar.Respondent;
                 Requestor = cpar.Requestor;
                 IssueDate = cpar.IssueDate;
@@ -76,6 +77,11 @@ namespace ATSAudit.Views.AuditPlans
         {
             return Partial("Partials/_CPARPreventiveActionsTable", (List<PreventiveActionModel>) await _preventiveActions.GetPreventiveActionsByCPAR(cparId));
         }
+
+
+        #region POST
+        
+        #endregion
 
     }
 }

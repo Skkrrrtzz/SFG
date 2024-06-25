@@ -1,30 +1,38 @@
 async function renderCorrectiveActionsTable() {
-    $('#readCPARCorrectiveActionsTable').empty();
     $('#readCPARCorrectiveActionsTable').load(`?handler=CorrectiveActions&cparId=${$('#readCPARId').val()}`, () => { 
+        // $('.uploadEvidenceButton').on('click', e => {
+        //     $('#readCPAR').modal('toggle');
+
+        //     //Setting form values so I don't have to render the whole form from the client side
+        //     uploadEvidenceData( "CPARs",
+        //                         "CorrectiveActions",
+        //                         e.currentTarget.dataset.correctiveActionId);
+        // });
+
+        $('.correctiveAction-delete').on('click', e => {
+            let correctiveActionId = e.currentTarget.parentNode.dataset.correctiveactionid/* .split('-')[1] */;
+
+            fetch('/api/correctiveactions/' + correctiveActionId, {
+                method: "DELETE",
+            })
+            .then(response => response.json())
+            .then(data => { renderCorrectiveActionsTable() })
+            .catch(error => console.log(error));
+        });
+
+
+        $('.correctiveAction-close').on('click', e => {
+            let correctiveActionId = e.currentTarget.parentNode.dataset.correctiveactionid/* .split('-')[1] */;
+
+            fetch('/api/correctiveactions/' + correctiveActionId, {
+                method: "PATCH",
+            })
+            .then(response => response.json())
+            .then(data => { renderCorrectiveActionsTable() })
+            .catch(error => console.log(error));
+        });
     });
 
-    $('.correctiveAction-delete').on('click', e => {
-        let correctiveActionId = e.currentTarget.parentNode.dataset.correctiveactionid/* .split('-')[1] */;
-
-        fetch('/api/correctiveactions/' + correctiveActionId, {
-            method: "DELETE",
-        })
-        .then(response => response.json())
-        .then(data => { renderCorrectiveActionsTable() })
-        .catch(error => console.log(error));
-    });
-
-
-    $('.correctiveAction-close').on('click', e => {
-        let correctiveActionId = e.currentTarget.parentNode.dataset.correctiveactionid/* .split('-')[1] */;
-
-        fetch('/api/correctiveactions/' + correctiveActionId, {
-            method: "PATCH",
-        })
-        .then(response => response.json())
-        .then(data => { renderCorrectiveActionsTable() })
-        .catch(error => console.log(error));
-    });
 }
 
 $('#createCorrectiveActionButton').on('click', e => {

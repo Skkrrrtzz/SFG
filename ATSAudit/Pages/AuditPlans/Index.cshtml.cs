@@ -10,7 +10,7 @@ using System.IO;
 namespace ATSAudit.Views.AuditPlans
 {
     [Authorize]
-    public class DashboardRazor : PageModel
+    public class Index : PageModel
     {
         private readonly IAuditPlansRepository _auditPlans;
         private readonly IConformitiesRepository _conformities;
@@ -26,13 +26,13 @@ namespace ATSAudit.Views.AuditPlans
 
         public List<CorrectionModel> Corrections { get; set; }
 
-        public DashboardRazor(  IAuditPlansRepository auditPlans, 
-                                IConformitiesRepository conformities, 
-                                ICPARsRepository cpars, 
-                                ICorrectionsRepository corrections, 
-                                ICorrectiveActionsRepository correctiveActions,
-                                IPreventiveActionsRepository preventiveActions,
-                                IUsersRepository usersRepository) 
+        public Index(   IAuditPlansRepository auditPlans, 
+                        IConformitiesRepository conformities, 
+                        ICPARsRepository cpars, 
+                        ICorrectionsRepository corrections, 
+                        ICorrectiveActionsRepository correctiveActions,
+                        IPreventiveActionsRepository preventiveActions,
+                        IUsersRepository usersRepository) 
         {
             _auditPlans = auditPlans;
             _conformities = conformities;

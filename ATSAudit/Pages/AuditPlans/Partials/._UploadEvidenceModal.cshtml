@@ -1,0 +1,53 @@
+<div class="modal fade" data-bs-backdrop='static' id="uploadEvidence" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary">
+                <h6 class="modal-title text-light">Uploading Evidence</h6>    
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <form   class="grid row-gap-3" 
+                        id="uploadEvidenceForm"
+                        method="post" 
+                        enctype="multipart/form-data"
+                        data-ajax="true"
+                        data-ajax-url="?handler=UploadEvidence"
+                        data-ajax-complete="uploadEvidenceComplete"
+                        data-ajax-method="post"
+                        >
+
+                    <div class="row">
+                        <label for="evidence" class="form-text">
+                            <i class="fa-solid fa-file-arrow-up"></i>
+                            Upload attachments
+                        </label>
+
+                        @* <input type="hidden" name="__RequestVerificationToken" value="@Antiforgery.GetTokens(HttpContext).RequestToken" /> *@
+                        <input id="uploadEvidenceForm" type="hidden" name="form" value="test">
+                        <input id="uploadEvidenceSubform" type="hidden" name="subform" value="test">
+                        <input id="uploadEvidenceId" type="hidden" name="id" value="test">
+                        <input id="uploadEvidenceInput" type="file" name="evidence" multiple>
+
+                        <div id="attachedFiles"></div>
+                    </div>
+
+                    <div class="modal-footer row">
+                        <button class="btn btn-primary"
+                                type="submit"
+                                id="uploadEvidenceSubmit" 
+                                data-bs-target="#readCPAR" 
+                                data-bs-toggle="modal">
+                            Submit
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+@using ATSAudit.Models
+@model List<CorrectionModel>
+
+@* <h6 class="form-text text-center">Corrections</h6> *@
+@if (Model.Count > 0)
+{
+    <table class="table table-striped" id="correctionsTable">
+        <thead class="bg-dark text-white">
+            <tr>
+                <th scope="col" hidden>CorrectionId</th>
+                <th scope="col" hidden>CPARId</th>
+                <th scope="col">Correction (Immediate Action)</th>
+                <th scope="col">Escape Cause</th>
+                <th scope="col">Action for Escape Cause</th>
+                <th scope="col">Status</th>
+                <th scope="col">Evidence</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var correction in Model)
+            {
+                <tr>
+                    <td hidden>@correction.CorrectionId</td>
+                    <td hidden>@correction.CPARId</td>
+                    <td>@correction.CorrectionDescription</td>
+                    <td>@correction.EscapeCause</td>
+                    <td>@correction.Action</td>
+
+                    @{
+                        (string badgeClass, string badgeText) status = correction.Status switch 
+                        {
+                            0 => ( "bg-warning text-black", "Open" ),
+                            1 => ( "bg-success", "Closed" ),
+                            _ => ( "bg-danger", "Error" )
+                        };
+                    }
+
+                    <td><span class="badge @status.badgeClass">@status.badgeText</span></td>
+                    <td>
+                        @{
+
+                            string directoryPath = @"\\DASHBOARDPC\ATSPortals\ATSAuditFiles";
+                            string fullPath = $@"{directoryPath}\CPARs\Corrections\{correction.CorrectionId}";
+                            
+                            var directoryExists = Directory.Exists(fullPath);
+                            var files = Directory.EnumerateFiles(fullPath);
+                        }
+
+                        @if (directoryExists && files.Any())
+                        {
+                        <button class="uploadEvidenceButton form-control fa-solid fa-eye" data-correction-id="@correction.CorrectionId" data-bs-target="#uploadEvidence" data-bs-toggle="modal"></button>
+                        }
+                        else
+                        {
+                        <button class="uploadEvidenceButton form-control fa-solid fa-file" data-correction-id="@correction.CorrectionId" data-bs-target="#uploadEvidence" data-bs-toggle="modal"></button>
+                        }
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger corrections-delete fa-solid fa-trash"></button>
+                        <button type="button" class="btn btn-secondary corrections-edit fa-solid fa-pen-to-square"></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+} else 
+{
+    <partial name="Partials/_EmptyTable"></partial>
+}
+
+@* <button class="form-control fa-solid fa-plus" data-bs-target="#createCorrection" data-bs-toggle="modal" /> *@

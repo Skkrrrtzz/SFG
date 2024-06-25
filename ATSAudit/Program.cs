@@ -17,7 +17,7 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddRazorPages(options => 
 {
-    options.Conventions.AddPageRoute("/AuditPlans/DashboardRazor", "");
+    options.Conventions.AddPageRoute("/AuditPlans/Index", "");
 });
 
 // Add Swagger and Controller Endpoints

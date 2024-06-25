@@ -1,0 +1,54 @@
+@using ATSAudit.Models
+@model List<CorrectiveActionModel>
+
+@* <h6 class="form-text text-center">Corrective Actions</h6> *@
+    <table class="table table-striped" id="CPARsTable">
+    @if (Model.Count > 0)
+    {
+        <thead>
+            <tr>
+                <th scope="col" hidden>CorrectiveActionId</th>
+                <th scope="col" hidden>CPARId</th>
+                <th scope="col">Corrective Action</th>
+                <th scope="col">Target Date</th>
+                <th scope="col">Responsible Person</th>
+                <th scope="col">Status</th>
+                <th scope="col">Evidence</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+                @foreach (var correctiveAction in Model)
+                {
+                    <tr>
+                        <td hidden>@correctiveAction.CorrectiveActionId</td>
+                        <td hidden>@correctiveAction.CPARId</td>
+                        <td>@correctiveAction.CorrectiveActionDescription</td>
+                        <td>@correctiveAction.TargetDate.ToShortDateString()</td>
+                        <td>@correctiveAction.Responsible</td>
+                        @{
+                            (string badgeClass, string badgeText) status = correctiveAction.Status switch 
+                            {
+                                0 => ( "bg-warning text-black", "Open" ),
+                                1 => ( "bg-success", "Closed" ),
+                                _ => ( "bg-danger", "Error" )
+                            };
+                        }
+                        <td><span class="badge @status.badgeClass">@status.badgeText</span></td>
+                        <td>
+                            <button class="uploadEvidenceButton form-control fa-solid fa-file" data-corrective-action-id="@correctiveAction.CorrectiveActionId" data-bs-target="#uploadEvidence" data-bs-toggle="modal"></button>
+                        </td>
+                        <td data-correctiveactionid="@correctiveAction.CorrectiveActionId">
+                            <button type="button" class="btn btn-success correctiveAction-close fa-solid fa-square-check"></button>
+                            <button type="button" class="btn btn-secondary correctiveAction-edit fa-solid fa-pen-to-square"></button>
+                            <button type="button" class="btn btn-danger correctiveAction-delete fa-solid fa-trash"></button>
+                        </td>
+                    </tr>
+                }
+        </tbody>
+    } else 
+    {
+        <partial name="Partials/_EmptyTable"></partial>
+    }
+    </table>
+

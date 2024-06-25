@@ -13,10 +13,6 @@
                         id="uploadEvidenceForm"
                         method="post" 
                         enctype="multipart/form-data"
-                        data-ajax="true"
-                        data-ajax-url="?handler=UploadEvidence"
-                        data-ajax-complete="uploadEvidence"
-                        data-ajax-method="post"
                         >
 
                     <div class="row">
@@ -26,9 +22,9 @@
                         </label>
 
                         @* <input type="hidden" name="__RequestVerificationToken" value="@Antiforgery.GetTokens(HttpContext).RequestToken" /> *@
-                        <input type="hidden" name="form" value="CPARs">
-                        <input type="hidden" name="subform" value="Corrections">
-                        <input id="uploadEvidenceId" type="hidden" name="id" value="test">
+                        <input id="uploadEvidenceForForm" type="hidden" name="form" value="test">
+                        <input id="uploadEvidenceForSubform" type="hidden" name="subform" value="test">
+                        <input id="uploadEvidenceForId" type="hidden" name="id" value="test">
                         <input id="uploadEvidenceInput" type="file" name="evidence" multiple>
 
                         <div id="attachedFiles"></div>

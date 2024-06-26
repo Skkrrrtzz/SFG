@@ -1,12 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ATSAudit.Models;
-using ATSAudit.Repositories;
+using ATSAudit.Services;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace ATSAudit.Views.AuditPlans
+namespace ATSAudit.Views.CPARs
 {
     public partial class ReadCPAR : PageModel
     {
+
+        public List<CorrectionModel> Corrections { get; set; }
+        public static IEnumerable<string>? Files { get; set; }
 
         public async Task<IActionResult> OnPostUploadEvidence(List<IFormFile> evidence, string form, string? subform, string id)
         {
@@ -18,9 +22,11 @@ namespace ATSAudit.Views.AuditPlans
                     string directoryPath = @"\\DASHBOARDPC\ATSPortals\ATSAuditFiles";
                     string fullPath = $@"{directoryPath}\{form}\{subform}\{id}";
 
+                    Console.WriteLine(fullPath);
+
                     foreach (var file in evidence)
                     {
-                        string filePath = Path.Combine(directoryPath,  file.FileName);
+                        string filePath = Path.Combine(fullPath, file.FileName);
 
                         //Check if directory exists, otherwise create directory
                         if (!Directory.Exists(fullPath))
@@ -47,54 +53,6 @@ namespace ATSAudit.Views.AuditPlans
             }
             return StatusCode(400, "No file was uploaded.");
         }
-
-        public async Task<IActionResult> OnGetCheckDirectory(string form, string subform, string id)
-        {
-            string directoryPath = @"\\DASHBOARDPC\ATSPortals\ATSAuditFiles";
-            string fullPath = $@"{directoryPath}\{form}\{subform}\{id}";
-            // string filePath = Path.Combine(fullPath, file.FileName);
-
-            //Check if there are any files in the directory
-            if (Directory.Exists(fullPath))
-            {
-                var files = Directory.EnumerateFiles(fullPath);
-
-                //Check if there any files in the directory
-                if (files.Any())
-                {
-                    // return StatusCode(200, "Files found!");
-                    return new JsonResult(files) ;
-                }
-
-                return StatusCode(404, "No files found");
-
-
-            }
-            else
-            {
-                return StatusCode(404, "Directory does not exist");
-            }
-
-
-        }
-
-            [NonHandler]
-            public IEnumerable<string> CheckDirectory(string form, string subform, string id)
-            {
-
-                string directoryPath = @"\\DASHBOARDPC\ATSPortals\ATSAuditFiles";
-                string fullPath = $@"{directoryPath}\{form}\{subform}\{id}";
-
-                if(Directory.Exists(fullPath))
-                {
-                    var files = Directory.EnumerateFiles(fullPath);
-                    return files;
-                } 
-                else 
-                {
-                    return Enumerable.Empty<string>();
-                }
-            }
     }
 }
 

@@ -1,6 +1,6 @@
 using ATSAudit.Models;
 
-namespace ATSAudit.Repositories
+namespace ATSAudit.Services
 {
     public interface IConformitiesRepository
     {

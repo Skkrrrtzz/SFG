@@ -2,51 +2,61 @@
 @model List<PreventiveActionModel>
 
 @* <h6 class="form-text text-center">Preventive Actions</h6> *@
-    <table class="table table-striped" id="CPARsTable">
-    @if (Model.Count > 0)
-    {
-        <thead>
-            <tr>
-                <th scope="col" hidden>PreventiveActionId</th>
-                <th scope="col" hidden>CPARId</th>
-                <th scope="col">Preventive Action</th>
-                <th scope="col">Target Date</th>
-                <th scope="col">Responsible Person</th>
-                <th scope="col">Status</th>
-                <th scope="col">Evidence</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-                @foreach (var preventiveAction in Model)
-                {
-                    <tr>
-                        <td hidden>@preventiveAction.PreventiveActionId</td>
-                        <td hidden>@preventiveAction.CPARId</td>
-                        <td>@preventiveAction.PreventiveActionDescription</td>
-                        <td>@preventiveAction.TargetDate.ToShortDateString()</td>
-                        <td>@preventiveAction.Responsible</td>
-                        @{
-                            (string badgeClass, string badgeText) status = preventiveAction.Status switch 
-                            {
-                                0 => ( "bg-warning text-black", "Open" ),
-                                1 => ( "bg-success", "Closed" ),
-                                _ => ( "bg-danger", "Error" )
-                            };
+@if (Model.Count > 0)
+{
+<table class="table table-striped table-sm compact" style="width: 100%" id="preventiveActionsTable">
+    <thead class="bg-dark text-white">
+        <tr>
+            <th scope="col" hidden>PreventiveActionId</th>
+            <th scope="col" hidden>CPARId</th>
+            <th scope="col">Preventive Action</th>
+            <th scope="col">Target Date</th>
+            <th scope="col">Responsible Person</th>
+            <th scope="col">Status</th>
+            <th scope="col">Evidence</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var preventiveAction in Model)
+            {
+                <tr>
+                    <td hidden>@preventiveAction.PreventiveActionId</td>
+                    <td hidden>@preventiveAction.CPARId</td>
+                    <td>@preventiveAction.PreventiveActionDescription</td>
+                    <td>@preventiveAction.TargetDate.ToShortDateString()</td>
+                    <td>@preventiveAction.Responsible</td>
+                    @{
+                        (string badgeClass, string badgeText) status = preventiveAction.Status switch 
+                        {
+                            0 => ( "bg-warning text-black", "Open" ),
+                            1 => ( "bg-success", "Closed" ),
+                            _ => ( "bg-danger", "Error" )
+                        };
+                    }
+                    <td><span class="badge @status.badgeClass">@status.badgeText</span></td>
+                    <td>
+                        @if (preventiveAction.HasEvidence)
+                        {
+                        <button class="btn btn-primary viewEvidenceButton form-control fa-solid fa-eye" data-preventive-action-id="@preventiveAction.PreventiveActionId" data-bs-target="#viewEvidence" data-bs-toggle="modal"></button>
                         }
-                        <td><span class="badge @status.badgeClass">@status.badgeText</span></td>
-                        <td></td>
-                        <td>
-                            <button type="button" class="btn btn-success correctiveAction-close fa-solid fa-square-check"></button>
-                            <button type="button" class="btn btn-secondary preventiveAction-edit fa-solid fa-pen-to-square"></button>
-                            <button type="button" class="btn btn-danger preventiveAction-delete fa-solid fa-trash"></button>
-                        </td>
-                    </tr>
-                }
-        </tbody>
-    } else 
-    {
-        <partial name="Partials/_EmptyTable"></partial>
-    }
-    </table>
+                        else
+                        {
+                        //Button for uploading files
+                        <button class="uploadEvidenceButton form-control fa-solid fa-file" data-preventive-action-id="@preventiveAction.PreventiveActionId" data-bs-target="#uploadEvidence" data-bs-toggle="modal"></button>
+                        }
+                    </td>
+                    <td class="d-flex justify-content-around">
+                        <button type="button" class="btn btn-success correctiveAction-close fa-solid fa-square-check"></button>
+                        <button type="button" class="btn btn-secondary preventiveAction-edit fa-solid fa-pen-to-square"></button>
+                        <button type="button" class="btn btn-danger preventiveAction-delete fa-solid fa-trash"></button>
+                    </td>
+                </tr>
+            }
+    </tbody>
+</table>
+} else 
+{
+    <partial name="Partials/_EmptyTable"></partial>
+}
 

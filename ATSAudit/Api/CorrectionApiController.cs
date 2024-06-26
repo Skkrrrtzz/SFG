@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ATSAudit.Models;
-using ATSAudit.Repositories;
+using ATSAudit.Services;
 
 namespace ATSAudit.Controllers.Api
 {
@@ -41,7 +41,7 @@ namespace ATSAudit.Controllers.Api
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<int> PostCorrection([FromBody] CorrectionModel request)
+        public async Task<int> PostCorrection([FromForm] CorrectionModel request)
         {
             //TODO: Use CreatedAtRoute() to be RESTful
             return await _repository.PostCorrection(request);

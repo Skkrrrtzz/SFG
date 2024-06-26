@@ -1,4 +1,4 @@
-<div class="modal fade" data-bs-backdrop='static' id="uploadEvidence" tabindex="-1">
+<div class="modal fade" data-bs-backdrop='static' id="viewEvidence" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
@@ -13,32 +13,28 @@
                         id="uploadEvidenceForm"
                         method="post" 
                         enctype="multipart/form-data"
-                        data-ajax="true"
-                        data-ajax-url="?handler=UploadEvidence"
-                        data-ajax-complete="uploadEvidenceComplete"
-                        data-ajax-method="post">
+                        >
 
                     <div class="row">
                         <label for="evidence" class="form-text">
                             <i class="fa-solid fa-file-arrow-up"></i>
-                            Upload attachments
+                            Currently Uploaded Attachments
                         </label>
 
-                        @* <input type="hidden" name="__RequestVerificationToken" value="@Antiforgery.GetTokens(HttpContext).RequestToken" /> *@
-                        <input id="uploadEvidenceForForm" type="hidden" name="form" value="test">
+                        @* <input id="uploadEvidenceForForm" type="hidden" name="form" value="test">
                         <input id="uploadEvidenceForSubform" type="hidden" name="subform" value="test">
                         <input id="uploadEvidenceForId" type="hidden" name="id" value="test">
-                        <input id="uploadEvidenceInput" type="file" name="evidence" multiple>
+                        <input id="uploadEvidenceInput" type="file" name="evidence" multiple> *@
 
                         <div id="attachedFiles"></div>
                     </div>
 
                     <div class="modal-footer row">
-                        <button type="submit"
+                        <button class="btn btn-primary"
+                                type="submit"
                                 id="uploadEvidenceSubmit" 
                                 data-bs-target="#readCPAR" 
-                                data-bs-toggle="modal"
-                                class="btn btn-primary">
+                                data-bs-toggle="modal">
                             Submit
                         </button>
                     </div>

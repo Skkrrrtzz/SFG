@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ATSAudit.Models;
-using ATSAudit.Repositories;
+using ATSAudit.Services;
 
-namespace ATSAudit.Views.AuditPlans
+namespace ATSAudit.Views.CPARs
 {
     [BindProperties]
     public partial class ReadCPAR : PageModel
@@ -12,16 +12,20 @@ namespace ATSAudit.Views.AuditPlans
         private readonly ICorrectionsRepository _corrections;
         private readonly ICorrectiveActionsRepository _correctiveActions;
         private readonly IPreventiveActionsRepository _preventiveActions;
+        private readonly FileService _files;
 
         public ReadCPAR(    ICPARsRepository cpars,
                             ICorrectionsRepository corrections, 
                             ICorrectiveActionsRepository correctiveActions,
-                            IPreventiveActionsRepository preventiveActions) 
+                            IPreventiveActionsRepository preventiveActions,
+                            FileService files
+                            ) 
         {
             _cpars = cpars;
             _corrections = corrections;
             _correctiveActions = correctiveActions;
             _preventiveActions = preventiveActions;
+            _files = files;
         }
         
         public CPARModel? cpar;
@@ -63,19 +67,45 @@ namespace ATSAudit.Views.AuditPlans
         //GET: https://localhost:<port>?handler=Corrections&cparId=<cparId>
         public async Task<PartialViewResult> OnGetCorrections(int cparId)
         {
-            return Partial("Partials/_CPARCorrectionsTable", (List<CorrectionModel>) await _corrections.GetCorrectionsByCPAR(cparId));
+            //Checking Database
+            var corrections = await _corrections.GetCorrectionsByCPAR(cparId);
+
+            //Checking Filesystem
+            foreach (var correction in corrections)
+            {
+                correction.HasEvidence = await _files.CheckDirectoryIfEmpty("CPARs", "Corrections", correction.CorrectionId);
+            }
+
+            return Partial("Partials/_CPARCorrectionsTable", (List<CorrectionModel>) corrections);
         }
 
         //GET: https://localhost:<port>?handler=CorrectiveActions&cparId=<cparId>
         public async Task<PartialViewResult> OnGetCorrectiveActions(int cparId)
         {
-            return Partial("Partials/_CPARCorrectiveActionsTable", (List<CorrectiveActionModel>) await _correctiveActions.GetCorrectiveActionsByCPAR(cparId));
+            //Checking Database
+            var correctiveActions = await _correctiveActions.GetCorrectiveActionsByCPAR(cparId);
+
+            //Checking Filesystem
+            foreach (var correctiveAction in correctiveActions)
+            {
+                correctiveAction.HasEvidence = await _files.CheckDirectoryIfEmpty("CPARs", "CorrectiveActions", correctiveAction.CorrectiveActionId);
+            }
+
+            return Partial("Partials/_CPARCorrectiveActionsTable", (List<CorrectiveActionModel>) correctiveActions);
         }
 
         //GET: https://localhost:<port>?handler=PreventiveActions&cparId=<cparId>
         public async Task<PartialViewResult> OnGetPreventiveActions(int cparId)
         {
-            return Partial("Partials/_CPARPreventiveActionsTable", (List<PreventiveActionModel>) await _preventiveActions.GetPreventiveActionsByCPAR(cparId));
+            //Checking Database
+            var preventiveActions = await _preventiveActions.GetPreventiveActionsByCPAR(cparId);
+
+            //Checking Filesystem
+            foreach (var preventiveAction in preventiveActions)
+            {
+                preventiveAction.HasEvidence = await _files.CheckDirectoryIfEmpty("CPARs", "PreventiveActions", preventiveAction.PreventiveActionId);
+            }
+            return Partial("Partials/_CPARPreventiveActionsTable", (List<PreventiveActionModel>) preventiveActions);
         }
 
 

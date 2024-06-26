@@ -1,11 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.SqlClient;
-using OfficeOpenXml;
 using ATSSFG.Models;
-using System.Text.RegularExpressions;
 using APPCommon.Class;
-using Microsoft.VisualBasic;
-using Xceed.Wpf.AvalonDock.Themes;
 
 namespace ATSSFG.Repository
 {
@@ -193,7 +189,6 @@ namespace ATSSFG.Repository
 
                 return result > 0;
             }
-
         }
 
         public async Task<bool> TableExists(string tableName)
@@ -281,6 +276,7 @@ namespace ATSSFG.Repository
                 throw;
             }
         }
+
         public async Task<bool> SaveSupplierAndComments(PartData data)
         {
             try

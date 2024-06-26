@@ -48,6 +48,9 @@ table {
   margin-top: 0.5rem;
   margin-right: 0.5rem;
 }
+.dataTables_length {
+  width: 10%;
+}
 .best1stPriceColor {
   background-color: var(--colorMain2);
 }
@@ -65,7 +68,7 @@ table {
   color: white;
 }
 .highlight {
-    background-color: var(--colorHighLight) !important;
+  background-color: var(--colorHighLight) !important;
 }
 /* Positioning */
 

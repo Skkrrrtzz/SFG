@@ -381,23 +381,6 @@ namespace ATSSFG.Pages.Sourcing
 
                 if (result)
                 {
-                    //var fileName = _uploadService.GetRFQFilePNDesc(data.ProjectName);
-
-                    //if (fileName == null)
-                    //{
-                    //    return NotFound(new { message = "File not found for the provided project name." });
-                    //}
-
-                    //bool excelResult = await WriteSuggestedSupplierAndComments(fileName, data.PartNumber, data.SuggestedSupplier, data.Comments);
-
-                    //if (excelResult)
-                    //{
-                    //    return new JsonResult(new { success = true, message = "Supplier and comments saved successfully." });
-                    //}
-                    //else
-                    //{
-                    //    return new JsonResult(new { success = false, message = "Error saving supplier and comments." });
-                    //}
                     return new JsonResult(new { success = true, message = "Supplier and comments saved successfully." });
                 }
                 else

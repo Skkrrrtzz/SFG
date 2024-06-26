@@ -11,15 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="EPPlus" Version="7.1.2" />
     <PackageReference Include="Excel-DNA.Interop" Version="15.0.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
     <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1001" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\APPCommon\APPCommon.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -235,6 +232,12 @@
     <None Include="wwwroot\DataTables\StateRestore-1.3.0\js\stateRestore.jqueryui.min.js" />
     <None Include="wwwroot\DataTables\StateRestore-1.3.0\js\stateRestore.semanticui.js" />
     <None Include="wwwroot\DataTables\StateRestore-1.3.0\js\stateRestore.semanticui.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="APPCommon">
+      <HintPath>..\APPCommon\bin\Debug\net6.0-windows7.0\APPCommon.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

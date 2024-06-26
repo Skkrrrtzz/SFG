@@ -108,6 +108,7 @@
         </div>
     </div>
 </div>
+
 <div>
     <!--Menu Modal -->
     <div class="modal fade" id="menuSFG" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="menuSFGLabel" aria-hidden="true">
@@ -147,6 +148,7 @@
     </div>
     @await Html.PartialAsync("_DashboardModals")
 </div>
+
 <!-- Open Sourcing Form Modal -->
 <div class="modal fade" id="sourcingForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="sourcingFormLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -170,10 +172,10 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <button type="button" class="btn btn-primary border-3 border-primary-subtle" data-bs-toggle="modal" data-bs-target="#sourcingFormModal">
+                <button type="button" class="btn bg-main3" data-bs-toggle="modal" data-bs-target="#sourcingFormModal">
                     <i class="fa-solid fa-circle-plus"></i> Create Sourcing Form without BOM 
                 </button>
-                <button type="button" class="btn btn-primary border-3 border-primary-subtle d-none" id="viewPNDesc"><i class="fa-solid fa-eye"></i> View</button>
+                <button type="button" class="btn bg-main3 d-none" id="viewPNDesc"><i class="fa-solid fa-eye"></i> View</button>
             </div>
         </div>
     </div>
@@ -238,6 +240,7 @@
 </div>
 @section Scripts {
     <script>
+
          let department = "@department";
          const viewer = "@viewer";
     </script>

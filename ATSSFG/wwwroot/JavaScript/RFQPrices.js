@@ -238,6 +238,9 @@ function appendSupplierCards(data) {
 
 function populateSelect(data) {
   var select = $("#partNumbers");
+  // Clear existing options
+  select.empty();
+
   $.each(data, function (index, item) {
     select.append(
       $("<option>", {
@@ -318,9 +321,8 @@ function saveSupplierAndComments() {
     })
     .then((response) => {
       if (response.success) {
-        showSuccessAlert(response.message).then(() => {
-          fetchRFQPartNumbers(projectName, quotationCode);
-        });
+        showSuccessAlert(response.message);
+        fetchRFQPartNumbers(projectName, quotationCode);
       } else {
         showErrorAlert(response.message);
       }

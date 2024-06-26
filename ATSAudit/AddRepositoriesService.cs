@@ -1,4 +1,4 @@
-using ATSAudit.Repositories;
+using ATSAudit.Services;
 
 public static class AddRepositoriesService
 {
@@ -11,6 +11,7 @@ public static class AddRepositoriesService
         services.AddScoped<ICorrectiveActionsRepository, CorrectiveActionsService>();
         services.AddScoped<IPreventiveActionsRepository, PreventiveActionsService>();
         services.AddScoped<IUsersRepository, UserService>();
+        services.AddScoped<FileService>();
         return services;
     }
 }

@@ -1,5 +1,5 @@
 @page "/cpars/{cparId}"
-@model ATSAudit.Views.AuditPlans.ReadCPAR
+@model ATSAudit.Views.CPARs.ReadCPAR
 @{
     ViewData["Title"] = $"Viewing CPAR - {Model.CPARId}";
 }
@@ -104,11 +104,9 @@
         <div class="col-lg-12 col-xl-7 my-3">
             @* <hr class="d-block d-sm-block d-md-none border border-2"> *@
 
-            <div class="row">
+            @* <div class="row">
                 <h6 class="form-text text-center">Corrections</h6>
-                <div class="tableWrapper">
-                    <div class="row" id="readCPARCorrectionsTable"></div>
-                </div>
+                <div class="row" id="readCPARCorrectionsTable"></div>
                 <button id="createCorrectionButton" class="form-control fa-solid fa-plus" data-bs-target="#createCorrection" data-bs-toggle="modal" />
             </div>
 
@@ -131,6 +129,35 @@
                 </div>
                 <button id="createPreventiveActionButton" class="form-control col-3 fa-solid fa-plus" data-bs-target="#createPreventiveAction" data-bs-toggle="modal" />
             </div>
+        </div> *@
+
+        <nav>
+            <div class="nav nav-tabs" id="dashboardTab" role="tablist">
+                <button class="nav-link active" id="correctionsTab" data-bs-toggle="tab" data-bs-target="#correctionsTabPane" type="button" role="tab">
+                    Corrections
+                </button> 
+                <button class="nav-link" id="correctiveActionsTab" data-bs-toggle="tab" data-bs-target="#correctiveActionsTabPane" type="button" role="tab">
+                    Corrective Actions
+                </button>
+                <button class="nav-link" id="preventiveActionsTab" data-bs-toggle="tab" data-bs-target="#preventiveActionsTabPane" type="button" role="tab">
+                    Preventive Actions
+                </button>
+            </div>
+        </nav>
+
+        <div class="tab-content">
+            <div class="tab-pane m-4 show active" id="correctionsTabPane" role="tabpanel" tabindex="0">
+                <div class="row" id="readCPARCorrectionsTable"></div>
+                <button id="createCorrectionButton" class="form-control fa-solid fa-plus" data-bs-target="#createCorrection" data-bs-toggle="modal" />
+            </div>  
+            <div class="tab-pane m-4" id="correctiveActionsTabPane" role="tabpanel" tabindex="0">
+                <div class="row" id="readCPARCorrectiveActionsTable"></div>
+                <button id="createCorrectiveActionButton" class="form-control fa-solid fa-plus" data-bs-target="#createCorrectiveAction" data-bs-toggle="modal" />
+            </div>
+            <div class="tab-pane m-4" id="preventiveActionsTabPane" role="tabpanel" tabindex="0">
+                <div class="row" id="readCPARPreventiveActionsTable"></div>
+                <button id="createPreventiveActionButton" class="form-control col-3 fa-solid fa-plus" data-bs-target="#createPreventiveAction" data-bs-toggle="modal" />
+            </div>
         </div>
 
     </div>
@@ -141,6 +168,11 @@
 </div>
 
 <partial name="Partials/_UploadEvidenceModal"></partial>
+<partial name="Partials/_ViewEvidenceModal"></partial>
+
+<partial name="Partials/_CreateCorrectionModal"></partial>
+<partial name="Partials/_CreateCorrectiveActionModal"></partial>
+<partial name="Partials/_CreatePreventiveActionModal"></partial>
 
 @section Scripts
 {

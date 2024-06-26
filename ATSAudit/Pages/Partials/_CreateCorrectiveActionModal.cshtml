@@ -1,0 +1,36 @@
+<div class="modal" id="createCorrectiveAction" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <p class="modal-title fw-bold text-white">Create Corrective Action</p>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form   id="correctiveActionForm"
+                    method="post"
+                    data-ajax="true"
+                    data-ajax-url="/api/correctiveactions"
+                    data-ajax-complete="createCorrectiveAction"
+                    data-ajax-method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="CPARId" value="@Model.CPARId">
+
+                    <label for="CorrectiveActionDescription" class="form-label">Corrective Action Description:</label>
+                    <input type="text" name="CorrectiveActionDescription" id="CorrectiveActionDescription" class="form-control">
+
+                    <label for="CorrectiveActionTargetDate" class="form-label">Target Date:</label>
+                    <input type="date" name="TargetDate" id="CorrectiveActionTargetDate" class="form-control">
+
+                    <label for="CorrectiveActionResponsible" class="form-label">Responsible:</label>
+                    <input type="text" name="Responsible" id="CorrectiveActionResponsible" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" 
+                            data-bs-dismiss="modal" 
+                            class="btn btn-primary">Submit
+                    </button>
+                </div>
+            </form>           
+        </div>
+    </div>
+</div>
+

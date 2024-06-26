@@ -18,7 +18,7 @@ namespace ATSAudit.Models
         [Required]
         public string? Responsible  { get; set; }
         public byte Status { get; set; }
-        public string? EvidenceFiles { get; set; }
+        public bool HasEvidence { get; set; }
 
     }
 }

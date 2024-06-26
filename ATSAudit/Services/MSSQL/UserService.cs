@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 using APPCommon.Class;
 
-namespace ATSAudit.Repositories
+namespace ATSAudit.Services
 {
     public class UserService : IUsersRepository
     {

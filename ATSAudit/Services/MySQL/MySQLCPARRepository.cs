@@ -7,7 +7,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using ATSAudit.Models;
 
-namespace ATSAudit.Repositories
+namespace ATSAudit.Services
 {
     public class MySQLCPARRepository : ICPARsRepository
     {

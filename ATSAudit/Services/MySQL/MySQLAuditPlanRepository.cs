@@ -14,7 +14,7 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using MySqlConnector;
 
-namespace ATSAudit.Repositories
+namespace ATSAudit.Services
 {
     public class MySQLAuditPlanRepository : IAuditPlansRepository
     {

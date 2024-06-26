@@ -1,0 +1,38 @@
+<div class="modal" id="createPreventiveAction" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <p class="modal-title fw-bold text-white">Create Preventive Action</p>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form   id="correctiveActionForm"
+                    method="post"
+                    data-ajax="true"
+                    data-ajax-url="/api/preventiveactions"
+                    data-ajax-complete="createPreventiveAction"
+                    data-ajax-method="post">
+
+                <div class="modal-body">
+                    <input type="hidden" name="CPARId" value="@Model.CPARId">
+
+                    <label for="PreventiveActionDescription" class="form-label">Preventive Action Description:</label>
+                    <input type="text" name="PreventiveActionDescription" id="PreventiveActionDescription" class="form-control">
+
+                    <label for="PreventiveActionTargetDate" class="form-label">Target Date:</label>
+                    <input type="date" name="TargetDate" id="PreventiveActionTargetDate" class="form-control">
+
+                    <label for="PreventiveActionResponsible" class="form-label">Responsible:</label>
+                    <input type="text" name="Responsible" id="PreventiveActionResponsible" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" 
+                            data-bs-dismiss="modal" 
+                            class="btn btn-primary">Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

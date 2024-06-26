@@ -7,7 +7,7 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using APPCommon.Class;
 
-namespace ATSAudit.Repositories
+namespace ATSAudit.Services
 {
     public class AuditPlansService : IAuditPlansRepository
     {

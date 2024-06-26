@@ -1,13 +1,12 @@
 async function renderCorrectiveActionsTable() {
     $('#readCPARCorrectiveActionsTable').load(`?handler=CorrectiveActions&cparId=${$('#readCPARId').val()}`, () => { 
-        // $('.uploadEvidenceButton').on('click', e => {
-        //     $('#readCPAR').modal('toggle');
+        $('.uploadEvidenceButton').on('click', e => {
 
-        //     //Setting form values so I don't have to render the whole form from the client side
-        //     uploadEvidenceData( "CPARs",
-        //                         "CorrectiveActions",
-        //                         e.currentTarget.dataset.correctiveActionId);
-        // });
+            //Setting form values so I don't have to render the whole form from the client side
+            uploadEvidenceData( "CPARs",
+                                "CorrectiveActions",
+                                e.currentTarget.dataset.correctiveActionId);
+        });
 
         $('.correctiveAction-delete').on('click', e => {
             let correctiveActionId = e.currentTarget.parentNode.dataset.correctiveactionid/* .split('-')[1] */;
@@ -31,8 +30,13 @@ async function renderCorrectiveActionsTable() {
             .then(data => { renderCorrectiveActionsTable() })
             .catch(error => console.log(error));
         });
-    });
 
+        $("#correctiveActionsTable").DataTable({ pageLength: 15, lengthChange: false });
+    });
+}
+
+function createCorrectiveAction() {
+    renderCorrectiveActionsTable();
 }
 
 $('#createCorrectiveActionButton').on('click', e => {

@@ -1,0 +1,44 @@
+<div class="modal" id="createCorrection" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <p class="modal-title fw-bold text-white">Create Correction</p>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+			<form	id="correctionForm"
+					method="post"
+					data-ajax="true"
+					data-ajax-url="/api/corrections"
+					data-ajax-complete="createCorrection"
+					data-ajax-success="closeCreateCorrection"
+					data-ajax-method="post"
+					>
+				<div class="modal-body">
+					<input type="hidden" name="CPARId" value="@Model.CPARId" readonly/>
+
+					<label for="CorrectionDescription" class="form-label">Correction (Immediate Action):</label> 
+					<input type="text" name="CorrectionDescription" id="CorrectionDescription" class="form-control" required>
+					<div class="invalid-feedback">
+						Please choose a username.
+					</div>
+
+					<label for="CorrectionEscapeCause" class="form-label">Escape Cause:</label>
+					<input type="text" name="EscapeCause" id="CorrectionEscapeCause" class="form-control" required>
+
+					<label for="CorrectionAction" class="form-label">Action for Escape Cause:</label>
+					<input type="text" name="Action" id="CorrectionAction" class="form-control" required>
+				</div>
+
+				<div class="modal-footer">
+					<button type="submit" 
+							id="createCorrectionSubmit"
+							class="btn btn-primary"
+							>Submit
+					</button>
+				</div>
+			</form>           
+
+        </div>
+    </div>
+</div>

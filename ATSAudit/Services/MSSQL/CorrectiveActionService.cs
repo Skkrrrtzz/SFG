@@ -7,7 +7,7 @@ using Microsoft.Data.SqlClient;
 using APPCommon.Class;
 using System.Data;
 
-namespace ATSAudit.Repositories
+namespace ATSAudit.Services
 {
     public class CorrectiveActionsService : ICorrectiveActionsRepository
     {

@@ -11,12 +11,12 @@ using ATSAudit.Models;
 using Dapper;
 using System.Data;
 using System.ComponentModel;
-using ATSAudit.Repositories;
+using ATSAudit.Services;
 // using MySqlConnector;'
 using Microsoft.Data.SqlClient;
 
 
-namespace ATSAudit.Repositories
+namespace ATSAudit.Services
 {
     public class MySQLPreventiveActionRepository : IPreventiveActionsRepository
     {

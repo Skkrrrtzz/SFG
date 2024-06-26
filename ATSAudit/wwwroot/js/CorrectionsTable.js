@@ -10,41 +10,60 @@ async function renderCorrectionsTable() {
                                 "Corrections",
                                 e.currentTarget.dataset.correctionId);
         });
+
+        $("#correctionsTable").DataTable({ 
+            pageLength: 15, 
+            lengthChange: false,
+            buttons: [
+                {
+                    text: 'Add Correction',
+                    action: () => { $("#createCorrection").modal('toggle') }
+                }
+            ]
+        });
     });
-    // fetch(`?handler=Corrections&cparId=${$('#readCPARId').val()}`)
-    // .then(response => $('#readCPARCorrectionsTable').load(response));
 }
 
-$('#createCorrectionButton').on('click', e => {
-    $('#createCorrectionCPARId').val($('#readCPARId').val());
-    $('#readCPAR').modal('toggle');
-});
+function createCorrection() {
+    renderCorrectionsTable();
+}
 
-$('#createCorrection button.btn-close').on('click', e => {
-    $('#readCPAR').modal('toggle');
-});
+function closeCreateCorrection() {
+    console.log("ilovepimes")
+    $("#createCorrection").modal('hide');
+}
 
-$('#createCorrectionSubmit').on('click', e => {
-    $('#createCorrection').modal('toggle');
 
-    let formData = {
-        CPARId: $('#createCorrectionCPARId').val(),
-        CorrectionDescription: $('#createCorrectionDescription').val(),
-        EscapeCause: $('#createCorrectionEscapeCause').val(),
-        Action: $('#createCorrectionAction').val()
-    };
+// $('#createCorrectionButton').on('click', e => {
+//     $('#createCorrectionCPARId').val($('#readCPARId').val());
+//     $('#readCPAR').modal('toggle');
+// });
 
-    fetch("/api/corrections/", {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    .then(response => {
-        console.log(response)
-        renderCorrectionsTable();
-    })
-    .catch(error => console.log(error));
-});
+// $('#createCorrection button.btn-close').on('click', e => {
+//     $('#readCPAR').modal('toggle');
+// });
+
+// $('#createCorrectionSubmit').on('click', e => {
+//     $('#createCorrection').modal('toggle');
+
+//     let formData = {
+//         CPARId: $('#createCorrectionCPARId').val(),
+//         CorrectionDescription: $('#createCorrectionDescription').val(),
+//         EscapeCause: $('#createCorrectionEscapeCause').val(),
+//         Action: $('#createCorrectionAction').val()
+//     };
+
+//     fetch("/api/corrections/", {
+//         method: "POST",
+//         body: JSON.stringify(formData),
+//         headers: {
+//             "Content-Type": "application/json"
+//         }
+//     })
+//     .then(response => {
+//         console.log(response)
+//         renderCorrectionsTable();
+//     })
+//     .catch(error => console.log(error));
+// });
 

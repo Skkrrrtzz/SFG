@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 using ATSAudit.Models;
 using APPCommon.Class;
 
-namespace ATSAudit.Repositories
+namespace ATSAudit.Services
 {
     public class CPARsService : ICPARsRepository
     {

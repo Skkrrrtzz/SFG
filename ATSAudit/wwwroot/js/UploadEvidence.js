@@ -6,8 +6,13 @@ $("#uploadEvidenceSubmit").on('click', () => {
 //Triggers whenever the form is submitted (currently via Unobtrusive AJAX)
 function uploadEvidenceComplete(xhr, status) {
     alert(xhr.responseText);
+    
+    //Clear form
     $("#uploadEvidenceForm")[0].reset();
     $("#attachedFiles").empty();
+
+    //Re-render sub-tables
+    renderCPARSubtables();
 }
 
 //When files are uploaded, create anchor tags to preview (like Schoolbook hehe)

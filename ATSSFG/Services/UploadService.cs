@@ -103,7 +103,7 @@ namespace ATSSFG.Services
 
         public string GetExportedExcel(string projectName)
         {
-            string uploadsDirectory = _networkDirectory + _exportedExcelDirectory;
+            string uploadsDirectory = _networkDirectory + _exportedExcelDirectory; // change it to the RFQ directory
 
             if (!Directory.Exists(uploadsDirectory))
             {

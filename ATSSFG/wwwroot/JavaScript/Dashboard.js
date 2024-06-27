@@ -192,7 +192,6 @@ $("#uploadMRPBomButton").click(function () {
     "MRPBomExcel"
   );
 });
-
 function sourcingForm() {
   fetch("/Dashboard/Dashboard?handler=PNandDescription", {
     method: "GET",
@@ -231,7 +230,7 @@ function sourcingForm() {
     });
 }
 function viewRFQProjects(table, data) {
-  $(table).DataTable({
+  let tables = $(table).DataTable({
     responsive: true,
     data: data,
     columns: [
@@ -279,17 +278,17 @@ function viewRFQProjects(table, data) {
               row.quotationCode +
               '" data-name="' +
               row.projectName +
-              '"><i class="fa-solid fa-eye"></i></a>' +
-              '<a href="#" class="btn btn-sm bg-main3 marked-btn me-2" data-id="' +
+              '"><i class="fa-solid fa-eye"></i> View</a>' +
+              '<button type="button" class="btn btn-sm bg-main3 marked-btn me-2" data-id="' +
               row.quotationCode +
               '" data-name="' +
               row.projectName +
-              '"><i class="fa-solid fa-circle-xmark"></i></a>' +
+              '"><i class="fa-solid fa-circle-xmark"></i> Close</button>' +
               '<a href="#" class="btn btn-sm bg-main3 accept-btn" data-id="' +
               row.quotationCode +
               '" data-name="' +
               row.projectName +
-              '"><i class="fa-solid fa-circle-check"></i></a>';
+              '"><i class="fa-solid fa-circle-check"></i> Accepted</a>';
             return buttons;
           } else if (department === "Sourcing") {
             return (
@@ -339,37 +338,45 @@ $("#incomingRFQTable").on("click", ".marked-btn", function () {
     projectName: projectName,
   };
 
-  fetch("/Dashboard/Dashboard?handler=MarkedAsClosed", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      RequestVerificationToken: $(
-        'input:hidden[name="__RequestVerificationToken"]'
-      ).val(),
-    },
-    body: JSON.stringify(requestData),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
+  showConfirmButton("Are you sure you want to close this RFQ?", "warning").then(
+    (result) => {
+      if (result.isConfirmed) {
+        fetch("/Dashboard/Dashboard?handler=MarkedAsClosed", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            RequestVerificationToken: $(
+              'input:hidden[name="__RequestVerificationToken"]'
+            ).val(),
+          },
+          body: JSON.stringify(requestData),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // console.log(data);
+            if (data.success) {
+              showSuccessAlert(data.message).then(() => {
+                location.reload();
+              });
+            } else {
+              showErrorAlert(data.message);
+            }
+          })
+          .catch((error) => {
+            // Handle errors
+            console.error("Error:", error);
+            showErrorAlert(
+              "An error occurred while marking the project as closed."
+            );
+          });
       }
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data);
-      if (data.success) {
-        showSuccessAlert(data.message).then(() => {
-          location.reload();
-        });
-      } else {
-        showErrorAlert(data.message);
-      }
-    })
-    .catch((error) => {
-      // Handle errors
-      console.error("Error:", error);
-      showErrorAlert("An error occurred while marking the project as closed.");
-    });
+    }
+  );
 });
 
 $("#incomingRFQTable").on("click", ".list-btn", function () {

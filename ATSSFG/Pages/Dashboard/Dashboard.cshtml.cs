@@ -97,6 +97,107 @@ namespace ATSSFG.Pages.Dashboard
             return filePath;
         }
 
+        private async Task<int?> FindPartNumber(string fileName, string partNumber)
+        {
+            if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(partNumber))
+            {
+                return null;
+            }
+
+            try
+            {
+                using (var package = new ExcelPackage(new FileInfo(fileName)))
+                {
+                    var worksheet = package.Workbook.Worksheets[0];
+                    int rowCount = worksheet.Dimension.Rows;
+                    int partNumberColumn = 2;
+
+                    // Find the row containing the partNumber
+                    for (int row = 14; row <= rowCount; row++)
+                    {
+                        if (worksheet.Cells[row, partNumberColumn].Text.Equals(partNumber, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return row;
+                        }
+                    }
+
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing query: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> WriteSuggestedSupplierAndComments(string filePath, string quotationCode)
+        {
+            try
+            {
+                var result = await _dashboardRepository.GetRFQByQuotationCode(quotationCode);
+
+                if (result == null)
+                {
+                    return false;
+                }
+
+                using (var package = new ExcelPackage(new FileInfo(filePath)))
+                {
+                    var worksheet = package.Workbook.Worksheets[0];
+                    int rowCount = worksheet.Dimension.Rows;
+                    int colCount = worksheet.Dimension.Columns;
+
+                    int suggestedSupplierColumn = -1;
+                    int commentsColumn = -1;
+
+                    // Find the columns for "Cost Engineer's Suggested Supplier" and "Comments"
+                    for (int col = 1; col <= colCount; col++)
+                    {
+                        if (worksheet.Cells[13, col].Text == "Cost Engineer's Suggested Supplier")
+                        {
+                            suggestedSupplierColumn = col;
+                        }
+                        else if (worksheet.Cells[13, col].Text == "Comments")
+                        {
+                            commentsColumn = col;
+                        }
+                    }
+
+                    // If either column is not found, return false
+                    if (suggestedSupplierColumn == -1 || commentsColumn == -1)
+                    {
+                        Console.WriteLine("One or both of the required columns not found.");
+                        return false;
+                    }
+
+                    foreach (var item in result)
+                    {
+                        int? partNumberRow = await FindPartNumber(filePath, item.CustomerPartNumber);
+
+                        if (partNumberRow.HasValue)
+                        {
+                            worksheet.Cells[partNumberRow.Value, suggestedSupplierColumn].Value = item.SuggestedSupplier;
+                            worksheet.Cells[partNumberRow.Value, commentsColumn].Value = item.Comments;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Part number {item.CustomerPartNumber} not found.");
+                        }
+                    }
+
+                    await package.SaveAsync();
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing query: {ex.Message}");
+                return false;
+            }
+        }
+
         private async Task ProcessMRPQBOM(IFormFile file)
         {
             try
@@ -302,7 +403,7 @@ namespace ATSSFG.Pages.Dashboard
 
             return File(fileStream, "application/xlsx", fileName);
         }
-        
+
         #endregion Get
 
         #region Post
@@ -444,7 +545,23 @@ namespace ATSSFG.Pages.Dashboard
 
                 if (result)
                 {
-                    return new JsonResult(new { success = true, message = "Marked as closed successfully" });
+                    var fileName = _uploadService.GetRFQFilePNDesc(markedAsClosed.ProjectName);
+
+                    if (fileName == null)
+                    {
+                        return NotFound(new { message = "File not found for the provided project name." });
+                    }
+
+                    bool excelResult = await WriteSuggestedSupplierAndComments(fileName, markedAsClosed.QuotationCode);
+
+                    if (excelResult)
+                    {
+                        return new JsonResult(new { success = true, message = "Marked as closed successfully" });
+                    }
+                    else
+                    {
+                        return new JsonResult(new { success = false, message = "Failed to update Excel file." });
+                    }
                 }
                 else
                 {
@@ -456,6 +573,7 @@ namespace ATSSFG.Pages.Dashboard
                 return new JsonResult(new { success = false, message = ex.Message });
             }
         }
+
         public async Task<IActionResult> OnPostSummaryRFQperMonth([FromBody] string yearMonth)
         {
             try
@@ -468,6 +586,7 @@ namespace ATSSFG.Pages.Dashboard
                 return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
             }
         }
+
         #endregion Post
     }
 }

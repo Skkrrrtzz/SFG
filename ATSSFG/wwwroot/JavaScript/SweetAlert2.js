@@ -88,3 +88,15 @@ function showToastwithTimer() {
     title: "Please enter a valid input quantity in the Annual Forecast field.",
   });
 }
+
+function showConfirmButton(message, icon) {
+  return Swal.fire({
+    title: "Confirmation",
+    text: message,
+    icon: icon,
+    showCancelButton: true,
+    confirmButtonColor: "#293a80",
+    cancelButtonColor: "#696969",
+    confirmButtonText: "Confirm",
+  });
+}

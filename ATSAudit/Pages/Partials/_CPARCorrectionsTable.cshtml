@@ -44,13 +44,13 @@
                 <td>
                     @if (correction.HasEvidence)
                     {
-                    <div hidden="hidden">Has</div>
+                    <div hidden>Has</div>
                     <button class="btn btn-primary viewEvidenceButton form-control fa-solid fa-eye" data-correction-id="@correction.CorrectionId" data-bs-target="#viewEvidence" data-bs-toggle="modal"></button>
                     }
                     else
                     {
                     //Button for uploading files
-                    <div hidden="hidden">Empty</div>
+                    <div hidden>Empty</div>
                     <button class="uploadEvidenceButton form-control fa-solid fa-file" data-correction-id="@correction.CorrectionId" data-bs-target="#uploadEvidence" data-bs-toggle="modal"></button>
                     }
                 </td>

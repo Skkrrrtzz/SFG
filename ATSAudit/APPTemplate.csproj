@@ -45,12 +45,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="bootstrap" Version="5.3.2" />
     <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="datatables.net-bs5" Version="2.0.8" />
+    <PackageReference Include="datatables.net-buttons-bs5" Version="3.0.2" />
+    <PackageReference Include="datatables.net-buttons-dt" Version="3.0.2" />
+    <PackageReference Include="datatables.net-colreorder-bs5" Version="2.0.3" />
+    <PackageReference Include="datatables.net-colreorder-dt" Version="2.0.3" />
+    <PackageReference Include="datatables.net-dt" Version="2.0.8" />
+    <PackageReference Include="jszip" Version="3.10.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
     <PackageReference Include="MySqlConnector" Version="2.3.7" />
     <PackageReference Include="NSwag.AspNetCore" Version="14.0.7" />
+    <PackageReference Include="pdfmake" Version="0.1.18" />
     <!-- <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

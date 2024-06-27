@@ -18,5 +18,6 @@ namespace ATSAudit.Models
         public string? Action { get; set; }
         public byte Status { get; set; }
         public bool HasEvidence { get; set; } = false;
+        
     }
 }

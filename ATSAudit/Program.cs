@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Reflection;
 using ATSAudit;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -109,6 +110,13 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        // Path.Combine(builder.Environment.ContentRootPath, "MyStaticFiles"))
+        @"\\DASHBOARDPC\ATSPortals\ATSAuditFiles\")
+        // RequestPath = "/brrrt-skibidi-dop-dop-dop-yis-yiss"
+});
 
 app.UseRouting();
 

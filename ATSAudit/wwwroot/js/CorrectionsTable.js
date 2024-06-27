@@ -9,17 +9,22 @@ async function renderCorrectionsTable() {
             uploadEvidenceData( "CPARs",
                                 "Corrections",
                                 e.currentTarget.dataset.correctionId);
+
+            // viewEvidence(   "CPARs",
+            //                 "Corrections",
+            //                 e.currentTarget.dataset.correctionId);
+        });
+
+        $('.viewEvidenceButton').on('click', e => {
+            //Setting form values so I don't have to render the whole form from the client side
+            viewEvidence(   "CPARs",
+                            "Corrections",
+                            e.currentTarget.dataset.correctionId);
         });
 
         $("#correctionsTable").DataTable({ 
             pageLength: 15, 
-            lengthChange: false,
-            buttons: [
-                {
-                    text: 'Add Correction',
-                    action: () => { $("#createCorrection").modal('toggle') }
-                }
-            ]
+            lengthChange: false
         });
     });
 }

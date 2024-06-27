@@ -3,38 +3,55 @@
         <div class="modal-content">
 
             <div class="modal-header bg-primary">
-                <h6 class="modal-title text-light">Uploading Evidence</h6>    
+                <h6 class="modal-title text-light">Evidence Attachments</h6>    
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <div class="modal-body">
+            <div class="modal-body grid">
+                
+                <form   data-ajax="true"
+                        data-ajax-url="?handler=DeleteEvidence"
+                        data-ajax-complete="deleteEvidenceComplete"
+                        data-ajax-method="post"
+                        method="post">
+
+                    <p class="form-text">
+                        <i class="fa-solid fa-file-arrow-up"></i>
+                        Uploaded Evidence
+                    </p>
+                    <div id="viewAttachedFiles"></div>
+
+                </form>
 
                 <form   class="grid row-gap-3" 
-                        id="uploadEvidenceForm"
                         method="post" 
                         enctype="multipart/form-data"
-                        >
+                        data-ajax="true"
+                        data-ajax-url="?handler=UploadEvidence"
+                        data-ajax-complete="uploadEvidenceComplete"
+                        data-ajax-method="post">
+
 
                     <div class="row">
-                        <label for="evidence" class="form-text">
+                        <label for="viewEvidenceInput" class="form-text">
                             <i class="fa-solid fa-file-arrow-up"></i>
-                            Currently Uploaded Attachments
+                            Upload Attachments
                         </label>
+                        <input id="viewEvidenceInput" type="file" name="evidence" multiple>
 
-                        @* <input id="uploadEvidenceForForm" type="hidden" name="form" value="test">
-                        <input id="uploadEvidenceForSubform" type="hidden" name="subform" value="test">
-                        <input id="uploadEvidenceForId" type="hidden" name="id" value="test">
-                        <input id="uploadEvidenceInput" type="file" name="evidence" multiple> *@
+                        <input id="viewEvidenceForForm" type="hidden" name="form" value="test">
+                        <input id="viewEvidenceForSubform" type="hidden" name="subform" value="test">
+                        <input id="viewEvidenceForId" type="hidden" name="id" value="test">
 
                         <div id="attachedFiles"></div>
                     </div>
 
                     <div class="modal-footer row">
-                        <button class="btn btn-primary"
-                                type="submit"
-                                id="uploadEvidenceSubmit" 
+                        <button type="submit"
+                                id="viewEvidenceSubmit" 
                                 data-bs-target="#readCPAR" 
-                                data-bs-toggle="modal">
+                                data-bs-toggle="modal"
+                                class="btn btn-primary">
                             Submit
                         </button>
                     </div>

@@ -26,7 +26,7 @@ $("#uploadEvidenceInput").on('change', () => {
     for (const file of currFiles) {
         const anchor = document.createElement("a");
         anchor.href = URL.createObjectURL(file);
-        anchor.textContent = anchor.title = file.name;
+        anchor.textContent = file.name;
         anchor.target = "_blank";
 
         anchor.dataset.bsToggle = "tooltip";
@@ -41,6 +41,39 @@ function uploadEvidenceData(formName, subformName, id) {
     $("#uploadEvidenceForForm").val(formName);
     $("#uploadEvidenceForSubform").val(subformName);
     $("#uploadEvidenceForId").val(id);
+}
+
+function viewEvidence(formName, subformName, id) {
+    const attachedFiles = document.querySelector("#viewAttachedFiles");
+    attachedFiles.innerHTML = "";
+    
+    fetch(`?handler=Evidences&Form=${formName}&Subform=${subformName}&Id=${id}`)
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(file => {
+            const div = document.createElement("div");
+
+            //Anchor
+            const anchor = document.createElement("a");
+            // anchor.href = new Blob([file], { type: image });
+            anchor.href = `${subformName}/${id}/${file}`;
+            anchor.textContent = file;
+            anchor.target = "_blank";
+            anchor.dataset.bsToggle = "tooltip";
+            anchor.title =  "Click to preview file";
+            
+            //Delete
+            const button = document.createElement("input")
+            button.classList.add("fa", "fa-x");
+            button.type = "submit";
+            button.value = "X";
+            
+            div.appendChild(anchor);
+            div.appendChild(button);
+
+            attachedFiles.appendChild(div);
+        });
+    });
 }
 
 //Failed attempt to make upload ACID-compliant (not compatible with Unobtrusive AJAX)

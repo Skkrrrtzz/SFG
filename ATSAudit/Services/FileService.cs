@@ -3,35 +3,56 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Threading.Tasks;
+using ATSAudit.DTOs;
 
 namespace ATSAudit.Services
 {
     public class FileService
     {
         private readonly string directoryPath = @"\\DASHBOARDPC\ATSPortals\ATSAuditFiles";
- 
-        public async Task<IEnumerable<string>> GetFilesOrEmpty(string form, string subform, string id)
+
+        public string GetFullPath(ActionItemDTO actionItem)
         {
-            string fullPath = $@"{directoryPath}\{form}\{subform}\{id}";
+            return Path.Combine(directoryPath, $@"{actionItem.Form}\{actionItem.Subform}\{actionItem.Id}");
+        }
+ 
+        public async Task<IEnumerable<string>> GetFilePathsOrEmpty(ActionItemDTO actionItem)
+        {
             var files = Enumerable.Empty<string>();
+            var ignore = new[] {"*.db"};
 
             //Check if there are any files in the directory
-            if (Directory.Exists(fullPath))
+            if (Directory.Exists(GetFullPath(actionItem)))
             {
-                files = await Task.Run(() => Directory.EnumerateFiles(fullPath));
+                files = await Task.Run(() => Directory.EnumerateFiles(GetFullPath(actionItem))
+                                                    .Where(file => !ignore.Contains(Path.GetFileName(file))));
             }
 
             return files;
         }
 
-        public async Task<bool> CheckDirectoryIfEmpty(string form, string subform, int id)
+        public async Task<IEnumerable<string?>> GetFileNamesOrEmpty(ActionItemDTO actionItem)
         {
-            string fullPath = $@"{directoryPath}\{form}\{subform}\{id}";
+            var files = Enumerable.Empty<string?>();
+            var ignore = new[] {".db"};
 
             //Check if there are any files in the directory
-            if (Directory.Exists(fullPath))
+            if (Directory.Exists(GetFullPath(actionItem)))
             {
-                var files = await Task.Run(() => Directory.EnumerateFiles(fullPath));
+                files = await Task.Run(() => Directory.EnumerateFiles(GetFullPath(actionItem))
+                                                    .Where(file => !ignore.Contains(Path.GetExtension(file), StringComparer.OrdinalIgnoreCase))
+                                                    .Select(Path.GetFileName));
+            }
+
+            return files;
+        }
+
+        public async Task<bool> CheckDirectoryIfEmpty(ActionItemDTO actionItem)
+        {
+            //Check if there are any files in the directory
+            if (Directory.Exists(GetFullPath(actionItem)))
+            {
+                var files = await Task.Run(() => Directory.EnumerateFiles(GetFullPath(actionItem)));
                 return files.Any();
             }
 
@@ -39,12 +60,12 @@ namespace ATSAudit.Services
 
         }
 
-        public async Task<bool> DeleteDirectory(string form, string subform, int id)
+        public async Task<bool> DeleteDirectory(ActionItemDTO actionItem)
         {
-            string fullPath = $@"{directoryPath}\{form}\{subform}\{id}";
+            string fullPath = GetFullPath(actionItem);
 
             //Delete files
-            if (Directory.Exists(fullPath))
+            if (Directory.Exists(GetFullPath(actionItem)))
             {
                 await Task.Run(() => Directory.Delete(fullPath, true));
                 return !Directory.Exists(fullPath);

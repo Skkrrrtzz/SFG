@@ -164,3 +164,14 @@ table {
     display: flex;
     flex-direction: column;
 }
+
+
+#viewAttachedFiles {
+    /* margin-inline: auto; */
+    margin-block: 1rem;
+    /* padding: 0.5rem; */
+    width: 90%;
+    
+    display: flex;
+    flex-direction: column;
+}

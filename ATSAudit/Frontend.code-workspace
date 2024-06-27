@@ -22,8 +22,8 @@
 			"**/Properties": true,
 			"**/*.code-workspace": true,
 			"**/Services/*.cs": true,
-			"**/*.json": true,
-			"**/*.csproj": true,
+			// "**/*.json": true,
+			// "**/*.csproj": true,
 			"**/*.sln": true,
 			// "**/*.*": true,
 			// "**/Frontend*": false

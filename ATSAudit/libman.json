@@ -15,17 +15,6 @@
       "destination": "wwwroot/lib/jqueryui/"
     },
     {
-      "library": "bootstrap-icons@1.11.3",
-      "destination": "wwwroot/lib/bootstrap-icons/",
-      "files": [
-        "font/fonts/bootstrap-icons.woff",
-        "font/fonts/bootstrap-icons.woff2",
-        "font/bootstrap-icons.css",
-        "font/bootstrap-icons.json",
-        "font/bootstrap-icons.min.css"
-      ]
-    },
-    {
       "library": "jquery-ajax-unobtrusive@3.2.6",
       "destination": "wwwroot/lib/jquery-ajax-unobtrusive/"
     },
@@ -34,8 +23,16 @@
       "destination": "wwwroot/lib/datatables.net/"
     },
     {
-      "library": "font-awesome@6.5.2",
-      "destination": "wwwroot/lib/font-awesome/"
+      "library": "datatables.net-dt@2.1.1",
+      "destination": "wwwroot\\lib\\datatables.net-dt"
+    },
+    {
+      "library": "datatables.net-buttons-dt@3.0.2",
+      "destination": "wwwroot\\lib\\datatables.net-buttons-dt"
+    },
+    {
+      "library": "datatables.net-colreorder-dt@2.0.3",
+      "destination": "wwwroot\\lib\\datatables.net-colreorder-dt"
     }
   ]
 }

@@ -13,7 +13,7 @@ namespace ATSSFG.Pages
         #region Declaration
 
         private readonly IHttpContextAccessor _httpContext;
-        private readonly IUserRepository _userRepository;
+        private readonly IUsersRepository _userRepository;
 
         #endregion Declaration
 
@@ -23,7 +23,7 @@ namespace ATSSFG.Pages
 
         #region Constructor
 
-        public IndexModel(ISessionService sessionService, IUserRepository userRepository)
+        public IndexModel(ISessionService sessionService, IUsersRepository userRepository)
         : base(sessionService, userRepository)
         {
         }
@@ -46,9 +46,9 @@ namespace ATSSFG.Pages
 
             //Check if user exists in Database
             //string userName = User.FindFirstValue("FullName");
-            string userName = "Michelle Adrales";
+            string userName = "Kertz Henrich Gajete";
             //Remove  this when publishing
-            //z = "Michelle Adrales";Patrick Cusipag
+            //z = "Michelle Adrales";Patrick CusipagKertz Henrich Gajete
             //y = "MENU";
             //x = "ATS";
             //w = "Cost Engineering";

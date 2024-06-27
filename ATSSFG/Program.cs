@@ -18,7 +18,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<ISessionService, SessionService>();
-builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUsersRepository, UsersRepository>();
 builder.Services.AddTransient<ISourcingRepository, SourcingRepository>();
 builder.Services.AddTransient<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<UploadService>();

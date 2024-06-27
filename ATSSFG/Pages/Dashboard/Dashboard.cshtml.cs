@@ -390,7 +390,7 @@ namespace ATSSFG.Pages.Dashboard
 
         public async Task<IActionResult> OnGetDownloadExcelFileAsync(string projectName)
         {
-            string filePath = _uploadService.GetExportedExcel(projectName);
+            string filePath = _uploadService.GetRFQFilePNDesc(projectName);
 
             if (!System.IO.File.Exists(filePath))
             {

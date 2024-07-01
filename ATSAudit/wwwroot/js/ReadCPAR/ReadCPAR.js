@@ -1,5 +1,6 @@
 // renderCorrectionsTable();
-let cparId = $("#cparId").val();
+// let cparId = $("#cparId").val();
+// let cparId = "meow";
 
 function renderCPARSubtables() {
     renderCorrectionsTable();

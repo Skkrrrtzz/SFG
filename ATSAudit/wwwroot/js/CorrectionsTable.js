@@ -2,25 +2,24 @@ $('#readCPARCorrectionsTable > loading').hide();
 
 async function renderCorrectionsTable() {
     $('#readCPARCorrectionsTable').load(`?handler=Corrections&cparId=${$('#readCPARId').val()}`, () => { 
-        $('.uploadEvidenceButton').on('click', e => {
+        $('#readCPARCorrectionsTable .uploadEvidenceButton').on('click', e => {
             $('#readCPAR').modal('toggle');
 
             //Setting form values so I don't have to render the whole form from the client side
-            uploadEvidenceData( "CPARs",
-                                "Corrections",
-                                e.currentTarget.dataset.correctionId);
-
-            // viewEvidence(   "CPARs",
-            //                 "Corrections",
-            //                 e.currentTarget.dataset.correctionId);
+            uploadEvidenceData("CPARs", "Corrections", e.currentTarget.parentNode.dataset.correctionId);
         });
 
-        $('.viewEvidenceButton').on('click', e => {
+        $('#readCPARCorrectionsTable .viewEvidenceButton').on('click', e => {
             //Setting form values so I don't have to render the whole form from the client side
-            viewEvidence(   "CPARs",
-                            "Corrections",
-                            e.currentTarget.dataset.correctionId);
+            viewEvidence("CPARs","Corrections", e.currentTarget.parentNode.dataset.correctionId);
         });
+
+        // $('.deleteEvidenceButton').on('click', e => {
+        //     //Setting form values so I don't have to render the whole form from the client side
+        //     deleteEvidence( "CPARs",
+        //                     "Corrections",
+        //                     e.currentTarget.dataset.correctionId);
+        // });
 
         $("#correctionsTable").DataTable({ 
             pageLength: 15, 

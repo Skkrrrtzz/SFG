@@ -8,8 +8,15 @@ async function renderCorrectiveActionsTable() {
                                 e.currentTarget.dataset.correctiveActionId);
         });
 
+        $('#readCPARCorrectiveActionsTable .viewEvidenceButton').on('click', e => {
+            //Setting form values so I don't have to render the whole form from the client side
+            viewEvidence(   "CPARs",
+                            "CorrectiveActions",
+                            e.currentTarget.dataset.correctiveActionId);
+        });
+
         $('.correctiveAction-delete').on('click', e => {
-            let correctiveActionId = e.currentTarget.parentNode.dataset.correctiveactionid/* .split('-')[1] */;
+            let correctiveActionId = e.currentTarget.parentNode.dataset.correctiveActionId/* .split('-')[1] */;
 
             fetch('/api/correctiveactions/' + correctiveActionId, {
                 method: "DELETE",
@@ -21,7 +28,7 @@ async function renderCorrectiveActionsTable() {
 
 
         $('.correctiveAction-close').on('click', e => {
-            let correctiveActionId = e.currentTarget.parentNode.dataset.correctiveactionid/* .split('-')[1] */;
+            let correctiveActionId = e.currentTarget.parentNode.dataset.correctiveActionId/* .split('-')[1] */;
 
             fetch('/api/correctiveactions/' + correctiveActionId, {
                 method: "PATCH",

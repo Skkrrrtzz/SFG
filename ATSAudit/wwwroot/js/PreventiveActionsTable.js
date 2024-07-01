@@ -1,12 +1,19 @@
 async function renderPreventiveActionsTable() {
     $('#readCPARPreventiveActionsTable').load(`?handler=PreventiveActions&cparId=${$('#readCPARId').val()}`, () => { 
-        $(".uploadEvidenceButton").on('click', e => {
+        $("#readCPARPreventiveActionsTable .uploadEvidenceButton").on('click', e => {
             $('#readCPAR').modal('toggle');
 
             //Setting form values so I don't have to render the whole form from the client side
             uploadEvidenceData( "CPARs",
-                                "CorrectiveActions",
-                                e.currentTarget.dataset.correctiveActionId);
+                                "PreventiveActions",
+                                e.currentTarget.dataset.preventiveActionId);
+        });
+
+        $('#readCPARPreventiveActionsTable .viewEvidenceButton').on('click', e => {
+            //Setting form values so I don't have to render the whole form from the client side
+            viewEvidence(   "CPARs",
+                            "PreventiveActions",
+                            e.currentTarget.dataset.preventiveActionId);
         });
 
         $("#preventiveActionsTable").DataTable({ pageLength: 15, lengthChange: false });

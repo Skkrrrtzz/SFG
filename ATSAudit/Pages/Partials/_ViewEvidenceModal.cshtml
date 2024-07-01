@@ -9,19 +9,19 @@
 
             <div class="modal-body grid">
                 
-                <form   data-ajax="true"
-                        data-ajax-url="?handler=DeleteEvidence"
-                        data-ajax-complete="deleteEvidenceComplete"
-                        data-ajax-method="post"
-                        method="post">
-
+                <form id="deleteEvidence" method="post">
                     <p class="form-text">
                         <i class="fa-solid fa-file-arrow-up"></i>
                         Uploaded Evidence
                     </p>
                     <div id="viewAttachedFiles"></div>
 
+                    <input type="hidden" name="form" value="test">
+                    <input type="hidden" name="subform" value="test">
+                    <input type="hidden" name="id" value="test">
+                    <input type="hidden" name="filename" value="test">
                 </form>
+
 
                 <form   class="grid row-gap-3" 
                         method="post" 

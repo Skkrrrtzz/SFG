@@ -1,3 +1,5 @@
+@model ATSAudit.Views.CPARs.ReadCPAR
+
 <div class="modal fade" data-bs-backdrop='static' id="uploadEvidence" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -25,6 +27,7 @@
                         </label>
 
                         @* <input type="hidden" name="__RequestVerificationToken" value="@Antiforgery.GetTokens(HttpContext).RequestToken" /> *@
+                        <input id="uploadEvidenceForCPAR" type="hidden" name="CPARId" value="@Model.CPARId">
                         <input id="uploadEvidenceForForm" type="hidden" name="form" value="test">
                         <input id="uploadEvidenceForSubform" type="hidden" name="subform" value="test">
                         <input id="uploadEvidenceForId" type="hidden" name="id" value="test">

@@ -2,24 +2,38 @@ $('#readCPARCorrectionsTable > loading').hide();
 
 async function renderCorrectionsTable() {
     $('#readCPARCorrectionsTable').load(`?handler=Corrections&cparId=${$('#readCPARId').val()}`, () => { 
-        $('.uploadEvidenceButton').on('click', e => {
+        let [form, subform] = ["CPARs", "Corrections"]
+        $('#readCPARCorrectionsTable .uploadEvidenceButton').on('click', e => {
             $('#readCPAR').modal('toggle');
 
             //Setting form values so I don't have to render the whole form from the client side
-            uploadEvidenceData( "CPARs",
-                                "Corrections",
-                                e.currentTarget.dataset.correctionId);
-
-            // viewEvidence(   "CPARs",
-            //                 "Corrections",
-            //                 e.currentTarget.dataset.correctionId);
+            uploadEvidenceData(form, subform, e.currentTarget.parentNode.dataset.correctionId);
         });
 
-        $('.viewEvidenceButton').on('click', e => {
+        $('#readCPARCorrectionsTable .viewEvidenceButton').on('click', e => {
             //Setting form values so I don't have to render the whole form from the client side
-            viewEvidence(   "CPARs",
-                            "Corrections",
-                            e.currentTarget.dataset.correctionId);
+            viewEvidence(form, subform, e.currentTarget.parentNode.dataset.correctionId);
+        });
+
+        // $('.deleteEvidenceButton').on('click', e => {
+        //     //Setting form values so I don't have to render the whole form from the client side
+        //     deleteEvidence( "CPARs",
+        //                     "Corrections",
+        //                     e.currentTarget.dataset.correctionId);
+        // });
+
+        $('.correction-close').on('click', e => {
+            fetch(`?handler=CloseActionItem`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    form: form,
+                    subform: subform,
+                    id: e.currentTarget.parentNode.dataset.correctionId
+                })
+            })
         });
 
         $("#correctionsTable").DataTable({ 

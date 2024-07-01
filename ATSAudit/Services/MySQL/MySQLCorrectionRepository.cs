@@ -85,5 +85,10 @@ namespace ATSAudit.Services
                 return await connection.ExecuteAsync(query, new { CorrectionId = correctionId });
             }
         }
+
+        public Task<int> CloseCorrection(int correctionId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

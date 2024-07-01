@@ -2,7 +2,7 @@
 
 namespace ATSSFG.Repository
 {
-    public interface IUserRepository
+    public interface IUsersRepository
     {
         public Task<IEnumerable<UsersInfoModel>> GetRole();
 
@@ -12,7 +12,7 @@ namespace ATSSFG.Repository
 
         public Task<bool> DeleteUserAsync(int id);
 
-        public Task<bool> EditUserAsync(UsersInfoModel edit);
+        public Task<bool> UpdateUserAsync(UsersInfoModel edit);
 
         public Task<string> AddUserAsync(UsersInfoModel add);
     }

@@ -7,9 +7,9 @@ namespace ATSSFG.Pages
     public class BasePageModel : PageModel
     {
         protected readonly ISessionService _sessionService;
-        protected readonly IUserRepository _userRepository;
+        protected readonly IUsersRepository _userRepository;
 
-        public BasePageModel(ISessionService sessionService, IUserRepository userRepository)
+        public BasePageModel(ISessionService sessionService, IUsersRepository userRepository)
         {
             _sessionService = sessionService;
             _userRepository = userRepository;

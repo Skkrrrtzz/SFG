@@ -6,11 +6,11 @@ using System.Data;
 
 namespace ATSSFG.Repository
 {
-    public class UserRepository : IUserRepository
+    public class UsersRepository : IUsersRepository
     {
         private readonly string _connectionString;
 
-        public UserRepository(IConfiguration configuration)
+        public UsersRepository(IConfiguration configuration)
         {
             _connectionString = PIMESSettings.atsSFGConnString;
         }
@@ -102,7 +102,7 @@ namespace ATSSFG.Repository
             }
         }
 
-        public async Task<bool> EditUserAsync(UsersInfoModel edit)
+        public async Task<bool> UpdateUserAsync(UsersInfoModel edit)
         {
             try
             {

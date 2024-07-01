@@ -83,7 +83,7 @@ namespace ATSAudit.Views.CPARs
             //Checking Filesystem
             foreach (var correction in corrections)
             {
-                correction.HasEvidence = await _files.CheckDirHasFilesAsync(new ActionItemDTO("CPARs", cparId, "Corrections", correction.CorrectionId));
+                correction.HasEvidence = await _files.CheckDirHasFilesAsync(new ActionItemDTO("CPARs", cparId.ToString(), "Corrections", correction.CorrectionId.ToString()));
             }
 
             return Partial("Partials/_CPARCorrectionsTable", (List<CorrectionModel>) corrections);
@@ -98,7 +98,7 @@ namespace ATSAudit.Views.CPARs
             //Checking Filesystem
             foreach (var correctiveAction in correctiveActions)
             {
-                correctiveAction.HasEvidence = await _files.CheckDirHasFilesAsync(new ActionItemDTO("CPARs", cparId, "CorrectiveActions", correctiveAction.CorrectiveActionId));
+                correctiveAction.HasEvidence = await _files.CheckDirHasFilesAsync(new ActionItemDTO("CPARs", cparId.ToString(), "CorrectiveActions", correctiveAction.CorrectiveActionId.ToString()));
             }
 
             return Partial("Partials/_CPARCorrectiveActionsTable", (List<CorrectiveActionModel>) correctiveActions);
@@ -114,7 +114,7 @@ namespace ATSAudit.Views.CPARs
             foreach (var preventiveAction in preventiveActions)
             {
                 // preventiveAction.HasEvidence = await _files.CheckDirectoryIfEmpty("CPARs", "PreventiveActions", preventiveAction.PreventiveActionId);
-                preventiveAction.HasEvidence = await _files.CheckDirHasFilesAsync(new ActionItemDTO("CPARs", cparId, "PreventiveActions", preventiveAction.PreventiveActionId));
+                preventiveAction.HasEvidence = await _files.CheckDirHasFilesAsync(new ActionItemDTO("CPARs", cparId.ToString(), "PreventiveActions", preventiveAction.PreventiveActionId.ToString()));
             }
             return Partial("Partials/_CPARPreventiveActionsTable", (List<PreventiveActionModel>) preventiveActions);
         }
@@ -125,7 +125,7 @@ namespace ATSAudit.Views.CPARs
 
         public async Task<IActionResult> OnPostUploadEvidence(List<IFormFile> evidence, string form, string subform, string id)
         {
-            var actionItem = new ActionItemDTO(form, CPARId, subform, id);
+            var actionItem = new ActionItemDTO(form, CPARId.ToString(), subform, id);
 
             if (evidence != null && evidence.Count > 0)
             {
@@ -195,6 +195,26 @@ namespace ATSAudit.Views.CPARs
             }
 
             return NotFound();
+        }
+
+        // public async Task<IActionResult> OnPatchCloseActionItem([FromBody] ActionItemDTO actionItem)
+        public async Task<IActionResult> OnPatchCloseActionItem([FromBody] string form, string subform, int id)
+        {
+            //Close Action Item
+            // int result = actionItem.Subform switch
+            int result = subform switch
+            {
+                // "Corrections" => await _corrections.CloseCorrection(Int32.Parse(actionItem.Id)),
+                "Corrections" => await _corrections.CloseCorrection(id),
+                _ => 0
+            };
+
+            if (result == 0)
+            {
+                return StatusCode(500);
+            }
+            
+            return new OkResult();
         }
 
         #endregion

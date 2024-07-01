@@ -9,6 +9,6 @@ namespace ATSAudit.Services
         public Task<IEnumerable<CorrectionModel>> GetCorrectionsByCPAR(int planId);
         public Task<int> PostCorrection(CorrectionModel correction);
         public Task<int> DeleteCorrection(int correctionId);
-     
+        public Task<int> CloseCorrection(int correctionId);
     }
 }

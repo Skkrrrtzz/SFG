@@ -74,5 +74,17 @@ namespace ATSAudit.Services
                 return await connection.ExecuteAsync(query, new { CorrectionId = correctionId });
             }
         }
+
+        public async Task<int> CloseCorrection(int correctionId)
+        {
+            using (var connection = new SqlConnection(_connectionString)) 
+            {
+                // Console.WriteLine("CorrectionId" + conformityId);
+
+                var query = "UPDATE dbo.Corrections SET Status = 1 WHERE CorrectionId = @CorrectionId";
+
+                return await connection.ExecuteAsync(query, new { CorrectionId = correctionId });
+            }
+        }
     }
 }

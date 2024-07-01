@@ -69,12 +69,13 @@ namespace ATSSFG.Repository
             {
                 await conn.OpenAsync();
 
-                string query = "SELECT * FROM [GetIncomingRFQ_1]";
+                string query = "SELECT * FROM GetIncomingRFQ_1";
 
                 var result = await conn.QueryAsync<RFQProjectModel>(query);
                 return result.ToList();
             }
         }
+
         public async Task<List<RFQProjectModel>> GetIncomingRFQProjects_2()
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -197,7 +198,8 @@ namespace ATSSFG.Repository
                     Description = model.Description,
                     DateModified = model.DateModified,
                     PreparedBy = model.PreparedBy,
-                    ReviewedBy = model.ReviewedBy
+                    ReviewedBy = model.ReviewedBy,
+                    UploadedBy = model.UploadedBy
                 };
 
                 return await conn.ExecuteAsync(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
@@ -278,19 +280,39 @@ namespace ATSSFG.Repository
             }
         }
 
-        public async Task<bool> MarkAsClosed(string quotationCode, string projectName)
+        public async Task<bool> MarkAsClosed(ProjectAndQuotation projectAndQuotation)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = @"UPDATE RFQProjects SET Status = 'CLOSED', ActualCompletionDate = GETDATE() WHERE ProjectName = @ProjectName AND QuotationCode = @QuotationCode";
+                string storedProcedure = "MarkProjectAsClosed_SP";
 
-                var parameters = new
-                {
-                    ProjectName = projectName,
-                    QuotationCode = quotationCode
-                };
-                var result = await conn.ExecuteAsync(query, parameters);
-                return result > 0;
+                var parameters = new DynamicParameters();
+                parameters.Add("ProjectName", projectAndQuotation.ProjectName);
+                parameters.Add("QuotationCode", projectAndQuotation.QuotationCode);
+                parameters.Add("RowsAffected", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                await conn.ExecuteAsync(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
+
+                int rowsAffected = parameters.Get<int>("RowsAffected");
+                return rowsAffected > 0;
+            }
+        }
+
+        public async Task<bool> IsAcceptedByCustomer(ProjectAndQuotation projectAndQuotation)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string storedProcedure = "AcceptedByCustomer_SP";
+
+                var parameters = new DynamicParameters();
+                parameters.Add("ProjectName", projectAndQuotation.ProjectName);
+                parameters.Add("QuotationCode", projectAndQuotation.QuotationCode);
+                parameters.Add("RowsAffected", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                await conn.ExecuteAsync(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
+
+                int rowsAffected = parameters.Get<int>("RowsAffected");
+                return rowsAffected > 0;
             }
         }
     }

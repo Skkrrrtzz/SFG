@@ -292,7 +292,7 @@ fetchRFQPartNumbers(projectName, quotationCode);
 
 function saveSupplierAndComments() {
   $("#saveButton").prop("disabled", true);
-  showLoading();
+  // showLoading();
   let partNumber = $("#PartNumber").val();
   let suggestedSupplier = $("#SuggestedSupplier").text();
   let comments = $("#Comments").val();
@@ -321,8 +321,10 @@ function saveSupplierAndComments() {
     })
     .then((response) => {
       if (response.success) {
-        showSuccessAlert(response.message);
-        fetchRFQPartNumbers(projectName, quotationCode);
+        showSuccessAlert(response.message).then(() => {
+          fetchRFQPartNumbers(projectName, quotationCode);
+        });
+        // fetchRFQPartNumbers(projectName, quotationCode);
       } else {
         showErrorAlert(response.message);
       }

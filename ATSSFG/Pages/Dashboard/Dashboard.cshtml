@@ -5,6 +5,7 @@
     string encoder = HttpContext?.Session.GetString("Encoder") ?? "";
     string processor = HttpContext?.Session.GetString("Processor") ?? "";
     string viewer = HttpContext?.Session.GetString("Viewer") ?? "";
+    string Username = HttpContext?.Session.GetString("UserName") ?? "";
     string Admin = HttpContext?.Session.GetString("Admin") ?? "";
 
     bool isAdmin = Admin.Equals("True", StringComparison.OrdinalIgnoreCase);
@@ -227,6 +228,7 @@
                                 <th>Request Date</th>
                                 <th>Part Number</th>
                                 <th>Status</th>
+                                <th>Accepted By Customer</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -240,9 +242,9 @@
 </div>
 @section Scripts {
     <script>
-
-         let department = "@department";
-         const viewer = "@viewer";
+        let department = "@department";
+        const viewer = "@viewer";
+        const uploader = "@Username";
     </script>
     <script src="~/JavaScript/Dashboard.js"></script>
     <script src="~/JavaScript/DashboardCharts.js"></script>

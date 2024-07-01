@@ -77,7 +77,7 @@ namespace ATSSFG.Pages.Dashboard
             };
         }
 
-        private MRPBOMProductModel SaveMRPBOMProducts(ExcelWorksheet worksheet)
+        private MRPBOMProductModel SaveMRPBOMProducts(ExcelWorksheet worksheet, string uploadedBy)
         {
             return new MRPBOMProductModel
             {
@@ -88,6 +88,7 @@ namespace ATSSFG.Pages.Dashboard
                 DateModified = worksheet.Cells[2, 12].GetValue<DateTime>(),
                 PreparedBy = GetValueOrDefault(worksheet.Cells[3, 12].Value),
                 ReviewedBy = GetValueOrDefault(worksheet.Cells[4, 12].Value),
+                UploadedBy = uploadedBy
             };
         }
 
@@ -198,7 +199,7 @@ namespace ATSSFG.Pages.Dashboard
             }
         }
 
-        private async Task ProcessMRPQBOM(IFormFile file)
+        private async Task ProcessMRPQBOM(IFormFile file, string uploadedBy)
         {
             try
             {
@@ -208,7 +209,7 @@ namespace ATSSFG.Pages.Dashboard
                     stream.Position = 0;
                     using (var package = new ExcelPackage(stream))
                     {
-                        await ProcessMRPQBOMFile(package, file);
+                        await ProcessMRPQBOMFile(package, file, uploadedBy);
                     }
                 }
             }
@@ -218,7 +219,7 @@ namespace ATSSFG.Pages.Dashboard
             }
         }
 
-        private async Task ProcessMRPQBOMFile(ExcelPackage package, IFormFile file)
+        private async Task ProcessMRPQBOMFile(ExcelPackage package, IFormFile file, string uploadedBy)
         {
             using (var worksheet = package.Workbook.Worksheets[1])
             {
@@ -260,7 +261,7 @@ namespace ATSSFG.Pages.Dashboard
                 }
 
                 // Save MRPBOMProducts
-                var productsModel = SaveMRPBOMProducts(worksheet);
+                var productsModel = SaveMRPBOMProducts(worksheet, uploadedBy);
                 var affectedRows2 = await _dashboardRepository.UploadMRPBOMProducts(productsModel);
 
                 if (affectedRows2 == 0)
@@ -390,7 +391,7 @@ namespace ATSSFG.Pages.Dashboard
 
         public async Task<IActionResult> OnGetDownloadExcelFileAsync(string projectName)
         {
-            string filePath = _uploadService.GetRFQFilePNDesc(projectName);
+            string filePath = _uploadService.GetRFQFilePathFromPNDesc(projectName);
 
             if (!System.IO.File.Exists(filePath))
             {
@@ -458,7 +459,7 @@ namespace ATSSFG.Pages.Dashboard
             }
         }
 
-        public async Task<IActionResult> OnPostUploadMRPBOMAsync(IFormFile file)
+        public async Task<IActionResult> OnPostUploadMRPBOMAsync(IFormFile file, string uploadedBy)
         {
             if (file == null || file.Length == 0)
             {
@@ -474,7 +475,7 @@ namespace ATSSFG.Pages.Dashboard
             try
             {
                 string tableName = "MRPBOM";
-                await ProcessMRPQBOM(file);
+                await ProcessMRPQBOM(file, uploadedBy);
                 return new JsonResult(new { success = true, message = "File uploaded successfully" });
             }
             catch (Exception ex)
@@ -541,7 +542,7 @@ namespace ATSSFG.Pages.Dashboard
         {
             try
             {
-                var result = await _dashboardRepository.MarkAsClosed(markedAsClosed.QuotationCode, markedAsClosed.ProjectName);
+                var result = await _dashboardRepository.MarkAsClosed(markedAsClosed);
 
                 if (result)
                 {
@@ -571,6 +572,19 @@ namespace ATSSFG.Pages.Dashboard
             catch (Exception ex)
             {
                 return new JsonResult(new { success = false, message = ex.Message });
+            }
+        }
+
+        public async Task<IActionResult> OnPostAcceptedRFQ([FromBody] ProjectAndQuotation projectAndQuotation)
+        {
+            try
+            {
+                var result = await _dashboardRepository.IsAcceptedByCustomer(projectAndQuotation);
+                return new JsonResult(new { success = result, message = result ? "Accepted successfully" : "Failed to accept." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, error = $"Error: {ex.Message}" });
             }
         }
 

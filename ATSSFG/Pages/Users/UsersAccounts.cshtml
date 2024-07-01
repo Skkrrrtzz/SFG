@@ -5,40 +5,42 @@
     bool isAdmin = Admin.Equals("True", StringComparison.OrdinalIgnoreCase);
 }
 @if(isAdmin){
-    
-    <div>
-        <div class="card container">
-            <div class="border-3 border-bottom border-dark">
-                <h4 class="fw-bold">Users Account</h4>
+    <div class="card container">
+        <div class="border-3 border-bottom border-dark">
+            <h4 class="fw-bold">Users Account</h4>
+        </div>
+       
+        <div class="table-responsive my-2">
+            <div class="d-flex justify-content-end me-2">
+                <button type="button" class="btn btn-sm bg-main3" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="fa-solid fa-plus"></i> Add User</button>
             </div>
-            <div class="table-responsive my-2">
-                <table class="table table-hover table-sm table-striped display" id="userTbl" style="width: 100%">
-                    <thead class="fw-bold table-secondary">
-                        <tr>
-                            <th>No</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Department</th>
-                            <th>Encoder</th>
-                            <th>Processor</th>
-                            <th>Viewer</th>
-                            <th>Admin</th>
-                            <th>Status</th>
-                            <th>Options</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+            <table class="table table-hover table-sm table-striped display" id="userTbl" style="width: 100%">
+                <thead class="fw-bold table-secondary">
+                    <tr>
+                        <th>No</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Encoder</th>
+                        <th>Processor</th>
+                        <th>Viewer</th>
+                        <th>Admin</th>
+                        <th>Status</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
     @Html.AntiForgeryToken()
-    @* Add Modal*@
+
+    // Add Modal
     <div class="modal fade" id="addUserModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-primary">
+                <div class="modal-header bg-main3">
                     <h5 class="modal-title text-white" id="addUserModalLabel">Add User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -47,150 +49,140 @@
                     <span id="alert-text"></span>
                 </div>
                 <div class="modal-body">
-                    <div class="row g-2">
-                        <div class="col-sm-6 mb-3">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control fw-bold" id="addUserField" name="name" required>
-                                <label for="addUserField">Name</label>
+                    <form id="addUserForm">
+                        <div class="row g-2">
+                            <div class="col-sm-6 mb-3">
+                                <label for="addNameField" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="addNameField" required>
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label for="addEmailField" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="addEmailField" required>
+                            </div>
+                            <div class="col-sm-2 mb-3">
+                                Roles
+                            </div>
+                            <div class="col-sm-2 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="addEncoder">
+                                    <label class="form-check-label" for="addEncoder">Encoder</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="addProcessor">
+                                    <label class="form-check-label" for="addProcessor">Processor</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="addViewer">
+                                    <label class="form-check-label" for="addViewer">Viewer</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="addAdmin">
+                                    <label class="form-check-label" for="addAdmin">Admin</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="addIsActive">
+                                    <label class="form-check-label" for="addIsActive">IsActive</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="addDeptField" class="form-label">Department</label>
+                                <select id="addDeptField" class="form-select" required>
+                                    <option selected disabled>Choose Department</option>
+                                    <option value="Business Control">Business Control</option>
+                                    <option value="Purchasing">Purchasing</option>
+                                    <option value="Sourcing">Sourcing</option>
+                                    <option value="Cost Engineering">Cost Engineering</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="col-sm-6 mb-3">
-                            <div class="form-floating mb-3">
-                                <input type="email" class="form-control" id="addEmailField" name="email" required />
-                                <label class="form-label" for="addEmailField">Email address</label>
-                            </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" id="addBtn" name="submit" class="btn bg-main3">Submit</button>
                         </div>
-                    </div>
-                    <div class="row g-2">
-                        <div class="col-sm-6 mb-3">
-                            <div class="form-outline">
-                                <input type="number" class="form-control" id="addEmpField" name="employee_id" required />
-                                <label class="form-label" for="addEmpField">Emp ID</label>
-                            </div>
-                        </div>
-                        <div class="col-sm-6 mb-3">
-                            <div class="input-group">
-                                <input type="password" class="form-control" name="password" id="addPassField" placeholder="Password" required minlength="8" pattern=".{8,}" title="Password must be at least 8 characters long">
-                                <button class="btn btn-outline-primary" type="button" id="toggleAddPassword" data-mdb-ripple-color="dark">
-                                    <i class="bi bi-eye-slash-fill"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-2">
-                        <div class="form-floating col-sm-4 mb-3">
-                            <select class="form-select" id="addDeptField" name="department" required>
-                                <option value="">Choose Department</option>
-                                <option value="Business Control">Business Control</option>
-                                <option value="Purchasing">Purchasing</option>
-                                <option value="Sourcing">Sourcing</option>
-                                <option value="EVP">EVP</option>
-                            </select>
-                            <label class="form-label" for="addDeptField">Department</label>
-                        </div>
-                        <div class="form-floating col-sm-4 mb-3">
-                            <select class="form-select" id="addRoleField" name="role" required>
-                                <option value="">Choose role</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Viewer">Viewer</option>
-                                <option value="Approver 1">Approver 1</option>
-                                <option value="Approver 2">Approver 2</option>
-                                <option value="Approver 3">Approver 3</option>
-                                <option value="Optional Approver">Optional Approver</option>
-                                <option value="Requestor">Requestor</option>
-                            </select>
-                            <label class="form-label" for="addRoleField">Role</label>
-                        </div>
-                        <div class="form-floating col-sm-4 mb-3">
-                            <select class="form-select" id="addPosField" name="position" required>
-                                <option value="">Choose position</option>
-                                <option value="Admin">Admin</option>
-                                <option value="Manager">Manager</option>
-                                <option value="Employee">Employee</option>
-
-                            </select>
-                            <label class="form-label" for="addPosField">Position</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="addBtn" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    @* // Edit Modal *@
+    // Edit Modal
      <div class="modal fade" id="editUserModal" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-     <div class="modal-dialog modal-lg">
-         <div class="modal-content">
-             <div class="modal-header bg-main3">
-                 <h5 class="modal-title text-white" id="editUserModalLabel"><i class="fa-solid fa-user-pen"></i> Edit User</h5>
-                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-             </div>
-             <div class="modal-body">
-                 <form id="editUserForm">
-                     <div class="row g-2">
-                         <div class="col-sm-6 mb-3">
-                             <label for="editNameField" class="form-label">Name</label>
-                             <input type="text" class="form-control" id="editNameField">
-                         </div>
-                         <div class="col-sm-6 mb-3">
-                             <label for="editEmailField" class="form-label">Email address</label>
-                             <input type="text" class="form-control" id="editEmailField">
-                         </div>
-                         <div class="col-sm-2 mb-3">
-                             Roles
-                         </div>
-                         <div class="col-sm-2 mb-3">
-                             <div class="form-check form-switch">
-                                 <input class="form-check-input" type="checkbox" role="switch" id="editEncoder">
-                                 <label class="form-check-label" for="editEncoder">Encoder</label>
-                             </div>
-                         </div>
-                         <div class="col-sm-2 mb-3">
-                             <div class="form-check form-switch">
-                                 <input class="form-check-input" type="checkbox" role="switch" id="editProcessor">
-                                 <label class="form-check-label" for="editProcessor">Processor</label>
-                             </div>
-                         </div>
-                         <div class="col-sm-2 mb-3">
-                             <div class="form-check form-switch">
-                                 <input class="form-check-input" type="checkbox" role="switch" id="editViewer">
-                                 <label class="form-check-label" for="editViewer">Viewer</label>
-                             </div>
-                         </div>
-                         <div class="col-sm-2 mb-3">
-                             <div class="form-check form-switch">
-                                 <input class="form-check-input" type="checkbox" role="switch" id="editAdmin">
-                                 <label class="form-check-label" for="editAdmin">Admin</label>
-                             </div>
-                         </div>
-                         <div class="col-sm-2 mb-3">
-                             <div class="form-check form-switch">
-                                 <input class="form-check-input" type="checkbox" role="switch" id="editIsActive">
-                                 <label class="form-check-label" for="editIsActive">IsActive</label>
-                             </div>
-                         </div>
-                         <div class="col-md-4">
-                             <label for="editDeptField" class="form-label">Department</label>
-                             <select id="editDeptField" class="form-select">
-                                 <option selected>Choose Department</option>
-                                 <option value="Business Control">Business Control</option>
-                                 <option value="Purchasing">Purchasing</option>
-                                 <option value="Sourcing">Sourcing</option>
-                                 <option value="Cost Engineering">Cost Engineering</option>
-                             </select>
-                         </div>
-                     </div>
-                     <div class="d-flex justify-content-end">
-                         <button type="submit" id="updateBtn" name="submit" class="btn bg-main3">Update</button>
-                     </div>
-                 </form>
-             </div>
-         </div>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-main3">
+                    <h5 class="modal-title text-white" id="editUserModalLabel"><i class="fa-solid fa-user-pen"></i> Edit User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserForm">
+                        <div class="row g-2">
+                            <div class="col-sm-6 mb-3">
+                                <label for="editNameField" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="editNameField">
+                            </div>
+                            <div class="col-sm-6 mb-3">
+                                <label for="editEmailField" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="editEmailField">
+                            </div>
+                            <div class="col-sm-2 mb-3">
+                                Roles
+                            </div>
+                            <div class="col-sm-2 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="editEncoder">
+                                    <label class="form-check-label" for="editEncoder">Encoder</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="editProcessor">
+                                    <label class="form-check-label" for="editProcessor">Processor</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="editViewer">
+                                    <label class="form-check-label" for="editViewer">Viewer</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="editAdmin">
+                                    <label class="form-check-label" for="editAdmin">Admin</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="editIsActive">
+                                    <label class="form-check-label" for="editIsActive">IsActive</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="editDeptField" class="form-label">Department</label>
+                                <select id="editDeptField" class="form-select">
+                                    <option selected disabled>Choose Department</option>
+                                    <option value="Business Control">Business Control</option>
+                                    <option value="Purchasing">Purchasing</option>
+                                    <option value="Sourcing">Sourcing</option>
+                                    <option value="Cost Engineering">Cost Engineering</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" id="updateBtn" name="submit" class="btn bg-main3">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
      </div>
- </div>
 
     @section Scripts {
         <script src="~/JavaScript/Users.js"></script>

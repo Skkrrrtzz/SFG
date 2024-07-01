@@ -187,61 +187,70 @@ function dataURLtoBlob(dataURL) {
 
 $("#btnSubmit").click(function (e) {
   e.preventDefault();
+  showConfirmButton("Are you sure you want to submit?", "warning").then(
+    (result) => {
+      if (result.isConfirmed) {
+        let currentIds = [];
+        let annualForecasts = [];
+        let isValid = true; // Flag variable to track input validity
 
-  let currentIds = [];
-  let annualForecasts = [];
-  let isValid = true; // Flag variable to track input validity
+        // Loop through each row in the table
+        allRowsData.each(function (rowData, index) {
+          let currentId = rowData[0];
+          let annualForecastValue = rowData[8];
 
-  // Loop through each row in the table
-  allRowsData.each(function (rowData, index) {
-    let currentId = rowData[0];
-    let annualForecastValue = rowData[8];
+          currentIds.push(currentId);
+          annualForecasts.push(annualForecastValue);
+          if (isNaN(annualForecastValue) || annualForecastValue === "") {
+            showInfoAlert(
+              "Please enter a valid input quantity in the Annual Forecast field."
+            );
 
-    currentIds.push(currentId);
-    annualForecasts.push(annualForecastValue);
-    if (isNaN(annualForecastValue) || annualForecastValue === "") {
-      showInfoAlert(
-        "Please enter a valid input quantity in the Annual Forecast field."
-      );
-
-      isValid = false; // Set isValid to false if invalid input is detected
-      return false; // Exit the loop
-    }
-  });
-
-  if (!isValid) {
-    return; // Exit the function if invalid input is detected
-  }
-  showLoading();
-  const partNumber = $("#projectName").val();
-
-  const formData = new FormData();
-  formData.append("ids", JSON.stringify(currentIds));
-  formData.append("annualForecasts", JSON.stringify(annualForecasts));
-  // Send AJAX request to the controller
-  fetch("/Sourcing/SourcingRFQForm?handler=AddAnnualForecast", {
-    method: "POST",
-    body: JSON.stringify({ ids: currentIds, annualForecasts: annualForecasts }),
-    headers: {
-      "Content-Type": "application/json",
-      RequestVerificationToken: $(
-        'input:hidden[name="__RequestVerificationToken"]'
-      ).val(),
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        showSuccessAlert("All data saved successfully.").then(() => {
-          project(partNumber);
+            isValid = false; // Set isValid to false if invalid input is detected
+            return false; // Exit the loop
+          }
         });
-      } else {
-        throw new Error("Failed to save data.");
+
+        if (!isValid) {
+          return; // Exit the function if invalid input is detected
+        }
+        // showLoading();
+
+        const partNumber = $("#projectName").val();
+
+        const formData = new FormData();
+        formData.append("ids", JSON.stringify(currentIds));
+        formData.append("annualForecasts", JSON.stringify(annualForecasts));
+        // Send AJAX request to the controller
+        fetch("/Sourcing/SourcingRFQForm?handler=AddAnnualForecast", {
+          method: "POST",
+          body: JSON.stringify({
+            ids: currentIds,
+            annualForecasts: annualForecasts,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            RequestVerificationToken: $(
+              'input:hidden[name="__RequestVerificationToken"]'
+            ).val(),
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              showSuccessAlert("All data saved successfully.").then(() => {
+                project(partNumber);
+              });
+            } else {
+              throw new Error("Failed to save data.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            showErrorAlert(error.message);
+          });
       }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      showErrorAlert(error.message);
-    });
+    }
+  );
 });
 
 function captureDivToImage(divId, callback) {

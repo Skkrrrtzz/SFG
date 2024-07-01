@@ -34,6 +34,8 @@ namespace ATSSFG.Repository
 
         public Task BulkInsertLastPurchaseInfo(IEnumerable<LastPurchaseInfoModel> lastpurchaseinfos);
 
-        public Task<bool> MarkAsClosed(string quotationCode, string projectName);
+        public Task<bool> MarkAsClosed(ProjectAndQuotation projectAndQuotation);
+
+        public Task<bool> IsAcceptedByCustomer(ProjectAndQuotation projectAndQuotation);
     }
 }

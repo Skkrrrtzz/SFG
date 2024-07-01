@@ -37,6 +37,7 @@ namespace ATSSFG.Models
         public DateTime? DateModified { get; set; }
         public string? PreparedBy { get; set; } = string.Empty;
         public string? ReviewedBy { get; set; } = string.Empty;
+        public string? UploadedBy { get; set; } = string.Empty;
     }
     public class QuotationModel
     {

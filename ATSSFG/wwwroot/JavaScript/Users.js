@@ -1,5 +1,4 @@
-﻿//Initialize DataTable with AJAX
-var table = $("#userTbl").DataTable({
+﻿let table = $("#userTbl").DataTable({
   scrollX: true,
   scrollY: "50vh",
   responsive: true,
@@ -94,102 +93,78 @@ var table = $("#userTbl").DataTable({
   ],
 });
 
-//ADD BUTTON
-// $("#addBtn").on("click", function (e) {
-//   e.preventDefault(); // Prevent default form submission
+// Add User Form
+$("#addUserForm").on("submit", function (e) {
+  e.preventDefault();
 
-//   // Retrieve the values from the modal inputs
-//   var name = $("#addUserField").val();
-//   var email = $("#addEmailField").val();
-//   var emp_id = $("#addEmpField").val();
-//   var pass = $("#addPassField").val();
-//   var dept = $("#addDeptField").val();
-//   var role = $("#addRoleField").val();
-//   var pos = $("#addPosField").val();
-//   // Hide the alert by default
-//   $("#alert").addClass("d-none");
+  if (this.checkValidity() === false) {
+    e.stopPropagation();
+    this.classList.add("was-validated");
+    return;
+  }
+  const name = $("#addNameField").val();
+  const email = $("#addEmailField").val();
+  const encoder = $("#addEncoder").is(":checked");
+  const processor = $("#addProcessor").is(":checked");
+  const viewer = $("#addViewer").is(":checked");
+  const admin = $("#addAdmin").is(":checked");
+  const isActive = $("#addIsActive").is(":checked");
+  const department = $("#addDeptField").val();
 
-//   // Check if any required field is empty
-//   if (
-//     name === "" ||
-//     email === "" ||
-//     emp_id === "" ||
-//     pass === "" ||
-//     role === ""
-//   ) {
-//     // Display error message for empty fields
-//     $("#alert-text").text("Please fill in all required fields.");
-//     $("#alert").removeClass("d-none").show();
-//     return;
-//   }
-//   // Check the password length
-//   // if (pass.length < 8) {
-//   //     // Display an error message for a password that is less than 8 characters long
-//   //     $('#alert-text').text('Password must be at least 8 characters long.');
-//   //     $('#alert').removeClass('d-none').show();
-//   //     return;
-//   // }
-//   // Hide the alert message if all fields are filled
-//   $("#alert").addClass("d-none");
+  const UserData = {
+    name,
+    email,
+    department,
+    encoder,
+    processor,
+    viewer,
+    admin,
+    isActive,
+  };
+  console.log(UserData);
+  fetch("/Users/UsersAccounts?handler=AddUser", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      RequestVerificationToken: $(
+        'input:hidden[name="__RequestVerificationToken"]'
+      ).val(),
+    },
+    body: JSON.stringify(UserData),
+  })
+    .then((response) => response.json())
+    .then((response) => {
+      if (response.success) {
+        showSuccessAlert(response.message).then(function () {
+          $("#addNameField").val("");
+          $("#addEmailField").val("");
+          $("#addDeptField").val("").prop("selected", false);
+          $("#addEncoder").prop("checked", false);
+          $("#addProcessor").prop("checked", false);
+          $("#addViewer").prop("checked", false);
+          $("#addAdmin").prop("checked", false);
+          $("#addIsActive").prop("checked", false);
+          // Close the modal
+          $("#addUserModal").modal("hide");
+          $(".modal-backdrop").remove();
+          table.ajax.reload();
+        });
+      } else {
+        showErrorAlert(response.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      showErrorAlert("An error occurred while adding the user.");
+    });
+});
 
-//   // Perform an AJAX request to insert the data into the database
-//   $.ajax({
-//     url: AddUser,
-//     method: "POST",
-//     data: {
-//       name: name,
-//       email: email,
-//       userName: emp_id,
-//       password: pass,
-//       department: dept,
-//       role: role,
-//       position: pos,
-//     },
-//     success: function (response) {
-//       // Handle the success response
-
-//       if (response.success) {
-//         // Check the 'success' property in the response
-//         // Show success message using SweetAlert2
-//         showSuccessAlert("The data has been added successfully!").then(
-//           function () {
-//             // Reset the modal inputs
-//             $("#addUserField").val("");
-//             $("#addEmailField").val("");
-//             $("#addEmpField").val("");
-//             $("#addPassField").val("");
-//             $("#addDeptField").val("");
-//             $("#addRoleField").val("");
-//             $("#addPosField").val("");
-//             // Close the modal
-//             $("#addUserModal").modal("hide");
-//             $(".modal-backdrop").remove();
-//             table.ajax.reload(); // Reload the DataTable
-//           }
-//         );
-//       } else {
-//         // Handle the case when the update failed
-//         showErrorAlert("Failed to add data");
-//         // Swal.fire({
-//         //   icon: "error",
-//         //   title: "Failed",
-//         //   text: response.message,
-//         //   showConfirmButton: true,
-//         // });
-//       }
-//     },
-//     error: function () {
-//       // Handle the error case
-//       console.log("Error occurred during data insertion");
-//     },
-//   });
-// });
-
-// EDIT BUTTON
+// Edit User Form
 $("#userTbl tbody").on("click", ".edit-btn", function (e) {
   e.preventDefault();
 
-  let selectedId = $(this).data("id");
+  selectedId = $(this).data("id");
+  console.log(selectedId);
   let rowData = table.row($(this).closest("tr")).data();
 
   $("#editNameField").val(rowData.name);
@@ -200,66 +175,67 @@ $("#userTbl tbody").on("click", ".edit-btn", function (e) {
   $("#editViewer").prop("checked", rowData.processor);
   $("#editAdmin").prop("checked", rowData.admin);
   $("#editIsActive").prop("checked", rowData.isActive);
-  // UPDATE BUTTON
-  $("#updateBtn").on("click", function (e) {
-    e.preventDefault();
-
-    let Id = selectedId;
-    let Name = $("#editNameField").val();
-    let Email = $("#editEmailField").val();
-    let Department = $("#editDeptField").val();
-    let Encoder = $("#editEncoder").prop("checked") || null;
-    let Processor = $("#editProcessor").prop("checked") || null;
-    let Viewer = $("#editViewer").prop("checked") || null;
-    let Admin = $("#editAdmin").prop("checked") || null;
-    let IsActive = $("#editIsActive").prop("checked") || null;
-
-    const UserData = {
-      Id,
-      Name,
-      Email,
-      Department,
-      Encoder,
-      Processor,
-      Viewer,
-      Admin,
-      IsActive,
-    };
-
-    fetch("/Users/UsersAccounts?handler=EditUser", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        RequestVerificationToken: $(
-          'input:hidden[name="__RequestVerificationToken"]'
-        ).val(),
-      },
-      body: JSON.stringify(UserData),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        if (response.success) {
-          showSuccessAlert(response.message).then(function () {
-            $("#editNameField").val("");
-            $("#editEmailField").val("");
-            $("#editDeptField").val("");
-            // Close the modal
-            $("#editUserModal").modal("hide");
-            $(".modal-backdrop").remove();
-            table.ajax.reload();
-          });
-        } else {
-          showErrorAlert(response.message);
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        showErrorAlert("An error occurred while updating the user.");
-      });
-  });
 });
 
-// DELETE BUTTON
+// Update User
+$("#updateBtn").on("click", function (e) {
+  e.preventDefault();
+
+  let Id = selectedId;
+  let Name = $("#editNameField").val();
+  let Email = $("#editEmailField").val();
+  let Department = $("#editDeptField").val();
+  let Encoder = $("#editEncoder").prop("checked");
+  let Processor = $("#editProcessor").prop("checked");
+  let Viewer = $("#editViewer").prop("checked");
+  let Admin = $("#editAdmin").prop("checked");
+  let IsActive = $("#editIsActive").prop("checked");
+
+  const UserData = {
+    Id,
+    Name,
+    Email,
+    Department,
+    Encoder,
+    Processor,
+    Viewer,
+    Admin,
+    IsActive,
+  };
+  console.log(UserData);
+  fetch("/Users/UsersAccounts?handler=EditUser", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      RequestVerificationToken: $(
+        'input:hidden[name="__RequestVerificationToken"]'
+      ).val(),
+    },
+    body: JSON.stringify(UserData),
+  })
+    .then((response) => response.json())
+    .then((response) => {
+      if (response.success) {
+        showSuccessAlert(response.message).then(function () {
+          $("#editNameField").val("");
+          $("#editEmailField").val("");
+          $("#editDeptField").val("");
+          // Close the modal
+          $("#editUserModal").modal("hide");
+          $(".modal-backdrop").remove();
+          table.ajax.reload();
+        });
+      } else {
+        showErrorAlert(response.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      showErrorAlert("An error occurred while updating the user.");
+    });
+});
+
+// Delete User
 $("#userTbl tbody").on("click", ".delete-btn", function (e) {
   e.preventDefault();
 
@@ -301,31 +277,3 @@ $("#userTbl tbody").on("click", ".delete-btn", function (e) {
     }
   );
 });
-
-// // Toggles password visibility
-// $("#toggleAddPassword").click(function () {
-//   // Toggle the password visibility
-//   let passwordAddField = $("#addPassField");
-//   let iconAdd = $(this).find("i");
-
-//   if (passwordAddField.attr("type") === "password") {
-//     passwordAddField.attr("type", "text");
-//     iconAdd.removeClass("bi bi-eye-slash-fill").addClass("bi bi-eye-fill");
-//   } else {
-//     passwordAddField.attr("type", "password");
-//     iconAdd.removeClass("bi bi-eye-fill").addClass("bi bi-eye-slash-fill");
-//   }
-// });
-
-// $("#toggleEditPassword").click(function () {
-//   let passwordEditField = $("#editPassField");
-//   let iconEdit = $(this).find("i");
-
-//   if (passwordEditField.attr("type") === "password") {
-//     passwordEditField.attr("type", "text");
-//     iconEdit.removeClass("bi bi-eye-slash-fill").addClass("bi bi-eye-fill");
-//   } else {
-//     passwordEditField.attr("type", "password");
-//     iconEdit.removeClass("bi bi-eye-fill").addClass("bi bi-eye-slash-fill");
-//   }
-// });

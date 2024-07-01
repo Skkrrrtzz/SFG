@@ -153,7 +153,7 @@ namespace ATSSFG.Repository
                     parameters.Add("@Department", add.Department);
                     parameters.Add("@Message", dbType: DbType.String, size: 100, direction: ParameterDirection.Output);
 
-                    await conn.ExecuteAsync("AddUser", parameters, commandType: CommandType.StoredProcedure);
+                    await conn.ExecuteAsync("AddUser_SP", parameters, commandType: CommandType.StoredProcedure);
 
                     string message = parameters.Get<string>("@Message");
                     return message;

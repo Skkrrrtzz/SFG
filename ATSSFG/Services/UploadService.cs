@@ -61,7 +61,7 @@ namespace ATSSFG.Services
             string fileName = $"RFQ - {description}{Path.GetExtension(file.FileName)}";
 
             // Define the directory path where the file will be saved
-            string uploadsFolder = Path.Combine(_networkDirectory + _excelDirectory, "RFQ");
+            string uploadsFolder = Path.Combine(_networkDirectory + _excelRFQDirectory);
 
             // If the directory doesn't exist, create it
             if (!Directory.Exists(uploadsFolder))
@@ -97,6 +97,16 @@ namespace ATSSFG.Services
             string uploadsDirectory = _networkDirectory + _excelRFQDirectory;
 
             string filePath = Path.Combine(uploadsDirectory, "RFQ - " + pNDesc + ".xlsx");
+
+            return filePath;
+        }
+
+        public string GetRFQFilePathFromPNDesc(string pNDesc)
+        {
+            // Construct the file path based on the parsed information and the upload directory
+            string uploadsDirectory = _networkDirectory + _exportedExcelDirectory;
+
+            string filePath = Path.Combine(uploadsDirectory, pNDesc + ".xlsx");
 
             return filePath;
         }

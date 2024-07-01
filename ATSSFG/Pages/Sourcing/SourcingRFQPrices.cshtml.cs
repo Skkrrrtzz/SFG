@@ -381,7 +381,7 @@ namespace ATSSFG.Pages.Sourcing
 
                 if (result)
                 {
-                    return new JsonResult(new { success = true, message = "Supplier and comments saved successfully." });
+                    return new JsonResult(new { success = true, message = "Supplier and comment saved successfully." });
                 }
                 else
                 {

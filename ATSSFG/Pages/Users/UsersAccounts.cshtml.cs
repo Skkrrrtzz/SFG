@@ -19,9 +19,11 @@ namespace ATSSFG.Pages.Users
         {
             _userRepository = userRepository;
         }
+
         #endregion Constructor
 
         #region Get
+
         public async Task<IActionResult> OnGetDisplayUsersAsync()
         {
             try
@@ -36,9 +38,25 @@ namespace ATSSFG.Pages.Users
                 return StatusCode(500, "An error occurred while fetching user data.");
             }
         }
+
         #endregion Get
 
         #region Post
+
+        public async Task<IActionResult> OnPostAddUserAsync([FromBody] UsersInfoModel UserData)
+        {
+            try
+            {
+                string result = await _userRepository.AddUserAsync(UserData);
+                return new JsonResult(new { success = true, message = result });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error adding user: {ex.Message}");
+                return StatusCode(500, new { success = false, message = "An error occurred while adding the user." });
+            }
+        }
+
         public async Task<IActionResult> OnPostEditUserAsync([FromBody] UsersInfoModel UserData)
         {
             try
@@ -62,11 +80,11 @@ namespace ATSSFG.Pages.Users
             }
             catch (Exception ex)
             {
-                // Log the exception or handle it appropriately
                 Console.WriteLine($"Error deleting user: {ex.Message}");
                 return StatusCode(500, new { success = false, message = "An error occurred while deleting the user." });
             }
         }
+
         #endregion Post
     }
 }

@@ -6,6 +6,23 @@
     return response.json();
   })
   .then((data) => {
+    // console.log(data);
+    let openCount = 0;
+    let closedCount = 0;
+
+    // Iterate over the data array and count the statuses
+    data.data.forEach((item) => {
+      if (item.status === "OPEN") {
+        openCount++;
+      } else if (item.status === "CLOSED") {
+        closedCount++;
+      }
+    });
+
+    // Update the text of the elements
+    $("#openRFQ").text(openCount);
+    $("#closedRFQ").text(closedCount);
+
     let count = data.data.length;
     $("#rfqCount").text(count);
     $("#libraryTable").DataTable({
@@ -119,9 +136,11 @@ function showIncomingRFQ(url) {
 function uploadFile(modalId, url, inputId) {
   const fileInput = document.getElementById(inputId);
   // console.log(modalId, url, inputId);
+
   const file = fileInput.files[0];
   const formData = new FormData();
   formData.append("file", file);
+  formData.append("uploadedBy", uploader);
 
   if (!fileInput.files || !fileInput.files[0]) {
     // Check if a file was selected
@@ -270,6 +289,16 @@ function viewRFQProjects(table, data) {
         },
       },
       {
+        data: "isAccepted",
+        render: function (data, type, row) {
+          if (data === true) {
+            return '<span class="badge rounded-pill text-bg-success">Accepted</span>';
+          } else {
+            return null;
+          }
+        },
+      },
+      {
         data: null,
         render: function (row) {
           if (department === "Cost Engineering") {
@@ -389,6 +418,57 @@ $("#incomingRFQTable").on("click", ".list-btn", function () {
     quotation;
 
   window.location.href = url;
+});
+
+$("#incomingRFQTable").on("click", ".accept-btn", function () {
+  let quotationCode = $(this).data("id");
+  let projectName = $(this).data("name");
+  // console.log(quotationCode, projectName);
+
+  const requestData = {
+    quotationCode: quotationCode,
+    projectName: projectName,
+  };
+
+  showConfirmButton("Is this RFQ accepted by Customer?", "warning").then(
+    (result) => {
+      if (result.isConfirmed) {
+        fetch("/Dashboard/Dashboard?handler=AcceptedRFQ", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            RequestVerificationToken: $(
+              'input:hidden[name="__RequestVerificationToken"]'
+            ).val(),
+          },
+          body: JSON.stringify(requestData),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            // console.log(data);
+            if (data.success) {
+              showSuccessAlert(data.message).then(() => {
+                location.reload();
+              });
+            } else {
+              showErrorAlert(data.message);
+            }
+          })
+          .catch((error) => {
+            // Handle errors
+            console.error("Error:", error);
+            showErrorAlert(
+              "An error occurred while marking the project as closed."
+            );
+          });
+      }
+    }
+  );
 });
 
 $("#libraryTable").on("click", ".view-btn", function () {

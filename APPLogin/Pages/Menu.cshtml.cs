@@ -67,8 +67,11 @@ namespace APPLogin.Pages
                     userMenu = await _loginRepository.GetMenu(User.FindFirstValue("Password"));
                     userPending = await _loginRepository.GetPending(User.FindFirstValue("FullName"));
 
-                    imgstring = "data:image/png;base64," + Convert.ToBase64String(await _loginRepository.GetEmployeeImage(PIMESProcedures.ToInt16OrDefault(User.FindFirstValue("EmpNo"))));
-                    user = User.FindFirstValue("FullName").ToUpper();
+                imgstring = "data:image/png;base64," + Convert.ToBase64String(await _loginRepository.GetEmployeeImage(PIMESProcedures.ToInt16OrDefault(User.FindFirstValue("EmpNo"))));
+                
+                
+
+                user = User.FindFirstValue("FullName").ToUpper();
                     greetings = PIMESProcedures.getGreeting();
 
                     using (var sr = new StreamReader(Path.Combine(_webHostEnvironment.WebRootPath, @"txt/trivia.txt")))
@@ -80,39 +83,57 @@ namespace APPLogin.Pages
                     mode = "MENU";
                     bucode = "";
                     role = "";
+                //string empNo = User.FindFirstValue("EmpNo");
 
-                    //Do not remove Cookie Implementation
 
-                    // var cookieOptions = new CookieOptions
-                    // {
-                    //    Path = "/",
-                    //    HttpOnly = false,
-                    //    Secure = true,
-                    //    SameSite = SameSiteMode.None,
-                    //    Expires = DateTime.Now.AddSeconds(14)
-                    // };
+                //if (int.TryParse(empNo, out int empNoValue) && empNoValue != 0)
+                //{
+                //    byte[] employeeImage = await _loginRepository.GetEmployeeImage(empNoValue);
+                //    if (employeeImage != null && employeeImage.Length > 0)
+                //    {
+                //        imgstring = "data:image/png;base64," + Convert.ToBase64String(employeeImage);
+                //    }
+                //    else
+                //    {
+                //        imgstring = null;
+                //    }
+                //}
+                //else
+                //{
+                //    imgstring = null;
+                //}
+                //Do not remove Cookie Implementation
 
-                    // _httpContext.HttpContext.Response.Cookies.Append("MyUser", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
-                    // _httpContext.HttpContext.Response.Cookies.Append("MyPassword", _httpContext.HttpContext.Session.GetString("MyPassword"), cookieOptions);
-                    // _httpContext.HttpContext.Response.Cookies.Append("MyLoginMode", "MENU", cookieOptions);
-                    // _httpContext.HttpContext.Response.Cookies.Append("MyProgramName", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
-                    // _httpContext.HttpContext.Response.Cookies.Append("MyBUNmame", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
-                    // _httpContext.HttpContext.Response.Cookies.Append("MyRole", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
+                // var cookieOptions = new CookieOptions
+                // {
+                //    Path = "/",
+                //    HttpOnly = false,
+                //    Secure = true,
+                //    SameSite = SameSiteMode.None,
+                //    Expires = DateTime.Now.AddSeconds(14)
+                // };
 
-                    // var claims = new List<Claim>
-                    // {
-                    //     new Claim(ClaimTypes.Name, user),
-                    //     new Claim(ClaimTypes.Role, "Skibidi"),
-                    // };
+                // _httpContext.HttpContext.Response.Cookies.Append("MyUser", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
+                // _httpContext.HttpContext.Response.Cookies.Append("MyPassword", _httpContext.HttpContext.Session.GetString("MyPassword"), cookieOptions);
+                // _httpContext.HttpContext.Response.Cookies.Append("MyLoginMode", "MENU", cookieOptions);
+                // _httpContext.HttpContext.Response.Cookies.Append("MyProgramName", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
+                // _httpContext.HttpContext.Response.Cookies.Append("MyBUNmame", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
+                // _httpContext.HttpContext.Response.Cookies.Append("MyRole", _httpContext.HttpContext.Session.GetString("MyUser"), cookieOptions);
 
-                    // var claimsIdentity = new ClaimsIdentity(
-                    //     claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                // var claims = new List<Claim>
+                // {
+                //     new Claim(ClaimTypes.Name, user),
+                //     new Claim(ClaimTypes.Role, "Skibidi"),
+                // };
 
-                    // await HttpContext.SignInAsync(
-                    //     CookieAuthenticationDefaults.AuthenticationScheme, 
-                    //     new ClaimsPrincipal(claimsIdentity));
+                // var claimsIdentity = new ClaimsIdentity(
+                //     claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                    Console.WriteLine(User.FindFirstValue("FullName"));
+                // await HttpContext.SignInAsync(
+                //     CookieAuthenticationDefaults.AuthenticationScheme, 
+                //     new ClaimsPrincipal(claimsIdentity));
+
+                Console.WriteLine(User.FindFirstValue("FullName"));
 
                     return Page();
                 }

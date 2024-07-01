@@ -17,14 +17,12 @@ fetch("/Dashboard/CheckingPartNumber?handler=CheckingPartNumber")
     return response.json();
   })
   .then((data) => {
-    console.log(data);
-
-    // Add a 'No' property to each item in the data array
+    // console.log(data);
     data.data.forEach((item, index) => {
       item.No = index + 1;
     });
 
-    let checkingPartNumber = $("#checkingPartNumberTbl").DataTable({
+    $("#checkingPartNumberTbl").DataTable({
       responsive: true,
       data: data.data,
       columns: [
@@ -43,7 +41,7 @@ fetch("/Dashboard/CheckingPartNumber?handler=CheckingPartNumber")
         { data: "LastPurchasedUSDPrice" },
         { data: "CustomerVendorName" },
       ],
-      // Add createdRow function to add numbering
+
       createdRow: function (row, data, dataIndex) {
         $("td:eq(0)", row).html(dataIndex + 1); // Use 1-based indexing for display
       },
